@@ -1,0 +1,78 @@
+
+/*
+ * Formato para todas las paginas
+ * */
+body {
+   background-color: #fff4d4;
+}
+
+/*
+ * Formato para menu encabezado
+ * */
+header {
+    width: 80%;
+    padding: 10px;
+    margin: 0 auto;
+}
+.horizontal-collapse {
+	height: 70px;
+}
+.navbar-collapse.in {
+	overflow-y: hidden;
+}
+
+/*
+ * Formato para secciones dentro de la aplicacion
+ * */
+section {
+    text-align: center;
+    margin: 0 auto;
+    width: 80%
+}
+
+/*
+ * Formato de tablas
+ * */
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td {
+    text-align: left;
+    padding: 8px;
+    height: 30px;
+}
+
+tr:nth-child(even){background-color: #D2D2D2}
+tr:nth-child(odd){background-color: white}
+
+tr:hover
+{
+    background-color: #A4A4A4;
+}
+
+th {
+    padding: 8px;
+    height: 30px;
+    background-color: #4C0F50;
+    color: white;
+    text-align: center;
+}
+
+
+/*
+ * Formato para areas de busquedas
+ * */
+
+#searchBarArea {
+    padding: 20px;
+    text-align: right;
+    margin: 0 auto;
+}
+
+#resultsArea {
+    margin: 0 auto;
+}
+
