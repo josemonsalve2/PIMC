@@ -69,16 +69,17 @@
                                                                             <div id="HojaServiciosDiv"> 
                                                                                 <table id="hojaServiciosTable">
                                                                                     <tr ng-click="abrirElemento(0)"><th>Carrera</th><th>Clase</th><th>Instituci&oacute;n</th><th>Al mando de</th><th>Lugar</th><th>Fecha</th></tr>
-                                                                                    <tr ng-click="abrirElemento(0)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
-                                                                                    <tr ng-click="abrirElemento(0)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
-                                                                                    <tr ng-click="abrirElemento(0)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
-                                                                                    <tr ng-click="abrirElemento(0)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
+                                                                                    <tr ng-click="abrirElemento(1)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
+                                                                                    <tr ng-click="abrirElemento(2)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
+                                                                                    <tr ng-click="abrirElemento(3)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
+                                                                                    <tr ng-click="abrirElemento(4)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
                                                                                     
                                                                                 </table>
                                                                             </div>
                                                                             </uib-tab>
-                                                                            <uib-tab index="$index + 1" ng-repeat="tab in tabs" heading="{{tab.title}}">
-                                                                                <div ng-bind-html="tab.content"></div>
+																			<uib-tab index="$index + 1" ng-repeat="tab in tabsArray" heading="{{tab[1].title}}">
+																					<div> {{tab.value.content}} <br>
+																							<div style="padding:20px; background-color:red; margin:auto; width:200px;" ng-click="cerrarElemento(tab[0])"> Cerrar Elemento</div></div>
                                                                             </uib-tab>
                                                                         </uib-tabset>
                                                                     </div>
