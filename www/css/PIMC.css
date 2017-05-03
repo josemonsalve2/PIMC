@@ -22,6 +22,32 @@ header {
 }
 
 /*
+ * Formato para una pagina que sólo tiene
+ * contenido informativo como la principal
+ */
+.contenido {
+
+    padding: 30px 50px;
+    margin: 0 auto;
+    background: #f8f8f8;
+
+}
+
+.contenido>p {
+    text-align: justify;
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
+    column-count: 2;
+    -webkit-column-gap: 40px; /* Chrome, Safari, Opera */
+    -moz-column-gap: 40px; /* Firefox */
+    column-gap: 40px;
+}
+.contenido>h1 {
+    margin-bottom:20px;
+    
+}
+
+/*
  * Formato para secciones dentro de la aplicacion
  * */
 section {
