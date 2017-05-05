@@ -1,0 +1,92 @@
+#fotoPerfilPersonaje{
+        width: 25%;
+        min-width: 300px;
+        height: 400px;
+        border:solid;
+        border-width: 3px;
+        border-radius: 20px;
+        border-color: #e7e7e7;
+        float:left;
+}
+
+#fotoPerfilPersonaje>img {
+        margin:20px;
+        max-height: 360px;
+        height:95%;
+}
+
+#datosPrincipalesPersonaje,#notasAdicionales {
+	width: 45%;
+        margin: 20px 20px 20px 40px;
+        padding-left: 20px;
+	float: left;
+        text-align: left;
+}
+
+#datosPrincipalesPersonaje>ul {
+        list-style-type: none;
+        padding:20px 0px;
+        margin:0;
+
+}
+#datosPrincipalesPersonaje>#nombre {
+        border:0;
+        margin:0px;
+        padding:0px;
+        font-size: 32px;
+        text-decoration: underline;
+        text-decoration-color: #A7A7A7;
+        font-weight: bold;
+}
+#datosPrincipalesPersonaje>#ocupacion {
+        border:0;
+        margin:0px;
+        padding:0px 20px;
+        font-size: 18px;
+        font-style: italic;
+}
+#datosPrincipalesPersonaje .tituloDato {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 0px;
+        padding: 0px 0px 0px 5px;
+        
+}
+#datosPrincipalesPersonaje .valorDato {
+        font-size: 20px;
+        margin: 0px;
+        padding: 0px 0px 0px 20px;
+}
+
+
+
+#parentescos {
+        width: 45%;
+        min-width: 300px;
+        float:left;
+        padding-top: 20px;
+}
+
+
+#notasAdicionales {
+	width: 55%;
+        margin: 0px 20px 0px 40px;
+	float: left;
+        text-align: left;
+        padding-left:20px;
+}
+
+
+#notasAdicionales h1 {
+    margin: 0px;
+    padding: 0px;
+}
+
+#comisionTrabajoTable{
+    width:90%;
+    margin:auto;
+}
+#comisionTrabajoDiv{
+    padding-top:20px;
+    text-align:center;
+}
