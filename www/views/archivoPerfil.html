@@ -1,143 +1,143 @@
 <!DOCTYPE html>
 <html>
-		<head>
-				<title>Perfil Archivo</title>
+<head>
+	<title>Perfil Archivo</title>
 
-				<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js"></script>
-				<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js"></script>
-				<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
-				<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
-				<script src="../apps/controllers/archivoPerfilController.js"></script>
-				<link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-				<link rel="stylesheet" href="../css/PIMC.css">
-				<link rel="stylesheet" href="../css/archivoPerfil.css">
-		</head>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
+	<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+	<script src="../apps/controllers/archivoPerfilController.js"></script>
+	<link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="../css/PIMC.css">
+	<link rel="stylesheet" href="../css/archivoPerfil.css">
+</head>
 
-		<body ng-app="archivoPerfil">
-				<header ng-include="'menu.html'">
-				</header>
-				<section ng-controller="archivoPerfilController">
-						<uib-tabset active="active">
-								<uib-tab index="0" heading="Datos Principales">	
-										<div id="datosPrincipalesArchivo">
-												<table id="datosManuscrito">
-														<tr><th colspan="3">DATOS MANUSCRITO</th></tr>
-														<tr><th>Archivo</th><th>A&ntilde;o</th><th>Titulo</th></tr>
-														<tr><td>Example</td><td>1990</td><td>Esto es un ejemplo</td></tr>
-												</table>
-												<div id="sinopsisComentarios">
-														<h1>Sinopsis general y comentarios</h1>
-														<span class="notas">Asi se vera este campo;,.... <br/> Lofdsafdsafdasfdsafdasfdsafdafdasfdsafdsafdsafdsfas</span>
-												</div>
-												<div class="dato">
-														<table>
-																<tr><th>Documento Vinculado a</th></tr>
-																<tr><td>ejemplo1</td></tr>
-														</table>
-												</div>
-										</div>
-										<div id="otrosDatosArchivoColDerecha">
-												<div class="dato">
-														<table>
-																<tr><th>Palabras Claves</th></tr>
-																<tr><td>ejemplo1</td></tr>
-																<tr><td>ejemplo1</td></tr>
-																<tr><td>ejemplo1</td></tr>
-														</table>
-												</div>
-												<div class="dato">
-														<table>
-																<tr><th>Anotaciones Catalogaci&oacute;n</th></tr>
-																<tr><td>ejemplo1</td></tr>
-														</table>
-												</div>
-												<div class="dato">
-														<table>
-																<tr><th>Estado de Conservaci&oacute;n</th></tr>
-																<tr><td>ahi...</td></tr>
-														</table>
-												</div>
-												<div class="dato">
-														<table>
-																<tr><th>disponibilidad de consulta</th></tr>
-																<tr><td>Disponible</td></tr>
-														</table>
-												</div>
-										</div>
-								</uib-tab>
-								<uib-tab index="1" heading="Datos Secundarios">
-										<div>
-												<div id="datosSecundariosArchivo">
-														<table id="listaDocumentos">
-																<tr><th>Tipo Documento</th><th>Cantidad</th><th>Formato</th></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td></tr>
-														</table>
-												</div>
-												<div id="fechasColDerecha">
-														<table>
-																<tr><th>Fecha Inicial</th><th>Fecha Final</th></tr>
-																<tr><td>Abril 10 1880</td><td>Abril 14 2005</td></tr>
-														</table>
-												</div>
-										</div>
-										<div>
-														<table id="emisorReceptorTabla">
-																<tr><th colspan="4">Emitido por</th><th colspan="3">Cantidad</th></tr>
-																<tr><th>Nombre</th><th>cargo</th><th>Instituci&oacute;n</th><th>Fecha (dd/mm/aaaa)</th><th>Nombre</th><th>Cargo</th><th>Instituci&oacute;n</th></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td></tr>
-														</table>
-										</div>
-								</uib-tab>
-								<uib-tab index="3" heading="Personajes">
-														<table id="personajesTabla">
-																<tr><th>Nombre</th><th>cargo</th><th>Nacionalidad</th><th>categoria</th><th>Cita/Anotaci&oacute;n</th></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-														</table>
-								</uib-tab>
-								<uib-tab index="4" heading="Embarcaciones">
-														<table id="embarcacionesTabla">
-																<tr><th>Nombre</th><th>Alias</th><th>Tipo de buque</th><th>Bandera</th><th>Utilidad</th><th>Categoria</th><th>Cita/Anotaci&oacute;n</th></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-														</table>
-								</uib-tab>
-								<uib-tab index="5" heading="Lugares">
-														<table id="lugaresTabla">
-																<tr><th>Nombre</th><th>Tipo de Lugar</th><th>Categoria</th><th>Cita/Anotaci&oacute;n</th></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
-														</table>
-								</uib-tab>
-								<uib-tab index="7" heading="Actividades">
-														<table id="ActividadesTabla">
-																<tr><th>Tipoe</th><th>Descripci&oacute;n del proceso</th><th>Personal</th><th>Herramientas</th><th>Materiales</th><th>Cita/Anotaci&oacute;n</th></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-														</table>
-								</uib-tab>
-								<uib-tab index="8" heading="Fechas y sucesos">
-														<table id="fechasSucesosTabla">
-																<tr><th>Fecha</th><th>Lugar</th><th>Descripci&oacute;n del evento</th><th>Categor&iacute;a</th><th>Cita/Anotaci&oacute;n</th></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-																<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-														</table>
-								</uib-tab>
-								<uib-tab index="9" heading="Instituciones">
-														<table id="institucionesTabla">
-																<tr><th>Nombre</th><th>Cita/Anotaci&oacute;n</th></tr>
-																<tr><td>Example</td><td>ASADFA</td></tr>
-																<tr><td>Example</td><td>ASADFA</td></tr>
-																<tr><td>Example</td><td>ASADFA</td></tr>
-														</table>
-								</uib-tab>
-						</uib-tabset>
-				</section>
-		</body>
+<body ng-app="archivoPerfil">
+	<header ng-include="'menu.html'">
+	</header>
+	<section ng-controller="archivoPerfilController">
+		<uib-tabset active="active">
+			<uib-tab index="0" heading="Datos Principales">	
+				<div id="datosPrincipalesArchivo">
+					<table id="datosManuscrito">
+						<tr><th colspan="3">DATOS MANUSCRITO</th></tr>
+						<tr><th>Archivo</th><th>A&ntilde;o</th><th>Titulo</th></tr>
+						<tr><td>Example</td><td>1990</td><td>Esto es un ejemplo</td></tr>
+					</table>
+					<div id="sinopsisComentarios">
+						<h1>Sinopsis general y comentarios</h1>
+						<span class="notas">Asi se vera este campo;,.... <br/> Lofdsafdsafdasfdsafdasfdsafdafdasfdsafdsafdsafdsfas</span>
+					</div>
+					<div class="dato">
+						<table>
+							<tr><th>Documento Vinculado a</th></tr>
+							<tr><td>ejemplo1</td></tr>
+						</table>
+					</div>
+				</div>
+				<div id="otrosDatosArchivoColDerecha">
+					<div class="dato">
+						<table>
+							<tr><th>Palabras Claves</th></tr>
+							<tr><td>ejemplo1</td></tr>
+							<tr><td>ejemplo1</td></tr>
+							<tr><td>ejemplo1</td></tr>
+						</table>
+					</div>
+					<div class="dato">
+						<table>
+							<tr><th>Anotaciones Catalogaci&oacute;n</th></tr>
+							<tr><td>ejemplo1</td></tr>
+						</table>
+					</div>
+					<div class="dato">
+						<table>
+							<tr><th>Estado de Conservaci&oacute;n</th></tr>
+							<tr><td>ahi...</td></tr>
+						</table>
+					</div>
+					<div class="dato">
+						<table>
+							<tr><th>disponibilidad de consulta</th></tr>
+							<tr><td>Disponible</td></tr>
+						</table>
+					</div>
+				</div>
+			</uib-tab>
+			<uib-tab index="1" heading="Datos Secundarios">
+				<div>
+					<div id="datosSecundariosArchivo">
+						<table id="listaDocumentos">
+							<tr><th>Tipo Documento</th><th>Cantidad</th><th>Formato</th></tr>
+							<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td></tr>
+						</table>
+					</div>
+					<div id="fechasColDerecha">
+						<table>
+							<tr><th>Fecha Inicial</th><th>Fecha Final</th></tr>
+							<tr><td>Abril 10 1880</td><td>Abril 14 2005</td></tr>
+						</table>
+					</div>
+				</div>
+				<div>
+					<table id="emisorReceptorTabla">
+						<tr><th colspan="4">Emitido por</th><th colspan="3">Cantidad</th></tr>
+						<tr><th>Nombre</th><th>cargo</th><th>Instituci&oacute;n</th><th>Fecha (dd/mm/aaaa)</th><th>Nombre</th><th>Cargo</th><th>Instituci&oacute;n</th></tr>
+						<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td></tr>
+					</table>
+				</div>
+			</uib-tab>
+			<uib-tab index="3" heading="Personajes">
+				<table id="personajesTabla">
+					<tr><th>Nombre</th><th>cargo</th><th>Nacionalidad</th><th>categoria</th><th>Cita/Anotaci&oacute;n</th></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+				</table>
+			</uib-tab>
+			<uib-tab index="4" heading="Embarcaciones">
+				<table id="embarcacionesTabla">
+					<tr><th>Nombre</th><th>Alias</th><th>Tipo de buque</th><th>Bandera</th><th>Utilidad</th><th>Categoria</th><th>Cita/Anotaci&oacute;n</th></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+				</table>
+			</uib-tab>
+			<uib-tab index="5" heading="Lugares">
+				<table id="lugaresTabla">
+					<tr><th>Nombre</th><th>Tipo de Lugar</th><th>Categoria</th><th>Cita/Anotaci&oacute;n</th></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
+				</table>
+			</uib-tab>
+			<uib-tab index="7" heading="Actividades">
+				<table id="ActividadesTabla">
+					<tr><th>Tipoe</th><th>Descripci&oacute;n del proceso</th><th>Personal</th><th>Herramientas</th><th>Materiales</th><th>Cita/Anotaci&oacute;n</th></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+				</table>
+			</uib-tab>
+			<uib-tab index="8" heading="Fechas y sucesos">
+				<table id="fechasSucesosTabla">
+					<tr><th>Fecha</th><th>Lugar</th><th>Descripci&oacute;n del evento</th><th>Categor&iacute;a</th><th>Cita/Anotaci&oacute;n</th></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+				</table>
+			</uib-tab>
+			<uib-tab index="9" heading="Instituciones">
+				<table id="institucionesTabla">
+					<tr><th>Nombre</th><th>Cita/Anotaci&oacute;n</th></tr>
+					<tr><td>Example</td><td>ASADFA</td></tr>
+					<tr><td>Example</td><td>ASADFA</td></tr>
+					<tr><td>Example</td><td>ASADFA</td></tr>
+				</table>
+			</uib-tab>
+		</uib-tabset>
+	</section>
+</body>
 </html>

@@ -1,4 +1,4 @@
-#fotoPerfilPersonaje{
+#fotoPerfilEmbarcacion{
         width: 25%;
         min-width: 300px;
         height: 400px;
@@ -9,64 +9,62 @@
         float:left;
 }
 
-#fotoPerfilPersonaje>img {
+#fotoPerfilEmbarcacion>img {
         margin:20px;
         max-height: 360px;
         height:95%;
 }
 
-#datosPrincipalesPersonaje,#notasAdicionales {
-	width: 45%;
-        margin: 20px 20px 20px 40px;
-        padding-left: 20px;
-	float: left;
-        text-align: left;
+#datosPrincipalesEmbarcacion,#datosTecnicosEmbarcacion,#notasAdicionales {
+	width: 80%;
+    margin: 20px auto 0px auto;
+    padding-left: 20px;
+    text-align: left;
 }
+#datosPrincipalesEmbarcacion .titulo,#datosTecnicosEmbarcacion .titulo {
+    width: 100%;
+    border-bottom: solid; 
 
-#datosPrincipalesPersonaje>ul {
+}
+#datosPrincipalesEmbarcacion .left,#datosPrincipalesEmbarcacion .right,
+#datosTecnicosEmbarcacion .left,#datosTecnicosEmbarcacion .right{
+    display:inline-block;
+    vertical-align: top;
+    margin: auto;
+    width: 45%;
+}
+#datosPrincipalesEmbarcacion ul, #datosTecnicosEmbarcacion ul{
         list-style-type: none;
         padding:20px 0px;
         margin:0;
 
 }
-#datosPrincipalesPersonaje>#nombre {
+#datosPrincipalesEmbarcacion #nombre,  #datosTecnicosEmbarcacion #nombre{
         border:0;
         margin:0px;
         padding:0px;
         font-size: 32px;
-        text-decoration: underline;
-        text-decoration-color: #A7A7A7;
         font-weight: bold;
 }
-#datosPrincipalesPersonaje>#ocupacion {
+#datosPrincipalesEmbarcacion #alias, #datosTecnicosEmbarcacion #alias{
         border:0;
         margin:0px;
         padding:0px 20px;
         font-size: 18px;
         font-style: italic;
 }
-#datosPrincipalesPersonaje .tituloDato {
+#datosPrincipalesEmbarcacion .tituloDato, #datosTecnicosEmbarcacion .tituloDato{
         font-size: 20px;
         font-weight: bold;
         margin: 0px;
         padding: 0px 0px 0px 5px;
         
 }
-#datosPrincipalesPersonaje .valorDato {
+#datosPrincipalesEmbarcacion .valorDato, #datosTecnicosEmbarcacion .valorDato {
         font-size: 20px;
         margin: 0px;
         padding: 0px 0px 0px 20px;
 }
-
-
-
-#parentescos {
-        width: 45%;
-        min-width: 300px;
-        float:left;
-        padding-top: 20px;
-}
-
 
 #notasAdicionales {
 	width: 55%;
@@ -74,8 +72,8 @@
 	float: left;
         text-align: left;
         padding-left:20px;
-}
 
+}
 
 #notasAdicionales h1 {
     margin: 0px;
@@ -89,4 +87,41 @@
 #comisionTrabajoDiv{
     padding-top:20px;
     text-align:center;
+}
+
+.perfilRuta .tituloRuta h2{
+    margin-bottom: 1px;
+}
+
+.perfilRuta .tituloRuta h3{
+    margin-top: 1px;
+}
+
+.perfilRuta .rutaPersonas,.perfilRuta .rutaPersonasAnonimas,.perfilRuta .escalasTabla,.perfilRuta .cargaTabla, .perfilRuta .bitacoraTabla{
+    width:90%;
+    margin: 10px auto;
+}
+.perfilRuta .perfilRutaTabContent{
+    height:400px;
+    overflow-y:auto;
+    
+}
+.notasAdicionalesRuta {
+    padding-left:20px;
+    text-align:left;
+}
+
+#datosSecundariosEmbarcacion .filtroCategoria {
+    text-align: left;
+    padding: 10px;
+}
+#reparacionesTabla {
+    width: 80%;
+    margin:auto;
+}
+#reparacionesTabla h1{
+    margin: 0px 0px 10px 0px;
+}
+.grid {
+    height: 200px;
 }
