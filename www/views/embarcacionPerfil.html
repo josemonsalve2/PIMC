@@ -1,116 +1,216 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Perfil Personaje</title>
-
+    <title>Perfil Embarcacion</title>
+	<meta charset="ISO-8859-1">
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-touch.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
     <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
     <script src="../apps/controllers/embarcacionPerfilController.js"></script>
+    <script src="http://ui-grid.info/docs/grunt-scripts/csv.js"></script>
+    <script src="http://ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
+    <script src="http://ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
+    <script src="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.css"></link>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/PIMC.css">
-    <link rel="stylesheet" href="../css/personajePerfil.css">
+    <link rel="stylesheet" href="../css/embarcacionPerfil.css">
+    <link rel="stylesheet" href="../external/flags/flags.css">
 </head>
-
 <body ng-app="embarcacionPerfil">
     <header ng-include="'menu.html'">
     </header>
     <section ng-controller="embarcacionPerfilController">
         <uib-tabset active="active">
             <uib-tab index="0" heading="Datos Principales"> 
-                <div class="top">
-                    <!--                                                                                 -->
-                    <div id="datosPrincipalesPersonaje">
-                        <h1 id="nombre">
-                            Se&ntilde;or Felipe Perez
+                <div id="datosPrincipalesEmbarcacion">
+                    <div class="titulo">
+                     <h1 id="nombre">
+                            La ni&ntilde;a
                         </h1>
-                        <h2 id="ocupacion">
-                            Cargo: Procrastinador
+                        <h2 id="alias">
+                            Alias: Procrastinador
                         </h2>
+                        </div>
+                    <div class="left">
                         <ul>
-                            <li class="tituloDato"> Sexo </li>
-                            <li class="valorDato"> Masculino </li>
-                            <li class="tituloDato"> Nacionalidades </li>
-                            <li class="valorDato"> Colombiano </li>
-                            <li class="tituloDato"> Lugar Nacimiento </li>
-                            <li class="valorDato"> Colombia </li>
-                            <li class="tituloDato"> Fecha Nacimiento </li>
-                            <li class="valorDato"> 12 octubre 1900</li>
-                            <li class="tituloDato"> Edad </li>
-                            <li class="valorDato"> 87 <span id="naceMuere">(1900 - 1987)</span></li>
-                            <li class="tituloDato"> Lugar Fallecimiento </li>
-                            <li class="valorDato"> Peru </li>
-                            <li class="tituloDato"> Fecha Fallecimiento </li>
-                            <li class="valorDato"> 12 octubre 1987</li>
-                            <li class="tituloDato"> Enfermedades </li>
-                            <li class="valorDato"> bobada </li>
+                            <li class="tituloDato"> Banderas </li>
+                            <li class="valorDato"> <div class="flag flag-co" alt="Colombia" ></div> Colombia  <span id="naceMuere">(1900 - 1987)</span></li>
+                            <li class="valorDato"> <div class="flag flag-es" alt="Colombia" ></div> Espa&ntilde;a <span id="naceMuere">(1900 - 1987)</span></li>
+                            <li class="valorDato"> <div class="flag flag-de" alt="Colombia" ></div> Alemania <span id="naceMuere">(1900 - 1987)</span></li>
+                            <li class="tituloDato"> Tipo de Buque </li>
+                            <li class="valorDato"> Canoa </li>
+                            <li class="tituloDato"> Utilidades </li>
+                            <li class="valorDato">  Correo </li>
+                            <li class="valorDato">  Guardacostas </li>
                         </ul>
                     </div>
-                    <div id="parentescos">
-                        <table>
-                            <tr><th colspan="2">Parentescos</th></tr>
-                            <tr><th>Personaje</th><th>Relacion</th></tr>
-                            <tr><td>Pepito Perez</td><td>primo</td></tr>
-                            <tr><td>Pepito Perez</td><td>primo</td></tr>
-                            <tr><td>Pepito Perez</td><td>primo</td></tr>
-                        </table>
+                    <div class="right">
+                        <ul>
+                        <li class="tituloDato"> Lugar Construcci&oacute;n </li>
+                        <li class="valorDato"> Colombia </li>
+                        <li class="tituloDato"> Fecha construcci&oacute;n </li>
+                        <li class="valorDato"> 12 octubre 1900</li>
+                        <li class="tituloDato"> Lugar Deserci&oacute;n </li>
+                        <li class="valorDato"> Peru </li>
+                        <li class="tituloDato"> Raz&oacute;n Deserci&oacute;n </li>
+                        <li class="valorDato"> Ataque pirata</li>
+                     </ul>
+                 </div>
+             </div>
+            </uib-tab>
+            <uib-tab index="1" heading="Especificaciones T&eacute;cnicas">
+                <div id="datosTecnicosEmbarcacion">
+                    <div class="titulo">
+                        <h1 id="nombre">
+                            La ni&ntilde;a
+                        </h1>
+                        <h2 id="alias">
+                            Alias: Procrastinador
+                        </h2>
                     </div>
-                </div>
-                <div class="bottom">
-                    
-                    
+                    <div class="left">
+                        <ul>
+                            <li class="tituloDato"> Manga </li>
+                            <li class="valorDato"> 10 metros</li>
+                            <li class="tituloDato"> Eslora </li>
+                            <li class="valorDato"> 20 metros </li>
+                            <li class="tituloDato"> Puntal </li>
+                            <li class="valorDato">  40 metros </li>
+                            <li class="tituloDato"> Calado </li>
+                            <li class="valorDato">  30 metros </li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <ul>
+                            <li class="tituloDato"> Capacidad de Carga </li>
+                            <li class="valorDato"> 400 Kg</li>
+                            <li class="tituloDato"> Otras caracteristicas </li>
+                            <li class="valorDato"> Color </li>
+                            <li class="valorDato"> Cabinas </li>
+                            <li class="valorDato"> Algo especial </li>
+                        </ul>
+                    </div>
+             </div>
+             <div id="reparacionesTabla">
+             	<h1>Reparaciones</h1>
+                <div ui-grid="tablaReparaciones" ui-grid-auto-resize ui-grid-edit ui-grid-cellnav class="grid"></div>
+            </div>
+            </uib-tab>
+            <uib-tab index="2" heading="Datos Secundarios">
+                <div id="datosSecundariosEmbarcacion">
+	            	<div class="filtroCategoria" class="btn-group" uib-dropdown keyboard-nav>
+				        <button id="simple-btn-keyboard-nav" type="button" class="btn btn-primary" uib-dropdown-toggle>
+				           Filtrar por categoria<span class="caret"></span>
+				        </button>
+				        <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav" >
+				        	<li ng-repeat="categoria in filtroDropdownContenido" ng-click="filtrar(categoria)"><a href="#">{{categoria}}</a></li>
+				        </ul>
+				    </div>
+	                <div ui-grid="tablaDatosSecundarios" ui-grid-auto-resize ui-grid-edit ui-grid-cellnav class="grid"></div>
                 </div>
             </uib-tab>
-            <uib-tab index="1" heading="Hoja de servicio">
+            <uib-tab index="3" heading="Hoja de Servicio y Personal">
                 <div id="hojaServicioTabs">
-                    <uib-tabset active="active">
-                        <uib-tab index="0" heading="Listado">
-                            <div id="HojaServiciosDiv"> 
-                                <table id="hojaServiciosTable">
-                                    <tr ng-click="abrirElemento(0)"><th>Carrera</th><th>Clase</th><th>Instituci&oacute;n</th><th>Al mando de</th><th>Lugar</th><th>Fecha</th></tr>
-                                    <tr ng-click="abrirElemento(1)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
-                                    <tr ng-click="abrirElemento(2)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
-                                    <tr ng-click="abrirElemento(3)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
-                                    <tr ng-click="abrirElemento(4)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
-                                    
+                <uib-tabset active="0">
+                    <uib-tab index="0" heading="Listado">
+                        <div id="HojaServiciosDiv"> 
+                            <div ui-grid="tablaHojaServicioPersonal" ui-grid-auto-resize ui-grid-edit ui-grid-selection class="grid"></div>
+                        </div>
+                    </uib-tab>
+                    <uib-tab index="$index + 1" ng-repeat="tab in tabsArray" heading="{{tab[1].title}}">
+                     <div class="perfilRuta">
+                        <div class="tituloRuta">
+                            <h2> Ruta Cartagena - Espa&ntilde;a </h2>
+                            <h3> 10 Abril 1900 al 20 Marzo 1990 </h3>
+                        </div>
+
+                        <uib-tabset active="0">
+                            <uib-tab index="0" heading="Personal">
+                            <div class="perfilRutaTabContent">
+                                <table class="rutaPersonas">
+                                    <tr><th colspan="5">Personal Identificado</th></tr>
+                                    <tr><th>Nombre</th><th>Cargo</th><th>Categoria</th><th>Fecha Inicial</th><th>Fecha Final</th></tr>
+                                    <tr><td>Felipe Perez</td><td>General</td><td>Oficiales</td><td>Abril 1880</td><td>Mayo 1980</td></tr>
+                                    <tr><td>Jose</td><td>Marinero</td><td>Tripulacion</td><td>Abril 1880</td><td>Mayo 1980</td></tr>
+                                    <tr><td>David Perez</td><td>Marinero</td><td>Guarnicion</td><td>Abril 1880</td><td>Mayo 1980</td></tr>
+                                </table>
+                                <table class="rutaPersonasAnonimas">
+                                    <tr><th colspan="5">Otro personal</th></tr>
+                                    <tr><th>Tipo de personal</th><th>Cantidad</th><th>Anotaciones</th></tr>
+                                    <tr><td>Tropa</td><td>20</td><td>No identificados</td></tr>
+                                    <tr><td>Cocineros</td><td>10</td><td>No identificados</td></tr>
+                                    <tr><td>Aseo</td><td>30</td><td>No identificados</td></tr>
                                 </table>
                             </div>
-                        </uib-tab>
-                        <uib-tab index="$index + 1" ng-repeat="tab in tabsArray" heading="{{tab[1].title}}">
-                            <div> {{tab.value.content}} <br>
-                                <div style="padding:20px; background-color:red; margin:auto; width:200px;" ng-click="cerrarElemento(tab[0])"> Cerrar Elemento</div></div>
+                            </uib-tab>
+                            <uib-tab index="1" heading="Escalas">
+                            <div class="perfilRutaTabContent">
+                                <table class="escalasTabla">
+                                    <tr><th>Territorio</th><th>Lugar</th><th>Fecha llegada</th><th>Fecha Salida</th><th>Descripci&oacute;n</th></tr>
+                                    <tr><td>Colombia</td><td>Puerto en Cartagena</td><td>Abril 1880</td><td>Mayo 1980</td><td>Escala para entrega de carga</td></tr>
+                                    <tr><td>Colombia</td><td>Puerto en Cartagena</td><td>Abril 1880</td><td>Mayo 1980</td><td>Escala para entrega de carga</td></tr>
+                                    <tr><td>Colombia</td><td>Puerto en Cartagena</td><td>Abril 1880</td><td>Mayo 1980</td><td>Escala para entrega de carga</td></tr>
+                                </table>
+                            </div>
+                            </uib-tab>
+                            <uib-tab index="2" heading="Bit&aacute;cora">
+                            <div class="perfilRutaTabContent">
+                                <table class="bitacoraTabla">
+                                    <tr><th>Fecha</th><th>Anotaci&oacute;n</th></tr>
+                                    <tr><td>Abril 2015</td><td>Alguien murio</td></tr>
+                                    <tr><td>Marzo 3 1900</td><td>Ataque pirata</td></tr>
+                                    <tr><td>Dia 5 de viaje</td><td>Perdida de carga</td></tr>
+                                </table>
+                            </div>
+                            </uib-tab>
+                            <uib-tab index="3" heading="Carga">
+                            <div class="perfilRutaTabContent">
+                                <table class="cargaTabla">
+                                    <tr><th>Elemento</th><th>Cantidad</th><th>Descripci&oacute;n</th></tr>
+                                    <tr><td>Ca&ntilde;ones</td><td>20</td><td>Para entrega en armada</td></tr>
+                                    <tr><td>Sables</td><td>10</td><td>Para Realeza</td></tr>
+                                    <tr><td>Piezas de oro</td><td>30 Kg</td><td>Robados</td></tr>
+                                </table>
+                            </div>
+                            </uib-tab>
+                            <uib-tab index="4" heading="Anotaciones">
+                            <div class="perfilRutaTabContent">
+                            <div class="notasAdicionalesRuta">
+                                <h1>Comentarios</h1>
+                                <span class="notas">Aca ira eventualmente una lista de comentarios de dicho personaje <br/> <ul> 
+                                    <li>comentario 1</li> 
+                                    <li>comentario 2</li> 
+                                    <li>comentario 3</li> 
+                                    <li>comentario 4</li> 
+                                </ul></span>
+                            </div>
+                            </div>
                             </uib-tab>
                         </uib-tabset>
-                    </div>
-                    
-                </uib-tab>
-                <uib-tab index="2" heading="Comisiones y trabajos">
-                    <div id="comisionTrabajoDiv"> 
-                        <table id="comisionTrabajoTable">
-                            <tr><th>Tipo</th><th>Lugar</th><th>Fechas</th><th>Cargo o Funci&oacute;n</th><th>Al mando o solicitada por</th><th>Instituci&oacute;n</th></tr>
-                            <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
-                            <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
-                            <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
-                            <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
-                        </table>
-                    </div>
-                </uib-tab>
-                <uib-tab index="3" heading="Datos seg&uacute;n documentaci&oacute;n">
-                    <div id="fotoPerfilPersonaje">
-                        <img src="../images/perfilVacio.jpg"></img>
-                    </div>
-                    <div id="notasAdicionales">
-                        <h1>Comentarios</h1>
-                        <span class="notas">Aca ira eventualmente una lista de comentarios de dicho personaje <br/> <ul> 
-                            <li>comentario 1</li> 
-                            <li>comentario 2</li> 
-                            <li>comentario 3</li> 
-                            <li>comentario 4</li> 
-                        </ul></span>
-                    </div>
-                </uib-tab>
-            </uib-tabset>
-        </section>
-    </body>
-    </html>
+                      </div>
+                       <div style="padding:20px; background-color:green; margin:auto; width:200px;" ng-click="cerrarElemento(tab[0])"> Cerrar Elemento</div>
+                   </uib-tab>
+               </uib-tabset>
+           </div>
+            </uib-tab>
+            <uib-tab index="4" heading="Datos Embarcaci&oacute;n Seg&uacute;n documentaci&oacute;n">
+            <div id="fotoPerfilEmbarcacion">
+                    <img src="../images/ninnaPerfil.jpg"></img>
+                </div>
+                <div id="notasAdicionales">
+                    <h1>Comentarios</h1>
+                    <span class="notas">Aca ira eventualmente una lista de comentarios de dicho personaje <br/> <ul> 
+                        <li>comentario 1</li> 
+                        <li>comentario 2</li> 
+                        <li>comentario 3</li> 
+                        <li>comentario 4</li> 
+                    </ul></span>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </section>
+</body>
+</html>
