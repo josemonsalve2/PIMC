@@ -1,0 +1,17 @@
+/*
+ * Formato para areas de busquedas
+ * */
+
+#searchBarArea, #botonAbrirArea {
+    padding: 20px;
+    text-align: right;
+    margin: 0 auto;
+}
+#botonAbrirArea > .btn {
+    padding: 15px 40px;
+    font-size: 1.2em;
+}
+
+#resultsArea {
+    margin: 0 auto;
+}

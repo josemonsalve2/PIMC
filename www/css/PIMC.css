@@ -3,7 +3,8 @@
  * Formato para todas las paginas
  * */
 body {
-   background-color: #fff4d4;
+   background-color: #dddfd4
+;
 }
 
 /*
@@ -82,23 +83,47 @@ tr:hover
 th {
     padding: 8px;
     height: 30px;
-    background-color: #4C0F50;
+    background-color: #173e43;
     color: white;
     text-align: center;
 }
 
+.tituloTabla {
+    padding: 8px;
+    height: 30px;
+    background-color: #d5cdd6;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+}
 
-/*
- * Formato para areas de busquedas
- * */
-
-#searchBarArea {
-    padding: 20px;
+.nota{
+    background-color:#d3edeb;
+    position: relative;
+    padding: 10px 20px 20px 20px;
+}
+.notaFecha{
+    position:absolute;
+    bottom: 0;
+    right: 0;
+}
+.notaReferencia{
+    font-weight: bold;
     text-align: right;
-    margin: 0 auto;
+    width: 95%;
 }
 
-#resultsArea {
-    margin: 0 auto;
+.status-bar{
+    position: absolute;
+    bottom: 0;
+    width: 80%;
+    height: 50px;
+    background-color: #f8f8f8;
+    padding: 5px 10px;
+    margin: 0px auto;
+    left: 0;
+    right: 0;
+    text-align: right;
 }
+
 
