@@ -1,143 +1,215 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Perfil Archivo</title>
+    <head>
+        <title>Perfil Archivo</title>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-touch.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
+        <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+        <script src="http://ui-grid.info/docs/grunt-scripts/csv.js"></script>
+        <script src="http://ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
+        <script src="http://ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
+        <script src="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.js"></script>
+        <script src="../external/angular-xeditable-0.8.0/js/xeditable.js"></script>
+        <script src="../apps/controllers/archivoPerfilController.js"></script>
 
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
-	<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
-	<script src="../apps/controllers/archivoPerfilController.js"></script>
-	<link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="../css/PIMC.css">
-	<link rel="stylesheet" href="../css/archivoPerfil.css">
-</head>
+        <link rel="stylesheet" href="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.css">
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">	
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link href="../external/angular-xeditable-0.8.0/css/xeditable.css" rel="stylesheet">
+        <link rel="stylesheet" href="../css/PIMC.css">
+        <link rel="stylesheet" href="../css/archivoPerfil.css">
+    </head>
 
-<body ng-app="archivoPerfil">
-	<header ng-include="'menu.html'">
-	</header>
-	<section ng-controller="archivoPerfilController">
-		<uib-tabset active="active">
-			<uib-tab index="0" heading="Datos Principales">	
-				<div id="datosPrincipalesArchivo">
-					<table id="datosManuscrito">
-						<tr><th colspan="3">DATOS MANUSCRITO</th></tr>
-						<tr><th>Archivo</th><th>A&ntilde;o</th><th>Titulo</th></tr>
-						<tr><td>Example</td><td>1990</td><td>Esto es un ejemplo</td></tr>
-					</table>
-					<div id="sinopsisComentarios">
-						<h1>Sinopsis general y comentarios</h1>
-						<span class="notas">Asi se vera este campo;,.... <br/> Lofdsafdsafdasfdsafdasfdsafdafdasfdsafdsafdsafdsfas</span>
-					</div>
-					<div class="dato">
-						<table>
-							<tr><th>Documento Vinculado a</th></tr>
-							<tr><td>ejemplo1</td></tr>
-						</table>
-					</div>
-				</div>
-				<div id="otrosDatosArchivoColDerecha">
-					<div class="dato">
-						<table>
-							<tr><th>Palabras Claves</th></tr>
-							<tr><td>ejemplo1</td></tr>
-							<tr><td>ejemplo1</td></tr>
-							<tr><td>ejemplo1</td></tr>
-						</table>
-					</div>
-					<div class="dato">
-						<table>
-							<tr><th>Anotaciones Catalogaci&oacute;n</th></tr>
-							<tr><td>ejemplo1</td></tr>
-						</table>
-					</div>
-					<div class="dato">
-						<table>
-							<tr><th>Estado de Conservaci&oacute;n</th></tr>
-							<tr><td>ahi...</td></tr>
-						</table>
-					</div>
-					<div class="dato">
-						<table>
-							<tr><th>disponibilidad de consulta</th></tr>
-							<tr><td>Disponible</td></tr>
-						</table>
-					</div>
-				</div>
-			</uib-tab>
-			<uib-tab index="1" heading="Datos Secundarios">
-				<div>
-					<div id="datosSecundariosArchivo">
-						<table id="listaDocumentos">
-							<tr><th>Tipo Documento</th><th>Cantidad</th><th>Formato</th></tr>
-							<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td></tr>
-						</table>
-					</div>
-					<div id="fechasColDerecha">
-						<table>
-							<tr><th>Fecha Inicial</th><th>Fecha Final</th></tr>
-							<tr><td>Abril 10 1880</td><td>Abril 14 2005</td></tr>
-						</table>
-					</div>
-				</div>
-				<div>
-					<table id="emisorReceptorTabla">
-						<tr><th colspan="4">Emitido por</th><th colspan="3">Cantidad</th></tr>
-						<tr><th>Nombre</th><th>cargo</th><th>Instituci&oacute;n</th><th>Fecha (dd/mm/aaaa)</th><th>Nombre</th><th>Cargo</th><th>Instituci&oacute;n</th></tr>
-						<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td></tr>
-					</table>
-				</div>
-			</uib-tab>
-			<uib-tab index="3" heading="Personajes">
-				<table id="personajesTabla">
-					<tr><th>Nombre</th><th>cargo</th><th>Nacionalidad</th><th>categoria</th><th>Cita/Anotaci&oacute;n</th></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-				</table>
-			</uib-tab>
-			<uib-tab index="4" heading="Embarcaciones">
-				<table id="embarcacionesTabla">
-					<tr><th>Nombre</th><th>Alias</th><th>Tipo de buque</th><th>Bandera</th><th>Utilidad</th><th>Categoria</th><th>Cita/Anotaci&oacute;n</th></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-				</table>
-			</uib-tab>
-			<uib-tab index="5" heading="Lugares">
-				<table id="lugaresTabla">
-					<tr><th>Nombre</th><th>Tipo de Lugar</th><th>Categoria</th><th>Cita/Anotaci&oacute;n</th></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
-				</table>
-			</uib-tab>
-			<uib-tab index="7" heading="Actividades">
-				<table id="ActividadesTabla">
-					<tr><th>Tipoe</th><th>Descripci&oacute;n del proceso</th><th>Personal</th><th>Herramientas</th><th>Materiales</th><th>Cita/Anotaci&oacute;n</th></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-				</table>
-			</uib-tab>
-			<uib-tab index="8" heading="Fechas y sucesos">
-				<table id="fechasSucesosTabla">
-					<tr><th>Fecha</th><th>Lugar</th><th>Descripci&oacute;n del evento</th><th>Categor&iacute;a</th><th>Cita/Anotaci&oacute;n</th></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-					<tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-				</table>
-			</uib-tab>
-			<uib-tab index="9" heading="Instituciones">
-				<table id="institucionesTabla">
-					<tr><th>Nombre</th><th>Cita/Anotaci&oacute;n</th></tr>
-					<tr><td>Example</td><td>ASADFA</td></tr>
-					<tr><td>Example</td><td>ASADFA</td></tr>
-					<tr><td>Example</td><td>ASADFA</td></tr>
-				</table>
-			</uib-tab>
-		</uib-tabset>
-	</section>
-</body>
+    <body ng-app="archivoPerfil">
+        <header ng-include="'menu.html'"></header>
+        <section ng-controller="archivoPerfilController">
+            <uib-tabset active="active">
+
+                <!-- DATOS PRINCIPALES-->
+                <uib-tab index="0" heading="Datos Principales">	
+                    <div id="datosPrincipalesArchivo">
+                        <div class="w3-card-4" style="margin:10px;background-color:#" >
+                            <header style="background-color:#173e43; font-size:1vw;width:100%;color:white">
+                                <h1 style="font-size:2vh;color:white;" editable-textarea="datosPrincipales.archivoTitulo" e-rows="2" e-cols="100">{{ datosPrincipales.archivoTitulo }}</h1>
+                            </header>
+
+                            <div class="w3-container w3-left-align w3-padding" >
+                                <ul class="w3-ul w3-hoverable" style="font-size:1em;font-weight:bold">
+                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Fondo Documental</span> <span editable-text="datosPrincipales.archivoNombre" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.archivoNombre }}</span></li>
+                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Instituci&oacute;n Fondo</span> <span editable-text="datosPrincipales.institucionFondo"class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.institucionFondo }}</span></li>
+                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Secci&oacute;n</span> <span editable-text="datosPrincipales.seccion" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.seccion }}</span></li>
+                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Num Referencia</span> <span editable-text="datosPrincipales.numRefDentroFondo" class="w3-tag w3-transparent w3-text-black"> {{datosPrincipales.numRefDentroFondo}}</span></li>
+                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Rango Fechas</span> <span editable-text="datosPrincipales.archivoFecha" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.archivoFecha }}</span></li>
+                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Folio Inicial </span> <span editable-text="datosPrincipales.folioInicial" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.folioInicial }}</span></li>
+                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Folio final</span> <span editable-text="datosPrincipales.folioFinal" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.folioFinal }}</span></li>
+                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Legajo</span> <span editable-text="datosPrincipales.legajo" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.legajo }}</span></li>
+                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Numero Orden</span> <span editable-text="datosPrincipales.numOrden" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.numOrden }}</span></li>
+                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Numero P&aacute;ginas</span> <span editable-text="datosPrincipales.numPaginas" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.numPaginas }}</span></li>
+
+                                </ul>
+                            </div>
+                            <footer style="background-color:#173e43;height:10px">
+                            </footer>
+
+                        </div>
+
+
+                        <div id="sinopsisComentarios">
+                            <div class="w3-card-4" style="margin:10px; height:300px;overflow-y:auto" >
+                                <header style="background-color:#173e43; font-size:1vw;width:100%;color:white">
+                                    <h1 style="font-size:3vh">Sinopsis general y comentarios</h1>
+                                </header>
+                                <div class="w3-container w3-left-align w3-padding" >
+                                    <span class=" w3-tag w3-round-large w3-center w3-opacity" style="background-color:#3fb0ac; margin:5px;">+Agregar Comentario</span>
+                                    <div class="nota w3-panel w3-margin w3-leftbar w3-border-blue" >
+                                        <p class="notaContenido" editable-textarea="datosPrincipales.archivoTitulo" e-rows="2" e-cols="100">London is the most populous city in the United Kingdom,
+                                            with a metropolitan area of over 9 million inhabitants.</p>
+                                        <div class="notaReferencia" >Referencia: <span editable-text="datosPrincipales.notas">aa</span></div>
+                                        
+                                        <div class="notaFecha">date</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div id="otrosDatosArchivoColDerecha">
+                        <div class="w3-card-4" style="margin:10px;background-color:#" >
+                            <header class="w3-container" style="background-color:#173e43; width:100%;color:white">
+                                <h4>Palabras Claves</h4>
+                            </header>
+                            <div class="w3-container w3-left-align w3-padding" >
+                                <span class="w3-tag w3-round-large w3-center" style="background-color:#3fb0ac; margin:5px;" ng-repeat="palabra in datosPrincipales.palabrasClaves">{{palabra}}</span>
+                                <span class="w3-tag w3-round-large w3-center w3-opacity" style="background-color:#3fb0ac; margin:5px;">+Agregar</span>
+                            </div>
+                            <footer style="background-color:#173e43;height:10px">
+                            </footer>
+                        </div>
+                        <div class="w3-card-4" style="margin:10px;background-color:#" >
+                            <header class="w3-container" style="background-color:#173e43; width:100%;color:white">
+                                <h4>Anotaciones Catalogaci&oacute;n</h4>
+                            </header>
+                            <div class="w3-container w3-left-align w3-padding" >
+
+                            </div>
+                            <footer style="background-color:#173e43;height:10px">
+                            </footer>
+                        </div>
+                        <div class="w3-card-4" style="margin:10px;background-color:#" >
+                            <header class="w3-container" style="background-color:#173e43; width:100%;color:white">
+                                <h4>Estado de Conservaci&oacute;n</h4>
+                            </header>
+                            <div class="w3-container w3-left-align w3-padding" >
+
+                            </div>
+                            <footer style="background-color:#173e43;height:10px">
+                            </footer>
+                        </div>
+                        <div class="w3-card-4" style="margin:10px;background-color:#" >
+                            <header class="w3-container" style="background-color:#173e43; width:100%;color:white">
+                                <h4>disponibilidad de consulta</h4>
+                            </header>
+                            <div class="w3-container w3-center-align w3-padding" style="font-weight:bold;font-size:1.2em;" >
+                                <p editable-text="datosPrincipales.disponibilidad">{{datosPrincipales.disponibilidad}}</p>
+                            </div>
+                            <footer style="background-color:#173e43;height:10px">
+                            </footer>
+                        </div>
+                    </div>
+                </uib-tab>
+
+                <!-- DATOS SECUNDARIOS-->
+                <uib-tab index="1" heading="Datos Secundarios">
+                    <div>
+                        <div id="datosSecundariosArchivo">
+                            <table id="listaDocumentos">
+                                <tr><th>Tipo Documento</th><th>Cantidad</th><th>Formato</th></tr>
+                                <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td></tr>
+                            </table>
+                        </div>
+                        <div id="fechasColDerecha">
+                            <table>
+                                <tr><th>Fecha Inicial</th><th>Fecha Final</th></tr>
+                                <tr><td>Abril 10 1880</td><td>Abril 14 2005</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div>
+                        <table id="emisorReceptorTabla">
+                            <tr><th colspan="4">Emitido por</th><th colspan="3">Cantidad</th></tr>
+                            <tr><th>Nombre</th><th>cargo</th><th>Instituci&oacute;n</th><th>Fecha (dd/mm/aaaa)</th><th>Nombre</th><th>Cargo</th><th>Instituci&oacute;n</th></tr>
+                            <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td></tr>
+                        </table>
+                    </div>
+                </uib-tab>
+
+                <!-- PERSONAJES -->
+                <uib-tab index="3" heading="Personajes">
+                    <table id="personajesTabla">
+                        <tr><th>Nombre</th><th>cargo</th><th>Nacionalidad</th><th>categoria</th><th>Cita/Anotaci&oacute;n</th></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+                    </table>
+                </uib-tab>
+
+                <!-- EMBARCACIONES -->
+                <uib-tab index="4" heading="Embarcaciones">
+                    <table id="embarcacionesTabla">
+                        <tr><th>Nombre</th><th>Alias</th><th>Tipo de buque</th><th>Bandera</th><th>Utilidad</th><th>Categoria</th><th>Cita/Anotaci&oacute;n</th></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+                    </table>
+                </uib-tab>
+
+                <!-- LUGARES -->
+                <uib-tab index="5" heading="Lugares">
+                    <table id="lugaresTabla">
+                        <tr><th>Nombre</th><th>Tipo de Lugar</th><th>Categoria</th><th>Cita/Anotaci&oacute;n</th></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
+                    </table>
+                </uib-tab>
+
+                <!-- ACTIVIDADES -->
+                <uib-tab index="7" heading="Actividades">
+                    <table id="ActividadesTabla">
+                        <tr><th>Tipoe</th><th>Descripci&oacute;n del proceso</th><th>Personal</th><th>Herramientas</th><th>Materiales</th><th>Cita/Anotaci&oacute;n</th></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+                    </table>
+                </uib-tab>
+
+                <!-- FECHAS Y SUCESOS -->
+                <uib-tab index="8" heading="Fechas y sucesos">
+                    <table id="fechasSucesosTabla">
+                        <tr><th>Fecha</th><th>Lugar</th><th>Descripci&oacute;n del evento</th><th>Categor&iacute;a</th><th>Cita/Anotaci&oacute;n</th></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+                        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+                    </table>
+                </uib-tab>
+
+                <!-- INSTITUCIONES -->
+                <uib-tab index="9" heading="Instituciones">
+                    <table id="institucionesTabla">
+                        <tr><th>Nombre</th><th>Cita/Anotaci&oacute;n</th></tr>
+                        <tr><td>Example</td><td>ASADFA</td></tr>
+                        <tr><td>Example</td><td>ASADFA</td></tr>
+                        <tr><td>Example</td><td>ASADFA</td></tr>
+                    </table>
+                </uib-tab>
+            </uib-tabset>
+        </section>
+        <footer ng-controller="archivoPerfilController" class="status-bar">
+            <button ng-click='borrarCambios()' class="btn " ng-disabled="guardarDatos">borrarCambios</button>
+            <button ng-click='guardarCambios()' class="btn btn-primary">Guardar</button>
+        </footer>
+    </body>
 </html>

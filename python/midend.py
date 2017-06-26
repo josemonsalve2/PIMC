@@ -59,18 +59,65 @@ def crossdomain(origin=None, methods=None, headers=None,
 
 
 
-@app.route("/busquedaArchivos")
+@app.route("/PIMC0.1/ConsultaArchivo", methods=['POST', 'GET'])
 @crossdomain(origin='*')
 def index():
-    try:
-        cur = mysql.connection.cursor()
-        cur.execute('''SELECT * FROM Archivos''')
-        rv = cur.fetchall()
-        columns = cur.description
-        result = [{columns[index][0]:column for index, column in enumerate(value)} for value in rv]
-        return jsonify(result)
-    except Exception as e:
-        return(str(e))
+    #For POST Methond
+    if request.method == 'POST':
+        #si no se ha enviado un dato de  un archivo
+        if len(request.form) == 0:
+            try:
+                cur = mysql.connection.cursor()
+                cur.execute('''SELECT * FROM Archivos''')
+                rv = cur.fetchall()
+                columns = cur.description
+                result = [{columns[index][0]:column for index, column in enumerate(value)} for value in rv]
+                return jsonify(result)
+            except Exception as e:
+                return(str(e))
+        #si se esta pidiendo algo
+        else:
+            try:
+                cur = mysql.connection.cursor()
+                if request.form["archivoID"]:
+                    cur.execute('''SELECT * FROM Archivos WHERE archivoID = %s''',{int(request.form["archivoID"])})
+                elif request.form["archivoTitulo"]:
+                    cur.execute('''SELECT * FROM Archivos WHERE titulo LIKE %s ''',{str("%"+request.args.get("archivoTitulo")+"%")})
+                else:
+                    cur.execute('''SELECT * FROM Archivos''')
+                rv = cur.fetchall()
+                columns = cur.description
+                result = [{columns[index][0]:column for index, column in enumerate(value)} for value in rv]
+                return jsonify(result)
+            except Exception as e:
+                return(str(e))
+    elif request.method == 'GET':
+        if len(request.args) == 0:
+            try:
+                cur = mysql.connection.cursor()
+                cur.execute('''SELECT * FROM Archivos''')
+                rv = cur.fetchall()
+                columns = cur.description
+                result = [{columns[index][0]:column for index, column in enumerate(value)} for value in rv]
+                return jsonify(result)
+            except Exception as e:
+                return(str(e))
+        else:
+            try:
+                cur = mysql.connection.cursor()
+                
+                if request.args.get("archivoID"):
+                    cur.execute('''SELECT * FROM Archivos WHERE archivoID = %s''',{int(request.args.get("archivoID"))})
+                elif request.args.get("archivoTitulo"):
+                    cur.execute('''SELECT * FROM Archivos WHERE titulo LIKE %s ''',{str("%"+request.args.get("archivoTitulo")+"%")})
+                else:
+                    cur.execute('''SELECT * FROM Archivos''')
+                rv = cur.fetchall()
+                columns = cur.description
+                result = [{columns[index][0]:column for index, column in enumerate(value)} for value in rv]
+                return jsonify(result)
+            except Exception as e:
+                return(str(e))
 
 @app.route("/hello")
 def hello():
