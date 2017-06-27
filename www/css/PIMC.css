@@ -107,6 +107,11 @@ th {
     bottom: 0;
     right: 0;
 }
+.notaCerrar{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
 .notaReferencia{
     font-weight: bold;
     text-align: right;
