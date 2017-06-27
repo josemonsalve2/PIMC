@@ -57,11 +57,11 @@
 
 
                         <div id="sinopsisComentarios">
-                            <div class="w3-card-4" style="margin:10px; height:300px;overflow-y:auto" >
+                            <div class="w3-card-4" style="margin:10px; height:300px" >
                                 <header style="background-color:#173e43; font-size:1vw;width:100%;color:white">
                                     <h1 style="font-size:3vh">Sinopsis general y comentarios</h1>
                                 </header>
-                                <div class="w3-container w3-left-align w3-padding" >
+                                <div class="w3-container w3-left-align w3-padding" style:"overflow-y:auto">
                                     <span class=" w3-tag w3-round-large w3-center w3-opacity" ng-click="agregarNotaVacia()" style="background-color:#3fb0ac; margin:5px;">+Agregar Comentario</span>
                                     <div class="nota w3-panel w3-margin w3-leftbar w3-border-blue" ng-repeat="nota in notas track by $index" >
                                         <p class="notaContenido" editable-textarea="nota.nota" e-rows="2" buttons="right" style="width:90%" e-style="width:90%">{{nota.nota || "Comentario Vacio"}}</p>
