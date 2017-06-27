@@ -67,6 +67,9 @@
         $scope.notasAEliminar = [];
         $scope.notasCambio = false;
         $scope.cargarNotas = function () {
+            $scope.notas = "";
+            $scope.notasAEliminar = [];
+            $scope.notasCambio = false;
             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/ArchivosNotas?archivoID=' + $scope.archivoID).then(function (data) {
                 if (!String(data.data).startsWith("[WARNING]")) {
                     $scope.notas = data.data;
@@ -176,8 +179,8 @@
                 // Eliminamos notas eliminadas
                 $scope.notasAEliminar.forEach(function (nota) {
                     $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/ArchivosNotas?idUnico=archivoID&idUnico=notaID&notaID='+ nota.notaID +'&archivoID=' + $scope.archivoID).then(function (data) {
-                            console.log(data);
-                        });
+                        console.log(data);
+                    });
                 });
 
             }
@@ -187,8 +190,8 @@
             }
             init();
         };
-        
-        
+
+
         // Initialization fucntion
         init();
 
