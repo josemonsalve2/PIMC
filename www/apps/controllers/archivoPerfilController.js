@@ -90,7 +90,7 @@
                     fechaCreacion:"",
                     fechaHistorica:"",
                     fechaHistFormato:"",
-                    modificada = false
+                    modificada: false
                 }];
             } else {
                 $scope.notas.push({
@@ -99,7 +99,7 @@
                     fechaCreacion:"",
                     fechaHistorica:"",
                     fechaHistFormato:"",
-                    modificada = false
+                    modificada: false
                 });
             }
             $scope.notasCambios = true;
