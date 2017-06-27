@@ -7,7 +7,7 @@
             // DATOS PRINCIPALES
             $scope.cargarDatosPrincipales();
             // ANOTACIONES
-            screenTop.cargarNotas();
+            $scope.cargarNotas();
         };
         
         //Datos principales
