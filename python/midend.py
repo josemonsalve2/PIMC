@@ -204,7 +204,7 @@ def eliminarElementoRelacional(elemento_relacional):
                             querry = querry + value + " = " + request.args.get(value) + " AND "
                         except Exception as e:
                             inserted = False;
-                            return "[ERROR]: No se encontro un valor para el idUnico=" + keyName 
+                            return "[ERROR]: No se encontro un valor para el idUnico=" + value 
                 #Revisamos que si haya una llave primaria para identificar el elemento
                 if inserted:
                     querry = querry[:-5]
