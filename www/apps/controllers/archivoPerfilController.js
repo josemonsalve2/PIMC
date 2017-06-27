@@ -90,28 +90,13 @@
                 fechaHistorica:"",
                 fechaHistFormato:""
             });
-            
             }
+            $scope.notasAgregadas = true;
         }
 
         // Initialization fucntion
         init();
 
-        // Button functions
-        $scope.borrarCambios = function () {
-            if (window.confirm("Esta Seguro que quiere borrar los cambios?") === true) {
-                init();
-            }
-        };
-        $scope.guardarCambios = function () {
-            if($scope.guardarDatos) {
-
-                //Revisamos datos principales editados
-                if ($scope.datosPrincipales.editado) {
-
-                }
-            }
-        };
 
 
         // Para borrar palabras claves
@@ -136,8 +121,28 @@
             $scope.palabraNueva.mensaje = "+Agregar";
         }
         
-        //Para guardar 
-        $scope.guardarDatos = false;
+        //Para guardar borrar y barra
+        $scope.ultimaAccion = "";
+        // Button functions
+        $scope.borrarCambios = function () {
+            if (window.confirm("Esta Seguro que quiere borrar los cambios?") === true) {
+                init();
+            }
+        };
+        $scope.guardarCambios = function () {
+            if($scope.notasAgregadas) {
+                $scope.notas.forEach(function (nota) {
+                    if (nota.nota.length() != 0)
+                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/ArchivosNotas?idUnico=archivoID&nota=' + nota.nota + '&referencia='  + nota.referencia).then(function (data) {
+                            
+                        };
+                })
+            }
+            //Revisamos datos principales editados
+            if ($scope.datosPrincipales.editado) {
+
+            }
+        };
 
     }]);
     archivoPerfilControllerApp.run(function (editableOptions,editableThemes) {

@@ -129,7 +129,6 @@ def consultarElementoRelacional(elemento_relacional):
             try:
                 cur = mysql.connection.cursor()
                 querry = '''SELECT * FROM ''' + str(elemento_relacional) + ''' WHERE ''' 
-                primaryKey = [];
                 print(request.args.to_dict())
                 inserted = False
                 # we find the keys first
@@ -144,9 +143,39 @@ def consultarElementoRelacional(elemento_relacional):
                     if (len(rv) != 0):
                         columns = cur.description
                         result = [{columns[index][0]:column for index, column in enumerate(value)} for value in rv]
-                        return jsonify(results)
+                        return jsonify(result)
                     else:
                         return "[WARNING]: No se encontraron elementos con dichos parametros u ocurrio un error en la consulta"
+                else:
+                    return "[WARNING]: No se envio ningun parametro para modificar"
+            except Exception as e:
+                return(str(e))
+            
+@app.route("/PIMC0.1/Insertar/<elemento_relacional>", methods=['POST', 'GET'])
+@crossdomain(origin='*')
+def insertarElementoRelacional(elemento_relacional):            
+    if request.method == 'GET':
+        if len(request.args) == 0:
+            return "[ERROR]: No se envio ningun parametro. Por favor indique los valores a insertar"
+        else:
+            try:
+                cur = mysql.connection.cursor()
+                querry = '''INSERT INTO ''' + str(elemento_relacional) + '''('''
+                print(request.args.to_dict())
+                inserted = False
+                #Insertamos las columnas
+                for col,value in request.args.to_dict().items():
+                    inserted = True
+                    querry = querry + str(col) + ","
+                querry = querry[:-1] + ") VALUES("
+                #Insertamos los valores
+                for col,value in request.args.to_dict().items():
+                    querry = querry + str(value) + ","
+                querry = querry[:-1] + ")"
+                #Revisamos que si haya una llave primaria para identificar el elemento
+                if inserted:
+                    numAffectedRows = cur.execute(querry)
+                    return jsonify(numAffectedRows)
                 else:
                     return "[WARNING]: No se envio ningun parametro para insertar"
             except Exception as e:
