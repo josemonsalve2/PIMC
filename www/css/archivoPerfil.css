@@ -33,3 +33,13 @@
 #emisorReceptorTabla,  #personajesTabla {
 	padding: 30px;
 }
+
+.dato {
+    font-size:1.5vhs;
+
+}
+
+.etiqueta {
+    width:40%;
+    font-size:1.5vh
+}

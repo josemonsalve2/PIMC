@@ -22,9 +22,9 @@
         <link rel="stylesheet" href="../css/archivoPerfil.css">
     </head>
 
-    <body ng-app="archivoPerfil">
+    <body ng-app="archivoPerfil" ng-controller="archivoPerfilController">
         <header ng-include="'menu.html'"></header>
-        <section ng-controller="archivoPerfilController">
+        <section>
             <uib-tabset active="active">
 
                 <!-- DATOS PRINCIPALES-->
@@ -37,16 +37,16 @@
 
                             <div class="w3-container w3-left-align w3-padding" >
                                 <ul class="w3-ul w3-hoverable" style="font-size:1em;font-weight:bold">
-                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Fondo Documental</span> <span editable-text="datosPrincipales.archivoNombre" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.archivoNombre }}</span></li>
-                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Instituci&oacute;n Fondo</span> <span editable-text="datosPrincipales.institucionFondo"class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.institucionFondo }}</span></li>
-                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Secci&oacute;n</span> <span editable-text="datosPrincipales.seccion" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.seccion }}</span></li>
-                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Num Referencia</span> <span editable-text="datosPrincipales.numRefDentroFondo" class="w3-tag w3-transparent w3-text-black"> {{datosPrincipales.numRefDentroFondo}}</span></li>
-                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Rango Fechas</span> <span editable-text="datosPrincipales.archivoFecha" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.archivoFecha }}</span></li>
-                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Folio Inicial </span> <span editable-text="datosPrincipales.folioInicial" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.folioInicial }}</span></li>
-                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Folio final</span> <span editable-text="datosPrincipales.folioFinal" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.folioFinal }}</span></li>
-                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Legajo</span> <span editable-text="datosPrincipales.legajo" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.legajo }}</span></li>
-                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Numero Orden</span> <span editable-text="datosPrincipales.numOrden" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.numOrden }}</span></li>
-                                    <li><span class="w3-tag w3-blue w3-opacity" style="width:50%">Numero P&aacute;ginas</span> <span editable-text="datosPrincipales.numPaginas" class="w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.numPaginas }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Fondo Documental</span> <span editable-text="datosPrincipales.archivoNombre" class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.archivoNombre }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Instituci&oacute;n Fondo</span> <span editable-text="datosPrincipales.institucionFondo" class="dato  w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.institucionFondo }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Secci&oacute;n</span> <span editable-text="datosPrincipales.seccion" class="dato  w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.seccion }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Num Referencia</span> <span editable-text="datosPrincipales.numRefDentroFondo" class="dato w3-tag w3-transparent w3-text-black"> {{datosPrincipales.numRefDentroFondo}}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Rango Fechas</span> <span editable-text="datosPrincipales.archivoFecha" class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.archivoFecha }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Folio Inicial </span> <span editable-text="datosPrincipales.folioInicial" class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.folioInicial }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Folio final</span> <span editable-text="datosPrincipales.folioFinal" class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.folioFinal }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Legajo</span> <span editable-text="datosPrincipales.legajo" class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.legajo }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Numero Orden</span> <span editable-text="datosPrincipales.numOrden" class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.numOrden }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Numero P&aacute;ginas</span> <span editable-text="datosPrincipales.numPaginas" class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.numPaginas }}</span></li>
 
                                 </ul>
                             </div>
@@ -81,8 +81,9 @@
                                 <h4>Palabras Claves</h4>
                             </header>
                             <div class="w3-container w3-left-align w3-padding" >
-                                <span class="w3-tag w3-round-large w3-center" style="background-color:#3fb0ac; margin:5px;" ng-repeat="palabra in datosPrincipales.palabrasClaves">{{palabra}}</span>
-                                <span class="w3-tag w3-round-large w3-center w3-opacity" style="background-color:#3fb0ac; margin:5px;">+Agregar</span>
+                                <span class="w3-tag w3-round-large w3-center" style="background-color:#3fb0ac; margin:5px;" onaftersave="borrarSiVacio($index,palabra)" editable-text="palabra" ng-repeat="palabra in datosPrincipales.palabrasClaves  track by $index">{{palabra}}</span>
+                                <span class="w3-tag w3-round-large w3-center w3-opacity" editable-text="palabraNueva.mensaje" onaftersave="agregarPalabraNueva(palabraNueva.mensaje)"  e-ng-focus="borrarCampo()" oncancel="mostrarCampo()"  style="background-color:#3fb0ac; margin:5px;" >{{palabraNueva.mensaje}}</span>
+                               
                             </div>
                             <footer style="background-color:#173e43;height:10px">
                             </footer>
@@ -207,7 +208,7 @@
                 </uib-tab>
             </uib-tabset>
         </section>
-        <footer ng-controller="archivoPerfilController" class="status-bar">
+        <footer class="status-bar">
             <button ng-click='borrarCambios()' class="btn " ng-disabled="guardarDatos">borrarCambios</button>
             <button ng-click='guardarCambios()' class="btn btn-primary">Guardar</button>
         </footer>
