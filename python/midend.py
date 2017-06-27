@@ -199,7 +199,7 @@ def eliminarElementoRelacional(elemento_relacional):
                 # we find the keys first
                 for col,value in request.args.to_dict().items():
                     inserted = True
-                    if col == "idUnico":
+                    if col.startswith("idUnico"):
                         try:
                             querry = querry + value + " = " + request.args.get(value) + " AND "
                         except Exception as e:
@@ -232,7 +232,7 @@ def modificarElementoRelacional(elemento_relacional):
                 inserted = False
                 # we find the keys first
                 for col,value in request.args.to_dict().items():
-                    if col == "idUnico":
+                    if col.startswith("idUnico"):
                         primaryKey.append(value)
                 for col,value in request.args.to_dict().items():            
                     if len(value) != 0 and col not in primaryKey and col != "idUnico":

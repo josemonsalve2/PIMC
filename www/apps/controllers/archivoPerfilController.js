@@ -171,14 +171,14 @@
                         });
                     // Modificamos notas viejas
                     if (nota.modificada == true) {
-                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/ArchivosNotas?idUnico=archivoID&idUnico=notaID&notaID='+ nota.notaID +' &archivoID=' + $scope.archivoID +'&nota="' + nota.nota + '"&referencia="'  + nota.referencia + '"').then(function (data) {
+                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/ArchivosNotas?idUnico2=archivoID&idUnico=notaID&notaID='+ nota.notaID +' &archivoID=' + $scope.archivoID +'&nota="' + nota.nota + '"&referencia="'  + nota.referencia + '"').then(function (data) {
                             console.log(data);
                         });
                     }
                 });
                 // Eliminamos notas eliminadas
                 $scope.notasAEliminar.forEach(function (nota) {
-                    $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/ArchivosNotas?idUnico=archivoID&idUnico=notaID&notaID='+ nota.notaID +'&archivoID=' + $scope.archivoID).then(function (data) {
+                    $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/ArchivosNotas?idUnico=archivoID&idUnico2=notaID&notaID='+ nota.notaID +'&archivoID=' + $scope.archivoID).then(function (data) {
                         console.log(data);
                     });
                 });
