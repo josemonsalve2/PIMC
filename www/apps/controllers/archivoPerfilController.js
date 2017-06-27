@@ -63,7 +63,7 @@
         };
 
         // Anotaciones
-        $scope.notas = {{}};
+        $scope.notas = "";
         $scope.cargarNotas = function () {
             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/ArchivosNotas?archivoID=' + $scope.archivoID).then(function (data) {
                 if (String(data).startsWith("[WARNING]")) {
@@ -75,13 +75,21 @@
 
         };
         $scope.agregarNotaVacia = function () {
-            $scope.notas.push({
+            if ($scope.notas === "") {
+                $scope.notas = {{
+                    nota:"",
+                    referencia:"",
+                    fechaHistorica:"",
+                    fechaHistFormato:""
+                }};
+            } else {
+                $scope.notas.push({
                 nota:"",
                 referencia:"",
                 fechaHistorica:"",
                 fechaHistFormato:""
             });
-
+            }
         }
 
         // Initialization fucntion
