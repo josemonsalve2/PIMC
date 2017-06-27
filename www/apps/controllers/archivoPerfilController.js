@@ -76,12 +76,12 @@
         };
         $scope.agregarNotaVacia = function () {
             if ($scope.notas === "") {
-                $scope.notas = {{
+                $scope.notas = [{
                     nota:"",
                     referencia:"",
                     fechaHistorica:"",
                     fechaHistFormato:""
-                }};
+                }];
             } else {
                 $scope.notas.push({
                 nota:"",
