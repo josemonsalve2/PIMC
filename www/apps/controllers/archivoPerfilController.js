@@ -9,7 +9,7 @@
             // ANOTACIONES
             $scope.cargarNotas();
         };
-        
+
         //Datos principales
         $scope.archivoDatos = {};
         $scope.datosPrincipales = {};
@@ -26,7 +26,7 @@
         $scope.datosPrincipales.numPaginas = "";
         $scope.datosPrincipales.palabrasClaves = {};
         $scope.datosPrincipales.disponibilidad = "";
-        
+
         //Bandera para saber cuando guardar o no
         $scope.datosPrincipales.editado = false;
 
@@ -64,7 +64,10 @@
 
         // Anotaciones
         $scope.notas = "";
+        $scope.notasAEliminar = [];
+        $scope.notasAModificar = [];
         $scope.notasAgregadas = false;
+        $scope.notasEliminadas = false;
         $scope.cargarNotas = function () {
             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/ArchivosNotas?archivoID=' + $scope.archivoID).then(function (data) {
                 if (!String(data.data).startsWith("[WARNING]")) {
@@ -76,6 +79,7 @@
 
         };
         $scope.agregarNotaVacia = function () {
+            // Una nota que no tiene fecha de creacion es una nota que no existe en la base de datos aun
             if ($scope.notas === "") {
                 $scope.notas = [{
                     nota:"",
@@ -86,20 +90,36 @@
                 }];
             } else {
                 $scope.notas.push({
-                nota:"",
-                referencia:"",
-                fechaCreacion:"",
-                fechaHistorica:"",
-                fechaHistFormato:""
-            });
+                    nota:"",
+                    referencia:"",
+                    fechaCreacion:"",
+                    fechaHistorica:"",
+                    fechaHistFormato:""
+                });
             }
             $scope.notasAgregadas = true;
         }
-
+        $scope.eliminarNota = function(indexNota) {
+            if ($scope.notas[indexNota].fechaCreacion != "") {
+                $scope.notasAEliminar.push($scope.notas[indexNota]);
+            }
+            $scope.notas.splice(indexNota,1);
+        };
+        $scope.modificarNota = function(indexNota,nuevaNota) {
+            $scope.notas[indexNota].nota = nuevaNota;
+            if ($scope.notas[indexNota].fechaCreacion != "") {
+                $scope.notasAModificar.indexOf(indexNota) === -1 ? $scope.notasAModificar.push(indexNota):;
+            };
+        };
+        $scope.modificarReferencia = function(indexNota,nuevaReferencia) {
+            $scope.notas[indexNota].referencia = nuevaReferencia;
+            if ($scope.notas[indexNota].fechaCreacion != "") {
+                $scope.notasAModificar.indexOf(indexNota) === -1 ? $scope.notasAModificar.push(indexNota):;
+            }
+        };
+        
         // Initialization fucntion
         init();
-
-
 
         // Para borrar palabras claves
         $scope.borrarSiVacio = function (indexEditada, palabra) {
@@ -122,7 +142,7 @@
             }
             $scope.palabraNueva.mensaje = "+Agregar";
         }
-        
+
         //Para guardar borrar y barra
         $scope.ultimaAccion = "";
         // Button functions
@@ -148,7 +168,7 @@
             if ($scope.datosPrincipales.editado) {
 
             }
-                init();
+            init();
         };
 
     }]);
