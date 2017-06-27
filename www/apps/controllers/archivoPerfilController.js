@@ -67,7 +67,7 @@
         $scope.notasAgregadas = false;
         $scope.cargarNotas = function () {
             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/ArchivosNotas?archivoID=' + $scope.archivoID).then(function (data) {
-                if (String(data).startsWith("[WARNING]")) {
+                if (!String(data.data).startsWith("[WARNING]")) {
                     $scope.notas = data.data;
                     // LOG
                     console.log($scope.notas);
