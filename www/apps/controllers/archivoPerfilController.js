@@ -133,8 +133,8 @@
             if($scope.notasAgregadas) {
                 $scope.notas.forEach(function (nota) {
                     if (nota.nota.length() != 0)
-                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/ArchivosNotas?idUnico=archivoID&nota=' + nota.nota + '&referencia='  + nota.referencia).then(function (data) {
-                            
+                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/ArchivosNotas?idUnico=archivoID&nota="' + nota.nota + '"&referencia="'  + nota.referencia + '"').then(function (data) {
+                            console.log(data);
                         };
                 })
             }
