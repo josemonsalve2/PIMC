@@ -213,10 +213,12 @@ def modificarElementoRelacional(elemento_relacional):
                     for keyName in primaryKey:
                         inserted = True
                         try:
-                            querry = querry + "WHERE " + keyName + " = " + request.args.get(keyName)
+                            querry = querry + "WHERE " + keyName + " = " + request.args.get(keyName) + " AND "
                         except Exception as e:
                             inserted = False;
                             return "No se encontro un valor para el idUnico=" + keyName 
+                    #removemos el ultimo AND
+                    querry = querry[:-5]
                 #Revisamos que si haya una llave primaria para identificar el elemento
                 if inserted:
                     numAffectedRows = cur.execute(querry)

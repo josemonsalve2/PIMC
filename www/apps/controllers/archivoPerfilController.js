@@ -65,13 +65,15 @@
         // Anotaciones
         $scope.notas = "";
         $scope.notasAEliminar = [];
-        $scope.notasAModificar = [];
         $scope.notasAgregadas = false;
         $scope.notasEliminadas = false;
         $scope.cargarNotas = function () {
             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/ArchivosNotas?archivoID=' + $scope.archivoID).then(function (data) {
                 if (!String(data.data).startsWith("[WARNING]")) {
                     $scope.notas = data.data;
+                    $scope.notas.forEach( function (nota) {
+                        nota.modificada = false;
+                    });
                     // LOG
                     console.log($scope.notas);
                 }
@@ -86,7 +88,8 @@
                     referencia:"",
                     fechaCreacion:"",
                     fechaHistorica:"",
-                    fechaHistFormato:""
+                    fechaHistFormato:"",
+                    modificada = false
                 }];
             } else {
                 $scope.notas.push({
@@ -94,7 +97,8 @@
                     referencia:"",
                     fechaCreacion:"",
                     fechaHistorica:"",
-                    fechaHistFormato:""
+                    fechaHistFormato:"",
+                    modificada = false
                 });
             }
             $scope.notasAgregadas = true;
@@ -108,17 +112,13 @@
         $scope.modificarNota = function(indexNota,nuevaNota) {
             $scope.notas[indexNota].nota = nuevaNota;
             if ($scope.notas[indexNota].fechaCreacion != "") {
-                if ($scope.notasAModificar.indexOf(indexNota) === -1) {
-                    $scope.notasAModificar.push(indexNota);
-                }
+                $scope.notas[indexNota].modificada = true;
             };
         };
         $scope.modificarReferencia = function(indexNota,nuevaReferencia) {
             $scope.notas[indexNota].referencia = nuevaReferencia;
             if ($scope.notas[indexNota].fechaCreacion != "") {
-                if ($scope.notasAModificar.indexOf(indexNota) === -1) {
-                    $scope.notasAModificar.push(indexNota);
-                }
+                $scope.notas[indexNota].modificada = true;
             }
         };
 
@@ -165,8 +165,14 @@
                             console.log(data);
                         });
                     // Modificamos notas viejas
+                    if (nota.modificada == true) {
+                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/ArchivosNotas?idUnico=archivoId&idUnico=notaID&notaID='+ nota.notaID +' &ArchivoID=' + $scope.archivoID +'&nota="' + nota.nota + '"&referencia="'  + nota.referencia + '"').then(function (data) {
+                            console.log(data);
+                        });
+                    }
                     // Eliminamos notas eliminadas
-                })
+                });
+                
             }
             //Revisamos datos principales editados
             if ($scope.datosPrincipales.editado) {
