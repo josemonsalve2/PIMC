@@ -175,6 +175,7 @@ def insertarElementoRelacional(elemento_relacional):
                 #Revisamos que si haya una llave primaria para identificar el elemento
                 if inserted:
                     numAffectedRows = cur.execute(querry)
+                    print (querry)
                     return jsonify(numAffectedRows)
                 else:
                     return "[WARNING]: No se envio ningun parametro para insertar"
