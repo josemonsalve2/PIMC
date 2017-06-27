@@ -176,6 +176,7 @@ def insertarElementoRelacional(elemento_relacional):
                 if inserted:
                     numAffectedRows = cur.execute(querry)
                     print (querry)
+                    mysql.connection.commit()
                     return jsonify(numAffectedRows)
                 else:
                     return "[WARNING]: No se envio ningun parametro para insertar"
@@ -220,6 +221,7 @@ def modificarElementoRelacional(elemento_relacional):
                 if inserted:
                     numAffectedRows = cur.execute(querry)
                     rv = cur.fetchall()
+                    mysql.connection.commit()
                     return str(numAffectedRows)
                 else:
                     return "No se envio ningun parametro para insertar"
