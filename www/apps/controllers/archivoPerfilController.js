@@ -80,6 +80,7 @@
                 $scope.notas = [{
                     nota:"",
                     referencia:"",
+                    fechaCreacion:"",
                     fechaHistorica:"",
                     fechaHistFormato:""
                 }];
