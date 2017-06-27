@@ -119,6 +119,40 @@ def index():
             except Exception as e:
                 return(str(e))
 
+@app.route("/PIMC0.1/Consulta/<elemento_relacional>", methods=['POST', 'GET'])
+@crossdomain(origin='*')
+def modificarElementoRelacional(elemento_relacional):            
+    if request.method == 'GET':
+        if len(request.args) == 0:
+            return "No se envio ningun parametro. Por favor indique los filtros"
+        else:
+            try:
+                cur = mysql.connection.cursor()
+                querry = '''SELECT * FROM ''' + str(elemento_relacional) + ''' WHERE ''' 
+                primaryKey = [];
+                print(request.args.to_dict())
+                inserted = False
+                # we find the keys first
+                for col,value in request.args.to_dict().items():
+                    inserted = True
+                    querry = querry + str(col) + " = " + str(value)+ "AND "
+                #Revisamos que si haya una llave primaria para identificar el elemento
+                if inserted:
+                    querry = querry [:-4]
+                    numAffectedRows = cur.execute(querry)
+                    rv = cur.fetchall()
+                    if (len(rv) != 0):
+                        columns = cur.description
+                        result = [{columns[index][0]:column for index, column in enumerate(value)} for value in rv]
+                        return jsonify(results)
+                    else:
+                        return "No se encontraron elementos con dichos parametros u ocurrio un error en la consulta"
+                else:
+                    return "No se envio ningun parametro para insertar"
+            except Exception as e:
+                return(str(e))
+
+## TODO Agreagar request.method == POST
 @app.route("/PIMC0.1/Modificar/<elemento_relacional>", methods=['POST', 'GET'])
 @crossdomain(origin='*')
 def modificarElementoRelacional(elemento_relacional):
