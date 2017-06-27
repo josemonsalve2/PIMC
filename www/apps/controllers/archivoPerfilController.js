@@ -175,7 +175,7 @@
                 });
                 // Eliminamos notas eliminadas
                 $scope.notasAEliminar.forEach(function (nota) {
-                    $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/ArchivosNotas?idUnico=archivoId&idUnico=notaID&notaID='+ nota.notaID +' &archivoID=' + $scope.archivoID).then(function (data) {
+                    $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/ArchivosNotas?idUnico=archivoId&idUnico=notaID&notaID='+ nota.notaID +'&archivoID=' + $scope.archivoID).then(function (data) {
                             console.log(data);
                         });
                 });
