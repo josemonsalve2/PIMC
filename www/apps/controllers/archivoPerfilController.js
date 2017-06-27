@@ -9,11 +9,7 @@
             // ANOTACIONES
             screenTop.cargarNotas();
         };
-
-        //Bandera para saber cuando guardar o no
-        $scope.datosPrincipales.editado = false;
-        $scope.guardarDatos = false;
-
+        
         //Datos principales
         $scope.archivoDatos = {};
         $scope.datosPrincipales = {};
@@ -30,6 +26,9 @@
         $scope.datosPrincipales.numPaginas = "";
         $scope.datosPrincipales.palabrasClaves = {};
         $scope.datosPrincipales.disponibilidad = "";
+        
+        //Bandera para saber cuando guardar o no
+        $scope.datosPrincipales.editado = false;
 
         $scope.cargarDatosPrincipales = function () {
             $http.get('http://monsalvediaz.com:5000/PIMC0.1/ConsultaArchivo?archivoID=' + $scope.archivoID).then(function (data) {
@@ -119,7 +118,6 @@
         }
         $scope.mostrarCampo = function () {
             $scope.palabraNueva.mensaje = "+Agregar";
-            //$scope.;
         }
         $scope.agregarPalabraNueva = function (palabra) {
             if (!$scope.datosPrincipales.palabrasClaves.includes(palabra) && palabra.length != 0) {
@@ -127,6 +125,10 @@
             }
             $scope.palabraNueva.mensaje = "+Agregar";
         }
+        
+        //Para guardar 
+        $scope.guardarDatos = false;
+
     }]);
     archivoPerfilControllerApp.run(function (editableOptions,editableThemes) {
         editableThemes.bs3.inputClass = 'input-sm';
