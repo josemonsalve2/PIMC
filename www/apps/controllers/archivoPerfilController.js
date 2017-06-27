@@ -108,16 +108,20 @@
         $scope.modificarNota = function(indexNota,nuevaNota) {
             $scope.notas[indexNota].nota = nuevaNota;
             if ($scope.notas[indexNota].fechaCreacion != "") {
-                $scope.notasAModificar.indexOf(indexNota) === -1 ? $scope.notasAModificar.push(indexNota):;
+                if ($scope.notasAModificar.indexOf(indexNota) === -1) {
+                    $scope.notasAModificar.push(indexNota);
+                }
             };
         };
         $scope.modificarReferencia = function(indexNota,nuevaReferencia) {
             $scope.notas[indexNota].referencia = nuevaReferencia;
             if ($scope.notas[indexNota].fechaCreacion != "") {
-                $scope.notasAModificar.indexOf(indexNota) === -1 ? $scope.notasAModificar.push(indexNota):;
+                if ($scope.notasAModificar.indexOf(indexNota) === -1) {
+                    $scope.notasAModificar.push(indexNota);
+                }
             }
         };
-        
+
         // Initialization fucntion
         init();
 
