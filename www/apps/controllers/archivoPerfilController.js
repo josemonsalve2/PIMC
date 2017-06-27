@@ -131,8 +131,9 @@
         };
         $scope.guardarCambios = function () {
             if($scope.notasAgregadas) {
+                $scope.notasAgregadas = false;
                 $scope.notas.forEach(function (nota) {
-                    if (nota.nota.length() != 0)
+                    if (nota.nota.length != 0)
                         $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/ArchivosNotas?idUnico=archivoID&nota="' + nota.nota + '"&referencia="'  + nota.referencia + '"').then(function (data) {
                             console.log(data);
                         });
@@ -142,6 +143,7 @@
             if ($scope.datosPrincipales.editado) {
 
             }
+                init();
         };
 
     }]);
