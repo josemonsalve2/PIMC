@@ -9,8 +9,6 @@
             // ANOTACIONES
             $scope.cargarNotas();
         };
-        // Initialization fucntion
-        init();
 
         //Datos principales
         $scope.archivoDatos = {};
@@ -189,6 +187,10 @@
             }
             init();
         };
+        
+        
+        // Initialization fucntion
+        init();
 
     }]);
     archivoPerfilControllerApp.run(function (editableOptions,editableThemes) {
