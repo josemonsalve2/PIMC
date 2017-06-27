@@ -6,6 +6,8 @@
             $scope.archivoID = $window.localStorage.getItem("archivoID");
             // DATOS PRINCIPALES
             $scope.cargarDatosPrincipales();
+            // ANOTACIONES
+            screenTop.cargarNotas();
         };
 
         //Bandera para saber cuando guardar o no
@@ -28,7 +30,7 @@
         $scope.datosPrincipales.numPaginas = "";
         $scope.datosPrincipales.palabrasClaves = {};
         $scope.datosPrincipales.disponibilidad = "";
-        
+
         $scope.cargarDatosPrincipales = function () {
             $http.get('http://monsalvediaz.com:5000/PIMC0.1/ConsultaArchivo?archivoID=' + $scope.archivoID).then(function (data) {
                 //Obtener los datos JSON
@@ -60,7 +62,7 @@
 
             });
         };
-        
+
         // Anotaciones
         $scope.notas = {};
         $scope.cargarNotas = function () {
@@ -71,7 +73,7 @@
                     console.log($scope.notas);
                 }
             });
-            
+
         };
         $scope.agregarNotaVacia = function () {
             $scope.notas.push({
@@ -79,8 +81,8 @@
                 referencia:"",
                 fechaHistorica:"",
                 fechaHistFormato:""
-            })
-            
+            });
+
         }
 
         // Initialization fucntion
