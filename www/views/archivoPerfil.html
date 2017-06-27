@@ -62,13 +62,12 @@
                                     <h1 style="font-size:3vh">Sinopsis general y comentarios</h1>
                                 </header>
                                 <div class="w3-container w3-left-align w3-padding" >
-                                    <span class=" w3-tag w3-round-large w3-center w3-opacity" style="background-color:#3fb0ac; margin:5px;">+Agregar Comentario</span>
-                                    <div class="nota w3-panel w3-margin w3-leftbar w3-border-blue" >
-                                        <p class="notaContenido" editable-textarea="datosPrincipales.archivoTitulo" e-rows="2" e-cols="100">London is the most populous city in the United Kingdom,
-                                            with a metropolitan area of over 9 million inhabitants.</p>
-                                        <div class="notaReferencia" >Referencia: <span editable-text="datosPrincipales.notas">aa</span></div>
+                                    <span class=" w3-tag w3-round-large w3-center w3-opacity" ng-click="agregarNotaVacia()" style="background-color:#3fb0ac; margin:5px;">+Agregar Comentario</span>
+                                    <div class="nota w3-panel w3-margin w3-leftbar w3-border-blue" ng-repeat="nota in notasArchivo track by index" >
+                                        <p class="notaContenido" editable-textarea="nota.nota" e-rows="2" e-cols="100">{{nota.nota || "Comentario Vacio"}}</p>
+                                        <div class="notaReferencia" >Referencia:  <span editable-text="nota.referencia">{{nota.referencia || "ND"}}</span></div>
                                         
-                                        <div class="notaFecha">date</div>
+                                        <div class="notaFecha">{{nota.fechaCreacion || "Nota Nueva"}}</div>
                                     </div>
                                 </div>
                             </div>
