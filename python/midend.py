@@ -121,7 +121,7 @@ def index():
 
 @app.route("/PIMC0.1/Consulta/<elemento_relacional>", methods=['POST', 'GET'])
 @crossdomain(origin='*')
-def modificarElementoRelacional(elemento_relacional):            
+def consultarElementoRelacional(elemento_relacional):            
     if request.method == 'GET':
         if len(request.args) == 0:
             return "No se envio ningun parametro. Por favor indique los filtros"
