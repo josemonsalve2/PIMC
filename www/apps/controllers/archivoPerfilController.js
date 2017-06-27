@@ -87,6 +87,7 @@
                 $scope.notas.push({
                 nota:"",
                 referencia:"",
+                fechaCreacion:"",
                 fechaHistorica:"",
                 fechaHistFormato:""
             });
@@ -133,10 +134,13 @@
             if($scope.notasAgregadas) {
                 $scope.notasAgregadas = false;
                 $scope.notas.forEach(function (nota) {
-                    if (nota.nota.length != 0)
-                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/ArchivosNotas?idUnico=archivoID&nota="' + nota.nota + '"&referencia="'  + nota.referencia + '"').then(function (data) {
+                    // Insertamos notas nuevas
+                    if (nota.fechaCreacion.length == 0 && nota.nota.length != 0)
+                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/ArchivosNotas?ArchivoID='+ $scope.archivoID +'&nota="' + nota.nota + '"&referencia="'  + nota.referencia + '"').then(function (data) {
                             console.log(data);
                         });
+                    // Modificamos notas viejas
+                    // Eliminamos notas eliminadas
                 })
             }
             //Revisamos datos principales editados
