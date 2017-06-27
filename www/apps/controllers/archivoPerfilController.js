@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
     var archivoPerfilControllerApp = angular.module('archivoPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable'])
-    .controller('archivoPerfilController', ['$scope', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', '$scope', '$timeout', function ($scope, $timeout, $http, $window, $location, $filter, i18nService, uiGridConstants) {
+    .controller('archivoPerfilController', ['$scope', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', '$scope', function ($scope, $timeout, $http, $window, $location, $filter, i18nService, uiGridConstants) {
         var init = function () {
             $scope.archivoID = $window.localStorage.getItem("archivoID");
             // DATOS PRINCIPALES
