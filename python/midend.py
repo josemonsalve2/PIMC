@@ -124,7 +124,7 @@ def index():
 def consultarElementoRelacional(elemento_relacional):            
     if request.method == 'GET':
         if len(request.args) == 0:
-            return "No se envio ningun parametro. Por favor indique los filtros"
+            return "[ERROR]: No se envio ningun parametro. Por favor indique los filtros"
         else:
             try:
                 cur = mysql.connection.cursor()
@@ -146,9 +146,9 @@ def consultarElementoRelacional(elemento_relacional):
                         result = [{columns[index][0]:column for index, column in enumerate(value)} for value in rv]
                         return jsonify(results)
                     else:
-                        return "No se encontraron elementos con dichos parametros u ocurrio un error en la consulta"
+                        return "[WARNING]: No se encontraron elementos con dichos parametros u ocurrio un error en la consulta"
                 else:
-                    return "No se envio ningun parametro para insertar"
+                    return "[WARNING]: No se envio ningun parametro para insertar"
             except Exception as e:
                 return(str(e))
 

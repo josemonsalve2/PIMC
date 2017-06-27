@@ -7,6 +7,12 @@
             // DATOS PRINCIPALES
             $scope.cargarDatosPrincipales();
         };
+
+        //Bandera para saber cuando guardar o no
+        $scope.datosPrincipales.editado = false;
+        $scope.guardarDatos = false;
+
+        //Datos principales
         $scope.archivoDatos = {};
         $scope.datosPrincipales = {};
         $scope.datosPrincipales.archivoTitulo = "";
@@ -22,12 +28,7 @@
         $scope.datosPrincipales.numPaginas = "";
         $scope.datosPrincipales.palabrasClaves = {};
         $scope.datosPrincipales.disponibilidad = "";
-
-        //Bandera para saber cuando guardar o no
-        $scope.datosPrincipales.editado = false;
-        $scope.guardarDatos = false;
-
-
+        
         $scope.cargarDatosPrincipales = function () {
             $http.get('http://monsalvediaz.com:5000/PIMC0.1/ConsultaArchivo?archivoID=' + $scope.archivoID).then(function (data) {
                 //Obtener los datos JSON
@@ -58,9 +59,29 @@
                 $scope.palabraNueva = {mensaje:"+Agregar"};
 
             });
-
-
         };
+        
+        // Anotaciones
+        $scope.notas = {};
+        $scope.cargarNotas = function () {
+            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/ArchivosNotas?archivoID=' + $scope.archivoID).then(function (data) {
+                if (data[0:8] != "[WARNING]") {
+                    $scope.notas = data.data;
+                    // LOG
+                    console.log($scope.notas);
+                }
+            });
+            
+        };
+        $scope.agregarNotaVacia = function () {
+            $scope.notas.push({
+                nota:"",
+                referencia:"",
+                fechaHistorica:"",
+                fechaHistFormato:""
+            })
+            
+        }
 
         // Initialization fucntion
         init();
