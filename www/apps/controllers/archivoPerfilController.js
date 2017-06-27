@@ -9,6 +9,8 @@
             // ANOTACIONES
             $scope.cargarNotas();
         };
+        // Initialization fucntion
+        init();
 
         //Datos principales
         $scope.archivoDatos = {};
@@ -65,8 +67,7 @@
         // Anotaciones
         $scope.notas = "";
         $scope.notasAEliminar = [];
-        $scope.notasAgregadas = false;
-        $scope.notasEliminadas = false;
+        $scope.notasCambio = false;
         $scope.cargarNotas = function () {
             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/ArchivosNotas?archivoID=' + $scope.archivoID).then(function (data) {
                 if (!String(data.data).startsWith("[WARNING]")) {
@@ -101,29 +102,32 @@
                     modificada = false
                 });
             }
-            $scope.notasAgregadas = true;
+            $scope.notasCambios = true;
         }
         $scope.eliminarNota = function(indexNota) {
             if ($scope.notas[indexNota].fechaCreacion != "") {
                 $scope.notasAEliminar.push($scope.notas[indexNota]);
             }
             $scope.notas.splice(indexNota,1);
+            $scope.notasCambios = true;
         };
         $scope.modificarNota = function(indexNota,nuevaNota) {
             $scope.notas[indexNota].nota = nuevaNota;
             if ($scope.notas[indexNota].fechaCreacion != "") {
                 $scope.notas[indexNota].modificada = true;
             };
+            $scope.notasCambios = true;
         };
         $scope.modificarReferencia = function(indexNota,nuevaReferencia) {
             $scope.notas[indexNota].referencia = nuevaReferencia;
             if ($scope.notas[indexNota].fechaCreacion != "") {
                 $scope.notas[indexNota].modificada = true;
             }
+            $scope.notasCambios = true;
+
         };
 
-        // Initialization fucntion
-        init();
+
 
         // Para borrar palabras claves
         $scope.borrarSiVacio = function (indexEditada, palabra) {
@@ -156,8 +160,8 @@
             }
         };
         $scope.guardarCambios = function () {
-            if($scope.notasAgregadas) {
-                $scope.notasAgregadas = false;
+            if($scope.notasCambios) {
+                $scope.notasCambios = false;
                 $scope.notas.forEach(function (nota) {
                     // Insertamos notas nuevas
                     if (nota.fechaCreacion.length == 0 && nota.nota.length != 0)
@@ -170,9 +174,9 @@
                             console.log(data);
                         });
                     }
-                    // Eliminamos notas eliminadas
                 });
-                
+                // Eliminamos notas eliminadas
+
             }
             //Revisamos datos principales editados
             if ($scope.datosPrincipales.editado) {

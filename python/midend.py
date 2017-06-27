@@ -182,6 +182,40 @@ def insertarElementoRelacional(elemento_relacional):
                     return "[WARNING]: No se envio ningun parametro para insertar"
             except Exception as e:
                 return(str(e))
+            
+@app.route("/PIMC0.1/Eliminar/<elemento_relacional>", methods=['POST', 'GET'])
+@crossdomain(origin='*')
+def eliminarElementoRelacional(elemento_relacional):            
+    if request.method == 'GET':
+        if len(request.args) == 0:
+            return "[ERROR]: No se envio ningun parametro. Por favor indique los valores a eliminar"
+        else:
+            try:
+                cur = mysql.connection.cursor()
+                querry = '''DELETE FROM ''' + str(elemento_relacional) + ''' WHERE '''
+                print(request.args.to_dict())
+                primaryKey = [];
+                inserted = False
+                # we find the keys first
+                for col,value in request.args.to_dict().items():
+                    inserted = True
+                    if col == "idUnico":
+                        try:
+                            querry = querry + value + " = " + request.args.get(value) + " AND "
+                        except Exception as e:
+                            inserted = False;
+                            return "[ERROR]: No se encontro un valor para el idUnico=" + keyName 
+                #Revisamos que si haya una llave primaria para identificar el elemento
+                if inserted:
+                    querry = querry[:-5]
+                    numAffectedRows = cur.execute(querry)
+                    print (querry)
+                    mysql.connection.commit()
+                    return jsonify(numAffectedRows)
+                else:
+                    return "[WARNING]: No se envio ningun parametro para eliminar"
+            except Exception as e:
+                return(str(e))
 
 ## TODO Agreagar request.method == POST
 @app.route("/PIMC0.1/Modificar/<elemento_relacional>", methods=['POST', 'GET'])
@@ -195,7 +229,6 @@ def modificarElementoRelacional(elemento_relacional):
                 cur = mysql.connection.cursor()
                 querry = '''UPDATE ''' + str(elemento_relacional) + ''' SET ''' 
                 primaryKey = [];
-                print(request.args.to_dict())
                 inserted = False
                 # we find the keys first
                 for col,value in request.args.to_dict().items():
