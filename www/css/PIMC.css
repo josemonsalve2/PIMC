@@ -130,5 +130,10 @@ th {
     right: 0;
     text-align: right;
 }
+.status-message{
+    width: 70%;
+    text-align: left;
+    display: inline-block;
+}
 
 

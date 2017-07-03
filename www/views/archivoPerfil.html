@@ -32,21 +32,21 @@
                     <div id="datosPrincipalesArchivo">
                         <div class="w3-card-4" style="margin:10px;background-color:#" >
                             <header style="background-color:#173e43; font-size:1vw;width:100%;color:white">
-                                <h1 style="font-size:2vh;color:white;" editable-textarea="datosPrincipales.archivoTitulo" e-rows="2" e-cols="100">{{ datosPrincipales.archivoTitulo }}</h1>
+                                <h1 style="font-size:2vh;color:white;" editable-textarea="datosPrincipales.archivoTitulo" buttons="right" onbeforesave="datosPrincipales.datoEditado('titulo',$data)" e-rows="2" >{{ datosPrincipales.archivoTitulo }}</h1>
                             </header>
 
                             <div class="w3-container w3-left-align w3-padding" >
                                 <ul class="w3-ul w3-hoverable" style="font-size:1em;font-weight:bold">
-                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Fondo Documental</span> <span editable-text="datosPrincipales.archivoNombre" class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.archivoNombre }}</span></li>
-                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Instituci&oacute;n Fondo</span> <span editable-text="datosPrincipales.institucionFondo" class="dato  w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.institucionFondo }}</span></li>
-                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Secci&oacute;n</span> <span editable-text="datosPrincipales.seccion" class="dato  w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.seccion }}</span></li>
-                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Num Referencia</span> <span editable-text="datosPrincipales.numRefDentroFondo" class="dato w3-tag w3-transparent w3-text-black"> {{datosPrincipales.numRefDentroFondo}}</span></li>
-                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Rango Fechas</span> <span editable-text="datosPrincipales.archivoFecha" class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.archivoFecha }}</span></li>
-                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Folio Inicial </span> <span editable-text="datosPrincipales.folioInicial" class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.folioInicial }}</span></li>
-                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Folio final</span> <span editable-text="datosPrincipales.folioFinal" class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.folioFinal }}</span></li>
-                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Legajo</span> <span editable-text="datosPrincipales.legajo" class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.legajo }}</span></li>
-                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Numero Orden</span> <span editable-text="datosPrincipales.numOrden" class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.numOrden }}</span></li>
-                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Numero P&aacute;ginas</span> <span editable-text="datosPrincipales.numPaginas" class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.numPaginas }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Fondo Documental</span> <span editable-text="datosPrincipales.archivoFondo" onbeforesave="datosPrincipales.datoEditado('fondo',$data)"  class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.archivoFondo }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Instituci&oacute;n Fondo</span> <span editable-text="datosPrincipales.institucionFondo" onbeforesave="datosPrincipales.datoEditado('institucion',$data)"  class="dato  w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.institucionFondo }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Secci&oacute;n</span> <span editable-text="datosPrincipales.seccion" onbeforesave="datosPrincipales.datoEditado('seccion',$data)"  class="dato  w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.seccion }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Num Referencia</span> <span editable-text="datosPrincipales.numRefDentroFondo" onbeforesave="datosPrincipales.datoEditado('numReferencia',$data)"  class="dato w3-tag w3-transparent w3-text-black"> {{datosPrincipales.numRefDentroFondo}}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Rango Fechas</span> <span editable-text="datosPrincipales.fechaInicial" onbeforesave="datosPrincipales.datoEditado('fechaInicial',$data)"  class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.fechaInicial }}</span> <span> - </span><span editable-text="datosPrincipales.fechaFinal" onbeforesave="datosPrincipales.datoEditado('fechaFinal',$data)"  class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.fechaFinal }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Folio Inicial </span> <span editable-text="datosPrincipales.folioInicial" onbeforesave="datosPrincipales.datoEditado('folioInicial',$data)"  class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.folioInicial }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Folio final</span> <span editable-text="datosPrincipales.folioFinal" onbeforesave="datosPrincipales.datoEditado('folioFinal',$data)"  class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.folioFinal }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Legajo</span> <span editable-text="datosPrincipales.legajo" onbeforesave="datosPrincipales.datoEditado('legajo',$data)"  class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.legajo }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Numero Orden</span> <span editable-text="datosPrincipales.numOrden" onbeforesave="datosPrincipales.datoEditado('numOrden',$data)"  class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.numOrden }}</span></li>
+                                    <li><span class="etiqueta w3-tag w3-blue w3-opacity" >Numero P&aacute;ginas</span> <span editable-text="datosPrincipales.numPaginas" onbeforesave="datosPrincipales.datoEditado('numPaginas',$data)"  class="dato w3-tag w3-transparent w3-text-black"> {{ datosPrincipales.numPaginas }}</span></li>
 
                                 </ul>
                             </div>
@@ -82,8 +82,8 @@
                                 <h4>Palabras Claves</h4>
                             </header>
                             <div class="w3-container w3-left-align w3-padding" >
-                                <span class="w3-tag w3-round-large w3-center" style="background-color:#3fb0ac; margin:5px;" onaftersave="borrarSiVacio($index,palabra)" editable-text="palabra" ng-repeat="palabra in datosPrincipales.palabrasClaves  track by $index">{{palabra}}</span>
-                                <span class="w3-tag w3-round-large w3-center w3-opacity" editable-text="palabraNueva.mensaje" onaftersave="agregarPalabraNueva(palabraNueva.mensaje)"  e-ng-focus="borrarCampo()" oncancel="mostrarCampo()"  style="background-color:#3fb0ac; margin:5px;" >{{palabraNueva.mensaje}}</span>
+                                <span class="w3-tag w3-round-large w3-center" style="background-color:#3fb0ac; margin:5px;" onaftersave="palabrasClaves.modificarBorrarPalabra($index,palabra)" editable-text="palabra" ng-repeat="palabra in datosPrincipales.palabrasClaves  track by $index">{{palabra}}</span>
+                                <span class="w3-tag w3-round-large w3-center w3-opacity" editable-text="palabrasClaves.palabraNueva.mensaje" onaftersave="palabrasClaves.agregarPalabraNueva(palabrasClaves.palabraNueva.mensaje)"  e-ng-focus="palabrasClaves.borrarCampo()" oncancel="palabrasClaves.mostrarCampo()"  style="background-color:#3fb0ac; margin:5px;" >{{palabrasClaves.palabraNueva.mensaje}}</span>
 
                             </div>
                             <footer style="background-color:#173e43;height:10px">
@@ -114,7 +114,7 @@
                                 <h4>disponibilidad de consulta</h4>
                             </header>
                             <div class="w3-container w3-center-align w3-padding" style="font-weight:bold;font-size:1.2em;" >
-                                <p editable-text="datosPrincipales.disponibilidad">{{datosPrincipales.disponibilidad}}</p>
+                                <p editable-text="datosPrincipales.disponibilidad" onbeforesave="datosPrincipales.datoEditado('disponibilidadConsulta',$data)" >{{datosPrincipales.disponibilidad}}</p>
                             </div>
                             <footer style="background-color:#173e43;height:10px">
                             </footer>
@@ -210,8 +210,11 @@
             </uib-tabset>
         </section>
         <footer class="status-bar">
-            <button ng-click='borrarCambios()' class="btn " ng-disabled="guardarDatos">borrarCambios</button>
-            <button ng-click='guardarCambios()' class="btn btn-primary">Guardar</button>
+            <div>
+                <span><b>Ultima Accion:</b></span> <span class="status-message" ng-bind-html="ultimaAccion">  {{ultimaAccion}}</span>
+                <button ng-click='borrarCambios()' class="btn " ng-disabled="guardarDatos">borrarCambios</button>
+                <button ng-click='guardarCambios()' class="btn btn-primary">Guardar</button>
+            </div>
         </footer>
     </body>
 </html>

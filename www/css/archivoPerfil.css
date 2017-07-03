@@ -43,3 +43,20 @@
     width:40%;
     font-size:1.5vh
 }
+
+
+.editable-buttons {
+    display: block;
+    text-align: right;
+}
+.editable-textarea {
+    width:80%;
+}
+.editable-controls, .editable-controls > textarea {
+    width:100% !important;
+}
+/*
+.editable-container.editable-inline, .editableform > .control-group,.editable-textarea, .editable-input, .editableform .form-control {
+    width:80%;
+}
+*/
