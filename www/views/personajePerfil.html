@@ -1,113 +1,149 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Perfil Personaje</title>
+	<head>
+	  <!-- Declaramos charset utf8 para poder usar caracteres especiales directamente. -->
+	  <meta charset="utf-8">
 
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
-    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
-    <script src="../apps/controllers/personajePerfilController.js"></script>
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/PIMC.css">
-    <link rel="stylesheet" href="../css/personajePerfil.css">
-</head>
+	  <title>Perfil de Personaje</title>
+	  
+	  <!-- Estilos  -->
+	  <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">  
+	  <link href="../css/PIMC.css" rel="stylesheet">
+	  <link href="../css/personajePerfil.css" rel="stylesheet">
+	</head>
 
-<body ng-app="personajePerfil">
-    <header ng-include="'menu.html'">
-    </header>
-    <section ng-controller="personajePerfilController">
-      <uib-tabset active="active">
-        <uib-tab index="0" heading="Datos Principales">	
-            <div class="top">
-                <!--                                                                                 -->
-                <div id="datosPrincipalesPersonaje">
-                    <h1 id="nombre">
-                        Se&ntilde;or Felipe Perez
-                    </h1>
-                    <h2 id="ocupacion">
-                        Cargo: Procrastinador
-                    </h2>
-                    <ul>
-                        <li class="tituloDato"> Sexo </li>
-                        <li class="valorDato"> Masculino </li>
-                        <li class="tituloDato"> Nacionalidades </li>
-                        <li class="valorDato"> Colombiano </li>
-                        <li class="tituloDato"> Lugar Nacimiento </li>
-                        <li class="valorDato"> Colombia </li>
-                        <li class="tituloDato"> Fecha Nacimiento </li>
-                        <li class="valorDato"> 12 octubre 1900</li>
-                        <li class="tituloDato"> Edad </li>
-                        <li class="valorDato"> 87 <span id="naceMuere">(1900 - 1987)</span></li>
-                        <li class="tituloDato"> Lugar Fallecimiento </li>
-                        <li class="valorDato"> Peru </li>
-                        <li class="tituloDato"> Fecha Fallecimiento </li>
-                        <li class="valorDato"> 12 octubre 1987</li>
-                        <li class="tituloDato"> Enfermedades </li>
-                        <li class="valorDato"> bobada </li>
-                    </ul>
-                </div>
-                <div id="parentescos">
-                    <table>
-                        <tr><th colspan="2">Parentescos</th></tr>
-                        <tr><th>Personaje</th><th>Relacion</th></tr>
-                        <tr><td>Pepito Perez</td><td>primo</td></tr>
-                        <tr><td>Pepito Perez</td><td>primo</td></tr>
-                        <tr><td>Pepito Perez</td><td>primo</td></tr>
-                    </table>
-                </div>
-            </div>
-            <div class="bottom">
-            </div>
-        </uib-tab>
-        <uib-tab index="1" heading="Hoja de servicio">
-            <div id="hojaServicioTabs">
-                <uib-tabset active="active">
-                    <uib-tab index="0" heading="Listado">
-                        <div id="HojaServiciosDiv"> 
-                            <table id="hojaServiciosTable">
-                                <tr ng-click="abrirElemento(0)"><th>Carrera</th><th>Clase</th><th>Instituci&oacute;n</th><th>Al mando de</th><th>Lugar</th><th>Fecha</th></tr>
-                                <tr ng-click="abrirElemento(1)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
-                                <tr ng-click="abrirElemento(2)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
-                                <tr ng-click="abrirElemento(3)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
-                                <tr ng-click="abrirElemento(4)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
-                                
-                            </table>
-                        </div>
-                    </uib-tab>
-                    <uib-tab index="$index + 1" ng-repeat="tab in tabsArray" heading="{{tab[1].title}}">
-                     <div> {{tab[1].content}} <br/>
-                       <div style="padding:20px; background-color:red; margin:auto; width:200px;" ng-click="cerrarElemento(tab[0])"> Cerrar Elemento</div></div>
-                   </uib-tab>
-               </uib-tabset>
-           </div>
-       </uib-tab>
-       <uib-tab index="2" heading="Comisiones y trabajos">
-        <div id="comisionTrabajoDiv"> 
-            <table id="comisionTrabajoTable">
-                <tr><th>Tipo</th><th>Lugar</th><th>Fechas</th><th>Cargo o Funci&oacute;n</th><th>Al mando o solicitada por</th><th>Instituci&oacute;n</th></tr>
-                <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
-                <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
-                <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
-                <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
-            </table>
-        </div>
-    </uib-tab>
-    <uib-tab index="3" heading="Datos seg&uacute;n documentaci&oacute;n">
-        <div id="fotoPerfilPersonaje">
-            <img src="../images/perfilVacio.jpg" />
-        </div>
-        <div id="notasAdicionales">
-            <h1>Comentarios</h1>
-            <span class="notas">Aca ira eventualmente una lista de comentarios de dicho personaje <br/> <ul> 
-                <li>comentario 1</li> 
-                <li>comentario 2</li> 
-                <li>comentario 3</li> 
-                <li>comentario 4</li> 
-            </ul></span>
-        </div>
-    </uib-tab>
-</uib-tabset>
-</section>
-</body>
+	<body ng-app="personajePerfil">
+
+		<!-- Preloader -->
+		<div id="preloading" class="preloader"><img src="../images/loader.gif"></div>
+		<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) {
+        var element = document.getElementById("preloading");
+        element.parentNode.removeChild(element);
+    });
+		</script>
+		<!-- /Preloader -->
+
+	  <header ng-include="'menu.html'"></header>
+
+	  <section ng-controller="personajePerfilController">
+	    <uib-tabset active="active">
+		    <uib-tab index="0" heading="Datos Principales"> 
+		      <div class="top">
+		        
+		        <div id="datosPrincipalesPersonaje">
+		          <h1 id="nombre">
+		            Señor Felipe Perez
+		          </h1>
+		          <h2 id="ocupacion">
+		            Cargo: Procrastinador
+		          </h2>
+		          <ul>
+		            <li class="tituloDato"> Sexo </li>
+		            <li class="valorDato"> Masculino </li>
+		            <li class="tituloDato"> Nacionalidades </li>
+		            <li class="valorDato"> Colombiano </li>
+		            <li class="tituloDato"> Lugar Nacimiento </li>
+		            <li class="valorDato"> Colombia </li>
+		            <li class="tituloDato"> Fecha Nacimiento </li>
+		            <li class="valorDato"> 12 octubre 1900</li>
+		            <li class="tituloDato"> Edad </li>
+		            <li class="valorDato"> 87 <span id="naceMuere">(1900 - 1987)</span></li>
+		            <li class="tituloDato"> Lugar Fallecimiento </li>
+		            <li class="valorDato"> Peru </li>
+		            <li class="tituloDato"> Fecha Fallecimiento </li>
+		            <li class="valorDato"> 12 octubre 1987</li>
+		            <li class="tituloDato"> Enfermedades </li>
+		            <li class="valorDato"> bobada </li>
+		          </ul>
+		        </div>
+
+		        <div id="parentescos">
+		          <table>
+		            <tr><th colspan="2">Parentescos</th></tr>
+		            <tr><th>Personaje</th><th>Relacion</th></tr>
+		            <tr><td>Pepito Perez</td><td>primo</td></tr>
+		            <tr><td>Pepito Perez</td><td>primo</td></tr>
+		            <tr><td>Pepito Perez</td><td>primo</td></tr>
+		          </table>
+		        </div>
+
+		      </div>
+		      
+		      <div class="bottom"></div>
+
+		    </uib-tab>
+
+		    <uib-tab index="1" heading="Hoja de servicio">
+		      <div id="hojaServicioTabs">
+		        <uib-tabset active="active">
+		          <uib-tab index="0" heading="Listado">
+		            <div id="HojaServiciosDiv"> 
+		              <table id="hojaServiciosTable">
+		                <tr ng-click="abrirElemento(0)"><th>Carrera</th><th>Clase</th><th>Institución</th><th>Al mando de</th><th>Lugar</th><th>Fecha</th></tr>
+		                <tr ng-click="abrirElemento(1)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
+		                <tr ng-click="abrirElemento(2)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
+		                <tr ng-click="abrirElemento(3)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
+		                <tr ng-click="abrirElemento(4)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
+		                
+		              </table>
+		            </div>
+		          </uib-tab>
+		          <uib-tab index="$index + 1" ng-repeat="tab in tabsArray" heading="{{tab[1].title}}">
+		          	<div> {{tab[1].content}} <br/> <div style="padding:20px; background-color:red; margin:auto; width:200px;" ng-click="cerrarElemento(tab[0])"> Cerrar Elemento</div></div>
+		          </uib-tab>
+		        </uib-tabset>
+		      </div>
+		    </uib-tab>
+
+	     	<uib-tab index="2" heading="Comisiones y trabajos">
+			    <div id="comisionTrabajoDiv"> 
+			      <table id="comisionTrabajoTable">
+			        <tr><th>Tipo</th><th>Lugar</th><th>Fechas</th><th>Cargo o Función</th><th>Al mando o solicitada por</th><th>Institución</th></tr>
+			        <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
+			        <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
+			        <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
+			        <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
+			      </table>
+			    </div>
+	  		</uib-tab>
+	  		
+	  		<uib-tab index="3" heading="Datos según documentación">
+			    <div id="fotoPerfilPersonaje">
+			      <img src="../images/perfilVacio.jpg" />
+			    </div>
+			    <div id="notasAdicionales">
+			      <h1>Comentarios</h1>
+			      <span class="notas">Aca ira eventualmente una lista de comentarios de dicho personaje <br/> <ul> 
+			        <li>comentario 1</li> 
+			        <li>comentario 2</li> 
+			        <li>comentario 3</li> 
+			        <li>comentario 4</li> 
+			      </ul></span>
+			    </div>
+			  </uib-tab>
+			</uib-tabset>
+		</section>
+
+
+		<!-- SCRIPTS -->
+	  <!-- AngularJS -->
+	  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+	  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-touch.js"></script>
+	  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-animate.js"></script>
+	  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"></script>
+
+	  <!-- UI (bootstrap) -->
+	  <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+
+	  <!-- UI-Grid -->
+	  <script src="//ui-grid.info/docs/grunt-scripts/csv.js"></script>
+	  <script src="//ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
+	  <script src="//ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
+	  <script src="//cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.js"></script>
+	  
+	  <!-- App (controlador) -->
+	  <script charset="utf-8" src="../apps/controllers/personajePerfilController.js"></script>
+
+	</body>
 </html>

@@ -1,40 +1,71 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Busqueda de Archivos</title>
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-touch.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
-        <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
-        <script src="http://ui-grid.info/docs/grunt-scripts/csv.js"></script>
-        <script src="http://ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
-        <script src="http://ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
-        <script src="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.js"></script>
-        <script src="../apps/controllers/archivosBusquedaController.js"></script>
-        
-        
-        <link rel="stylesheet" href="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.css">
-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">	
-        <link rel="stylesheet" href="../css/PIMC.css">
-        <link rel="stylesheet" href="../css/archivosBusqueda.css">
-    </head>
+  <head>
+    <!-- Declaramos charset utf8 para poder usar caracteres especiales directamente. -->
+    <meta charset="utf-8">
+    
+    <title>Busqueda de Archivos</title>
+    
+    <!-- Estilos  -->
+    <link href="//cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">  
+    <link href="../css/PIMC.css" rel="stylesheet">
+    <link href="../css/archivosBusqueda.css" rel="stylesheet">
+  </head>
 
-    <body ng-app="archivosBusqueda">
-        <header ng-include="'menu.html'">
-        </header>
+  <body ng-app="archivosBusqueda">
 
-        <section ng-controller="archivosBusquedaController">
-            <div id="searchBarArea">
-                <input type="text" ng-model="valorBusqueda" ng-keydown="$event.keyCode === 13 && realizarBusqueda()"> </input><button ng-click='realizarBusqueda()' class="btn btn-primary">buscar...</button>
-            </div>
-        <div id="resultsArea">
-            <div ui-grid="tablaResultados"ui-grid-selection ui-grid-auto-resize ui-grid-edit ui-grid-cellnav class="grid"></div>
-        </div>
-        <div id="botonAbrirArea">
-            <button ng-click='abrirArchivosSeleccionados()' class="btn btn-primary">Abrir Seleccionados</button>
-        </div>
-        </section>
-    </body>
+  	<!-- Preloader -->
+		<div id="preloading" class="preloader"><img src="../images/loader.gif"></div>
+		<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) {
+        var element = document.getElementById("preloading");
+        element.parentNode.removeChild(element);
+    });
+		</script>
+		<!-- /Preloader -->
 
+    <header ng-include="'menu.html'"></header>
+
+    <section ng-controller="archivosBusquedaController">
+
+      <div id="searchBarArea">
+        <input type="text" ng-model="valorBusqueda" ng-keydown="$event.keyCode === 13 && realizarBusqueda()"></input>
+        <button ng-click='realizarBusqueda()' class="btn btn-primary">buscar...</button>
+      </div>
+
+	    <div id="resultsArea">
+	      <div ui-grid="tablaResultados"ui-grid-selection ui-grid-auto-resize ui-grid-edit ui-grid-cellnav class="grid"></div>
+	    </div>
+	    
+	    <div id="botonAbrirArea">
+	      <button ng-click='abrirArchivosSeleccionados()' class="btn btn-primary">Abrir Seleccionados</button>
+    	</div>
+    	
+    </section>
+
+
+    <!-- SCRIPTS -->
+	  <!-- AngularJS -->
+	  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+	  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-touch.js"></script>
+	  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-animate.js"></script>
+	  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"></script>
+
+	  <!-- UI (bootstrap) -->
+	  <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+
+	  <!-- UI-Grid -->
+	  <script src="//ui-grid.info/docs/grunt-scripts/csv.js"></script>
+	  <script src="//ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
+	  <script src="//ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
+		<script src="//cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.js"></script>
+		
+	  <!-- Xeditable -->
+	  <script src="../external/angular-xeditable-0.8.0/js/xeditable.js"></script>
+
+	  <!-- App (controlador) -->
+	  <script charset="utf-8" src="../apps/controllers/archivosBusquedaController.js"></script>
+
+  </body>
 </html>

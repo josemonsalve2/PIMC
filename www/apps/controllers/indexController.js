@@ -1,6 +1,11 @@
 (function(angular) {
+
 	'use strict';
-	angular.module('index', [])
-		.controller('indexController', ['$scope', function($scope) {
-		}]);
+  
+  indexFunction.$inject = ['$scope'];
+
+	angular.module('index', []).controller('indexController', indexFunction);
+  
+  function indexFunction($scope) {}
+
 })(window.angular);
