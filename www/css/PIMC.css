@@ -1,25 +1,46 @@
+/*
+ *  Preloader
+ * */
+.preloader {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 9;
+  background-color: #dddfd4;
+}
+
+.preloader img {
+  width: 120px;
+ 	height: 120px;
+ 	position: absolute;
+ 	left: 50%;
+ 	top: 50%; 
+ 	margin-left: -60px;
+ 	margin-top: -60px;
+}
 
 /*
  * Formato para todas las paginas
  * */
 body {
-   background-color: #dddfd4
-;
+   background-color: #dddfd4;
 }
 
 /*
  * Formato para menu encabezado
  * */
 header {
-    width: 80%;
-    padding: 10px;
-    margin: 0 auto;
+  width: 80%;
+  padding: 10px;
+  margin: 0 auto;
 }
 .horizontal-collapse {
-	height: 70px;
+  height: 70px;
 }
 .navbar-collapse.in {
-	overflow-y: hidden;
+  overflow-y: hidden;
 }
 
 /*
@@ -27,34 +48,38 @@ header {
  * contenido informativo como la principal
  */
 .contenido {
-
-    padding: 30px 50px;
-    margin: 0 auto;
-    background: #f8f8f8;
-
+  padding: 30px 50px;
+  margin: 0 auto;
+  background: #f8f8f8;
 }
 
-.contenido>p {
-    text-align: justify;
-    -webkit-column-count: 2;
-    -moz-column-count: 2;
-    column-count: 2;
-    -webkit-column-gap: 40px; /* Chrome, Safari, Opera */
-    -moz-column-gap: 40px; /* Firefox */
-    column-gap: 40px;
+.contenido h1  {
+  margin-bottom:2em;
 }
-.contenido>h1 {
-    margin-bottom:20px;
-    
+
+.dos-columnas {
+  text-align: justify;
+  -webkit-column-count: 2;
+  -moz-column-count: 2;
+  column-count: 2;
+  -webkit-column-gap: 40px; /* Chrome, Safari, Opera */
+  -moz-column-gap: 40px; /* Firefox */
+  column-gap: 40px;
+}
+.dos-columnas > h1, .dos-columnas > h2  {
+  -webkit-column-span: all; 
+  -moz-column-span: all; 
+  column-span: all;
+  text-align: center;
 }
 
 /*
  * Formato para secciones dentro de la aplicacion
  * */
 section {
-    text-align: center;
-    margin: 0 auto;
-    width: 80%
+  text-align: center;
+  margin: 0 auto;
+  width: 80%
 }
 
 /*
@@ -62,14 +87,14 @@ section {
  * */
 
 table {
-    border-collapse: collapse;
-    width: 100%;
+  border-collapse: collapse;
+  width: 100%;
 }
 
 td {
-    text-align: left;
-    padding: 8px;
-    height: 30px;
+  text-align: left;
+  padding: 8px;
+  height: 30px;
 }
 
 tr:nth-child(even){background-color: #D2D2D2}
@@ -77,63 +102,63 @@ tr:nth-child(odd){background-color: white}
 
 tr:hover
 {
-    background-color: #A4A4A4;
+  background-color: #A4A4A4;
 }
 
 th {
-    padding: 8px;
-    height: 30px;
-    background-color: #173e43;
-    color: white;
-    text-align: center;
+  padding: 8px;
+  height: 30px;
+  background-color: #173e43;
+  color: white;
+  text-align: center;
 }
 
 .tituloTabla {
-    padding: 8px;
-    height: 30px;
-    background-color: #d5cdd6;
-    color: black;
-    font-weight: bold;
-    text-align: center;
+  padding: 8px;
+  height: 30px;
+  background-color: #d5cdd6;
+  color: black;
+  font-weight: bold;
+  text-align: center;
 }
 
 .nota{
-    background-color:#d3edeb;
-    position: relative;
-    padding: 10px 20px 20px 20px;
+  background-color:#d3edeb;
+  position: relative;
+  padding: 10px 20px 20px 20px;
 }
 .notaFecha{
-    position:absolute;
-    bottom: 0;
-    right: 0;
+  position:absolute;
+  bottom: 0;
+  right: 0;
 }
 .notaCerrar{
-    position: absolute;
-    top: 0;
-    right: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 .notaReferencia{
-    font-weight: bold;
-    text-align: right;
-    width: 95%;
+  font-weight: bold;
+  text-align: right;
+  width: 95%;
 }
 
 .status-bar{
-    position: absolute;
-    bottom: 0;
-    width: 80%;
-    height: 50px;
-    background-color: #f8f8f8;
-    padding: 5px 10px;
-    margin: 0px auto;
-    left: 0;
-    right: 0;
-    text-align: right;
+  position: absolute;
+  bottom: 0;
+  width: 80%;
+  height: 50px;
+  background-color: #f8f8f8;
+  padding: 5px 10px;
+  margin: 0px auto;
+  left: 0;
+  right: 0;
+  text-align: right;
 }
 .status-message{
-    width: 70%;
-    text-align: left;
-    display: inline-block;
+  width: 70%;
+  text-align: left;
+  display: inline-block;
 }
 
 
