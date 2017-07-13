@@ -1,61 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="es" ng-app="pimc">
 	<head>
 		<!-- Declaramos charset utf8 para poder usar caracteres especiales directamente. -->
 		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title></title>
+        <title>PIMC: Patrimonio Inmaterial Marítimo Colombiano</title>
 
-		<!-- Estilos  -->
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/PIMC.css">
+        <!-- Estilos  -->
+        <link href="//cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.css" rel="stylesheet">
+        <link href="external/bootstrap/bootstrap.min.css" rel="stylesheet">
+        <link href="external/angular-xeditable-0.8.0/css/xeditable.css" rel="stylesheet">
+        <link href="external/flags/flags.css" rel="stylesheet">
+        <link href="css/PIMC.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
 	</head>
 
-	<body ng-app="index" ng-controller="indexController">
+	<body>
 
 		<!-- Preloader -->
 		<div id="preloading" class="preloader"><img src="images/loader.gif"></div>
-		<script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function(event) {
-        var element = document.getElementById("preloading");
-        element.parentNode.removeChild(element);
-    });
+		<script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            var element = document.getElementById("preloading");
+            element.parentNode.removeChild(element);
+        });
 		</script>
 		<!-- /Preloader -->
 
-		<header ng-include="'views/menu.html'"></header>
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+          <div class="container">
+            <div class="collapse navbar-collapse" uid-collapse="isNavCollapsed">
+              <ul class="nav navbar-nav">
+                <li><a ng-href="#!/" set-parent-active>Principal</a></li>
+                <li><a ng-href="#!/personaje" set-parent-active>Perfil de persona</a></li>
+                <li><a ng-href="#!/archivo" set-parent-active>Perfil de archivo</a></li>
+                <li><a ng-href="#!/embarcacion" set-parent-active>Perfil de embarcación</a></li>
+                <li><a ng-href="#!/busqueda" set-parent-active>Búsqueda de archivos</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
 
-		<section>
-		
-			<div class="contenido dos-columnas">
 
-					<h1>PATRIMONIO INMATERIAL MARÍTIMO COLOMBIANO</h1>
-			
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam maximus leo id consectetur convallis. Sed enim sapien, porttitor sit amet lobortis in, blandit a lacus. Vivamus efficitur metus a iaculis finibus. Etiam nunc massa, varius et arcu sed, rhoncus condimentum leo. Praesent vehicula consectetur urna, in malesuada risus ullamcorper sit amet. Praesent est risus, finibus ac tellus vitae, condimentum lacinia odio. Praesent commodo vestibulum pharetra.</p>
-
-					<p>Nunc at mauris in velit interdum interdum sit amet vel elit. Duis semper quam rhoncus dignissim venenatis. Fusce eleifend tincidunt lectus, a varius urna tristique et. Maecenas blandit nec sapien non tempor. Aliquam erat volutpat. Vestibulum ullamcorper maximus urna a cursus. Ut feugiat tincidunt risus nec tristique. Proin rutrum elementum diam at dictum. Maecenas quam justo, rutrum at condimentum vel, imperdiet at arcu. Pellentesque nec dictum lectus. Vestibulum ut lobortis augue, id aliquam sapien. Sed vulputate mi ac arcu viverra, a ultricies velit tincidunt. Maecenas placerat nec turpis vitae egestas. Vivamus consequat venenatis ex at fermentum. Etiam non sem mi. Nulla consequat dignissim dapibus.</p>
-
-					<p>Vivamus lacus felis, molestie et tincidunt et, faucibus ac velit. Aliquam non magna sit amet arcu lacinia dictum. Aliquam erat volutpat. Quisque efficitur id sem ac fermentum. Aenean mattis venenatis volutpat. Aliquam sodales posuere orci rhoncus ullamcorper. Aenean posuere vehicula nulla, ut tincidunt libero fringilla id. Nullam in dolor quis urna elementum mollis.</p>
-
-					<p>Aliquam condimentum gravida nisi at vestibulum. Proin faucibus suscipit lorem vel gravida. Maecenas gravida elementum lacus, ut pretium libero lobortis eget. Aenean facilisis tellus vel ante maximus sagittis. Fusce fringilla orci libero, id vehicula purus feugiat a. Integer quis facilisis risus. Morbi vel turpis neque. Vivamus iaculis magna et nisl iaculis, eget iaculis orci condimentum. Ut gravida a libero ac fermentum. Cras luctus iaculis ante eget fermentum. Vestibulum id ante aliquam, feugiat nibh sit amet, aliquet quam. Praesent posuere volutpat molestie.</p>
-
-					<p>Fusce suscipit sollicitudin turpis, sit amet vulputate leo sodales volutpat. Suspendisse et erat sit amet mi fermentum venenatis. Nunc pulvinar neque id dolor mattis, ac placerat est elementum. Aliquam hendrerit varius dignissim. Maecenas et feugiat erat, suscipit pharetra mauris. Sed viverra ac odio in fermentum. Nam lorem eros, auctor eget massa nec, bibendum tempus dolor. Etiam eu risus feugiat, elementum lectus vel, iaculis ligula. Ut ac quam tincidunt, efficitur libero ut, porttitor quam. Nam faucibus metus quam, id dignissim enim mollis at. Nunc odio odio, sollicitudin nec sollicitudin non, porta et nulla.</p>
-
-			</div>
-		</section>
+        <!-- Main view -->
+		<main class="container" ng-view></main>
 
 
 		<!-- SCRIPTS -->
-		<!-- AngularJS -->
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-animate.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"></script>
+        <!-- AngularJS -->
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-touch.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-animate.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"></script>
 
-		<!-- UI (bootstrap) -->
-		<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+        <!-- JQuery -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-		<!-- App (controlador) -->
-		<script charset="utf-8" src="apps/controllers/indexController.js"></script>
+        <!-- UI (bootstrap) -->
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+
+        <!-- UI-Grid -->
+        <script src="//ui-grid.info/docs/grunt-scripts/csv.js"></script>
+        <script src="//ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
+        <script src="//ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
+        <script src="//cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.js"></script>
+
+        <!-- Xeditable -->
+        <script src="external/angular-xeditable-0.8.0/js/xeditable.js"></script>
+
+		<!-- App -->
+		<script charset="utf-8" src="app/app.js"></script>
+
+        <!-- Módulos -->
+        <script charset="utf-8" src="app/mod.js"></script>
 
 	</body>
 </html>

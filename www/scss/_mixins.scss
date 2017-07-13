@@ -1,0 +1,108 @@
+//colores
+$white: #fff;
+$black: #000;
+$alabaster: #f9f9f9;
+$mercury: #e6e6e6;
+$alto: #ddd;
+$celeste: #cccccc;
+$silver: #c0c0c0;
+$shady_lady: #a7a7a7;
+$mountain_meadow: #18bc9c;
+$curious_blue: #3498db;
+$mariner: #217dbb;
+$shark: #1a242f;
+$pickled_bluewood: #2c3e50;
+$yellow: #ff0;
+$meteor: #c87f0a;
+$golden_bell: #e08e0b;
+$cinnabar: #e74c3c;
+$thunderbird: #d62c1a;
+$maroon_flush: #c7254e;
+$mine_shaft: #333333;
+
+// colores de bootstrap
+$primary: $pickled_bluewood;
+$success: $mountain_meadow;
+$info: $curious_blue;
+$warning: $meteor;
+$danger: $thunderbird;
+
+//class names list
+$colors: (
+  white:$white,
+  black:$black,
+  alabaster:$alabaster,
+  mercury:$mercury,
+  alto:$alto,
+  celeste:$celeste,
+  silver:$silver,
+  shady_lady:$shady_lady,
+  mountain_meadow:$mountain_meadow,
+  curious_blue:$curious_blue,
+  mariner:$mariner,
+  shark:$shark,
+  pickled_bluewood:$pickled_bluewood,
+  yellow:$yellow,
+  meteor:$meteor,
+  golden_bell:$golden_bell,
+  cinnabar:$cinnabar,
+  thunderbird:$thunderbird,
+  maroon_flush:$maroon_flush,
+  mine_shaft:$mine_shaft,
+  primary: $primary,
+  success: $success,
+  info: $info,
+  warning: $warning,
+  danger: $danger
+);
+
+@mixin gen-props($prefix, $property) {
+  @each $color-name, $color in $colors {
+    .#{$prefix}-#{$color-name} {
+      #{$property}: $color!important;
+    }
+  }
+}
+
+@include gen-props('text', 'color');
+@include gen-props('bg', 'background')
+
+
+// Spacers
+$spacer: 15px;
+$spacer-x: $spacer;
+$spacer-y: $spacer;
+
+$spacers: ();
+
+@for $i from 0 through 4 {
+  $spacers: map-merge($spacers, (
+    $i: (
+      x: $spacer-x * $i,
+      y: $spacer-y * $i
+    )
+  )) 
+}
+
+@each $prop, $abbrev in (margin: m, padding: p) {
+  @each $size, $lengths in $spacers {
+    $length-x:   map-get($lengths, x);
+    $length-y:   map-get($lengths, y);
+
+    .#{$abbrev}-a-#{$size} { #{$prop}:        $length-y $length-x !important; } // a = All sides
+    .#{$abbrev}-t-#{$size} { #{$prop}-top:    $length-y !important; }
+    .#{$abbrev}-r-#{$size} { #{$prop}-right:  $length-x !important; }
+    .#{$abbrev}-b-#{$size} { #{$prop}-bottom: $length-y !important; }
+    .#{$abbrev}-l-#{$size} { #{$prop}-left:   $length-x !important; }
+
+    // Axes
+    .#{$abbrev}-x-#{$size} {
+      #{$prop}-right:  $length-x !important;
+      #{$prop}-left:   $length-x !important;
+    }
+    .#{$abbrev}-y-#{$size} {
+      #{$prop}-top:    $length-y !important;
+      #{$prop}-bottom: $length-y !important;
+    }
+  }
+}
