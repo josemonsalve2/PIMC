@@ -1,0 +1,102 @@
+<section>
+  <uib-tabset active="active">
+    <uib-tab index="0" heading="Datos Principales"> 
+      <div class="row p-t-2">
+        
+        <div id="datosPrincipalesPersonaje" class="col-sm-12 col-md-4">
+          <h1 class="nombre">
+            Señor Felipe Perez
+          </h1>
+          <h2 class="ocupacion">
+            Cargo: Procrastinador
+          </h2>
+          <ul class="datos">
+            <li><span class="tituloDato">Sexo:</span><span class="valorDato">Masculino </span></li>
+            <li><span class="tituloDato">Nacionalidades:</span><span class="valorDato"> Colombiano </span></li>
+            <li><span class="tituloDato">Lugar Nacimiento:</span><span class="valorDato"> Colombia </span></li>
+            <li><span class="tituloDato">Fecha Nacimiento:</span><span class="valorDato"> 12 octubre 1900</span></li>
+            <li><span class="tituloDato">Edad:</span><span class="valorDato">87</span><span id="naceMuere">(1900 - 1987)</span></li>
+            <li><span class="tituloDato">Lugar Fallecimiento:</span><span class="valorDato">Peru</span></li>
+            <li><span class="tituloDato">Fecha Fallecimiento:</span><span class="valorDato">12 octubre 1987</span></li>
+            <li><span class="tituloDato">Enfermedades:</span><span class="valorDato">bobada</span></li>
+          </ul>
+        </div>
+
+        <div id="parentescos" class="col-sm-12 col-md-8">
+          <table>
+            <tr><th colspan="2">Parentescos</th></tr>
+            <tr><th>Personaje</th><th>Relacion</th></tr>
+            <tr><td>Pepito Perez</td><td>primo</td></tr>
+            <tr><td>Pepito Perez</td><td>primo</td></tr>
+            <tr><td>Pepito Perez</td><td>primo</td></tr>
+          </table>
+        </div>
+
+      </div>
+      
+      <div class="bottom"></div>
+
+    </uib-tab>
+
+    <uib-tab index="1" heading="Hoja de servicio">
+      <div id="hojaServicioTabs" class="p-t-1">
+        <uib-tabset active="active">
+          <uib-tab index="0" heading="Listado">
+            <div class="p-t-1"> 
+              <table class="table-left">
+                <tr ng-click="abrirElemento(0)"><th>Carrera</th><th>Clase</th><th>Institución</th><th>Al mando de</th><th>Lugar</th><th>Fecha</th></tr>
+                <tr ng-click="abrirElemento(1)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
+                <tr ng-click="abrirElemento(2)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
+                <tr ng-click="abrirElemento(3)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
+                <tr ng-click="abrirElemento(4)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
+              </table>
+            </div>
+          </uib-tab>
+          <uib-tab index="$index + 1" ng-repeat="tab in tabsArray" heading="{{tab[1].title}}">
+          	<div class="row p-t-2">
+              <div class="col-sm-12">
+                <p>{{tab[1].content}}</p>
+                <hr>
+                <p class="text-right"><button class="btn btn-danger" ng-click="cerrarElemento(tab[0])">Cerrar Elemento</button></p>
+              </div>
+            </div>
+          </uib-tab>
+        </uib-tabset>
+      </div>
+    </uib-tab>
+
+   	<uib-tab index="2" heading="Comisiones y trabajos">
+	    <div class="p-t-2"> 
+	      <table class="table-left">
+	        <tr><th>Tipo</th><th>Lugar</th><th>Fechas</th><th>Cargo o Función</th><th>Al mando o solicitada por</th><th>Institución</th></tr>
+	        <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
+	        <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
+	        <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
+	        <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
+	      </table>
+	    </div>
+		</uib-tab>
+		
+		<uib-tab index="3" heading="Datos según documentación">
+      <div class="row p-t-2">
+        <div class="col-sm-12 col-md-4">
+          <div class="fotoPerfil">
+            <img class="img-responsive img-thumbnail p-a-2" src="images/perfilVacio.jpg" />
+          </div>
+        </div>
+        <div id="notasAdicionales" class="col-sm-12 col-md-8">
+          <h1>Comentarios</h1>
+          <div class="notas">
+            <p>Aca ira eventualmente una lista de comentarios de dicho personaje.</p>
+            <ul> 
+              <li>comentario 1</li> 
+              <li>comentario 2</li> 
+              <li>comentario 3</li> 
+              <li>comentario 4</li> 
+            </ul>
+          </div>
+        </div>
+      </div>
+	  </uib-tab>
+	</uib-tabset>
+</section>

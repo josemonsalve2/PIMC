@@ -1,0 +1,24 @@
+{
+  "name": "pimc",
+  "version": "0.1.0",
+  "description": "Una aplicaicón para PIMC.",
+  "main": "gulpfile.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/josemonsalve2/PIMC.git"
+  },
+  "author": "José Monsalve",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/josemonsalve2/PIMC/issues"
+  },
+  "homepage": "https://github.com/josemonsalve2/PIMC#readme",
+  "devDependencies": {
+    "browser-sync": "^2.18.12",
+    "gulp": "^3.9.1",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-sass": "^3.1.0",
+    "run-sequence": "^2.0.0"
+  },
+  "dependencies": {}
+}

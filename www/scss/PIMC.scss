@@ -1,0 +1,203 @@
+// Mixins
+@import 'mixins';
+
+// Estilos de aplicacion
+.preloader {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 9;
+  background-color: $alabaster;
+  img {
+    width: 120px;
+    height: 120px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -60px;
+    margin-top: -60px;
+  }
+}
+
+body {
+  margin: 80px 0;
+}
+
+.dos-columnas {
+  column-count: 2;
+  column-gap: 2em;
+}
+
+.column-span {
+  column-span: all;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  padding: 0.5em;
+  min-height: 1em;
+}
+
+th {
+  background-color: $primary;
+  color: $white;
+}
+
+tr {
+  border-bottom: 1px solid rgba($celeste, 0.2);
+  &:nth-child(even) {
+    background-color: $alabaster;
+  }
+  &:nth-child(odd) {
+    background-color: $mercury;
+  }
+  &:hover {
+    background-color: rgba($mariner, 0.1);
+  }
+}
+
+.notaReferencia {
+  font-weight: bold;
+}
+
+.status-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 15px;
+  border-top: 1px solid $mercury;
+  background-color: lighten($mercury, 5%);
+}
+
+#emisorReceptorTabla, #personajesTabla {
+  padding: 30px;
+}
+
+.panel-heading form {
+  width: 100%;
+  input[type="text"], textarea {
+    width: 100%;
+  }
+}
+
+.editable-controls.form-group {
+  display: flex;
+  #sinopsisComentarios & {
+    display: block;
+    .editable-buttons {
+      display: block;
+      text-align: right;
+    }
+  }
+}
+
+.editable-textarea {
+  width: 100%;
+}
+
+.editable-controls {
+  width: 100%;
+  > textarea {
+    width: 100%;
+  }
+}
+
+#sinopsisComentarios .editable-textarea textarea {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.fechas-grupo {
+  .fechaFinal {
+    &:before {
+      content: " — ";
+    }
+  }
+}
+
+.datos {
+  list-style-type: none;
+  padding: 1em 0;
+  margin: 0;
+  & > li {
+    padding: 1em 0;
+    border-bottom: 1px solid $shady_lady;
+  }
+}
+
+.nombre {
+  font-size: 32px;
+  padding-bottom: 0.5em;
+  border-bottom: 0.1em solid $shady_lady;
+}
+
+.ocupacion {
+  font-size: 18px;
+  font-style: italic;
+}
+
+.tituloDato {
+  font-weight: bold;
+  margin: 0;
+  padding-right: 0.5em;
+}
+
+.valorDato {
+  padding-right: 0.5em;
+}
+
+.navbar-collapse.in {
+  overflow-y: hidden;
+}
+
+#datosManuscrito > tr {
+  text-align: center;
+}
+
+.nocorners {
+  border-radius: 0!important;
+}
+
+.table-left {
+  th,td {
+    text-align: left;
+  }
+}
+.table-right {
+  th,td {
+    text-align: right;
+  }
+}
+.table-center {
+  th,td {
+    text-align: center;
+  }
+}
+
+.nav-pills.rounded {
+  input[type="text"] {
+    margin-left: 0.5em;
+    margin-top: 0.3em;
+  }
+  li {
+    margin-bottom: 2px;
+  }
+  a {
+    border-radius: 1.5em;  
+  }
+}
+
+.inline {
+  display: inline-block;
+}
+
+.ui-grid-column-menu-button-last-col {
+  margin-right: 0;
+}
