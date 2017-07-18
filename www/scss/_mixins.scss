@@ -67,7 +67,6 @@ $colors: (
 @include gen-props('text', 'color');
 @include gen-props('bg', 'background');
 
-
 // Spacers
 $spacer: 15px;
 $spacer-x: $spacer;
