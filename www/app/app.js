@@ -7,7 +7,6 @@
     'indexModule',
     'archivoPerfil',
     'personajePerfil',
-    'archivoPerfil',
     'embarcacionPerfil',
     'archivosBusqueda'
   ]);
