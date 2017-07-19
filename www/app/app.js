@@ -8,7 +8,8 @@
     'archivoPerfil',
     'personajePerfil',
     'embarcacionPerfil',
-    'archivosBusqueda'
+    'archivosBusqueda',
+    'documentoPerfil'
   ]);
 
   pimc.controller('AppController', function($scope) {});
@@ -34,6 +35,10 @@
       .when('/busqueda', {
         templateUrl: 'views/busqueda.html',
         controller:  'archivosBusquedaController'
+      })
+      .when('/documento', {
+        templateUrl: 'views/documento.html',
+        controller:  'documentoPerfilController'
       })
       .otherwise({
         redirectTo:  '/'

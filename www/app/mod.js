@@ -369,6 +369,179 @@
   });
 
 
+
+  ////////////////////////////////////////////////////////////////////////////////////
+  // DOCUMENTO PERFIL MODULE
+  ////////////////////////////////////////////////////////////////////////////////////
+
+  var documentoPerfil = angular.module('documentoPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
+  documentoPerfil.controller('documentoPerfilController', ['$scope', '$sce', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', '$scope', function($scope, $sce, $http, $window, $location, $filter, i18nService, uiGridConstants) {
+    var init = function() {
+          $scope.archivoID = $window.localStorage.getItem("archivoID");
+          $scope.documentoID = $window.localStorage.getItem("documentoID");
+          if (!$scope.datosGuardados) {
+              $scope.registrarAccion("Archivo <strong>" + $scope.archivoID + "</strong> ha sido cargado");
+          } else {
+              $scope.registrarAccion("Archivo <strong>" + $scope.archivoID + "</strong> ha sido guardado en la base de datos");
+              $scope.datosGuardados = false;
+          }
+
+          // Cargamoss los datos principales
+          $scope.cargarDatosPrincipales();
+      };
+      
+      //Datos principales
+      $scope.documentoDatos = {};
+      $scope.datosPrincipales = {
+          tipoDocumento: "",
+          estadoConservacion: "",
+          formatoDisponible: "",
+          fechaMinima: "",
+          fechaMinimaFormato: "",
+          fechaMaxima: "",
+          fechaMaximaFormato: "",
+          sinopsis: "",
+          listaTemas: []
+      };
+
+      //Bandera para saber cuando guardar o no
+      $scope.datosPrincipales.editado = false;
+
+      $scope.cargarDatosPrincipales = function() {
+          $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/ArchivosNotas?archivoID=' + $scope.archivoID + '&documentoId=' + $scope.documentoID).then(function(data) {
+              //Obtener los datos JSON
+              $scope.documentoDatos = data.data[0];
+              
+              //Log
+              console.log($scope.documentoDatos);
+
+              //Llenamos los datos del documento
+              $scope.datosPrincipales.tipoDocumento = $scope.documentoDatos.tipoDocumento;
+              $scope.datosPrincipales.estadoConservacion = $scope.documentoDatos.estadoConservacion;
+              $scope.datosPrincipales.formatoDisponible = $scope.documentoDatos.formatoDisponible;
+              $scope.datosPrincipales.fechaMinima = $filter('date')(new Date($scope.documentoDatos.fechaMinima), String($scope.documentoDatos.fechaMinFormato).toLowerCase());
+              $scope.datosPrincipales.fechaMaxima = $filter('date')(new Date($scope.documentoDatos.fechaMaxima), String($scope.documentoDatos.fechaMaxFormato).toLowerCase());
+              $scope.datosPrincipales.sinopsis = $scope.documentoDatos.sinopsis;
+              $scope.datosPrincipales.listaTemas = $scope.documentoDatos.listaTemas.split(",");
+              $scope.datosPrincipales.listaTemas = $scope.datosPrincipales.listaTemas.map(function(e) {
+                  return e.trim();
+              });              
+
+              //Limpiamos la bandera de editado
+              $scope.datosPrincipales.editado = false;
+
+              //Para palabras claves
+              $scope.listaTemas.temaNuevo = {
+                  mensaje: "+ Agregar"
+              };
+
+          });
+      };
+      $scope.datosPrincipales.datoEditado = function(campo, valorNuevo) {
+          switch (campo) {
+              case "tipoDocumento":
+                  if (valorNuevo != $scope.datosPrincipales.archivoTitulo) {
+                      $scope.registrarAccion("Tipo de documento modificado");
+                      $scope.datosPrincipales.editado = true;
+                  }
+                  break;
+              case "estadoConservacion":
+                  if (valorNuevo != $scope.datosPrincipales.archivoFondo) {
+                      $scope.registrarAccion("Estado de conservacion modificado");
+                      $scope.datosPrincipales.editado = true;
+                  }
+                  break;
+              case "formatoDisponible":
+                  if (valorNuevo != $scope.datosPrincipales.institucionFondo) {
+                      $scope.registrarAccion("Formato disponible modificado");
+                      $scope.datosPrincipales.editado = true;
+                  }
+                  break;
+              case "sinopsis":
+                  if (valorNuevo != $scope.datosPrincipales.seccion) {
+                      $scope.registrarAccion("Sinopsis modificada");
+                      $scope.datosPrincipales.editado = true;
+                  }
+                  break;
+              default:
+                  $scope.registrarAccion("[ERROR] No se pueden modificar datos principales.");
+                  break;
+          }
+
+      }
+      
+      
+      // Temas
+      $scope.listaTemas = {}
+      // Para borrar Temas
+      $scope.listaTemas.modificarBorrarTema = function(indexEditada, tema) {
+          if (tema == "") {
+              var temaEliminado = $scope.datosPrincipales.listaTemas[indexEditada];
+              if (temaEliminado != "") {
+                  $scope.registrarAccion("Tema <strong>" + temaEliminado + "</strong> eliminado");
+                  $scope.datosPrincipales.editado = true;
+              }
+              $scope.datosPrincipales.listaTemas.splice(indexEditada, 1);
+          } else {
+              var temaModificado = $scope.datosPrincipales.listaTemas[indexEditada];
+              if (tema != temaModificado) {
+                  $scope.registrarAccion("Tema <strong>" + temaModificado + "</strong> Modificado a <strong>" + tema + "</strong>");
+                  $scope.datosPrincipales.listaTemas[indexEditada] = tema;
+                  $scope.datosPrincipales.editado = true;
+              }
+          }
+      }
+      //Para agregar temas
+      $scope.listaTemas.temaNuevo = {
+          mensaje: '+ Agregar'
+      };
+      $scope.listaTemas.borrarCampo = function() {
+          $scope.listaTemas.temaNuevo.mensaje = "";
+      }
+      $scope.listaTemas.mostrarCampo = function() {
+          $scope.listaTemas.temaNuevo.mensaje = "+ Agregar";
+      }
+      $scope.listaTemas.agregarTemaNuevo = function(tema) {
+          if (!$scope.datosPrincipales.listaTemas.includes(tema) && tema.length != 0) {
+              $scope.datosPrincipales.listaTemas.push(tema);
+              $scope.registrarAccion("Tema <strong>" + tema + "</strong> agregado");
+              $scope.datosPrincipales.editado = true;
+          }
+          $scope.listaTemas.temaNuevo.mensaje = "+ Agregar";
+      }
+      
+            // Para guardar borrar y barra de estado
+      $scope.ultimaAccion = $sce.trustAsHtml("Ninguna");
+      // Log
+      $scope.registrarAccion = function(mensaje) {
+          $scope.ultimaAccion = $sce.trustAsHtml(mensaje);
+          console.log(mensaje)
+      }
+      // Button functions
+      $scope.borrarCambios = function() {
+          if (window.confirm("Esta Seguro que quiere borrar los cambios?") === true) {
+              $scope.registrarAccion("Los cambios han sido borrados");
+              init();
+          }
+      };
+      $scope.datosGuardados = false;
+      $scope.guardarCambios = function() {
+         init();
+      };
+      
+      init();
+      
+  }]);
+
+  documentoPerfil.run(function(editableOptions, editableThemes) {
+      editableThemes.bs3.inputClass = 'input-sm';
+      editableThemes.bs3.buttonsClass = 'btn-sm';
+      editableOptions.theme = 'bs3';
+      editableOptions.buttons = 'no';
+  });
+    
+    
+    
   ////////////////////////////////////////////////////////////////////////////////////
   // PERSONAJE PERFIL MODULE
   ////////////////////////////////////////////////////////////////////////////////////

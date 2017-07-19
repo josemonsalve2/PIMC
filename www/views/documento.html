@@ -1,0 +1,231 @@
+<section>
+  <uib-tabset active="active">
+
+    <!-- DATOS PRINCIPALES-->
+    <uib-tab index="0" heading="Datos Principales"> 
+
+    	<div class="row p-t-2">
+
+        <div class="col-sm-12 col-md-4">
+
+          <div class="panel panel-primary m-b-2">
+
+            <header class="panel-heading">
+              <h3 class="m-a-1">Datos Documento {{documentoID}}</h3>
+            </header>
+
+            <div class="panel-body">
+
+              <ul class="list-group m-b-0">
+                
+                <li class="list-group-item">
+                	<span class="label label-primary">Tipo de Documento</span>
+                	<span editable-text="datosPrincipales.tipoDocumento" 
+                				onbeforesave="datosPrincipales.datoEditado('tipoDocumento',$data)"  
+                				class="m-l-1"> {{ datosPrincipales.tipoDocumento }}</span>
+                </li>
+                <li class="list-group-item">
+                	<span class="label label-primary">Estado de conservación</span>
+                	<span editable-text="datosPrincipales.estadoConservacion" 
+                				onbeforesave="datosPrincipales.datoEditado('estadoConservacion',$data)"  
+                				class="m-l-1"> {{ datosPrincipales.estadoConservacion }}</span>
+                </li>
+                <li class="list-group-item">
+                	<span class="label label-primary">Formato Disponible</span> 
+                	<span editable-text="datosPrincipales.formatoDisponible" 
+                				onbeforesave="datosPrincipales.datoEditado('formatoDisponible',$data)"  
+                				class="m-l-1"> {{ datosPrincipales.formatoDisponible }}</span>
+                </li>
+                <li class="list-group-item fechas-grupo">
+                	<span class="label label-primary">Rango de fechas</span> 
+                	<span editable-text="datosPrincipales.fechaMinima" 
+                				onbeforesave="datosPrincipales.datoEditado('fechaMinima',$data)"  
+                				class="fechaMinima m-l-1"> {{ datosPrincipales.fechaMinima }}</span> 
+                	<span editable-text="datosPrincipales.fechaMaxima" 
+                				onbeforesave="datosPrincipales.datoEditado('fechaMaxima',$data)"
+                				class="fechaMaxima">{{ datosPrincipales.fechaMaxima }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+            <div class="panel panel-primary">
+            <header class="panel-heading">
+              <h4>Palabras Claves</h4>
+            </header>
+            <div class="panel-body">
+            	<ul class="nav nav-pills rounded">
+            		<li role="presentation" class="active" 
+            				onaftersave="listaTemas.modificarBorrarTema($index,tema)" 
+            				editable-text="tema" 
+            				ng-repeat="tema in datosPrincipales.listaTemas track by $index">
+            				<a href="#" class="bg-mountain_meadow">{{tema}}</a>
+            		</li>
+            		<li role="presentation" 
+            				editable-text="listaTemas.temaNuevo.mensaje" 
+            				onaftersave="listaTemas.agregarTemaNuevo(listaTemas.temaNuevo.mensaje)" 
+            				e-ng-focus="listaTemas.borrarCampo()" 
+            				oncancel="listaTemas.mostrarCampo()">
+            				<a href="#">{{listaTemas.temaNuevo.mensaje}}</a>
+            		</li>
+            	</ul>
+            </div>
+          </div>
+           
+        </div>
+
+        <div id="sinopsisComentarios" class="col-sm-12 col-md-8">
+ 
+          <div>
+            <div class="panel panel-primary">
+              <header class="panel-heading">
+                <h4 class="m-a-1">Sinopsis general</h4>
+              </header>
+                  <div class="p-a-1">
+                      <div class="panel panel-default m-b-0 m-t-0">
+                          <div class="panel-body">
+                              <p class="notaContenido" 
+                                    editable-textarea="datosPrincipales.sinopsis" 
+                                    e-rows="2" 
+                                    buttons="right" 
+                                    onaftersave="datosPrincipales.datoEditado('sinopsis',datosPrincipales.sinopsis)">{{datosPrincipales.sinopsis || "Click aqui para agregar sinopsis"}}</p>
+                          </div>
+                      </div>
+                  </div>
+            </div>
+            <div class="panel panel-primary">
+
+              <header class="panel-heading">
+                <h4 class="m-a-1">Comentarios</h4>
+              </header>
+            
+              <div class="p-a-1">
+
+                <button class="btn btn-primary" ng-click="agregarNotaVacia()">Agregar Comentario</button>
+
+                <div class="panel panel-default m-b-0 m-t-1" ng-repeat="nota in notas track by $index">
+                	<div class="panel-body">
+                		<button type="button" 
+                    				class="close" 
+                    				aria-label="Cerrar" 
+                    				ng-click="eliminarNota($index)">
+                    				<span aria-hidden="true">&times;</span></button>
+                		<p class="notaContenido" 
+                				editable-textarea="nota.nota" 
+                				e-rows="2" 
+                				buttons="right" 
+                				onaftersave="modificarNota($index,nota.nota)">{{nota.nota || "Click para editar"}}</p>
+                    <div class="clearfix m-t-1">
+                    	<div class="notaReferencia pull-left">Referencia: <span editable-text="nota.referencia" 
+                    			 onaftersave="modificarReferencia($index,nota.referencia)">{{nota.referencia || "ND"}}</span></div>
+                    	<div class="notaFecha pull-right">{{nota.fechaCreacion || "Nota Nueva"}}</div>
+                    </div>
+                	</div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+          
+        </div>
+
+      </div><!-- .row -->
+
+    </uib-tab>
+
+    <!-- PERSONAJES -->
+    <uib-tab index="3" heading="Personajes">
+    	<div class="row p-t-2">
+    		<div class="col-sm-12">
+    			<table id="personajesTabla">
+		        <tr><th>Nombre</th><th>cargo</th><th>Nacionalidad</th><th>categoria</th><th>Cita/Anotación</th></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+		      </table>
+    		</div>
+    	</div>
+    </uib-tab>
+
+    <!-- EMBARCACIONES -->
+    <uib-tab index="4" heading="Embarcaciones">
+    	<div class="row p-t-2">
+    		<div class="col-sm-12">
+		      <table id="embarcacionesTabla">
+		        <tr><th>Nombre</th><th>Alias</th><th>Tipo de buque</th><th>Bandera</th><th>Utilidad</th><th>Categoria</th><th>Cita/Anotación</th></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+		      </table>
+      	</div>
+      </div>
+    </uib-tab>
+
+    <!-- LUGARES -->
+    <uib-tab index="5" heading="Lugares">
+    	<div class="row p-t-2">
+    		<div class="col-sm-12">
+		      <table id="lugaresTabla">
+		        <tr><th>Nombre</th><th>Tipo de Lugar</th><th>Categoria</th><th>Cita/Anotación</th></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
+		      </table>
+      	</div>
+      </div>
+    </uib-tab>
+
+    <!-- ACTIVIDADES -->
+    <uib-tab index="7" heading="Actividades">
+    	<div class="row p-t-2">
+    		<div class="col-sm-12">
+		      <table id="ActividadesTabla">
+		        <tr><th>Tipo</th><th>Descripción del proceso</th><th>Personal</th><th>Herramientas</th><th>Materiales</th><th>Cita/Anotación</th></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+		      </table>
+	      </div>
+      </div>
+    </uib-tab>
+
+    <!-- FECHAS Y SUCESOS -->
+    <uib-tab index="8" heading="Fechas y sucesos">
+    	<div class="row p-t-2">
+    		<div class="col-sm-12">
+		      <table id="fechasSucesosTabla">
+		        <tr><th>Fecha</th><th>Lugar</th><th>Descripción del evento</th><th>Categoría</th><th>Cita/Anotación</th></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+		      </table>
+		    </div>
+		  </div>
+    </uib-tab>
+
+    <!-- INSTITUCIONES -->
+    <uib-tab index="9" heading="Instituciones">
+    	<div class="row p-t-2">
+    		<div class="col-sm-12">
+		      <table id="institucionesTabla">
+		        <tr><th>Nombre</th><th>Cita/Anotación</th></tr>
+		        <tr><td>Example</td><td>ASADFA</td></tr>
+		        <tr><td>Example</td><td>ASADFA</td></tr>
+		        <tr><td>Example</td><td>ASADFA</td></tr>
+		      </table>
+		    </div>
+		  </div>
+    </uib-tab>
+  </uib-tabset>
+</section>
+
+<footer class="status-bar">
+  <div class="text-right">
+    <strong>Ultima Accion: </strong><span class="status-message p-r-1" ng-bind-html="ultimaAccion">{{ultimaAccion}}</span>
+    <button ng-click='borrarCambios()' class="btn btn-danger m-r-1" ng-disabled="guardarDatos">Borrar cambios</button>
+    <button ng-click='guardarCambios()' class="btn btn-success">Guardar</button>
+  </div>
+</footer>
