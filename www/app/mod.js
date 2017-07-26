@@ -31,7 +31,6 @@
       };
 
       //Datos principales
-      $scope.archivoDatos = {};
       $scope.datosPrincipales = {
           archivoTitulo: "",
           archivoFondo: "",
@@ -55,28 +54,28 @@
       $scope.cargarDatosPrincipales = function() {
           $http.get('http://monsalvediaz.com:5000/PIMC0.1/ConsultaArchivo?archivoID=' + $scope.archivoID).then(function(data) {
               //Obtener los datos JSON
-              $scope.archivoDatos = data.data[0];
+              var archivoDatos = data.data[0];
               //Log
-              console.log($scope.archivoDatos);
+              console.log(archivoDatos);
 
               //Llenamos los datos del archivo
-              $scope.datosPrincipales.archivoTitulo = $scope.archivoDatos.titulo;
-              $scope.datosPrincipales.archivoFondo = $scope.archivoDatos.fondo;
-              $scope.datosPrincipales.institucionFondo = $scope.archivoDatos.institucionFondo;
-              $scope.datosPrincipales.seccion = $scope.archivoDatos.seccion;
-              $scope.datosPrincipales.numRefDentroFondo = $scope.archivoDatos.numRefDentroFondo;
-              $scope.datosPrincipales.fechaInicial = $filter('date')(new Date($scope.archivoDatos.fechaInicial), String($scope.archivoDatos.fechaInicialFormato).toLowerCase());
-              $scope.datosPrincipales.fechaFinal = $filter('date')(new Date($scope.archivoDatos.fechaFinal), String($scope.archivoDatos.fechaFinalFormato).toLowerCase());
-              $scope.datosPrincipales.folioInicial = $scope.archivoDatos.folioInicial;
-              $scope.datosPrincipales.folioFinal = $scope.archivoDatos.folioFinal;
-              $scope.datosPrincipales.legajo = $scope.archivoDatos.legajo;
-              $scope.datosPrincipales.numOrden = $scope.archivoDatos.numOrden;
-              $scope.datosPrincipales.numPaginas = $scope.archivoDatos.numPaginas;
-              $scope.datosPrincipales.palabrasClaves = $scope.archivoDatos.palabrasClaves.split(",");
+              $scope.datosPrincipales.archivoTitulo = archivoDatos.titulo;
+              $scope.datosPrincipales.archivoFondo = archivoDatos.fondo;
+              $scope.datosPrincipales.institucionFondo = archivoDatos.institucionFondo;
+              $scope.datosPrincipales.seccion = archivoDatos.seccion;
+              $scope.datosPrincipales.numRefDentroFondo = archivoDatos.numRefDentroFondo;
+              $scope.datosPrincipales.fechaInicial = $filter('date')(new Date(archivoDatos.fechaInicial), String(archivoDatos.fechaInicialFormato).toLowerCase());
+              $scope.datosPrincipales.fechaFinal = $filter('date')(new Date(archivoDatos.fechaFinal), String(archivoDatos.fechaFinalFormato).toLowerCase());
+              $scope.datosPrincipales.folioInicial = archivoDatos.folioInicial;
+              $scope.datosPrincipales.folioFinal = archivoDatos.folioFinal;
+              $scope.datosPrincipales.legajo = archivoDatos.legajo;
+              $scope.datosPrincipales.numOrden = archivoDatos.numOrden;
+              $scope.datosPrincipales.numPaginas = archivoDatos.numPaginas;
+              $scope.datosPrincipales.palabrasClaves = archivoDatos.palabrasClaves.split(",");
               $scope.datosPrincipales.palabrasClaves = $scope.datosPrincipales.palabrasClaves.map(function(e) {
                   return e.trim();
               });
-              $scope.datosPrincipales.disponibilidad = $scope.archivoDatos.disponibilidad;
+              $scope.datosPrincipales.disponibilidad = archivoDatos.disponibilidad;
 
               //Limpiamos la bandera de editado
               $scope.datosPrincipales.editado = false;
@@ -389,6 +388,8 @@
     }
   });
   documentoPerfil.controller('documentoPerfilController', ['$scope', '$sce', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', '$scope', function($scope, $sce, $http, $window, $location, $filter, $timeout, i18nService, uiGridConstants) {
+    $scope.archivoID = -1;
+    $scope.documentoID = -1;
     var init = function() {
           $scope.archivoID = $window.localStorage.getItem("archivoID");
           $scope.documentoID = $window.localStorage.getItem("documentoID");
@@ -401,10 +402,12 @@
 
           // Cargamoss los datos principales
           $scope.cargarDatosPrincipales();
+        
+          // Cargamos Emisor Receptor
+          $scope.cargarEmisorReceptor();
       };
       
       //Datos principales
-      $scope.documentoDatos = {};
       $scope.datosPrincipales = {
           tipoDocumento: "",
           estadoConservacion: "",
@@ -423,20 +426,20 @@
       $scope.cargarDatosPrincipales = function() {
           $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/ArchivosNotas?archivoID=' + $scope.archivoID + '&documentoId=' + $scope.documentoID).then(function(data) {
               //Obtener los datos JSON
-              $scope.documentoDatos = data.data[0];
+              var documentoDatos = data.data[0];
               
               //Log
-              console.log($scope.documentoDatos);
+              console.log(documentoDatos);
 
               try {
                   //Llenamos los datos del documento
-                  $scope.datosPrincipales.tipoDocumento = $scope.documentoDatos.tipoDocumento;
-                  $scope.datosPrincipales.estadoConservacion = $scope.documentoDatos.estadoConservacion;
-                  $scope.datosPrincipales.formatoDisponible = $scope.documentoDatos.formatoDisponible;
-                  $scope.datosPrincipales.fechaMinima = $filter('date')(new Date($scope.documentoDatos.fechaMinima), String($scope.documentoDatos.fechaMinFormato).toLowerCase());
-                  $scope.datosPrincipales.fechaMaxima = $filter('date')(new Date($scope.documentoDatos.fechaMaxima), String($scope.documentoDatos.fechaMaxFormato).toLowerCase());
-                  $scope.datosPrincipales.sinopsis = $scope.documentoDatos.sinopsis;
-                  $scope.datosPrincipales.listaTemas = $scope.documentoDatos.listaTemas.split(",");
+                  $scope.datosPrincipales.tipoDocumento = documentoDatos.tipoDocumento;
+                  $scope.datosPrincipales.estadoConservacion = documentoDatos.estadoConservacion;
+                  $scope.datosPrincipales.formatoDisponible = documentoDatos.formatoDisponible;
+                  $scope.datosPrincipales.fechaMinima = $filter('date')(new Date(documentoDatos.fechaMinima), String(documentoDatos.fechaMinFormato).toLowerCase());
+                  $scope.datosPrincipales.fechaMaxima = $filter('date')(new Date(documentoDatos.fechaMaxima), String(documentoDatos.fechaMaxFormato).toLowerCase());
+                  $scope.datosPrincipales.sinopsis = documentoDatos.sinopsis;
+                  $scope.datosPrincipales.listaTemas = documentoDatos.listaTemas.split(",");
                   $scope.datosPrincipales.listaTemas = $scope.datosPrincipales.listaTemas.map(function(e) {
                       return e.trim();
                   });
@@ -549,7 +552,7 @@
               personaje: "",
               cargo: "",
               institucion: "",
-              nota: "",
+              nota: ""
           }
           nuevoEmisorReceptor.receptor= {
               personaje: "",
@@ -622,37 +625,39 @@
           }
       }
       $scope.cargarEmisorReceptor = function () {
-           $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosEmisorReceptor?archivoID=' + $scope.archivoID + '&documentoId=' + $scope.documentoID).then(function(data) {
+           $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosEmisorReceptor?documentoID=' + $scope.documentoID).then(function(data) {
               //Obtener los datos JSON
-              $scope.documentoDatos = data.data[0];
+              var emisorReceptorDatos = data.data[0];
               
               //Log
-              console.log($scope.documentoDatos);
+              console.log(emisorReceptorDatos);
 
               try {
                   //Llenamos los datos del documento
-                  $scope.datosPrincipales.tipoDocumento = $scope.documentoDatos.tipoDocumento;
-                  $scope.datosPrincipales.estadoConservacion = $scope.documentoDatos.estadoConservacion;
-                  $scope.datosPrincipales.formatoDisponible = $scope.documentoDatos.formatoDisponible;
-                  $scope.datosPrincipales.fechaMinima = $filter('date')(new Date($scope.documentoDatos.fechaMinima), String($scope.documentoDatos.fechaMinFormato).toLowerCase());
-                  $scope.datosPrincipales.fechaMaxima = $filter('date')(new Date($scope.documentoDatos.fechaMaxima), String($scope.documentoDatos.fechaMaxFormato).toLowerCase());
-                  $scope.datosPrincipales.sinopsis = $scope.documentoDatos.sinopsis;
-                  $scope.datosPrincipales.listaTemas = $scope.documentoDatos.listaTemas.split(",");
-                  $scope.datosPrincipales.listaTemas = $scope.datosPrincipales.listaTemas.map(function(e) {
-                      return e.trim();
+                  emisorReceptorDatos.forEach(function (emisorReceptorEntrada) {
+                      var nuevoEmisorReceptor = {}
+                      nuevoEmisorReceptor.eliminar=false;
+                      nuevoEmisorReceptor.emisor= {
+                          personaje: emisorReceptorEntrada.emitidoPorID,
+                          cargo: emisorReceptorEntrada.cargoEmisor,
+                          institucion: emisorReceptorEntrada.institucionEmisorID,
+                          nota: emisorReceptorEntrada.notasEmisor
+                      }
+                      nuevoEmisorReceptor.receptor= {
+                          personaje: emisorReceptorEntrada.dirigidoAID,
+                          cargo: emisorReceptorEntrada.cargoReceptor,
+                          institucion: emisorReceptorEntrada.institucionReceptorID,
+                          nota: emisorReceptorEntrada.notasReceptor
+                      }
+                      $scope.emisorReceptor.push(nuevoEmisorReceptor);
                   });
               }
               catch(err) {
-                  console.log("Problema cargando los valores de datos principales del documento");
+                  console.log("Problema cargando los emisores y receptores de la base de datos");
               }
 
               //Limpiamos la bandera de editado
-              $scope.datosPrincipales.editado = false;
-
-              //Para palabras claves
-              $scope.listaTemas.temaNuevo = {
-                  mensaje: "+ Agregar"
-              };
+              $scope.emisorReceptorEditado = false;
             });
       }
       
