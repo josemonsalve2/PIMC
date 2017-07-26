@@ -374,19 +374,6 @@
   ////////////////////////////////////////////////////////////////////////////////////
 
   var documentoPerfil = angular.module('documentoPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
-  documentoPerfil.directive("uibTabAgregar", function() {
-    return {
-        restrict: 'EA',
-        scope: {
-          handler: '&',
-          text:'@'
-        },
-        template: '<li class="uib-tab nav-item">' +
-          '<a href="javascript:;" ng-click="handler()" class="nav-link" ng-bind="text"></a>' +
-          '</li>',
-        replace: true
-    }
-  });
   documentoPerfil.controller('documentoPerfilController', ['$scope', '$sce', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', '$scope', function($scope, $sce, $http, $window, $location, $filter, $timeout, i18nService, uiGridConstants) {
     $scope.archivoID = -1;
     $scope.documentoID = -1;
@@ -533,20 +520,24 @@
       // Emisor y receptor
       $scope.emisorReceptorEditado = false;
       $scope.emisorReceptor = [];
+      $scope.emisorReceptorEliminar = [];
       $scope.emisorReceptorActivo = 0;
       // Para eliminar una entrada emisorReceptor
       $scope.eliminarEmisorReceptor = function (index) {
           $scope.emisorReceptorEditado = true;
-          if ($scope.emisorReceptor[index].nuevo) {
-              $scope.emisorReceptor.splice(index,1);
-          } else {
-              $scope.emisorReceptor[index].eliminar = true;
+          if ($scope.emisorReceptor[index].emisorReceptorID != -1) {
+              $scope.emisorReceptorEliminar.push($scope.emisorReceptor[index].emisorReceptorID);
           }
+          $scope.emisorReceptor.splice(index,1);
+          $timeout(function() {
+            $scope.emisorReceptorActivo = index-1; // El nuevo elemento es el activo
+          });
       }
       // Para agregar una entrada emisorReceptor
       $scope.agregarEmisorReceptor = function () {
           $scope.emisorReceptorEditado = true;
           var nuevoEmisorReceptor = {}
+          nuevoEmisorReceptor.emisorReceptorID = -1;
           nuevoEmisorReceptor.nuevo = true;
           nuevoEmisorReceptor.emisor= {
               personaje: "",
@@ -562,6 +553,7 @@
           }
           // Agregarlo a la lista de emisor y receptor
           $scope.emisorReceptor.push(nuevoEmisorReceptor);
+          
           $timeout(function() {
             $scope.emisorReceptorActivo = $scope.emisorReceptor.length - 1; // El nuevo elemento es el activo
           });
@@ -636,7 +628,7 @@
                   //Llenamos los datos del documento
                   emisorReceptorDatos.forEach(function (emisorReceptorEntrada) {
                       var nuevoEmisorReceptor = {}
-                      nuevoEmisorReceptor.eliminar=false;
+                      nuevoEmisorReceptor.emisorReceptorID = emisorReceptorDatos.origenDestinoID;
                       nuevoEmisorReceptor.emisor= {
                           personaje: emisorReceptorEntrada.emitidoPorID,
                           cargo: emisorReceptorEntrada.cargoEmisor,
@@ -762,6 +754,19 @@
       init();
       
   }]);
+  documentoPerfil.directive("uibTabAgregar", function() {
+    return {
+        restrict: 'EA',
+        scope: {
+          handler: '&',
+          text:'@'
+        },
+        template: '<li class="uib-tab nav-item">' +
+          '<a ng-click="handler()" class="nav-link" ng-bind="text"></a>' +
+          '</li>',
+        replace: true
+    }
+  });
 
   documentoPerfil.run(function(editableOptions, editableThemes) {
       editableThemes.bs3.inputClass = 'input-sm';
