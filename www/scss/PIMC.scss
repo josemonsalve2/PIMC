@@ -89,7 +89,7 @@ tr {
 
 .editable-controls.form-group {
   display: flex;
-  #sinopsisComentarios & {
+  #sinopsisComentarios &, .notaContenido & {
     display: block;
     .editable-buttons {
       display: block;
@@ -109,7 +109,7 @@ tr {
   }
 }
 
-#sinopsisComentarios .editable-textarea textarea {
+#sinopsisComentarios .editable-textarea textarea, .notaContenido .editable-textarea textarea  {
   width: 100%;
   margin-bottom: 15px;
 }

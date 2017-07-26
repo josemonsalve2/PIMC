@@ -375,7 +375,20 @@
   ////////////////////////////////////////////////////////////////////////////////////
 
   var documentoPerfil = angular.module('documentoPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
-  documentoPerfil.controller('documentoPerfilController', ['$scope', '$sce', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', '$scope', function($scope, $sce, $http, $window, $location, $filter, i18nService, uiGridConstants) {
+  documentoPerfil.directive("uibTabAgregar", function() {
+    return {
+        restrict: 'EA',
+        scope: {
+          handler: '&',
+          text:'@'
+        },
+        template: '<li class="uib-tab nav-item">' +
+          '<a href="javascript:;" ng-click="handler()" class="nav-link" ng-bind="text"></a>' +
+          '</li>',
+        replace: true
+    }
+  });
+  documentoPerfil.controller('documentoPerfilController', ['$scope', '$sce', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', '$scope', function($scope, $sce, $http, $window, $location, $filter, $timeout, i18nService, uiGridConstants) {
     var init = function() {
           $scope.archivoID = $window.localStorage.getItem("archivoID");
           $scope.documentoID = $window.localStorage.getItem("documentoID");
@@ -415,17 +428,22 @@
               //Log
               console.log($scope.documentoDatos);
 
-              //Llenamos los datos del documento
-              $scope.datosPrincipales.tipoDocumento = $scope.documentoDatos.tipoDocumento;
-              $scope.datosPrincipales.estadoConservacion = $scope.documentoDatos.estadoConservacion;
-              $scope.datosPrincipales.formatoDisponible = $scope.documentoDatos.formatoDisponible;
-              $scope.datosPrincipales.fechaMinima = $filter('date')(new Date($scope.documentoDatos.fechaMinima), String($scope.documentoDatos.fechaMinFormato).toLowerCase());
-              $scope.datosPrincipales.fechaMaxima = $filter('date')(new Date($scope.documentoDatos.fechaMaxima), String($scope.documentoDatos.fechaMaxFormato).toLowerCase());
-              $scope.datosPrincipales.sinopsis = $scope.documentoDatos.sinopsis;
-              $scope.datosPrincipales.listaTemas = $scope.documentoDatos.listaTemas.split(",");
-              $scope.datosPrincipales.listaTemas = $scope.datosPrincipales.listaTemas.map(function(e) {
-                  return e.trim();
-              });              
+              try {
+                  //Llenamos los datos del documento
+                  $scope.datosPrincipales.tipoDocumento = $scope.documentoDatos.tipoDocumento;
+                  $scope.datosPrincipales.estadoConservacion = $scope.documentoDatos.estadoConservacion;
+                  $scope.datosPrincipales.formatoDisponible = $scope.documentoDatos.formatoDisponible;
+                  $scope.datosPrincipales.fechaMinima = $filter('date')(new Date($scope.documentoDatos.fechaMinima), String($scope.documentoDatos.fechaMinFormato).toLowerCase());
+                  $scope.datosPrincipales.fechaMaxima = $filter('date')(new Date($scope.documentoDatos.fechaMaxima), String($scope.documentoDatos.fechaMaxFormato).toLowerCase());
+                  $scope.datosPrincipales.sinopsis = $scope.documentoDatos.sinopsis;
+                  $scope.datosPrincipales.listaTemas = $scope.documentoDatos.listaTemas.split(",");
+                  $scope.datosPrincipales.listaTemas = $scope.datosPrincipales.listaTemas.map(function(e) {
+                      return e.trim();
+                  });
+              }
+              catch(err) {
+                  console.log("Problema cargando los valores de datos principales del documento");
+              }
 
               //Limpiamos la bandera de editado
               $scope.datosPrincipales.editado = false;
@@ -470,7 +488,6 @@
 
       }
       
-      
       // Temas
       $scope.listaTemas = {}
       // Para borrar Temas
@@ -510,7 +527,215 @@
           $scope.listaTemas.temaNuevo.mensaje = "+ Agregar";
       }
       
-            // Para guardar borrar y barra de estado
+      // Emisor y receptor
+      $scope.emisorReceptorEditado = false;
+      $scope.emisorReceptor = [];
+      $scope.emisorReceptorActivo = 0;
+      // Para eliminar una entrada emisorReceptor
+      $scope.eliminarEmisorReceptor = function (index) {
+          $scope.emisorReceptorEditado = true;
+          if ($scope.emisorReceptor[index].nuevo) {
+              $scope.emisorReceptor.splice(index,1);
+          } else {
+              $scope.emisorReceptor[index].eliminar = true;
+          }
+      }
+      // Para agregar una entrada emisorReceptor
+      $scope.agregarEmisorReceptor = function () {
+          $scope.emisorReceptorEditado = true;
+          var nuevoEmisorReceptor = {}
+          nuevoEmisorReceptor.nuevo = true;
+          nuevoEmisorReceptor.emisor= {
+              personaje: "",
+              cargo: "",
+              institucion: "",
+              nota: "",
+          }
+          nuevoEmisorReceptor.receptor= {
+              personaje: "",
+              cargo: "",
+              institucion: "",
+              nota: ""
+          }
+          // Agregarlo a la lista de emisor y receptor
+          $scope.emisorReceptor.push(nuevoEmisorReceptor);
+          $timeout(function() {
+            $scope.emisorReceptorActivo = $scope.emisorReceptor.length - 1; // El nuevo elemento es el activo
+          });
+      }
+      // Para modificar el emisor de una entrada emisorReceptor
+      $scope.modificarEmisor = function (index, elementoEditado, valorNuevo) {
+          $scope.emisorReceptorEditado = true;
+          switch(elementoEditado) {
+            case "personaje":
+                if (valorNuevo != $scope.emisorReceptor[index].emisor.personaje) {
+                    $scope.registrarAccion("Personaje emisor  <strong>" + $scope.emisorReceptor[index].emisor.personaje + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
+                }
+                break;
+            case "cargo":
+                if (valorNuevo != $scope.emisorReceptor[index].emisor.cargo) {
+                    $scope.registrarAccion("Cargo personaje emisor <strong>" + $scope.emisorReceptor[index].emisor.cargo + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
+                }
+                break;
+            case "institucion":
+                if (valorNuevo != $scope.emisorReceptor[index].emisor.institucion) {
+                    $scope.registrarAccion("Institucion emisora <strong>" + $scope.emisorReceptor[index].emisor.institucion + "</strong> modificada a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
+                }
+                break;
+            case "nota":
+                if (valorNuevo != $scope.emisorReceptor[index].emisor.nota) {
+                    $scope.registrarAccion("nota emisor modificada en Emisor Receptor "+(index + 1));
+                }
+                break;
+            default:
+               $scope.registrarAccion("[ERROR] DATO EMISOR INCORRECTO!");
+                break;
+          }
+      }
+      // Para modificar el receptor de una entrada emisorReceptor
+      $scope.modificarReceptor = function (index, elementoEditado, valorNuevo) {
+          $scope.emisorReceptorEditado = true;
+           switch(elementoEditado) {
+            case "personaje":
+                if (valorNuevo != $scope.emisorReceptor[index].receptor.personaje) {
+                    $scope.registrarAccion("Personaje receptor <strong>" + $scope.emisorReceptor[index].receptor.personaje + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
+                }
+                break;
+            case "cargo":
+                if (valorNuevo != $scope.emisorReceptor[index].receptor.cargo) {
+                    $scope.registrarAccion("Cargo personaje receptor <strong>" + $scope.emisorReceptor[index].receptor.cargo + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
+                }
+                break;
+            case "institucion":
+                if (valorNuevo != $scope.emisorReceptor[index].receptor.institucion) {
+                    $scope.registrarAccion("Institucion receptora <strong>" + $scope.emisorReceptor[index].receptor.institucion + "</strong> modificada a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
+                }
+                break;
+            case "nota":
+                if (valorNuevo != $scope.emisorReceptor[index].receptor.nota) {
+                    $scope.registrarAccion("nota receptor modificada en Emisor Receptor "+index);
+                }
+                break;
+            default:
+               $scope.registrarAccion("[ERROR] DATO INCORRECTO!");
+                break;
+          }
+      }
+      $scope.cargarEmisorReceptor = function () {
+           $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosEmisorReceptor?archivoID=' + $scope.archivoID + '&documentoId=' + $scope.documentoID).then(function(data) {
+              //Obtener los datos JSON
+              $scope.documentoDatos = data.data[0];
+              
+              //Log
+              console.log($scope.documentoDatos);
+
+              try {
+                  //Llenamos los datos del documento
+                  $scope.datosPrincipales.tipoDocumento = $scope.documentoDatos.tipoDocumento;
+                  $scope.datosPrincipales.estadoConservacion = $scope.documentoDatos.estadoConservacion;
+                  $scope.datosPrincipales.formatoDisponible = $scope.documentoDatos.formatoDisponible;
+                  $scope.datosPrincipales.fechaMinima = $filter('date')(new Date($scope.documentoDatos.fechaMinima), String($scope.documentoDatos.fechaMinFormato).toLowerCase());
+                  $scope.datosPrincipales.fechaMaxima = $filter('date')(new Date($scope.documentoDatos.fechaMaxima), String($scope.documentoDatos.fechaMaxFormato).toLowerCase());
+                  $scope.datosPrincipales.sinopsis = $scope.documentoDatos.sinopsis;
+                  $scope.datosPrincipales.listaTemas = $scope.documentoDatos.listaTemas.split(",");
+                  $scope.datosPrincipales.listaTemas = $scope.datosPrincipales.listaTemas.map(function(e) {
+                      return e.trim();
+                  });
+              }
+              catch(err) {
+                  console.log("Problema cargando los valores de datos principales del documento");
+              }
+
+              //Limpiamos la bandera de editado
+              $scope.datosPrincipales.editado = false;
+
+              //Para palabras claves
+              $scope.listaTemas.temaNuevo = {
+                  mensaje: "+ Agregar"
+              };
+            });
+      }
+      
+      // Anotaciones
+      $scope.notas = "";
+      $scope.notasAEliminar = [];
+      $scope.notasCambio = false;
+      $scope.cargarNotas = function() {
+          $scope.notas = "";
+          $scope.notasAEliminar = [];
+          $scope.notasCambio = false;
+          $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosNotas?documentoID=' + $scope.documentoID).then(function(data) {
+              if (!String(data.data).startsWith("[WARNING]")) {
+                  $scope.notas = data.data;
+                  $scope.notas.forEach(function(nota) {
+                      nota.modificada = false;
+                  });
+                  // LOG
+                  console.log($scope.notas);
+              }
+          });
+
+      };
+      $scope.agregarNotaVacia = function() {
+          $scope.registrarAccion("Nota vacia agregada");
+          // Una nota que no tiene fecha de creacion es una nota que no existe en la base de datos aun
+          if ($scope.notas === "") {
+              $scope.notas = [{
+                  nota: "",
+                  referencia: "",
+                  fechaCreacion: "",
+                  fechaHistorica: "",
+                  fechaHistFormato: "",
+                  modificada: false
+              }];
+          } else {
+              $scope.notas.push({
+                  nota: "",
+                  referencia: "",
+                  fechaCreacion: "",
+                  fechaHistorica: "",
+                  fechaHistFormato: "",
+                  modificada: false
+              });
+          }
+          $scope.notasCambios = true;
+      }
+      $scope.eliminarNota = function(indexNota) {
+          $scope.registrarAccion("Nota <strong>" + indexNota + "</strong> eliminada");
+          if ($scope.notas[indexNota].fechaCreacion != "") {
+              $scope.notasAEliminar.push($scope.notas[indexNota]);
+          }
+          $scope.notas.splice(indexNota, 1);
+          $scope.notasCambios = true;
+      };
+      $scope.modificarNota = function(indexNota, nuevaNota) {
+          $scope.registrarAccion("Nota <strong>" + indexNota + "</strong> modificada");
+          $scope.notas[indexNota].nota = nuevaNota;
+          // fecha creacion esta vacia cuando la nota aun no se encuentra
+          // en la base de dats
+          if ($scope.notas[indexNota].fechaCreacion != "") {
+              $scope.notas[indexNota].modificada = true;
+          };
+          $scope.notasCambios = true;
+      };
+      $scope.modificarReferencia = function(indexNota, nuevaReferencia) {
+          $scope.registrarAccion("Referencia de nota <strong>" + indexNota + "</strong> modificada");
+          $scope.notas[indexNota].referencia = nuevaReferencia;
+          if ($scope.notas[indexNota].fechaCreacion != "") {
+              $scope.notas[indexNota].modificada = true;
+          }
+          $scope.notasCambios = true;
+      };
+      $scope.modificarFechaHistorica = function(indexNota, nuevaFechaHistorica) {
+          $scope.registrarAccion("Fecha Historica de nota <strong>" + indexNota + "</strong> modificada");
+          $scope.notas[indexNota].fechaHistorica = nuevaFechaHistorica;
+          if ($scope.notas[indexNota].fechaCreacion != "") {
+              $scope.notas[indexNota].modificada = true;
+          }
+          $scope.notasCambios = true;
+      };
+      
+      // Para guardar borrar y barra de estado
       $scope.ultimaAccion = $sce.trustAsHtml("Ninguna");
       // Log
       $scope.registrarAccion = function(mensaje) {

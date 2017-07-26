@@ -116,6 +116,10 @@
                 				buttons="right" 
                 				onaftersave="modificarNota($index,nota.nota)">{{nota.nota || "Click para editar"}}</p>
                     <div class="clearfix m-t-1">
+                        <div class="notaReferencia pull-left">Fecha Historica: <span editable-text="nota.fechaHistorica" 
+                                 onaftersave="modificarFechaHistorica($index,fechaHistorica)">{{nota.fechaHistorica || "ND"}}</span></div>
+                    </div>
+                    <div class="clearfix m-t-1">
                     	<div class="notaReferencia pull-left">Referencia: <span editable-text="nota.referencia" 
                     			 onaftersave="modificarReferencia($index,nota.referencia)">{{nota.referencia || "ND"}}</span></div>
                     	<div class="notaFecha pull-right">{{nota.fechaCreacion || "Nota Nueva"}}</div>
@@ -130,13 +134,103 @@
           </div>
           
         </div>
-
       </div><!-- .row -->
-
+        
     </uib-tab>
+      
 
+    <!-- EMISOR RECEPTOR -->
+    <uib-tab index="1" heading="Emisor Receptor">
+        <div class="row p-t-2">
+            
+                <uib-tabset active="emisorReceptorActivo">
+                    <uib-tab index="$index" active="emisorReceptorActivo==$index" ng-repeat="tab in emisorReceptor" heading="{{'Emisor Receptor '+($index+1)}}">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="panel panel-primary">
+                                <header class="panel-heading">
+                                    <h4 class="m-a-1">Emisor</h4>
+                                </header>
+                                <div class="panel-body">
+                                    <div class="clearfix m-a-1">
+                                        <input type="checkbox" ng-model="emisorEditarCamposOcultosChecked" ng-init="emisorEditarCamposOcultosChecked = false" />  Habilitar campos ocultos
+                                    </div>
+                                    <ul class="list-group m-b-0">
+                                        <li ng-if="(emisorReceptor[$index].emisor.personaje != '') || emisorEditarCamposOcultosChecked" class="list-group-item">
+                                            <span class="label label-primary">Personaje Emisor</span>
+                                            <span editable-text="emisorReceptor[$index].emisor.personaje" 
+                                                        onbeforesave="modificarEmisor($index,'personaje',$data)"  
+                                                        class="m-l-1"> {{ emisorReceptor[$index].emisor.personaje || "click para editar"}}</span>
+                                        </li>
+                                        <li ng-if="(emisorReceptor[$index].emisor.cargo != '') || emisorEditarCamposOcultosChecked" class="list-group-item">
+                                            <span class="label label-primary">Cargo Emisor</span>
+                                            <span editable-text="emisorReceptor[$index].emisor.cargo" 
+                                                        onbeforesave="modificarEmisor($index,'cargo',$data)"  
+                                                        class="m-l-1"> {{ emisorReceptor[$index].emisor.cargo || "click para editar"}}</span>
+                                        </li>
+                                        <li ng-if="(emisorReceptor[$index].emisor.institucion != '') || emisorEditarCamposOcultosChecked" class="list-group-item">
+                                            <span class="label label-primary">Institucion Emisora</span>
+                                            <span editable-text="emisorReceptor[$index].emisor.institucion" 
+                                                        onbeforesave="modificarEmisor($index,'institucion',$data)"  
+                                                        class="m-l-1"> {{ emisorReceptor[$index].emisor.institucion || "click para editar"}}</span>
+                                        </li>
+                                        <li ng-if="(emisorReceptor[$index].emisor.nota != '') || emisorEditarCamposOcultosChecked" class="list-group-item notaContenido">
+                                            <span class="label label-primary">Anotacion Emisor</span>
+                                            <p  editable-textarea="emisorReceptor[$index].emisor.nota" 
+                                                e-rows="2" 
+                                                buttons="right" 
+                                                onaftersave="modificarEmisor($index,'nota',$data)">{{emisorReceptor[$index].emisor.nota || "click para editar"}}</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                        <div class="panel panel-primary">
+                            <header class="panel-heading">
+                                <h4 class="m-a-1">Receptor</h4>
+                            </header>
+                            <div class="panel-body">
+                                <div class="clearfix m-a-1">
+                                    <input type="checkbox" ng-model="receptorEditarCamposOcultosChecked" ng-init="receptorEditarCamposOcultosChecked = false" />  Habilitar campos ocultos
+                                </div>
+                                <ul class="list-group m-b-0">
+                                        <li ng-if="(emisorReceptor[$index].receptor.personaje != '') || receptorEditarCamposOcultosChecked" class="list-group-item">
+                                            <span class="label label-primary">Personaje Emisor</span>
+                                            <span editable-text="emisorReceptor[$index].receptor.personaje" 
+                                                        onbeforesave="modificarReceptor($index, 'personaje', $data)"  
+                                                        class="m-l-1"> {{ emisorReceptor[$index].receptor.personaje || "click para editar"}}</span>
+                                        </li>
+                                        <li ng-if="(emisorReceptor[$index].receptor.cargo != '') || receptorEditarCamposOcultosChecked" class="list-group-item">
+                                            <span class="label label-primary">Cargo Emisor</span>
+                                            <span editable-text="emisorReceptor[$index].receptor.cargo" 
+                                                        onbeforesave="modificarReceptor($index, 'cargo',$data)"  
+                                                        class="m-l-1"> {{ emisorReceptor[$index].receptor.cargo || "click para editar"}}</span>
+                                        </li>
+                                        <li ng-if="(emisorReceptor[$index].receptor.institucion != '') || receptorEditarCamposOcultosChecked" class="list-group-item">
+                                            <span class="label label-primary">Institucion Emisora</span>
+                                            <span editable-text="emisorReceptor[$index].receptor.institucion" 
+                                                        onbeforesave="modificarReceptor($index, 'institucion',$data)"  
+                                                        class="m-l-1"> {{ emisorReceptor[$index].receptor.institucion || "click para editar"}}</span>
+                                        </li>
+                                        <li ng-if="(emisorReceptor[$index].receptor.nota != '') || receptorEditarCamposOcultosChecked" class="list-group-item notaContenido">
+                                            <span class="label label-primary">Anotacion Emisor</span>
+                                            <p  editable-textarea="emisorReceptor[$index].receptor.nota" 
+                                                e-rows="2" 
+                                                buttons="right" 
+                                                onaftersave="modificarReceptor($index, 'nota',$data)">{{emisorReceptor[$index].receptor.nota || "click para editar"}}</p>
+                                        </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    </uib-tab>
+                    <uib-tab-agregar text="Agregar" handler="agregarEmisorReceptor()">
+                    </uib-tab-agregar>
+                </uib-tabset>
+        </div> <!-- Row -->
+    </uib-tab>
     <!-- PERSONAJES -->
-    <uib-tab index="3" heading="Personajes">
+    <uib-tab index="2" heading="Personajes">
     	<div class="row p-t-2">
     		<div class="col-sm-12">
     			<table id="personajesTabla">
@@ -149,7 +243,7 @@
     </uib-tab>
 
     <!-- EMBARCACIONES -->
-    <uib-tab index="4" heading="Embarcaciones">
+    <uib-tab index="3" heading="Embarcaciones">
     	<div class="row p-t-2">
     		<div class="col-sm-12">
 		      <table id="embarcacionesTabla">
@@ -164,7 +258,7 @@
     </uib-tab>
 
     <!-- LUGARES -->
-    <uib-tab index="5" heading="Lugares">
+    <uib-tab index="4" heading="Lugares">
     	<div class="row p-t-2">
     		<div class="col-sm-12">
 		      <table id="lugaresTabla">
@@ -179,7 +273,7 @@
     </uib-tab>
 
     <!-- ACTIVIDADES -->
-    <uib-tab index="7" heading="Actividades">
+    <uib-tab index="5" heading="Actividades">
     	<div class="row p-t-2">
     		<div class="col-sm-12">
 		      <table id="ActividadesTabla">
@@ -193,7 +287,7 @@
     </uib-tab>
 
     <!-- FECHAS Y SUCESOS -->
-    <uib-tab index="8" heading="Fechas y sucesos">
+    <uib-tab index="6" heading="Fechas y sucesos">
     	<div class="row p-t-2">
     		<div class="col-sm-12">
 		      <table id="fechasSucesosTabla">
@@ -207,7 +301,7 @@
     </uib-tab>
 
     <!-- INSTITUCIONES -->
-    <uib-tab index="9" heading="Instituciones">
+    <uib-tab index="7" heading="Instituciones">
     	<div class="row p-t-2">
     		<div class="col-sm-12">
 		      <table id="institucionesTabla">
