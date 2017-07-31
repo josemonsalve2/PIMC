@@ -370,7 +370,213 @@
           }
           $scope.palabrasClaves.palabraNueva.mensaje = "+ Agregar";
       }
-
+      
+      // Cargar Listado personajes
+      $scope.hayPersonajes = false;
+      $scope.personajes = [];
+      $scope.cargarPersonajes = function () {
+          $scope.personajes = [];
+          var personajesIDs = [];
+          $scope.documentos.forEach(function (doc) {
+              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefPersonajes?documentoID=' + doc.documentoID).then(function(data) {
+                  if (!String(data.data).startsWith("[WARNING]")) {
+                      var listaReferencias = data.data;
+                      lstaReferencias.forEach (function (referencia) {
+                          var personajeID = referencia.personajeID;
+                          if (!personajesIDs.includes(personajeID)) {
+                              personajesIDs.push(personajeID);
+                              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes?personajeID=' + personajeID).then(function(data) {
+                                  if (!String(data.data).startsWith("[WARNING]")) {
+                                      var personaje = data.data;
+                                      personaje.documentosReferencias = [doc.documentoID];
+                                      $scope.personajes.push(personaje);
+                                      $scope.hayPersonajes = true;
+                                  }
+                              });
+                          } else {
+                              // Add the reference to this document
+                              $scope.personajes.forEach (function (personaje) {
+                                  if (!personaje.documentosReferencias.includes[doc.documentoID])
+                                      personaje.documentosReferencias = [doc.documentoID];
+                              });
+                          }
+                      });
+                  }
+              });
+          });
+      };
+      // Cargar Listado Embarcaciones
+      $scope.hayEmbarcaciones = false;
+      $scope.embarcaciones = [];
+      $scope.cargarEmbarcaciones = function () {
+          $scope.embarcaciones = [];
+          var embarcacionesIDs = [];
+          $scope.documentos.forEach(function (doc) {
+              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefEmbarcacion?documentoID=' + doc.documentoID).then(function(data) {
+                  if (!String(data.data).startsWith("[WARNING]")) {
+                      var listaReferencias = data.data;
+                      lstaReferencias.forEach (function (referencia) {
+                          var embarcacionID = referencia.embarcacionID;
+                          if (!embarcacionesIDs.includes(embarcacionID)) {
+                              embarcacionesIDs.push(embarcacionID);
+                              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Embarcaciones?embarcacionID=' + embarcacionID).then(function(data) {
+                                  if (!String(data.data).startsWith("[WARNING]")) {
+                                      var embarcacion = data.data;
+                                      embarcacion.documentosReferencias = [doc.documentoID];
+                                      $scope.embarcaciones.push(embarcacion);
+                                      $scope.hayEmbarcaciones = true;
+                                  }
+                              });
+                          } else {
+                              // Add the reference to this document
+                              $scope.embarcaciones.forEach (function (embarcacion) {
+                                  if (!embarcacion.documentosReferencias.includes[doc.documentoID])
+                                      embarcacion.documentosReferencias = [doc.documentoID];
+                              });
+                          }
+                      });
+                  }
+              });
+          });
+      };      
+      // Cargar listado de Lugares
+      $scope.hayLugares = false;
+      $scope.lugares = [];
+      $scope.cargarLugares = function () {
+          $scope.lugares = [];
+          var lugaresIDs = [];
+          $scope.documentos.forEach(function (doc) {
+              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefLugares?documentoID=' + doc.documentoID).then(function(data) {
+                  if (!String(data.data).startsWith("[WARNING]")) {
+                      var listaReferencias = data.data;
+                      lstaReferencias.forEach (function (referencia) {
+                          var lugarID = referencia.lugarID;
+                          if (!lugaresIDs.includes(lugarID)) {
+                              lugaresIDs.push(lugarID);
+                              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Lugares?lugarID=' + lugarID).then(function(data) {
+                              if (!String(data.data).startsWith("[WARNING]")) {
+                                  var lugar = data.data;
+                                  lugar.documentosReferencias = [doc.documentoID];
+                                  $scope.lugares.push(lugar);
+                                  $scope.hayLugares = true;
+                              }
+                          });
+                          } else {
+                              // Add the reference to this document
+                              $scope.lugares.forEach (function (lugar) {
+                                  if (!lugar.documentosReferencias.includes[doc.documentoID])
+                                      lugar.documentosReferencias = [doc.documentoID];
+                              });
+                          }
+                      });
+                  }
+              });
+          });
+      };      
+      // Cargar Listado de Actividades
+      $scope.hayActividades = false;
+      $scope.actividades = [];
+      $scope.cargarActividades = function () {
+          $scope.actividades = [];
+          var actividadesIDs = [];
+          $scope.documentos.forEach(function (doc) {
+              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefActividades?documentoID=' + doc.documentoID).then(function(data) {
+                  if (!String(data.data).startsWith("[WARNING]")) {
+                      var listaReferencias = data.data;
+                      lstaReferencias.forEach (function (referencia) {
+                          var actividadID = referencia.actividadID;
+                          if (!actividadesIDs.includes(actividadID)) {
+                              actividadesIDs.push(actividadID);
+                              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Actividades?actividadID=' + actividadID).then(function(data) {
+                                  if (!String(data.data).startsWith("[WARNING]")) {
+                                      var actividad = data.data;
+                                      actividad.documentosReferencias = [doc.documentoID];
+                                      $scope.actividades.push(actividad);
+                                      $scope.hayActividades = true;
+                                  }
+                              });
+                          } else {
+                              // Add the reference to this document
+                              $scope.actividades.forEach (function (actividad) {
+                                  if (!actividad.documentosReferencias.includes[doc.documentoID])
+                                      actividad.documentosReferencias = [doc.documentoID];
+                              });
+                          }
+                      });
+                  }
+              });
+          });
+      };      
+      // Cargar Listado de fechas y sucesos
+      $scope.hayFechasSucesos = false;
+      $scope.fechasSucesos = [];
+      $scope.cargarFechasSucesos = function () {
+          $scope.fechasSucesos = [];
+          var fechasSucesosIDs = [];
+          $scope.documentos.forEach(function (doc) {
+              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefEventos?documentoID=' + doc.documentoID).then(function(data) {
+                  if (!String(data.data).startsWith("[WARNING]")) {
+                      var listaReferencias = data.data;
+                      lstaReferencias.forEach (function (referencia) {
+                          var eventoID = referencia.eventoID;                          
+                          if (!fechasSucesosIDs.includes(eventoID)) {
+                              fechasSucesosIDs.push(eventoID);
+                              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Eventos?eventoID=' + eventoID).then(function(data) {
+                                  if (!String(data.data).startsWith("[WARNING]")) {
+                                      var fechaSuceso = data.data;
+                                      fechaSuceso.documentosReferencias = [doc.documentoID];
+                                      $scope.fechasSucesos.push(fechaSuceso);
+                                      $scope.hayFechasSucesos = true;
+                                  }
+                              });
+                           } else {
+                              // Add the reference to this document
+                              $scope.fechasSucesos.forEach (function (fechaSuceso) {
+                                  if (!fechaSuceso.documentosReferencias.includes[doc.documentoID])
+                                      fechaSuceso.documentosReferencias = [doc.documentoID];
+                              });
+                          }
+                      });
+                  }
+              });
+          });
+      };      
+      // Cargar Listado de instituciones
+      $scope.hayInstituciones = false;
+      $scope.instituciones = [];
+      $scope.cargarInstituciones = function () {
+          $scope.instituciones = [];
+          var institucionesIDs = [];
+          $scope.documentos.forEach(function (doc) {
+              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefInstituciones?documentoID=' + doc.documentoID).then(function(data) {
+                  if (!String(data.data).startsWith("[WARNING]")) {
+                      var listaReferencias = data.data;
+                      lstaReferencias.forEach (function (referencia) {
+                          var institucionID = referencia.institucionID;
+                          if (!institucionesIDs.includes(institucionID)) {
+                              institucionesIDs.push(institucionID);
+                              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Instituciones?institucionID=' + institucionID).then(function(data) {
+                                  if (!String(data.data).startsWith("[WARNING]")) {
+                                      var institucion = data.data;
+                                      institucion.documentosReferencias = [doc.documentoID];
+                                      $scope.instituciones.push(institucion);
+                                      $scope.hayInstituciones = true;
+                                  }
+                              });
+                          } else {
+                              // Add the reference to this document
+                              $scope.instituciones.forEach (function (institucion) {
+                                  if (!institucion.documentosReferencias.includes[doc.documentoID])
+                                      institucion.documentosReferencias = [doc.documentoID];
+                              });
+                          }
+                      });
+                  }
+              });
+          });
+      };
+      
+      
       // Para guardar borrar y barra de estado
       $scope.ultimaAccion = $sce.trustAsHtml("Ninguna");
       // Log

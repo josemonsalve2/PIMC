@@ -223,12 +223,14 @@
 
     <!-- PERSONAJES -->
     <uib-tab index="3" heading="Personajes">
-    	<div class="row p-t-2">
+      <div class="row p-t-2" ng-show="!hayPersonajes">
+          <span>Este Archivo no hace referencia a ningún personaje</span>
+      </div>
+      <div class="row p-t-2" ng-show="hayPersonajes">
     		<div class="col-sm-12">
     			<table>
-		        <tr><th>Nombre</th><th>cargo</th><th>Nacionalidad</th><th>categoria</th><th>Cita/Anotación</th></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+		        <tr><th>Nombre</th><th>Ocupación</th><th>Nacionalidad</th><th>categoria</th><th>documentos Referencia</th></tr>
+		        <tr ng-repeat="personaje in personajes track by $index"><td>{{personaje.nombre}}</td><td>{{personaje.ocupacion}}</td><td>{{personaje.nacionalidad}}</td><td>{{personaje.categoria}}</td><td>{{personaje.documentosReferencias.join(", ")}}</td></tr>
 		      </table>
     		</div>
     	</div>
@@ -236,14 +238,14 @@
 
     <!-- EMBARCACIONES -->
     <uib-tab index="4" heading="Embarcaciones">
-    	<div class="row p-t-2">
+      <div class="row p-t-2" ng-show="!hayEmbarcaciones">
+          <span>Este Archivo no hace referencia a ninguna embarcacion</span>
+      </div>
+    	<div class="row p-t-2" ng-show="hayEmbarcaciones">
     		<div class="col-sm-12">
 		      <table>
-		        <tr><th>Nombre</th><th>Alias</th><th>Tipo de buque</th><th>Bandera</th><th>Utilidad</th><th>Categoria</th><th>Cita/Anotación</th></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+		        <tr><th>Nombre</th><th>Alias</th><th>Tipo de buque</th><th>Categoria</th><th>documentos Referencia</th></tr>
+		        <tr ng-repeat="embarcacion in embarcaciones track by $index"><td>{{embarcacion.nombres}}</td><td>{{embarcacion.alias}}</td><td>{{embarcacion.tipo}}</td><td>{{embarcacion.categoria}}</td><td>{{embarcacion.documentosReferencias.join(", ")}}</td></tr>
 		      </table>
       	</div>
       </div>
@@ -251,14 +253,15 @@
 
     <!-- LUGARES -->
     <uib-tab index="5" heading="Lugares">
-    	<div class="row p-t-2">
-    		<div class="col-sm-12">
+      <div class="row p-t-2" ng-show="!hayLugares">
+          <span>Este Archivo no hace referencia a ningún lugar</span>
+      </div>
+    	<div class="row p-t-2" ng-show="hayLugares">
+    		<div class="col-sm-12" ng-show="hayInstituciones">
 		      <table >
-		        <tr><th>Nombre</th><th>Tipo de Lugar</th><th>Categoria</th><th>Cita/Anotación</th></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
+		        <tr><th>Nombre</th><th>Tipo de Lugar</th><th>Categoria</th><th>documentos Referencia</th></tr>
+		        <tr ng-repeat="lugar in lugares track by $index"><td>{{lugar.nombre}}</td><td>{{lugar.tipoLugar}}</td><td>{{lugar.categoria}}</td><td>{{lugar.documentosReferencias.join(", ")}}</td></tr>
+
 		      </table>
       	</div>
       </div>
@@ -266,13 +269,15 @@
 
     <!-- ACTIVIDADES -->
     <uib-tab index="7" heading="Actividades">
-    	<div class="row p-t-2">
+        <div class="row p-t-2" ng-show="!hayActividades">
+          <span>Este Archivo no hace referencia a ningún lugar</span>
+      </div>
+    	<div class="row p-t-2" ng-show="hayActividades">
     		<div class="col-sm-12">
 		      <table >
-		        <tr><th>Tipo</th><th>Descripción del proceso</th><th>Personal</th><th>Herramientas</th><th>Materiales</th><th>Cita/Anotación</th></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+                  <tr><th>Nombre</th><th>Tipo</th><th>Descripcion</th><th>Herramientas</th><th>Materiales</th><th>personajes Involucrados</th><th>documentos Referencia</th></tr>
+		        <tr ng-repeat="actividad in actividades track by $index"><td>{{actividad.nombre}}</td><td>{{actividad.tipo}}</td><td>{{actividad.descripcion}}</td><td>{{actividad.herramientas}}</td><td>{{actividad.materiales}}</td><td>{{actividad.personajesInvolucrados}}</td><td>{{actividad.documentosReferencias.join(", ")}}</td></tr>
+
 		      </table>
 	      </div>
       </div>
@@ -280,13 +285,14 @@
 
     <!-- FECHAS Y SUCESOS -->
     <uib-tab index="8" heading="Fechas y sucesos">
-    	<div class="row p-t-2">
+        <div class="row p-t-2" ng-show="!hayFechasSucesos">
+          <span>Este Archivo no hace referencia a ninguna fecha ni suceso</span>
+      </div>
+    	<div class="row p-t-2" ng-show="hayFechasSucesos">
     		<div class="col-sm-12">
 		      <table >
-		        <tr><th>Fecha</th><th>Lugar</th><th>Descripción del evento</th><th>Categoría</th><th>Cita/Anotación</th></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+		        <tr><th>Fecha</th><th>Lugar</th><th>Descripción del evento</th><th>Categoría</th><th>documentos Referencia</th></tr>
+		        <tr ng-repeat="evento in fechasSucesos track by $index"><td>{{evento.fecha}}</td><td>{{evento.lugar}}</td><td>{{evento.descripcion}}</td><td>{{evento.categoriaEvento}}</td><td>{{evento.documentosReferencias.join(", ")}}</td></tr>
 		      </table>
 		    </div>
 		  </div>
@@ -294,13 +300,15 @@
 
     <!-- INSTITUCIONES -->
     <uib-tab index="9" heading="Instituciones">
-    	<div class="row p-t-2">
+        <div class="row p-t-2" ng-show="!hayInstituciones">
+          <span>Este Archivo no hace referencia a ninguna institución</span>
+      </div>
+    	<div class="row p-t-2" ng-show="hayInstituciones">
     		<div class="col-sm-12">
 		      <table>
-		        <tr><th>Nombre</th><th>Cita/Anotación</th></tr>
-		        <tr><td>Example</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>ASADFA</td></tr>
+		        <tr><th>Nombre</th><th>documentos Referencia</th></tr>
+		        <tr ng-repeat="institucion in instutuciones track by $index"><td>{{institucion.nombre}}</td><td>{{institucion.documentosReferencias.join(", ")}}</td></tr>
+
 		      </table>
 		    </div>
 		  </div>
