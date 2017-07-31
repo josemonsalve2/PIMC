@@ -192,24 +192,32 @@
         <div class="col-sm-6">
           <table id="listaDocumentos">
             <tr><th>Tipo Documento</th><th>Cantidad</th><th>Formato</th></tr>
-            <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td></tr>
+            <tr  ng-repeat="(tipo, resumen) in documentosResumen track by $index">
+                <td>{{tipo}}</td><td>{{resumen.cantidad}}</td><td>{{resumen.formatos.join()}}</td>
+            </tr>
           </table>
         </div>
         <div class="col-sm-6">
           <table>
             <tr><th>Fecha Inicial</th><th>Fecha Final</th></tr>
-            <tr><td>Abril 10 1880</td><td>Abril 14 2005</td></tr>
+            <tr><td>{{documentosFechaRangoInferior}}</td><td>{{documentosFechaRangoSuperior}}</td></tr>
           </table>
         </div>
       </div>
       <div class="row p-t-1">
       	<div class="col-sm-12">
       		<table>
-	          <tr><th colspan="4">Emitido por</th><th colspan="3">Cantidad</th></tr>
-	          <tr><th>Nombre</th><th>cargo</th><th>Institución</th><th>Fecha (dd/mm/aaaa)</th><th>Nombre</th><th>Cargo</th><th>Institución</th></tr>
-	          <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td><td>Esto es un ejemplo</td></tr>
+	          <tr><th colspan="4">Documentos</th></tr>
+	          <tr><th>Documento ID</th><th>Tipo Documento</th><th>Formato</th><th>Lista de Temas</th></tr>
+	          <tr ng-click="abrirDocumentoSeleccionado($index)" ng-repeat="doc in documentos track by $index">
+                  <td class="entradaDocumento">{{doc.documentoID}}</td><td>{{doc.tipoDocumento}}</td><td>{{doc.formatoDisponible}}</td><td>{{doc.listaTemas}}</td>
+              </tr>
+              <tr ng-repeat="doc in documentosNuevos track by $index">
+                  <td class="entradaDocumentoNuevo"><button ng-click='borrarDocumentoNuevo($index)' class="btn-danger">-</button> Documento nuevo</td><td><span editable-text="doc.tipoDocumento">{{doc.tipoDocumento || "tipo documento"}}</span></td><td><span editable-text="doc.formatoDisponible">{{doc.formatoDisponible || "formato"}}</span></td><td><span editable-text="doc.listaTemas">{{doc.listaTemas || "Temas separados por coma"}}</span></td>
+              </tr>
 	        </table>
       	</div>
+        <button ng-click='agregarDocumento()' class="btn btn-success m-a-2">Agregar Documento</button>
       </div>
     </uib-tab>
 

@@ -22,28 +22,28 @@
                 	<span class="label label-primary">Tipo de Documento</span>
                 	<span editable-text="datosPrincipales.tipoDocumento" 
                 				onbeforesave="datosPrincipales.datoEditado('tipoDocumento',$data)"  
-                				class="m-l-1"> {{ datosPrincipales.tipoDocumento }}</span>
+                				class="m-l-1"> {{ datosPrincipales.tipoDocumento || "No definido" }}</span>
                 </li>
                 <li class="list-group-item">
                 	<span class="label label-primary">Estado de conservación</span>
                 	<span editable-text="datosPrincipales.estadoConservacion" 
                 				onbeforesave="datosPrincipales.datoEditado('estadoConservacion',$data)"  
-                				class="m-l-1"> {{ datosPrincipales.estadoConservacion }}</span>
+                				class="m-l-1"> {{ datosPrincipales.estadoConservacion || "No definido" }}</span>
                 </li>
                 <li class="list-group-item">
                 	<span class="label label-primary">Formato Disponible</span> 
                 	<span editable-text="datosPrincipales.formatoDisponible" 
                 				onbeforesave="datosPrincipales.datoEditado('formatoDisponible',$data)"  
-                				class="m-l-1"> {{ datosPrincipales.formatoDisponible }}</span>
+                				class="m-l-1"> {{ datosPrincipales.formatoDisponible || "No definido" }}</span>
                 </li>
                 <li class="list-group-item fechas-grupo">
                 	<span class="label label-primary">Rango de fechas</span> 
                 	<span editable-text="datosPrincipales.fechaMinima" 
                 				onbeforesave="datosPrincipales.datoEditado('fechaMinima',$data)"  
-                				class="fechaMinima m-l-1"> {{ datosPrincipales.fechaMinima }}</span> 
+                				class="fechaMinima m-l-1"> {{ datosPrincipales.fechaMinima || "No definido" }}</span> 
                 	<span editable-text="datosPrincipales.fechaMaxima" 
                 				onbeforesave="datosPrincipales.datoEditado('fechaMaxima',$data)"
-                				class="fechaMaxima">{{ datosPrincipales.fechaMaxima }}</span>
+                				class="fechaMaxima">{{ datosPrincipales.fechaMaxima || "No definido"}}</span>
                 </li>
               </ul>
             </div>
