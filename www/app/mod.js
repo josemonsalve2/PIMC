@@ -52,8 +52,10 @@
 
       //Bandera para saber cuando guardar o no
       $scope.datosPrincipales.editado = false;
+      $scope.datosPrincipalesCargando = true;
 
       $scope.cargarDatosPrincipales = function() {
+          $scope.datosPrincipalesCargando = true;
           $http.get('http://monsalvediaz.com:5000/PIMC0.1/ConsultaArchivo?archivoID=' + $scope.archivoID).then(function(data) {
               //Obtener los datos JSON
               var archivoDatos = data.data[0];
@@ -87,6 +89,8 @@
                   mensaje: "+ Agregar"
               };
 
+          }).finally(function () {
+              $scope.datosPrincipalesCargando = false;
           });
       };
       $scope.datosPrincipales.datoEditado = function(campo, valorNuevo) {
@@ -507,8 +511,10 @@
 
       //Bandera para saber cuando guardar o no
       $scope.datosPrincipales.editado = false;
+      $scope.datosPrincipalesCargando = true;
 
       $scope.cargarDatosPrincipales = function() {
+          $scope.datosPrincipalesCargando = true;
           $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Documentos?archivoID=' + $scope.archivoID + '&documentoID=' + $scope.documentoID).then(function(data) {
               //Obtener los datos JSON
               var documentoDatos = data.data[0];
@@ -543,6 +549,8 @@
                   mensaje: "+ Agregar"
               };
 
+          }).finally(function () {
+              $scope.datosPrincipalesCargando = false;
           });
       };
       $scope.datosPrincipales.datoEditado = function(campo, valorNuevo) {

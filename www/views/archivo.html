@@ -3,8 +3,8 @@
 
     <!-- DATOS PRINCIPALES-->
     <uib-tab index="0" heading="Datos Principales"> 
-
-    	<div class="row p-t-2">
+        <div id="preloading" class="preloader" ng-show="datosPrincipalesCargando"><img src="images/loader.gif"></div>
+    	<div class="row p-t-2" ng-show="!datosPrincipalesCargando">
 
         <div id="datosPrincipalesArchivo" class="col-sm-12 col-md-8">
 
