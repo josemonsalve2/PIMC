@@ -238,11 +238,37 @@
     	<div class="row p-t-2">
     		<div class="col-sm-12">
     			<table id="personajesTabla">
-		        <tr><th>Nombre</th><th>cargo</th><th>Nacionalidad</th><th>categoria</th><th>Cita/Anotación</th></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
+		        <tr><th>Personaje ID</th><th>Nombre</th><th>Ocupación</th><th>Nacionalidad</th><th>Sexo</th><th>categoria</th></tr>
+		        <tr ng-click="abrirPersonajeSeleccionado($index,'existente')" ng-repeat="personaje in personajes track by $index">
+                    <td>{{personaje.personajeID}}</td>
+                    <td>{{personaje.nombre}}</td>
+                    <td>{{personaje.ocupacion}}</td>
+                    <td>{{personaje.nacionalidad}}</td>
+                    <td>{{personaje.sexo}}</td>
+                    <td>{{personaje.categoria}}</td>
+                </tr>
+                <tr ng-click="abrirPersonajeSeleccionado($index,'nuevaRef')" ng-repeat="personaje in personajesAgregarReferencia track by $index">
+                    <td><button ng-click='borrarReferenciaNuevaPersonaje($index)' class="btn-danger">-</button> (Nueva Ref) {{personaje.personajeID}}</td>
+                    <td>{{personaje.nombre}}</td>
+                    <td>{{personaje.ocupacion}}</td>
+                    <td>{{personaje.nacionalidad}}</td>
+                    <td>{{personaje.sexo}}</td>
+                    <td>{{personaje.categoria}}</td>
+                </tr>
+                <tr ng-repeat="personaje in personajesNuevos track by $index">
+                    <td><button ng-click='borrarNuevoPersonaje($index)' class="btn-danger">-</button> {{"Personaje Nuevo"}}</td>
+                    <td>
+                        <span editable-text="personaje.nombre" e-typeahead-min-length="3" e-uib-typeahead="personajes.nombre for personajes in autocompletarPersonaje($viewValue)" e-typeahead-wait-ms="100" e-typeahead-on-select="actualizarPersonajeNuevoExistente($index,$item)" e-typeahead-no-results="personajesNoResults" e-typeahead-loading="cargandoNombres" onbeforesave="revisarSiPersonajeExiste($data)">{{personaje.nombre || "nuevo nombre"}}</span>
+                        <i ng-show="cargandoNombres" class="glyphicon glyphicon-refresh"></i>
+                        <div ng-show="personajesNoResults"><i class="glyphicon glyphicon-remove"></i> No Results Found</div></td>
+                    <td><span editable-text="personaje.ocupacion">{{personaje.ocupacion || "nueva ocupacion"}}</span></td>
+                    <td><span editable-text="personaje.nacionalidad">{{personaje.nacionalidad || "nueva nacionalidad"}}</span></td>
+                    <td><span editable-text="personaje.sexo">{{personaje.sexo || "nuevo sexo"}}</span></td>
+                    <td><span editable-text="personaje.categoria">{{personaje.categoria || "nueva categoria"}}</span></td></tr>
+
 		      </table>
     		</div>
+            <button ng-click='agregarPersonaje()' class="btn btn-success m-a-2">Agregar Personaje</button>
     	</div>
     </uib-tab>
 

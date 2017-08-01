@@ -30,6 +30,8 @@
           $scope.cargarNotas();
           // DOCUMENTOS
           $scope.cargarDocumentos();
+
+          
       };
 
       //Datos principales
@@ -88,8 +90,6 @@
               $scope.palabrasClaves.palabraNueva = {
                   mensaje: "+ Agregar"
               };
-
-          }).finally(function () {
               $scope.datosPrincipalesCargando = false;
           });
       };
@@ -232,6 +232,8 @@
                   });
                   // LOG
                   console.log($scope.notas);
+                  // PERSONAJES
+                  $scope.cargarPersonajes();  
               }
           });
       };
@@ -381,13 +383,13 @@
               $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefPersonajes?documentoID=' + doc.documentoID).then(function(data) {
                   if (!String(data.data).startsWith("[WARNING]")) {
                       var listaReferencias = data.data;
-                      lstaReferencias.forEach (function (referencia) {
+                      listaReferencias.forEach (function (referencia) {
                           var personajeID = referencia.personajeID;
                           if (!personajesIDs.includes(personajeID)) {
                               personajesIDs.push(personajeID);
                               $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes?personajeID=' + personajeID).then(function(data) {
                                   if (!String(data.data).startsWith("[WARNING]")) {
-                                      var personaje = data.data;
+                                      var personaje = data.data[0];
                                       personaje.documentosReferencias = [doc.documentoID];
                                       $scope.personajes.push(personaje);
                                       $scope.hayPersonajes = true;
@@ -421,7 +423,7 @@
                               embarcacionesIDs.push(embarcacionID);
                               $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Embarcaciones?embarcacionID=' + embarcacionID).then(function(data) {
                                   if (!String(data.data).startsWith("[WARNING]")) {
-                                      var embarcacion = data.data;
+                                      var embarcacion = data.data[0];
                                       embarcacion.documentosReferencias = [doc.documentoID];
                                       $scope.embarcaciones.push(embarcacion);
                                       $scope.hayEmbarcaciones = true;
@@ -455,7 +457,7 @@
                               lugaresIDs.push(lugarID);
                               $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Lugares?lugarID=' + lugarID).then(function(data) {
                               if (!String(data.data).startsWith("[WARNING]")) {
-                                  var lugar = data.data;
+                                  var lugar = data.data[0];
                                   lugar.documentosReferencias = [doc.documentoID];
                                   $scope.lugares.push(lugar);
                                   $scope.hayLugares = true;
@@ -489,7 +491,7 @@
                               actividadesIDs.push(actividadID);
                               $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Actividades?actividadID=' + actividadID).then(function(data) {
                                   if (!String(data.data).startsWith("[WARNING]")) {
-                                      var actividad = data.data;
+                                      var actividad = data.data[0];
                                       actividad.documentosReferencias = [doc.documentoID];
                                       $scope.actividades.push(actividad);
                                       $scope.hayActividades = true;
@@ -523,7 +525,7 @@
                               fechasSucesosIDs.push(eventoID);
                               $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Eventos?eventoID=' + eventoID).then(function(data) {
                                   if (!String(data.data).startsWith("[WARNING]")) {
-                                      var fechaSuceso = data.data;
+                                      var fechaSuceso = data.data[0];
                                       fechaSuceso.documentosReferencias = [doc.documentoID];
                                       $scope.fechasSucesos.push(fechaSuceso);
                                       $scope.hayFechasSucesos = true;
@@ -557,7 +559,7 @@
                               institucionesIDs.push(institucionID);
                               $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Instituciones?institucionID=' + institucionID).then(function(data) {
                                   if (!String(data.data).startsWith("[WARNING]")) {
-                                      var institucion = data.data;
+                                      var institucion = data.data[0];
                                       institucion.documentosReferencias = [doc.documentoID];
                                       $scope.instituciones.push(institucion);
                                       $scope.hayInstituciones = true;
@@ -700,6 +702,9 @@
         
           // Anotaciones
           $scope.cargarNotas();
+        
+          // Personajes
+          $scope.cargarPersonajes();
       };
       
       //Datos principales
@@ -754,8 +759,6 @@
               $scope.listaTemas.temaNuevo = {
                   mensaje: "+ Agregar"
               };
-
-          }).finally(function () {
               $scope.datosPrincipalesCargando = false;
           });
       };
@@ -1048,6 +1051,132 @@
           $scope.notasCambios = true;
       };
       
+      // PERSONAJES
+      $scope.personajes = [];
+      $scope.personajesNuevos = [];
+      $scope.personajesAgregarReferencia = [];
+      $scope.personajesCambios = false;
+      $scope.cargarPersonajes = function () {
+          $scope.personajesCambios = false;
+          $scope.personajes = [];
+          $scope.personajesNuevos = [];
+          $scope.personajesAgregarReferencia = [];
+          $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefPersonajes?documentoID=' + $scope.documentoID).then(function(data) {
+              // revisar si existe alguno
+              if (!String(data.data).startsWith("[WARNING]")) {
+                  var personajesReferencias = data.data;
+                  personajesReferencias.forEach(function(referencia) {
+                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes?personajeID=' + referencia.personajeID).then(function(data) {
+                            var personaje = data.data[0];
+                            $scope.personajes.push(personaje);
+                        });
+                  });
+                  // LOG
+                  console.log($scope.personajes);
+              }
+          });
+      }
+      $scope.agregarPersonaje = function () {
+          var personajeNuevo = {
+              personajeID: -1,
+              nombre: "",
+              ocupacion: "",
+              nacionalidad: "",
+              sexo: "",
+              categoria: ""
+          };
+          $scope.personajesNuevos.push(personajeNuevo);
+          $scope.personajesCambios = true;
+          $scope.registrarAccion("Personaje vacío agregado")
+      };
+      $scope.borrarNuevoPersonaje = function (indice) {
+          $scope.personajesNuevos.splice(indice,1);
+          $scope.registrarAccion("Personaje nuevo borrado");
+      };
+      $scope.borrarReferenciaNuevaPersonaje = function (indice) {
+          $scope.personajesAgregarReferencia.splice(indice,1);
+          $scope.registrarAccion("Nueva referencia a personaje borrada");
+      };
+      $scope.autocompletarPersonaje = function (hintNombre) {
+          return $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Personajes?nombre=' + hintNombre).then(function(data) {
+              var listaNombres = [];
+              var resultados = data.data;
+              var matchPerfecto = false;
+              if (resultados != "0") {
+                  resultados.forEach( function (valor) {
+                      listaNombres.push({nombre: valor.nombre, personajeID: valor.personajeID});
+                      // Revisamos si son identicos
+                      // TODO cambiar acentos 
+                      if (String(hintNombre).toLowerCase().replace(/\s/g, '') == String(valor.nombre).toLowerCase().replace(/\s/g, ''))
+                          matchPerfecto = true;
+                  })
+              }
+              if (!matchPerfecto && listaNombres.length != 0)
+                    listaNombres.unshift({nombre:hintNombre,personajeID:-1})
+              return listaNombres;
+          });
+      };
+      $scope.actualizarPersonajeNuevoExistente = function (indice,personaje) {
+          var alreadyExist = false;
+          // Revisamos si ya existe
+          $scope.personajes.forEach(function (elemento) {
+              if (personaje.personajeID == elemento.personajeID) {
+                  alreadyExist = true;
+                  personaje.nombre = "";
+                  return;
+              }
+          });
+          if (!alreadyExist && personaje.personajeID !== -1) {
+              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes', {
+                params: {
+                 personajeID: personaje.personajeID
+                }}).then(function(data) {
+                  var infoPersonaje = data.data[0];
+                  if (!String(infoPersonaje).startsWith("[WARNING]")) {
+                      $scope.personajesNuevos.splice(indice,1);
+                      var nuevaReferencia = {
+                            personajeID: infoPersonaje.personajeID,
+                            nombre: infoPersonaje.nombre,
+                            ocupacion: infoPersonaje.ocupacion,
+                            nacionalidad: infoPersonaje.nacionalidad,
+                            sexo: infoPersonaje.sexo,
+                            categoria: infoPersonaje.categoria
+                      }
+                      $scope.personajesAgregarReferencia.push(nuevaReferencia);
+                  }
+              });
+          }
+
+      };
+      $scope.abrirPersonajeSeleccionado = function(index, ubicacion) {
+          var seleccionado = -1;
+          if (ubicacion == "nuevaRef") {
+              seleccionado = $scope.personajes[index].personajeID;
+          } else if (ubicacion == "existente") {
+              seleccionado = $scope.personajes[index].personajeID;
+          }
+          if (seleccionado != -1) {
+              console.log("Abriendo documento" + seleccionado);
+              //TODO Enviar varios seleccionados
+              $window.localStorage.setItem("archivoID", $scope.archivoID);
+              $window.localStorage.setItem("documentoID", $scope.documentoID);
+              $window.localStorage.setItem("personajeID", seleccionado);
+              $window.location.href = "#!/personaje";
+          }
+      };
+      $scope.revisarSiPersonajeExiste = function ($value) {
+          var existe = false;
+          $scope.personajes.forEach( function(personaje) {
+              if ($value == personaje.nombre) {
+                  existe = true;
+                  return;
+              }
+          });
+          if (existe) {
+              return "Este nombre ya existe"
+          }
+      }
+      
       // Para guardar borrar y barra de estado
       $scope.ultimaAccion = $sce.trustAsHtml("Ninguna");
       // Log
@@ -1142,11 +1271,72 @@
               });
 
           }
-
-         init();
+          
+          // Emisor Receptor
+          if ($scope.emisorReceptorEditado) {
+              $scope.emisorReceptor.forEach( function (entrada) {
+                  // Agregar a la base de datos
+//                  if (entrada.emisorReceptorID == -1) {
+//                      $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/DocumentosEmisorReceptor?documentoID=' + $scope.documentoID + '&nota="' + nota.nota + '"&referencia="' + nota.referencia + '"').then(function(data) {
+//                          $scope.datosGuardados = true;
+//                          console.log(data);
+//                      });
+//                  }
+              });
+          }
+          
+          // PERSONAJES
+          if ($scope.personajesCambios) 
+          {
+              // agregar referencias a personajes existentes
+              $scope.personajesAgregarReferencia.forEach( function (personaje) {
+                  $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/DocumentosRefPersonajes',{
+                      params: {
+                          documentoID: $scope.documentoID,
+                          personajeID: personaje.personajeID
+                      }
+                  }).then(function(data) {
+                          $scope.datosGuardados = true;
+                          console.log(data);
+                  });
+              });
+              // Creamos personajes nuevos y agregamos referencia
+              $scope.personajesNuevos.forEach( function (personaje) {
+                  // revisar si el personaje nombre esta vacio
+                  if (personaje.nombre !== "") {
+                      $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Personajes',{
+                          params: {
+                              nombre: '"'+personaje.nombre+'"',
+                              ocupacion: '"'+personaje.ocupacion+'"',
+                              nacionalidad: '"'+personaje.nacionalidad+'"',
+                              sexo: '"'+personaje.sexo+'"',
+                              categoria: '"'+personaje.categoria+'"'
+                          }
+                      }).then(function(data) {
+                          $scope.datosGuardados = true;
+                          console.log(data);
+                          // Data contains the last insert id
+                          if (!String(data.data).startsWith("[WARNING]")) {
+                              var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
+                              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/DocumentosRefPersonajes',{
+                              params: {
+                                  documentoID: $scope.documentoID,
+                                  personajeID: lastInsertID
+                              }
+                              }).then(function(data) {
+                                  $scope.datosGuardados = true;
+                                  console.log(data);
+                              })
+                          }
+                      });
+                  }
+              });
+              
+              $timeout(function () {init();},200);
+          }
       };
       
-      init();
+      $timeout(function () {init();});
       
   }]);
   documentoPerfil.directive("uibTabAgregar", function() {
@@ -1530,5 +1720,18 @@
 
     }]);
 
+          
+// TOMADO DE
+// https://alistapart.com/article/accent-folding-for-auto-complete
+var accentMap = {
+  'á':'a', 'é':'e', 'í':'i','ó':'o','ú':'u'
+};function accent_fold (s) {
+  if (!s) { return ''; }
+  var ret = '';
+  for (var i = 0; i < s.length; i++) {
+    ret += accent_map[s.charAt(i)] || s.charAt(i);
+  }
+  return ret;
+}; 
 
 })(window.angular);
