@@ -187,6 +187,7 @@
       $scope.documentosFechaRangoInferior = "";
       $scope.documentosFechaRangoSuperior = "";
       $scope.documentosNuevos = [];
+      $scope.documentosAEliminar = [];
       $scope.documentosCambio = false;
       
       //metodo para cargar variables
@@ -197,6 +198,7 @@
           $scope.documentosFechaRangoInferior = "";
           $scope.documentosFechaRangoSuperior = "";
           $scope.documentosNuevos = [];
+          $scope.documentosAEliminar = [];
           $scope.documentosCambio = false;
           $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Documentos?archivoID=' + $scope.archivoID).then(function(data) {
               if (!String(data.data).startsWith("[WARNING]")) {
@@ -251,6 +253,18 @@
       $scope.borrarDocumentoNuevo = function (indexDocumento) {
           $scope.documentosNuevos.splice(indexDocumento, 1);
       };
+      $scope.borrarDocumentoExistente = function (indexDocumento) {
+          $scope.documentosAEliminar.push($scope.documentos[indexDocumento]);
+          $scope.documentos.splice(indexDocumento,1);
+          $scope.documentosCambio = true;
+      }
+      // TODO: Esta funcion es en caso de ser necesario. No esta siendo usada en este momento
+      $scope.reiniciarDocumentosBorrados = function () {
+          $scope.documentosAEliminar.forEach (function(doc) {
+              $scope.documents.push(doc);
+          });
+          $scope.documentosAEliminar = [];
+      }
       $scope.abrirDocumentoSeleccionado = function (indexDocumento) {
         var seleccionado = $scope.documentos[indexDocumento].documentoID;
         console.log("Abriendo documento" + seleccionado);
@@ -658,6 +672,17 @@
                       console.log(data);
                   });
               });
+              $scope.documentosAEliminar.forEach(function (docABorrar) {
+                  $scope.registrarAccion("Eliminando documento de la base de datos")
+                  $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/Documentos',
+                            {params: {idUnico:'documentoID',
+                                      documentoID: docABorrar.documentoID}}
+                  ).then (function(data) {
+                      $scope.datosGuardados = true;
+                      console.log(data);
+                  });
+                  
+              });
           }
           init();
       };
@@ -1054,12 +1079,14 @@
       // PERSONAJES
       $scope.personajes = [];
       $scope.personajesNuevos = [];
+      $scope.personajesAEliminar = [];
       $scope.personajesAgregarReferencia = [];
       $scope.personajesCambios = false;
       $scope.cargarPersonajes = function () {
           $scope.personajesCambios = false;
           $scope.personajes = [];
           $scope.personajesNuevos = [];
+          $scope.personajesAEliminar = [];
           $scope.personajesAgregarReferencia = [];
           $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefPersonajes?documentoID=' + $scope.documentoID).then(function(data) {
               // revisar si existe alguno
@@ -1068,6 +1095,7 @@
                   personajesReferencias.forEach(function(referencia) {
                         $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes?personajeID=' + referencia.personajeID).then(function(data) {
                             var personaje = data.data[0];
+                            personaje.referenciaID = referencia.referenciaID;
                             $scope.personajes.push(personaje);
                         });
                   });
@@ -1093,6 +1121,12 @@
           $scope.personajesNuevos.splice(indice,1);
           $scope.registrarAccion("Personaje nuevo borrado");
       };
+      $scope.borrarPersonajeExistente = function(indice) {
+          $scope.registrarAccion("Personaje " + $scope.personajes[indice].nombre + " seleccionado para eliminar")
+          $scope.personajesAEliminar.push($scope.personajes[indice]);
+          $scope.personajes.splice(indice,1);
+          $scope.personajesCambios = true;
+      }
       $scope.borrarReferenciaNuevaPersonaje = function (indice) {
           $scope.personajesAgregarReferencia.splice(indice,1);
           $scope.registrarAccion("Nueva referencia a personaje borrada");
@@ -1120,6 +1154,14 @@
           var alreadyExist = false;
           // Revisamos si ya existe
           $scope.personajes.forEach(function (elemento) {
+              if (personaje.personajeID == elemento.personajeID) {
+                  alreadyExist = true;
+                  personaje.nombre = "";
+                  return;
+              }
+          });
+          // Revisamos si la referencia fue eliminada anteriormente
+          $scope.personajesAEliminar.forEach(function (elemento) {
               if (personaje.personajeID == elemento.personajeID) {
                   alreadyExist = true;
                   personaje.nombre = "";
@@ -1166,14 +1208,23 @@
       };
       $scope.revisarSiPersonajeExiste = function ($value) {
           var existe = false;
+          var mensaje = "";
           $scope.personajes.forEach( function(personaje) {
               if ($value == personaje.nombre) {
                   existe = true;
+                  mensaje = "Este nombre ya existe";
+                  return;
+              }
+          });
+          $scope.personajesAEliminar.forEach( function(personajeEliminado){
+              if ($value == personajeEliminado.nombre) {
+                  existe = true;
+                  mensaje = "Este nombre ya existía, fue eliminado pero los cambios no han sido guardados.";
                   return;
               }
           });
           if (existe) {
-              return "Este nombre ya existe"
+              return mensaje;
           }
       }
       
@@ -1300,6 +1351,19 @@
                           console.log(data);
                   });
               });
+              // Eliminamos referencias existentes
+              $scope.personajesAEliminar.forEach (function (personajeRefABorrar) {
+                  $scope.registrarAccion("Referencia existente eliminada");
+                  $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/DocumentosRefPersonajes',{
+                      params: {
+                          idUnico: 'referenciaID',
+                          referenciaID: personajeRefABorrar.referenciaID
+                      }
+                  }).then(function(data) {
+                          $scope.datosGuardados = true;
+                          console.log(data);
+                  });
+              });
               // Creamos personajes nuevos y agregamos referencia
               $scope.personajesNuevos.forEach( function (personaje) {
                   // revisar si el personaje nombre esta vacio
@@ -1365,12 +1429,127 @@
   ////////////////////////////////////////////////////////////////////////////////////
   // PERSONAJE PERFIL MODULE
   ////////////////////////////////////////////////////////////////////////////////////
+    
+  var personajePerfil = angular.module('personajePerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
+  personajePerfil.controller('personajePerfilController', ['$scope', '$sce', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', function($scope, $sce, $http, $window, $location, $filter, $timeout, i18nService, uiGridConstants) {
+    $scope.archivoID = -1;
+    $scope.documentoID = -1;
+    $scope.personajeID = -1;
+    
+    var init = function() {
+          $scope.archivoID = $window.localStorage.getItem("archivoID");
+          $scope.documentoID = $window.localStorage.getItem("documentoID");
+          $scope.personajeID = $window.localStorage.getItem("personajeID");
+          if (!$scope.datosGuardados) {
+              $scope.registrarAccion("Personaje <strong>" + $scope.personajeID + "</strong> ha sido cargado");
+          } else {
+              $scope.registrarAccion("Personaje <strong>" + $scope.personajeID  + "</strong> ha sido guardado en la base de datos");
+              $scope.datosGuardados = false;
+          }
 
-  var personajePerfil = angular.module('personajePerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
-  personajePerfil.controller('personajePerfilController', ['$scope', function($scope) {
-      $scope.realizarBusqueda = function() {
-        alert("Función en construcción. Gracias por su paciencia.");
+          // Cargamoss los datos principales
+          $scope.cargarDatosPrincipales();
+        
       };
+      
+      //Datos principales
+      $scope.datosPrincipales = {};
+
+      //Bandera para saber cuando guardar o no
+      $scope.datosPrincipales.editado = false;
+      $scope.datosPrincipalesCargando = true;
+
+      $scope.cargarDatosPrincipales = function() {
+          $scope.datosPrincipalesCargando = true;
+          $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes',
+              {params: {personajeID: $scope.personajeID}}
+          ).then(function(data) {
+              //Obtener los datos JSON
+              var personajeDatos = data.data[0];
+              
+              //Log
+              console.log(personajeDatos);
+              try {
+                    $scope.datosPrincipales = personajeDatos;
+                  
+                    // Editamos fecha de nacimiento y fallecimiento al formato adecuado
+                    $scope.datosPrincipales.fechaNacimiento = personajeDatos.fechaNacimiento != null ? $filter('date')(new Date(personajeDatos.fechaNacimiento), String(personajeDatos.fechaNacimientoFormato).toLowerCase()) : "";
+                    $scope.datosPrincipales.fechaFallecimiento = personajeDatos.fechaFallecimiento != null ? $filter('date')(new Date(personajeDatos.fechaFallecimiento), String(personajeDatos.fechaFallecimientoFormato).toLowerCase()) : "";
+                  
+                    // Lista de enfermedades
+                    if ($scope.datosPrincipales.enfermedades != null && $scope.datosPrincipales.enfermedades != "") {
+                        $scope.datosPrincipales.enfermedades = personajeDatos.enfermedades.split(",");
+                        $scope.datosPrincipales.enfermedades = $scope.datosPrincipales.enfermedades.map(function(e) {
+                            return e.trim();
+                        });
+                    } else {
+                        $scope.datosPrincipales.enfermedades = [];
+                    }
+              }
+              catch(err) {
+                  console.log("Problema cargando los valores de datos principales del personaje " + err.message);
+              }
+              
+              //Limpiamos la bandera de editado
+              $scope.datosPrincipales.editado = false;
+              
+              // Funcion para datos editados
+              $scope.datosPrincipales.datoEditado = function(campo, valorNuevo) {
+                  if (valorNuevo != $scope.datosPrincipales[campo]) {
+                      $scope.registrarAccion(campo + "modificado");
+                      $scope.datosPrincipales.editado = true;
+                  }
+              };
+
+              //Para Lista de enfermedades claves
+              $scope.listaEnfermedades.enfermedadNueva = {
+                  mensaje: "+ Agregar"
+              };
+              $scope.datosPrincipalesCargando = false;
+          });
+      };
+      
+      // ENFERMEDADES
+      $scope.listaEnfermedades = {}
+      // Para borrar Enfermedades
+      $scope.listaEnfermedades.modificarBorrarEnfermedad = function(indexEditada, enfermedad) {
+          if (enfermedad == "") {
+              var enfermedadEliminada = $scope.datosPrincipales.listaEnfermedades[indexEditada];
+              if (enfermedadEliminada != "") {
+                  $scope.registrarAccion("Enfermedad <strong>" + enfermedadEliminada + "</strong> eliminada");
+                  $scope.datosPrincipales.editado = true;
+              }
+              $scope.datosPrincipales.listaEnfermedades.splice(indexEditada, 1);
+          } else {
+              var enfermedadModificada = $scope.datosPrincipales.listaEnfermedades[indexEditada];
+              if (enfermedad != enfermedadModificada) {
+                  $scope.registrarAccion("Enfermedad <strong>" + enfermedadModificada + "</strong> Modificada a <strong>" + enfermedad + "</strong>");
+                  $scope.datosPrincipales.listaEnfermedades[indexEditada] = enfermedad;
+                  $scope.datosPrincipales.editado = true;
+              }
+          }
+      }
+      //Para agregar enfermedades
+      $scope.listaEnfermedades.enfermedadNueva = {
+          mensaje: '+ Agregar'
+      };
+      $scope.listaEnfermedades.borrarCampo = function() {
+          $scope.listaEnfermedades.enfermedadNueva.mensaje = "";
+      }
+      $scope.listaEnfermedades.mostrarCampo = function() {
+          $scope.listaEnfermedades.enfermedadNueva.mensaje = "+ Agregar";
+      }
+      $scope.listaEnfermedades.agregarEnfermedadNueva = function(enfermedad) {
+          if (!$scope.datosPrincipales.enfermedades.includes(enfermedad) && enfermedad.length != 0) {
+              $scope.datosPrincipales.enfermedades.push(enfermedad);
+              $scope.registrarAccion("Enfermedad <strong>" + enfermedad + "</strong> agregada");
+              $scope.datosPrincipales.editado = true;
+          }
+          $scope.listaEnfermedades.enfermedadNueva.mensaje = "+ Agregar";
+      }
+      
+      
+      // Funcionalidad para hola de servicio
       $scope.tabs = new Map();
       $scope.tabsArray = [];
       $scope.abrirElemento = function(ElementoId) {
@@ -1390,6 +1569,24 @@
         }
         $scope.tabsArray = Array.from($scope.tabs);
       }
+      
+      // Para guardar borrar y barra de estado
+      $scope.ultimaAccion = $sce.trustAsHtml("Ninguna");
+      // Log
+      $scope.registrarAccion = function(mensaje) {
+          $scope.ultimaAccion = $sce.trustAsHtml(mensaje);
+          console.log(mensaje)
+      }
+      // Button functions
+      $scope.borrarCambios = function() {
+          if (window.confirm("Esta Seguro que quiere borrar los cambios?") === true) {
+              $scope.registrarAccion("Los cambios han sido borrados");
+              init();
+          }
+      };
+      
+      // Incializar el personaje
+      init();
 
     }]);
 

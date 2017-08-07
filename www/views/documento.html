@@ -240,7 +240,7 @@
     			<table id="personajesTabla">
 		        <tr><th>Personaje ID</th><th>Nombre</th><th>Ocupación</th><th>Nacionalidad</th><th>Sexo</th><th>categoria</th></tr>
 		        <tr ng-click="abrirPersonajeSeleccionado($index,'existente')" ng-repeat="personaje in personajes track by $index">
-                    <td>{{personaje.personajeID}}</td>
+                    <td><button ng-show="borrarPersonajesActivado" ng-click='borrarPersonajeExistente($index);$event.stopPropagation()' class="btn-danger">-</button>{{personaje.personajeID}}</td>
                     <td>{{personaje.nombre}}</td>
                     <td>{{personaje.ocupacion}}</td>
                     <td>{{personaje.nacionalidad}}</td>
@@ -269,6 +269,7 @@
 		      </table>
     		</div>
             <button ng-click='agregarPersonaje()' class="btn btn-success m-a-2">Agregar Personaje</button>
+            <button ng-click='borrarPersonajesActivado = !borrarPersonajesActivado' class="btn m-a-2">{{borrarPersonajesActivado? "Desabilitar" : "Habilitar"}} borrar personajes existentes</button>
     	</div>
     </uib-tab>
 

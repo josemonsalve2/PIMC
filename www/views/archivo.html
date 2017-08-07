@@ -210,7 +210,7 @@
 	          <tr><th colspan="4">Documentos</th></tr>
 	          <tr><th>Documento ID</th><th>Tipo Documento</th><th>Formato</th><th>Lista de Temas</th></tr>
 	          <tr ng-click="abrirDocumentoSeleccionado($index)" ng-repeat="doc in documentos track by $index">
-                  <td class="entradaDocumento">{{doc.documentoID}}</td><td>{{doc.tipoDocumento}}</td><td>{{doc.formatoDisponible}}</td><td>{{doc.listaTemas}}</td>
+                  <td class="entradaDocumento"> <button ng-show="borrarDocumentosActivado" ng-click='borrarDocumentoExistente($index);$event.stopPropagation()' class="btn-danger">-</button> {{doc.documentoID}}</td><td>{{doc.tipoDocumento}}</td><td>{{doc.formatoDisponible}}</td><td>{{doc.listaTemas}}</td>
               </tr>
               <tr ng-repeat="doc in documentosNuevos track by $index">
                   <td class="entradaDocumentoNuevo"><button ng-click='borrarDocumentoNuevo($index)' class="btn-danger">-</button> Documento nuevo</td><td><span editable-text="doc.tipoDocumento">{{doc.tipoDocumento || "tipo documento"}}</span></td><td><span editable-text="doc.formatoDisponible">{{doc.formatoDisponible || "formato"}}</span></td><td><span editable-text="doc.listaTemas">{{doc.listaTemas || "Temas separados por coma"}}</span></td>
@@ -218,6 +218,7 @@
 	        </table>
       	</div>
         <button ng-click='agregarDocumento()' class="btn btn-success m-a-2">Agregar Documento</button>
+        <button ng-click='borrarDocumentosActivado = !borrarDocumentosActivado' class="btn m-a-2">{{borrarDocumentosActivado? "Desabilitar" : "Habilitar"}} borrar documentos existentes</button>
       </div>
     </uib-tab>
 

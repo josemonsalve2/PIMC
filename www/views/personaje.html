@@ -5,20 +5,76 @@
         
         <div id="datosPrincipalesPersonaje" class="col-sm-12 col-md-4">
           <h1 class="nombre">
-            Señor Felipe Perez
+            <span editable-text="datosPrincipales.titulo" 
+                				onbeforesave="datosPrincipales.datoEditado('titulo',$data)"  
+                				class="m-l-1"> {{ datosPrincipales.titulo || "Titulo" }}</span>
+            <span editable-text="datosPrincipales.nombre" 
+                				onbeforesave="datosPrincipales.datoEditado('nombre',$data)"  
+                				class="m-l-1"> {{ datosPrincipales.nombre || "Nombre" }}</span>
           </h1>
           <h2 class="ocupacion">
-            Cargo: Procrastinador
+            Ocupacion Principal: <span editable-text="datosPrincipales.ocupacion" 
+                				onbeforesave="datosPrincipales.datoEditado('ocupacion',$data)"  
+                				class="m-l-1"> {{ datosPrincipales.ocupacion || "Ocupacion" }}</span>
           </h2>
-          <ul class="datos">
-            <li><span class="tituloDato">Sexo:</span><span class="valorDato">Masculino </span></li>
-            <li><span class="tituloDato">Nacionalidades:</span><span class="valorDato"> Colombiano </span></li>
-            <li><span class="tituloDato">Lugar Nacimiento:</span><span class="valorDato"> Colombia </span></li>
-            <li><span class="tituloDato">Fecha Nacimiento:</span><span class="valorDato"> 12 octubre 1900</span></li>
-            <li><span class="tituloDato">Edad:</span><span class="valorDato">87</span><span id="naceMuere">(1900 - 1987)</span></li>
-            <li><span class="tituloDato">Lugar Fallecimiento:</span><span class="valorDato">Peru</span></li>
-            <li><span class="tituloDato">Fecha Fallecimiento:</span><span class="valorDato">12 octubre 1987</span></li>
-            <li><span class="tituloDato">Enfermedades:</span><span class="valorDato">bobada</span></li>
+            
+          <ul class="list-group m-b-0">
+                
+                <li class="list-group-item">
+                	<span class="label label-primary">Sexo</span>
+                	<span editable-text="datosPrincipales.sexo" 
+                				onbeforesave="datosPrincipales.datoEditado('sexo',$data)"  
+                				class="m-l-1"> {{ datosPrincipales.sexo || "No definido" }}</span>
+              </li> 
+              <li class="list-group-item">
+                	<span class="label label-primary">Nacionalidades</span>
+                	<span editable-text="datosPrincipales.nacionalidad" 
+                				onbeforesave="datosPrincipales.datoEditado('nacionalidad',$data)"  
+                				class="m-l-1"> {{ datosPrincipales.nacionalidad || "No definido" }}</span>
+              </li> 
+              <li class="list-group-item">
+                	<span class="label label-primary">Lugar Nacimiento</span>
+                	<span editable-text="datosPrincipales.lugarNacimiento" 
+                				onbeforesave="datosPrincipales.datoEditado('lugarNacimiento',$data)"  
+                				class="m-l-1"> {{ datosPrincipales.lugarNacimiento || "No definido" }}</span>
+              </li> 
+              <li class="list-group-item">
+                	<span class="label label-primary">Fecha Nacimiento</span>
+                	<span editable-text="datosPrincipales.fechaNacimiento" 
+                				onbeforesave="datosPrincipales.datoEditado('fechaNacimiento',$data)"  
+                				class="m-l-1"> {{ datosPrincipales.fechaNacimiento || "No definido" }}</span>
+              </li> 
+              <li class="list-group-item">
+                	<span class="label label-primary">Lugar Fallecimiento</span>
+                	<span editable-text="datosPrincipales.lugarFallecimiento" 
+                				onbeforesave="datosPrincipales.datoEditado('lugarFallecimiento',$data)"  
+                				class="m-l-1"> {{ datosPrincipales.lugarFallecimiento || "No definido" }}</span>
+              </li> 
+              <li class="list-group-item">
+                	<span class="label label-primary">Fecha Fallecimiento</span>
+                	<span editable-text="datosPrincipales.fechaFallecimiento" 
+                				onbeforesave="datosPrincipales.datoEditado('fechaFallecimiento',$data)"  
+                				class="m-l-1"> {{ datosPrincipales.fechaFallecimiento || "No definido" }}</span>
+              </li> 
+              <li class="list-group-item">
+                	<span class="label label-primary">Enfermedades</span>
+                  <ul class="nav nav-pills rounded">
+            		<li role="presentation" class="active" 
+            				onaftersave="listaEnfermedades.modificarBorrarEnfermedad($index,enfermedad)" 
+            				editable-text="enfermedad" 
+            				ng-repeat="enfermedad in datosPrincipales.listaEnfermedades track by $index">
+            				<a href="#" class="bg-mountain_meadow">{{enfermedad}}</a>
+            		</li>
+            		<li role="presentation" 
+            				editable-text="listaEnfermedades.enfermedadNueva.mensaje" 
+            				onaftersave="listaEnfermedades.agregarEnfermedadNueva(listaEnfermedades.enfermedadNueva.mensaje)" 
+            				e-ng-focus="listaEnfermedades.borrarCampo()" 
+            				oncancel="listaEnfermedades.mostrarCampo()">
+            				<a href="#">{{listaEnfermedades.enfermedadNueva.mensaje}}</a>
+            		</li>
+            	</ul>
+              </li> 
+              
           </ul>
         </div>
 
