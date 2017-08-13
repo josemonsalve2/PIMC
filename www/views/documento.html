@@ -278,13 +278,44 @@
     	<div class="row p-t-2">
     		<div class="col-sm-12">
 		      <table id="embarcacionesTabla">
-		        <tr><th>Nombre</th><th>Alias</th><th>Tipo de buque</th><th>Bandera</th><th>Utilidad</th><th>Categoria</th><th>Cita/Anotación</th></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
+                  <tr><th>Embarcacion ID</th><th>Nombre</th><th>Alias</th><th>Tipo de buque</th><th>Bandera</th><th>Usos</th><th>Categoria</th><th>Cita/Anotación</th></tr>
+		        <tr ng-click="abrirEmbarcacionSeleccionada($index,'existente')" ng-repeat="embarcacion in embarcaciones track by $index">
+                    <td><button ng-show="borrarEmbarcacionesActivado" ng-click='borrarEmbarcacionExistente($index);$event.stopPropagation()' class="btn-danger">-</button>{{embarcacion.embarcacionID}}</td>
+                    <td>{{embarcacion.nombres}}</td>
+                    <td>{{embarcacion.alias}}</td>
+                    <td>{{embarcacion.tipo}}</td>
+                    <td>{{embarcacion.banderas}}</td>
+                    <td>{{embarcacion.usos}}</td>
+                    <td>{{embarcacion.categoria}}</td>
+                    <td>{{embarcacion.comentario}}</td>
+                </tr>
+                <tr ng-click="abrirEmbarcacionSeleccionada($index,'nuevaRef')" ng-repeat="embarcacion in embarcacionesAgregarReferencia track by $index">
+                    <td><button ng-click='borrarReferenciaNuevaEmbarcacion($index)' class="btn-danger">-</button> (Nueva Ref) {{embarcacion.embarcacionID}}</td>
+                    <td>{{embarcacion.nombres}}</td>
+                    <td>{{embarcacion.alias}}</td>
+                    <td>{{embarcacion.tipo}}</td>
+                    <td>{{embarcacion.banderas}}</td>
+                    <td>{{embarcacion.usos}}</td>
+                    <td>{{embarcacion.categoria}}</td>
+                    <td>{{embarcacion.comentario}}</td>
+                </tr>
+                <tr ng-repeat="embarcacion in embarcacionesNuevas track by $index">
+                    <td><button ng-click='borrarNuevaEmbarcacion($index)' class="btn-danger">-</button> {{"Embarcación Nueva"}}</td>
+                    <td>
+                        <span editable-text="embarcacion.nombres" e-typeahead-min-length="3" e-uib-typeahead="embarcaciones.nombres for embarcaciones in autocompletarEmbarcacion($viewValue)" e-typeahead-wait-ms="100" e-typeahead-on-select="actualizarEmbarcacionNuevaExistente($index,$item)" e-typeahead-no-results="EmbarcacionNoResults" e-typeahead-loading="cargandoNombresEmbarcacion" onbeforesave="revisarSiEmbarcacionExiste($data)">{{embarcacion.nombres || "nuevo nombres"}}</span>
+                        <i ng-show="cargandoNombresEmbarcacion" class="glyphicon glyphicon-refresh"></i>
+                        <div ng-show="EmbarcacionNoResults"><i class="glyphicon glyphicon-remove"></i> No Results Found</div></td>
+                    <td><span editable-text="embarcacion.alias">{{embarcacion.alias || "nuevo alias"}}</span></td>
+                    <td><span editable-text="embarcacion.tipo">{{embarcacion.tipo || "nuevo tipo"}}</span></td>
+                    <td><span editable-text="embarcacion.banderas">{{embarcacion.banderas || "lista banderas"}}</span></td>
+                    <td><span editable-text="embarcacion.usos">{{embarcacion.usos || "nuevos usos"}}</span></td>
+                    <td><span editable-text="embarcacion.categoria">{{embarcacion.categoria || "nueva categoria"}}</span></td>
+                    <td><span editable-text="embarcacion.comentario">{{embarcacion.comentario || "comentario de referencia"}}</span></td>
+               </tr>
 		      </table>
-      	</div>
+      	     </div>
+            <button ng-click='agregarEmbarcacion()' class="btn btn-success m-a-2">Agregar Embarcacion</button>
+            <button ng-click='borrarEmbarcacionesActivado = !borrarEmbarcacionesActivado' class="btn m-a-2">{{borrarEmbarcacionesActivado? "Desabilitar" : "Habilitar"}} borrar embarcaciones existentes</button>
       </div>
     </uib-tab>
 
@@ -293,11 +324,40 @@
     	<div class="row p-t-2">
     		<div class="col-sm-12">
 		      <table id="lugaresTabla">
-		        <tr><th>Nombre</th><th>Tipo de Lugar</th><th>Categoria</th><th>Cita/Anotación</th></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td></tr>
+		        <tr><th>Lugar ID</th><th>Nombre</th><th>Tipo de Lugar</th><th>Categoria</th><th>Cita/Anotación</th></tr>
+		        <tr ng-click="abrirLugarSeleccionado($index,'existente')" ng-repeat="lugar in lugares track by $index">
+                    <td><button ng-show="borrarLugaresActivado" ng-click='borrarLugarExistente($index);$event.stopPropagation()' class="btn-danger">-</button>{{lugar.embarcacionID}}</td>
+                    <td>{{lugar.nombres}}</td>
+                    <td>{{lugar.alias}}</td>
+                    <td>{{lugar.tipo}}</td>
+                    <td>{{lugar.banderas}}</td>
+                    <td>{{lugar.usos}}</td>
+                    <td>{{lugar.categoria}}</td>
+                    <td>{{lugar.comentario}}</td>
+                </tr>
+                <tr ng-click="abrirLugarSeleccionado($index,'nuevaRef')" ng-repeat="lugar in lugaresAgregarReferencia track by $index">
+                    <td><button ng-click='borrarReferenciaNuevoLugar($index)' class="btn-danger">-</button> (Nueva Ref) {{lugar.embarcacionID}}</td>
+                    <td>{{lugar.nombres}}</td>
+                    <td>{{lugar.alias}}</td>
+                    <td>{{lugar.tipo}}</td>
+                    <td>{{lugar.banderas}}</td>
+                    <td>{{lugar.usos}}</td>
+                    <td>{{lugar.categoria}}</td>
+                    <td>{{lugar.comentario}}</td>
+                </tr>
+                <tr ng-repeat="lugar in lugaresNuevas track by $index">
+                    <td><button ng-click='borrarNuevoLugar($index)' class="btn-danger">-</button> {{"Lugar Nuevo"}}</td>
+                    <td>
+                        <span editable-text="lugar.nombres" e-typeahead-min-length="3" e-uib-typeahead="lugares.nombres for lugares in autocompletarLugar($viewValue)" e-typeahead-wait-ms="100" e-typeahead-on-select="actualizarLugarNuevaExistente($index,$item)" e-typeahead-no-results="LugarNoResults" e-typeahead-loading="cargandoNombresLugar" onbeforesave="revisarSiLugarExiste($data)">{{lugar.nombres || "nuevo nombres"}}</span>
+                        <i ng-show="cargandoLugarrcacion" class="glyphicon glyphicon-refresh"></i>
+                        <div ng-show="LugarNoResults"><i class="glyphicon glyphicon-remove"></i> No Results Found</div></td>
+                    <td><span editable-text="lugar.alias">{{lugar.alias || "nuevo alias"}}</span></td>
+                    <td><span editable-text="lugar.tipo">{{lugar.tipo || "nuevo tipo"}}</span></td>
+                    <td><span editable-text="lugar.banderas">{{lugar.banderas || "lista banderas"}}</span></td>
+                    <td><span editable-text="lugar.usos">{{lugar.usos || "nuevos usos"}}</span></td>
+                    <td><span editable-text="lugar.categoria">{{lugar.categoria || "nueva categoria"}}</span></td>
+                    <td><span editable-text="lugar.comentario">{{lugar.comentario || "comentario de referencia"}}</span></td>
+               </tr>
 		      </table>
       	</div>
       </div>

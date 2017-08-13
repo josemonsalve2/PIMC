@@ -1,7 +1,7 @@
 (function (angular) {
   
   'use strict';
-
+  
   var pimc = angular.module('pimc', [
     'ngRoute',
     'indexModule',

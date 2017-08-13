@@ -9,7 +9,6 @@
   var indexModule = angular.module('indexModule', []);
   indexModule.controller('indexController', [function($scope) {}]);
 
-
   ////////////////////////////////////////////////////////////////////////////////////
   // ARCHIVO PERFIL MODULE
   ////////////////////////////////////////////////////////////////////////////////////
@@ -730,6 +729,9 @@
         
           // Personajes
           $scope.cargarPersonajes();
+        
+          // Embarcaciones
+          $scope.cargarEmbarcaciones();
       };
       
       //Datos principales
@@ -1168,6 +1170,14 @@
                   return;
               }
           });
+          $scope.personajesAgregarReferencia.forEach(function (elemento) {
+              if (personaje.personajeID == elemento.personajeID) {
+                  alreadyExist = true;
+                  personaje.nombre = "";
+                  return;
+              }
+          });
+          
           if (!alreadyExist && personaje.personajeID !== -1) {
               $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes', {
                 params: {
@@ -1193,13 +1203,14 @@
       $scope.abrirPersonajeSeleccionado = function(index, ubicacion) {
           var seleccionado = -1;
           if (ubicacion == "nuevaRef") {
-              seleccionado = $scope.personajes[index].personajeID;
+              seleccionado = $scope.personajesAgregarReferencia[index].personajeID;
           } else if (ubicacion == "existente") {
               seleccionado = $scope.personajes[index].personajeID;
           }
           if (seleccionado != -1) {
               console.log("Abriendo documento" + seleccionado);
               //TODO Enviar varios seleccionados
+              //TODO Preguntar si desea guardar cambios
               $window.localStorage.setItem("archivoID", $scope.archivoID);
               $window.localStorage.setItem("documentoID", $scope.documentoID);
               $window.localStorage.setItem("personajeID", seleccionado);
@@ -1223,10 +1234,248 @@
                   return;
               }
           });
+          $scope.personajesAgregarReferencia.forEach( function(personajeRefNueva) {
+              if ($value == personajeRefNueva.nombre) {
+                  existe = true;
+                  mensaje = "Ref ya agregada";
+                  return;
+              }
+          });
+          $scope.personajesNuevos.forEach( function(personajeNuevo) {
+              if ($value == personajeNuevo.nombre) {
+                  existe = true;
+                  mensaje = "Personaje ya agregado";
+                  return;
+              }
+          });
           if (existe) {
               return mensaje;
           }
       }
+      
+      // EMBARCACIONES
+      $scope.embarcaciones = [];
+      $scope.embarcacionesNuevas = [];
+      $scope.embarcacionesAEliminar = [];
+      $scope.embarcacionesAgregarReferencia = [];
+      $scope.embarcacionesCambios = false;
+      $scope.cargarEmbarcaciones = function () {
+          $scope.embarcacionesCambios = false;
+          $scope.embarcaciones = [];
+          $scope.embarcacionesNuevas = [];
+          $scope.embarcacionesAEliminar = [];
+          $scope.embarcacionesAgregarReferencia = [];
+          $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefEmbarcacion',
+                    { params: {
+                        documentoID:$scope.documentoID
+                      }
+                    }
+          ).then(function(data) {
+              // revisar si existe alguno
+              if (!String(data.data).startsWith("[WARNING]")) {
+                  var embarcacionReferencias = data.data;
+                  embarcacionReferencias.forEach(function(referencia) {
+                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Embarcaciones',
+                                  { params: {
+                                      embarcacionID:referencia.embarcacionID
+                                    }
+                                  }
+                        ).then(function(data) {
+                            var embarcacion = data.data[0];
+                            embarcacion.referenciaID = referencia.referenciaID;
+                            embarcacion.comentario = referencia.comentario;
+                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/EmbarcacionesBanderas',
+                                  { params: {
+                                      embarcacionID:referencia.embarcacionID
+                                    }
+                                  }
+                            ).then(function(data) {
+                                var banderas = data.data;
+                                var listaBanderas = [];
+                                banderas.forEach(function(bandera) {
+                                    listaBanderas.push(bandera.bandera);
+                                });
+                                embarcacion.banderas = listaBanderas.join(', ');
+                                $scope.embarcaciones.push(embarcacion);
+                               
+                            });
+                        });
+                        
+                  });
+                  // LOG
+                  console.log($scope.embarcaciones);
+              }
+          });
+      }
+      $scope.agregarEmbarcacion = function () {
+          var embarcacionNueva = {
+              embarcacionID: -1,
+              nombres: "",
+              alias: "",
+              tipo: "",
+              banderas: "",
+              usos: "",
+              categoria: "",
+              comentario: ""
+          };
+          $scope.embarcacionesNuevas.push(embarcacionNueva);
+          $scope.embarcacionesCambios = true;
+          $scope.registrarAccion("Embarcacion vacía agregada")
+      };
+      $scope.borrarNuevaEmbarcacion = function (indice) {
+          $scope.embarcacionesNuevas.splice(indice,1);
+          $scope.registrarAccion("Embarcación nueva borrada");
+      };
+      $scope.borrarEmbarcacionExistente = function(indice) {
+          $scope.registrarAccion("Embarcación " + $scope.embarcaciones[indice].nombres + " seleccionada para eliminar")
+          $scope.embarcacionesAEliminar.push($scope.embarcaciones[indice]);
+          $scope.embarcaciones.splice(indice,1);
+          $scope.embarcacionesCambios = true;
+      }
+      $scope.borrarReferenciaNuevaEmbarcacion = function (indice) {
+          $scope.embarcacionesAgregarReferencia.splice(indice,1);
+          $scope.registrarAccion("Nueva referencia a embarcación borrada");
+      };
+      $scope.autocompletarEmbarcacion = function (hintNombre) {
+          return $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Embarcaciones',
+                           { params: {
+                               nombres:hintNombre
+                             }
+                           }
+                  ).then(function(data) {
+                      var listaNombres = [];
+                      var resultados = data.data;
+                      var matchPerfecto = false;
+                      if (resultados != "0") {
+                          resultados.forEach( function (valor) {
+                              listaNombres.push({nombres: valor.nombres, embarcacionID: valor.embarcacionID});
+                              // Revisamos si son identicos
+                              // TODO cambiar acentos 
+                              if (String(hintNombre).toLowerCase().replace(/\s/g, '') == String(valor.nombres).toLowerCase().replace(/\s/g, ''))
+                                  matchPerfecto = true;
+                          })
+                      }
+                      if (!matchPerfecto && listaNombres.length != 0)
+                            listaNombres.unshift({nombres:hintNombre,embarcacionID:-1})
+                      return listaNombres;
+                  });
+      };
+      $scope.actualizarEmbarcacionNuevaExistente = function (indice,embarcacion) {
+          var alreadyExist = false;
+          // Revisamos si ya existe
+          $scope.embarcaciones.forEach(function (elemento) {
+              if (embarcacion.embarcacionID == elemento.embarcacionID) {
+                  alreadyExist = true;
+                  embarcacion.nombres = "";
+                  return;
+              }
+          });
+          // Revisamos si la referencia fue eliminada anteriormente
+          $scope.embarcacionesAEliminar.forEach(function (elemento) {
+              if (embarcacion.embarcacionID == elemento.embarcacionID) {
+                  alreadyExist = true;
+                  embarcacion.nombres = "";
+                  return;
+              }
+          });
+          $scope.embarcacionesAgregarReferencia.forEach(function (elemento) {
+              if (embarcacion.embarcacionID == elemento.embarcacionID) {
+                  alreadyExist = true;
+                  embarcacion.nombres = "";
+                  return;
+              }
+          });
+          
+          if (!alreadyExist && embarcacion.embarcacionID !== -1) {
+              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Embarcaciones', {
+                params: {
+                 embarcacionID: embarcacion.embarcacionID
+                }}
+              ).then(function(data) {
+                  var infoEmbarcacion = data.data[0];
+                  if (!String(infoEmbarcacion).startsWith("[WARNING]")) {
+                      $scope.embarcacionesNuevas.splice(indice,1);
+                      var nuevaReferencia = {
+                            embarcacionID: infoEmbarcacion.embarcacionID,
+                            alias: infoEmbarcacion.alias,
+                            tipo: infoEmbarcacion.tipo,
+                            usos: infoEmbarcacion.usos,
+                            categoria: infoEmbarcacion.categoria,
+                            comentario: infoEmbarcacion.comentario
+                      }
+                      $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/EmbarcacionesBanderas', {
+                        params: {
+                         embarcacionID: embarcacion.embarcacionID
+                        }}
+                      ).then(function(data) {
+                        if (!String(infoEmbarcacion).startsWith("[WARNING]")) {
+                            var banderas = data.data;
+                            var listaBanderas = [];
+                            banderas.forEach(function(bandera) {
+                                listaBanderas.push(bandera.bandera);
+                            });
+                            nuevaReferencia.banderas = listaBanderas.join(', ');
+                            $scope.embarcacionesAgregarReferencia.push(nuevaReferencia);
+                        }
+                      });
+                  }
+              });
+          }
+
+      };
+      $scope.abrirEmbarcacionSeleccionada = function(index, ubicacion) {
+          var seleccionado = -1;
+          if (ubicacion == "nuevaRef") {
+              seleccionado = $scope.embarcacionesAgregarReferencia[index].embarcacionID;
+          } else if (ubicacion == "existente") {
+              seleccionado = $scope.embarcaciones[index].embarcacionID;
+          }
+          if (seleccionado != -1) {
+              console.log("Abriendo documento" + seleccionado);
+              //TODO Enviar varios seleccionados
+              //TODO Preguntar si desea guardar cambios
+              $window.localStorage.setItem("archivoID", $scope.archivoID);
+              $window.localStorage.setItem("documentoID", $scope.documentoID);
+              $window.localStorage.setItem("embarcacionID", seleccionado);
+              $window.location.href = "#!/embarcacion";
+          }
+      };
+      $scope.revisarSiEmbarcacionExiste = function ($value) {
+          var existe = false;
+          var mensaje = "";
+          $scope.embarcaciones.forEach( function(embarcacion) {
+              if ($value == embarcacion.nombres) {
+                  existe = true;
+                  mensaje = "Este nombres ya existe";
+                  return;
+              }
+          });
+          $scope.embarcacionesAEliminar.forEach( function(embarcacionEliminada){
+              if ($value == embarcacionEliminada.nombres) {
+                  existe = true;
+                  mensaje = "Este nombres ya existía, fue eliminado pero los cambios no han sido guardados.";
+                  return;
+              }
+          });
+          $scope.embarcacionesAgregarReferencia.forEach( function(embarcacionRefNueva) {
+              if ($value == embarcacionRefNueva.nombres) {
+                  existe = true;
+                  mensaje = "Ref ya agregada";
+                  return;
+              }
+          });
+          $scope.embarcacionesNuevas.forEach( function(embarcacionNueva) {
+              if ($value == embarcacionNueva.nombres) {
+                  existe = true;
+                  mensaje = "Embarcación ya agregado";
+                  return;
+              }
+          });
+          if (existe) {
+              return mensaje;
+          }
+      }
+      
       
       // Para guardar borrar y barra de estado
       $scope.ultimaAccion = $sce.trustAsHtml("Ninguna");
@@ -1336,6 +1585,84 @@
               });
           }
           
+          // EMBARCACIONES
+          if ($scope.embarcacionesCambios)  {
+              // agregar referencias a embarcaciones existentes
+              $scope.embarcacionesAgregarReferencia.forEach( function (embarcacion) {
+                  $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/DocumentosRefEmbarcacion',{
+                      params: {
+                          documentoID: $scope.documentoID,
+                          embarcacionID: embarcacion.embarcacionID,
+                          comentario: '"'+embarcacion.comentario+'"'
+                      }
+                  }).then(function(data) {
+                          $scope.datosGuardados = true;
+                          console.log(data);
+                  });
+              });
+              // Eliminamos referencias existentes
+              $scope.embarcacionesAEliminar.forEach (function (embarcacionRefABorrar) {
+                  $scope.registrarAccion("Referencia a embarcacion existente eliminada");
+                  $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/DocumentosRefEmbarcacion',{
+                      params: {
+                          idUnico: 'referenciaID',
+                          referenciaID: embarcacionRefABorrar.referenciaID
+                      }
+                  }).then(function(data) {
+                          $scope.datosGuardados = true;
+                          console.log(data);
+                  });
+              });
+              // Creamos embarcaciones nuevas y agregamos referencia
+              $scope.embarcacionesNuevas.forEach( function (embarcacion) {
+                  // revisar si el personaje nombre esta vacio
+                  if (embarcacion.nombres !== "") {
+                      $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Embarcaciones',{
+                          params: {
+                                nombres: '"'+embarcacion.nombres+'"',
+                                alias: '"'+embarcacion.alias+'"',
+                                tipo: '"'+embarcacion.tipo+'"',
+                                usos: '"'+embarcacion.usos+'"',
+                                categoria: '"'+embarcacion.categoria+'"',
+                          }
+                      }).then(function(data) {
+                          $scope.datosGuardados = true;
+                          console.log(data);
+                          // Data contains the last insert id
+                          if (!String(data.data).startsWith("[WARNING]")) {
+                              // Agregamos las banderas
+                              var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
+                              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/DocumentosRefEmbarcacion',{
+                              params: {
+                                  documentoID: $scope.documentoID,
+                                  embarcacionID: lastInsertID,
+                                  comentario: "'" + embarcacion.comentario + "'"
+                              }
+                              }).then(function(data) {
+                                  $scope.datosGuardados = true;
+                                  console.log(data);
+                              });
+                              var listaBanderas = embarcacion.banderas.split(",");
+                              listaBanderas = listaBanderas.map(function(e) {
+                                  return e.trim();
+                              });
+                              listaBanderas.forEach(function (banderaAgregar) {
+                                  $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/EmbarcacionesBanderas',{
+                                  params: {
+                                      embarcacionID: lastInsertID,
+                                      bandera: "'" + banderaAgregar + "'"
+                                  }
+                                  }).then(function(data) {
+                                      $scope.datosGuardados = true;
+                                      console.log(data);
+                                  });
+                              });
+                          }
+                      });
+                  }
+              });
+          }
+              
           // PERSONAJES
           if ($scope.personajesCambios) 
           {
@@ -1395,9 +1722,8 @@
                       });
                   }
               });
-              
-              $timeout(function () {init();},200);
           }
+          $timeout(function () {init();},200);
       };
       
       $timeout(function () {init();});
@@ -1449,6 +1775,10 @@
 
           // Cargamoss los datos principales
           $scope.cargarDatosPrincipales();
+          // Cargamos las anotaciones
+          $scope.cargarNotas();
+          // Cargamos parentescos 
+          $scope.cargarParentescos();
         
       };
       
@@ -1456,7 +1786,7 @@
       $scope.datosPrincipales = {};
 
       //Bandera para saber cuando guardar o no
-      $scope.datosPrincipales.editado = false;
+      $scope.datosPrincipalesEditado = false;
       $scope.datosPrincipalesCargando = true;
 
       $scope.cargarDatosPrincipales = function() {
@@ -1491,13 +1821,13 @@
               }
               
               //Limpiamos la bandera de editado
-              $scope.datosPrincipales.editado = false;
+              $scope.datosPrincipalesEditado = false;
               
               // Funcion para datos editados
-              $scope.datosPrincipales.datoEditado = function(campo, valorNuevo) {
+              $scope.editarDatoPrincipal = function(campo, valorNuevo) {
                   if (valorNuevo != $scope.datosPrincipales[campo]) {
                       $scope.registrarAccion(campo + "modificado");
-                      $scope.datosPrincipales.editado = true;
+                      $scope.datosPrincipalesEditado = true;
                   }
               };
 
@@ -1514,18 +1844,18 @@
       // Para borrar Enfermedades
       $scope.listaEnfermedades.modificarBorrarEnfermedad = function(indexEditada, enfermedad) {
           if (enfermedad == "") {
-              var enfermedadEliminada = $scope.datosPrincipales.listaEnfermedades[indexEditada];
+              var enfermedadEliminada = $scope.datosPrincipales.enfermedades[indexEditada];
               if (enfermedadEliminada != "") {
                   $scope.registrarAccion("Enfermedad <strong>" + enfermedadEliminada + "</strong> eliminada");
-                  $scope.datosPrincipales.editado = true;
+                  $scope.datosPrincipalesEditado = true;
               }
-              $scope.datosPrincipales.listaEnfermedades.splice(indexEditada, 1);
+              $scope.datosPrincipales.enfermedades.splice(indexEditada, 1);
           } else {
-              var enfermedadModificada = $scope.datosPrincipales.listaEnfermedades[indexEditada];
+              var enfermedadModificada = $scope.datosPrincipales.enfermedades[indexEditada];
               if (enfermedad != enfermedadModificada) {
                   $scope.registrarAccion("Enfermedad <strong>" + enfermedadModificada + "</strong> Modificada a <strong>" + enfermedad + "</strong>");
-                  $scope.datosPrincipales.listaEnfermedades[indexEditada] = enfermedad;
-                  $scope.datosPrincipales.editado = true;
+                  $scope.datosPrincipales.enfermedades[indexEditada] = enfermedad;
+                  $scope.datosPrincipalesEditado = true;
               }
           }
       }
@@ -1543,13 +1873,273 @@
           if (!$scope.datosPrincipales.enfermedades.includes(enfermedad) && enfermedad.length != 0) {
               $scope.datosPrincipales.enfermedades.push(enfermedad);
               $scope.registrarAccion("Enfermedad <strong>" + enfermedad + "</strong> agregada");
-              $scope.datosPrincipales.editado = true;
+              $scope.datosPrincipalesEditado = true;
           }
           $scope.listaEnfermedades.enfermedadNueva.mensaje = "+ Agregar";
       }
       
+      // PARENTESCOS 
+      $scope.parentescos = [];
+      $scope.parentescosNuevos = [];
+      $scope.parentescosAEliminar = [];
+      $scope.parentescosAgregarReferencia = [];
+      $scope.parentescosCambios = false;
+      $scope.cargarParentescos = function () {
+          $scope.parentescosCambios = false;
+          $scope.parentescos = [];
+          $scope.parentescosNuevos = [];
+          $scope.parentescosAEliminar = [];
+          $scope.parentescosAgregarReferencia = [];
+          $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/PersonajesParentescos',
+                    {params:{
+                        egoID:$scope.personajeID
+                    }}
+          ).then(function(data) {
+              // revisar si existe alguno
+              if (!String(data.data).startsWith("[WARNING]")) {
+                  var parentescosReferencias = data.data;
+                  parentescosReferencias.forEach(function(referencia) {
+                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes',
+                                  {params: {
+                                      personajeID:referencia.parienteID 
+                                  }}
+                        ).then(function(data) {
+                            var personaje = data.data[0];
+                            var pariente = {
+                                parentescoID: referencia.parentescoID,
+                                parienteID: referencia.parienteID,
+                                nombrePersonaje: personaje.nombre,
+                                relacionDirecta: referencia.parentesco
+                            } 
+                            $scope.parentescos.push(pariente);
+                        });
+                  });
+                  // LOG
+                  console.log($scope.parentescos);
+              }
+          });
+      }
+      $scope.agregarParentesco = function () {
+          var parienteNuevo = {
+              parentescoID: -1,
+              parienteID: -1,
+              nombrePersonaje: "",
+              relacionDirecta: "",
+              relacionInversa: ""
+          };
+          $scope.parentescosNuevos.push(parienteNuevo);
+          $scope.parentescosCambios = true;
+          $scope.registrarAccion("Parentesco vacío agregado")
+      };
+      $scope.borrarParentescoNuevo = function (indice) {
+          $scope.parentescosNuevos.splice(indice,1);
+          $scope.registrarAccion("Parentesco nuevo borrado");
+      };
+      $scope.borrarParentescoExistente = function(indice) {
+          $scope.registrarAccion("Parentesco " + $scope.parentescos[indice].nombrePersonaje + " seleccionado para eliminar")
+          $scope.parentescosAEliminar.push($scope.parentescos[indice]);
+          $scope.parentescos.splice(indice,1);
+          $scope.parentescosCambios = true;
+      }
+      $scope.borrarReferenciaNuevoParentesco = function (indice) {
+          $scope.registrarAccion("Nueva parentesco a personaje" + $scope.parentescosAgregarReferencia[indice].nombrePersonaje + " borrada");
+          $scope.parentescosAgregarReferencia.splice(indice,1);
+      };
+      $scope.autocompletarPersonaje = function (hintNombre) {
+          return $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Personajes?nombre=' + hintNombre).then(function(data) {
+              var listaNombres = [];
+              var resultados = data.data;
+              var matchPerfecto = false;
+              if (resultados != "0") {
+                  resultados.forEach( function (valor) {
+                      if(valor.nombre != $scope.datosPrincipales.nombre) {
+                          listaNombres.push({nombre: valor.nombre, personajeID: valor.personajeID});
+                          // Revisamos si son identicos
+                          // TODO cambiar acentos 
+                          if (String(hintNombre).toLowerCase().replace(/\s/g, '') == String(valor.nombre).toLowerCase().replace(/\s/g, ''))
+                              matchPerfecto = true;
+                      }
+                  })
+              }
+              if (!matchPerfecto && listaNombres.length != 0)
+                    listaNombres.unshift({nombre:hintNombre,personajeID:-1})
+              return listaNombres;
+          });
+      };
+      $scope.actualizarParentescoNuevoExistente = function (indice, personajeBD) {
+          var alreadyExist = false;
+          // Revisamos si ya existe
+          $scope.parentescos.forEach(function (elemento) {
+              if (personajeBD.personajeID == elemento.parienteID) {
+                  alreadyExist = true;
+                  return;
+              }
+          });
+          // Revisamos si la referencia fue eliminada anteriormente
+          $scope.parentescosAEliminar.forEach(function (elemento) {
+              if (personajeBD.personajeID == elemento.parienteID) {
+                  alreadyExist = true;
+                  return;
+              }
+          });
+          $scope.parentescosAgregarReferencia.forEach(function (elemento) {
+              if (personajeBD.personajeID == elemento.parienteID) {
+                  alreadyExist = true;
+                  return;
+              }
+          });
+          if (!alreadyExist && personajeBD.personajeID !== -1) {
+              var nuevaReferencia = {
+                  parienteID: personajeBD.personajeID,
+                  nombrePersonaje: personajeBD.nombre,
+                  relacionDirecta: "",
+                  relacionInversa: ""
+              }
+              $scope.parentescosNuevos.splice(indice,1);
+              $scope.parentescosAgregarReferencia.push(nuevaReferencia);
+           }
+
+      };
+      $scope.abrirPersonajeSeleccionado = function(index, ubicacion) {
+          var seleccionado = -1;
+          if (ubicacion == "nuevaRef") {
+              seleccionado = $scope.parentescosAgregarReferencia[index].parienteID;
+          } else if (ubicacion == "existente") {
+              seleccionado = $scope.parentescos[index].parienteID;
+          }
+          if (seleccionado != -1) {
+              console.log("Abriendo documento" + seleccionado);
+              //TODO Enviar varios seleccionados
+              $window.localStorage.setItem("archivoID", $scope.archivoID);
+              $window.localStorage.setItem("documentoID", $scope.documentoID);
+              $window.localStorage.setItem("personajeID", seleccionado);
+              $window.location.reload();
+          }
+      };
+      $scope.revisarSiParentescoExiste = function ($value) {
+          var existe = false;
+          var mensaje = "";
+          $scope.parentescos.forEach( function(pariente) {
+              if ($value == pariente.nombrePersonaje) {
+                  existe = true;
+                  mensaje = "Este nombre ya existe";
+                  return;
+              }
+          });
+          $scope.parentescosAEliminar.forEach( function(parienteEliminado){
+              if ($value == parienteEliminado.nombrePersonaje) {
+                  existe = true;
+                  mensaje = "Este nombre ya existía, fue eliminado pero los cambios no han sido guardados.";
+                  return;
+              }
+          });
+          $scope.parentescosAgregarReferencia.forEach (function(parienteRefAgregada){
+              if ($value == parienteRefAgregada.nombrePersonaje) {
+                  existe = true;
+                  mensaje = "Ref ya agregada";
+                  return;
+              }
+          });
+          $scope.parentescosNuevos.forEach (function(parienteNuevo){
+              if ($value == parienteNuevo.nombrePersonaje) {
+                  existe = true;
+                  mensaje = "Pariente ya agregado";
+                  return;
+              }
+          });
+          if (existe) {
+              return mensaje;
+          }
+      }
       
-      // Funcionalidad para hola de servicio
+      
+      
+      // Anotaciones
+      $scope.notas = "";
+      $scope.notasAEliminar = [];
+      $scope.notasCambio = false;
+      $scope.cargarNotas = function() {
+          $scope.notas = "";
+          $scope.notasAEliminar = [];
+          $scope.notasCambio = false;
+          $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/PersonajesNotas', 
+          {
+            params:{
+                personajeID:$scope.personajeID
+            }
+          }).then(function(data) {
+              if (!String(data.data).startsWith("[WARNING]")) {
+                  $scope.notas = data.data;
+                  $scope.notas.forEach(function(nota) {
+                      nota.modificada = false;
+                  });
+                  // LOG
+                  console.log($scope.notas);
+              }
+          });
+
+      };
+      $scope.agregarNotaVacia = function() {
+          $scope.registrarAccion("Nota vacia agregada");
+          // Una nota que no tiene fecha de creacion es una nota que no existe en la base de datos aun
+          if ($scope.notas === "") {
+              $scope.notas = [{
+                  nota: "",
+                  referencia: "",
+                  fechaCreacion: "",
+                  fechaHistorica: "",
+                  fechaHistFormato: "",
+                  modificada: false
+              }];
+          } else {
+              $scope.notas.push({
+                  nota: "",
+                  referencia: "",
+                  fechaCreacion: "",
+                  fechaHistorica: "",
+                  fechaHistFormato: "",
+                  modificada: false
+              });
+          }
+          $scope.notasCambios = true;
+      }
+      $scope.eliminarNota = function(indexNota) {
+          $scope.registrarAccion("Nota <strong>" + indexNota + "</strong> eliminada");
+          if ($scope.notas[indexNota].fechaCreacion != "") {
+              $scope.notasAEliminar.push($scope.notas[indexNota]);
+          }
+          $scope.notas.splice(indexNota, 1);
+          $scope.notasCambios = true;
+      };
+      $scope.modificarNota = function(indexNota, nuevaNota) {
+          $scope.registrarAccion("Nota <strong>" + indexNota + "</strong> modificada");
+          $scope.notas[indexNota].nota = nuevaNota;
+          // fecha creacion esta vacia cuando la nota aun no se encuentra
+          // en la base de dats
+          if ($scope.notas[indexNota].fechaCreacion != "") {
+              $scope.notas[indexNota].modificada = true;
+          };
+          $scope.notasCambios = true;
+      };
+      $scope.modificarReferencia = function(indexNota, nuevaReferencia) {
+          $scope.registrarAccion("Referencia de nota <strong>" + indexNota + "</strong> modificada");
+          $scope.notas[indexNota].referencia = nuevaReferencia;
+          if ($scope.notas[indexNota].fechaCreacion != "") {
+              $scope.notas[indexNota].modificada = true;
+          }
+          $scope.notasCambios = true;
+      };
+      $scope.modificarFechaHistorica = function(indexNota, nuevaFechaHistorica) {
+          $scope.registrarAccion("Fecha Historica de nota <strong>" + indexNota + "</strong> modificada");
+          $scope.notas[indexNota].fechaHistorica = nuevaFechaHistorica;
+          if ($scope.notas[indexNota].fechaCreacion != "") {
+              $scope.notas[indexNota].modificada = true;
+          }
+          $scope.notasCambios = true;
+      };
+      
+      
+      // Funcionalidad para hoja de servicio
       $scope.tabs = new Map();
       $scope.tabsArray = [];
       $scope.abrirElemento = function(ElementoId) {
@@ -1585,9 +2175,207 @@
           }
       };
       
-      // Incializar el personaje
-      init();
+      $scope.datosGuardados = false;
+      $scope.guardarCambios = function() {
+          //Revisamos datos principales editados
+          if ($scope.datosPrincipalesEditado) {
+              $scope.registrarAccion("Actualizando BD Personajes");
+              var request = 'http://monsalvediaz.com:5000/PIMC0.1/Modificar/Personajes'
+              var parametros = {
+                  idUnico:'personajeID',
+                  personajeID:$scope.personajeID
+              }
+              
+              var agregado = false;
+              for (var key in $scope.datosPrincipales) {
+                  var value = $scope.datosPrincipales[key];
+                  if (key == 'enfermedades' && value.length != 0) {
+                      parametros[key] = value.join(", ");
+                      agregado = true;
+                  } else if (value != null && value != "" ) {
+                      if (typeof value === 'string') {
+                          parametros[key] = "'" + value + "'";
+                      } else {
+                          parametros[key] = value;
+                      }
+                      agregado = true;
+                  }                          
+              };
+              
+              if (agregado) {
+                  $http.get(request,{params:parametros}).then(function(data) {
+                      $scope.datosGuardados = true;
+                      console.log(data);
+                  });
+              }
+          }
+          // Anotaciones
+          if ($scope.notasCambios) {
+              $scope.registrarAccion("Actualizando BD notasArchivo");
+              $scope.notasCambios = false;
+              $scope.notas.forEach(function(nota) {
+                  // Insertamos notas nuevas
+                  if (nota.fechaCreacion.length == 0 && nota.nota.length != 0)
+                      $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesNotas',
+                                {params:{
+                                    personajeID: $scope.personajeID,
+                                    nota: "'" + nota.nota + "'",
+                                    referencia:"'" + nota.referencia + "'"
+                                }}
+                      ).then(function(data) {
+                          $scope.datosGuardados = true;
+                          console.log(data);
+                      });
+                  // Modificamos notas viejas
+                  if (nota.modificada == true) {
+                      $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/PersonajesNotas',
+                                {params:{
+                                    idUnico2:'personajeID',
+                                    idUnico:'notaID',
+                                    notaID:nota.notaID,
+                                    personajeID:$scope.personajeID,
+                                    nota:"'" + nota.nota + "'",
+                                    referencia:"'" + nota.referencia + "'"
+                                }}
+                      ).then(function(data) {
+                          $scope.datosGuardados = true;
+                          console.log(data);
+                      });
+                  }
+              });
+              // Eliminamos notas eliminadas
+              $scope.notasAEliminar.forEach(function(nota) {
+                  $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/PersonajesNotas',
+                            {params:{
+                            idUnico2:'personajeID',
+                            idUnico:'notaID',
+                            notaID:nota.notaID,
+                            personajeID:$scope.personajeID
+                            }}
+                  ).then(function(data) {
+                      $scope.datosGuardados = true;
+                      console.log(data);
+                  });
+              });
 
+          }
+          
+          // PARENTESCOS
+          if ($scope.parentescosCambios) 
+          {
+              // agregar referencias a personajes existentes
+              $scope.parentescosAgregarReferencia.forEach( function (parentesco) {
+                  // Guardamos la relacion directa
+                  $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
+                      params: {
+                          egoID: $scope.personajeID,
+                          parienteID: parentesco.parienteID,
+                          parentesco: "'" + parentesco.relacionDirecta + "'"
+                      }
+                  }).then(function(data) {
+                          $scope.datosGuardados = true;
+                          console.log(data);
+                  });
+                  // Guardamos la relacion Inversa
+                  $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
+                      params: {
+                          egoID: parentesco.parienteID,
+                          parienteID: $scope.personajeID,
+                          parentesco: "'" + parentesco.relacionInversa + "'"
+                      }
+                  }).then(function(data) {
+                          $scope.datosGuardados = true;
+                          console.log(data);
+                  });
+              });
+              // Eliminamos referencias existentes
+              $scope.parentescosAEliminar.forEach (function (personajeRefABorrar) {
+                  var relacionInversaID = -1;
+                  $scope.registrarAccion("Referencia existente eliminada");
+                  // Buscamos la relacion inversa
+                  $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/PersonajesParentescos',  {
+                      params: {
+                          egoID: personajeRefABorrar.parienteID,
+                          parienteID: $scope.personajeID
+                      }
+                  }).then(function(data) {
+                          console.log("relacion Inversa" + data);
+                          relacionInversaID = data.data[0].parentescoID;
+                          // Eliminamos relacion directa
+                          $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/PersonajesParentescos',{
+                              params: {
+                                  idUnico: 'parentescoID',
+                                  parentescoID: personajeRefABorrar.parentescoID
+                              }
+                          }).then(function(data) {
+                                  $scope.datosGuardados = true;
+                                  console.log(data);
+                          });
+                          // Eliminamos relacion inversa
+                          if (relacionInversaID != -1) {
+                              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/PersonajesParentescos',{
+                                  params: {
+                                      idUnico: 'parentescoID',
+                                      parentescoID: relacionInversaID
+                                  }
+                              }).then(function(data) {
+                                      $scope.datosGuardados = true;
+                                      console.log(data);
+                              });
+                          }
+                  });
+                  
+                  
+              });
+              // Creamos personajes nuevos y agregamos parentesco
+              $scope.parentescosNuevos.forEach( function (pariente) {
+                  // revisar si el personaje nombre esta vacio
+                  if (pariente.nombrePersonaje !== "") {
+                      $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Personajes',{
+                          params: {
+                              nombre: '"'+pariente.nombrePersonaje+'"'
+                          }
+                      }).then(function(data) {
+                          $scope.datosGuardados = true;
+                          console.log(data);
+                          // Data contains the last insert id
+                          if (!String(data.data).startsWith("[WARNING]")) {
+                              var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
+                              // Guardamos la relacion directa
+                              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
+                                  params: {
+                                      egoID: $scope.personajeID,
+                                      parienteID: lastInsertID,
+                                      parentesco: "'" + pariente.relacionDirecta + "'"
+                                  }
+                              }).then(function(data) {
+                                      $scope.datosGuardados = true;
+                                      console.log(data);
+                              });
+                              // Guardamos la relacion Inversa
+                              $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
+                                  params: {
+                                      egoID: lastInsertID,
+                                      parienteID: $scope.personajeID,
+                                      parentesco: "'" + pariente.relacionInversa + "'"
+                                  }
+                              }).then(function(data) {
+                                      $scope.datosGuardados = true;
+                                      console.log(data);
+                              });
+                          }
+                      });
+                  }
+              });
+          }
+          // Incializamos todo
+          $timeout(function () {init();},200);                                      
+        };
+          
+      
+      
+      // Incializamos todo
+      $timeout(function () {init();},200);
     }]);
 
 

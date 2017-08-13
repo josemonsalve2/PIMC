@@ -1,59 +1,62 @@
 <section>
   <uib-tabset active="active">
     <uib-tab index="0" heading="Datos Principales"> 
-      <div class="row p-t-2">
-        
-        <div id="datosPrincipalesPersonaje" class="col-sm-12 col-md-4">
+      <div id="preloading" class="preloader" ng-show="datosPrincipalesCargando"><img src="images/loader.gif"></div>
+      <div class="row p-t-2 p-l-2 p-r-2 " ng-show="!datosPrincipalesCargando">
           <h1 class="nombre">
             <span editable-text="datosPrincipales.titulo" 
-                				onbeforesave="datosPrincipales.datoEditado('titulo',$data)"  
+                				onbeforesave="editarDatoPrincipal('titulo',$data)"  
                 				class="m-l-1"> {{ datosPrincipales.titulo || "Titulo" }}</span>
             <span editable-text="datosPrincipales.nombre" 
-                				onbeforesave="datosPrincipales.datoEditado('nombre',$data)"  
+                				onbeforesave="editarDatoPrincipal('nombre',$data)"  
                 				class="m-l-1"> {{ datosPrincipales.nombre || "Nombre" }}</span>
           </h1>
           <h2 class="ocupacion">
             Ocupacion Principal: <span editable-text="datosPrincipales.ocupacion" 
-                				onbeforesave="datosPrincipales.datoEditado('ocupacion',$data)"  
+                				onbeforesave="editarDatoPrincipal('ocupacion',$data)"  
                 				class="m-l-1"> {{ datosPrincipales.ocupacion || "Ocupacion" }}</span>
           </h2>
             
+        </div>
+          <div class="row p-l-2 p-r-2">
+        <div class="col-sm-12 col-md-6">
+          
           <ul class="list-group m-b-0">
                 
                 <li class="list-group-item">
                 	<span class="label label-primary">Sexo</span>
                 	<span editable-text="datosPrincipales.sexo" 
-                				onbeforesave="datosPrincipales.datoEditado('sexo',$data)"  
+                				onbeforesave="editarDatoPrincipal('sexo',$data)"  
                 				class="m-l-1"> {{ datosPrincipales.sexo || "No definido" }}</span>
               </li> 
               <li class="list-group-item">
                 	<span class="label label-primary">Nacionalidades</span>
                 	<span editable-text="datosPrincipales.nacionalidad" 
-                				onbeforesave="datosPrincipales.datoEditado('nacionalidad',$data)"  
+                				onbeforesave="editarDatoPrincipal('nacionalidad',$data)"  
                 				class="m-l-1"> {{ datosPrincipales.nacionalidad || "No definido" }}</span>
               </li> 
               <li class="list-group-item">
                 	<span class="label label-primary">Lugar Nacimiento</span>
                 	<span editable-text="datosPrincipales.lugarNacimiento" 
-                				onbeforesave="datosPrincipales.datoEditado('lugarNacimiento',$data)"  
+                				onbeforesave="editarDatoPrincipal('lugarNacimiento',$data)"  
                 				class="m-l-1"> {{ datosPrincipales.lugarNacimiento || "No definido" }}</span>
               </li> 
               <li class="list-group-item">
                 	<span class="label label-primary">Fecha Nacimiento</span>
                 	<span editable-text="datosPrincipales.fechaNacimiento" 
-                				onbeforesave="datosPrincipales.datoEditado('fechaNacimiento',$data)"  
+                				onbeforesave="editarDatoPrincipal('fechaNacimiento',$data)"  
                 				class="m-l-1"> {{ datosPrincipales.fechaNacimiento || "No definido" }}</span>
               </li> 
               <li class="list-group-item">
                 	<span class="label label-primary">Lugar Fallecimiento</span>
                 	<span editable-text="datosPrincipales.lugarFallecimiento" 
-                				onbeforesave="datosPrincipales.datoEditado('lugarFallecimiento',$data)"  
+                				onbeforesave="editarDatoPrincipal('lugarFallecimiento',$data)"  
                 				class="m-l-1"> {{ datosPrincipales.lugarFallecimiento || "No definido" }}</span>
               </li> 
               <li class="list-group-item">
                 	<span class="label label-primary">Fecha Fallecimiento</span>
                 	<span editable-text="datosPrincipales.fechaFallecimiento" 
-                				onbeforesave="datosPrincipales.datoEditado('fechaFallecimiento',$data)"  
+                				onbeforesave="editarDatoPrincipal('fechaFallecimiento',$data)"  
                 				class="m-l-1"> {{ datosPrincipales.fechaFallecimiento || "No definido" }}</span>
               </li> 
               <li class="list-group-item">
@@ -62,7 +65,7 @@
             		<li role="presentation" class="active" 
             				onaftersave="listaEnfermedades.modificarBorrarEnfermedad($index,enfermedad)" 
             				editable-text="enfermedad" 
-            				ng-repeat="enfermedad in datosPrincipales.listaEnfermedades track by $index">
+            				ng-repeat="enfermedad in datosPrincipales.enfermedades track by $index">
             				<a href="#" class="bg-mountain_meadow">{{enfermedad}}</a>
             		</li>
             		<li role="presentation" 
@@ -78,14 +81,33 @@
           </ul>
         </div>
 
-        <div id="parentescos" class="col-sm-12 col-md-8">
+        <div id="parentescos" class="col-sm-12 col-md-6">
           <table>
-            <tr><th colspan="2">Parentescos</th></tr>
-            <tr><th>Personaje</th><th>Relacion</th></tr>
-            <tr><td>Pepito Perez</td><td>primo</td></tr>
-            <tr><td>Pepito Perez</td><td>primo</td></tr>
-            <tr><td>Pepito Perez</td><td>primo</td></tr>
+            <tr><th class="text-center" colspan="3">Parentescos</th></tr>
+              <tr><th>ID</th><th>Personaje</th><th>Relacion</th></tr>
+              <tr ng-click="abrirPersonajeSeleccionado($index,'existente')" ng-repeat="parentesco in parentescos track by $index">
+                    <td><button ng-show="borrarParentescoActivado" ng-click='borrarParentescoExistente($index);$event.stopPropagation()' class="btn-danger">-</button>{{parentesco.parentescoID}}</td>
+                    <td>{{parentesco.nombrePersonaje}}</td>
+                    <td>{{parentesco.relacionDirecta}}</td>
+                </tr>
+                <tr ng-click="abrirPersonajeSeleccionado($index,'nuevaRef')" ng-repeat="parentesco in parentescosAgregarReferencia track by $index">
+                    <td><button ng-click='borrarReferenciaNuevoParentesco($index)' class="btn-danger">-</button> (Nueva Ref) {{parentesco.parentescoID}}</td>
+                    <td>{{parentesco.nombrePersonaje}}</td>
+                    <td><span editable-text="parentesco.relacionDirecta" ng-click="$event.stopPropagation()">{{parentesco.relacionDirecta || "Relacion directa"}}</span> - <span editable-text="parentesco.relacionInversa" ng-click="$event.stopPropagation()">{{parentesco.relacionInversa || "Relacion Inversa"}}</span></td>
+                </tr>
+                <tr ng-repeat="parentesco in parentescosNuevos track by $index">
+                    <td><button ng-click='borrarParentescoNuevo($index)' class="btn-danger">-</button> {{"Parentesco Nuevo"}}</td>
+                    <td>
+                        <span editable-text="parentesco.nombrePersonaje" e-typeahead-min-length="3" e-uib-typeahead="personajes.nombre for personajes in autocompletarPersonaje($viewValue)" e-typeahead-wait-ms="100" e-typeahead-on-select="actualizarParentescoNuevoExistente($index,$item)" e-typeahead-no-results="parentescosNoResults" e-typeahead-loading="cargandoNombres" onbeforesave="revisarSiParentescoExiste($data)">{{parentesco.nombrePersonaje || "nuevo parentesco"}}</span>
+                        <i ng-show="cargandoNombres" class="glyphicon glyphicon-refresh"></i>
+                        <div ng-show="parentescosNoResults"><i class="glyphicon glyphicon-remove"></i> No Results Found</div></td>
+                    <td><span editable-text="parentesco.relacionDirecta">{{parentesco.relacionDirecta || "Relacion directa"}}</span> - <span editable-text="parentesco.relacionInversa">{{parentesco.relacionInversa || "Relacion Inversa"}}</span></td>
           </table>
+            <div class="row">
+            <button ng-click='agregarParentesco()' class="btn btn-success m-t-2 m-l-1">Agregar Parentesco</button>
+            <button ng-click='borrarParentescoActivado = !borrarParentescoActivado' class="btn m-t-2">{{borrarParentescoActivado? "Desabilitar" : "Habilitar"}} borrar parentesco existente</button>
+            </div>
+            
         </div>
 
       </div>
@@ -121,19 +143,7 @@
       </div>
     </uib-tab>
 
-   	<uib-tab index="2" heading="Comisiones y trabajos">
-	    <div class="p-t-2"> 
-	      <table class="table-left">
-	        <tr><th>Tipo</th><th>Lugar</th><th>Fechas</th><th>Cargo o Función</th><th>Al mando o solicitada por</th><th>Institución</th></tr>
-	        <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
-	        <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
-	        <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
-	        <tr><td>Guerra</td><td>Cartagena</td><td>Enero 2017 a abril 2018</td><td>Esto es un ejemplo</td><td>Fulano</td><td>Algun instituto</td></tr>
-	      </table>
-	    </div>
-		</uib-tab>
-		
-		<uib-tab index="3" heading="Datos según documentación">
+   	<uib-tab index="3" heading="Datos según documentación">
       <div class="row p-t-2">
         <div class="col-sm-12 col-md-4">
           <div class="fotoPerfil">
@@ -141,18 +151,50 @@
           </div>
         </div>
         <div id="notasAdicionales" class="col-sm-12 col-md-8">
-          <h1>Comentarios</h1>
-          <div class="notas">
-            <p>Aca ira eventualmente una lista de comentarios de dicho personaje.</p>
-            <ul> 
-              <li>comentario 1</li> 
-              <li>comentario 2</li> 
-              <li>comentario 3</li> 
-              <li>comentario 4</li> 
-            </ul>
-          </div>
+          <div class="panel panel-primary">
+              <header class="panel-heading">
+                <h4 class="m-a-1">Comentarios</h4>
+              </header>
+            
+              <div class="p-a-1">
+
+                <button class="btn btn-primary" ng-click="agregarNotaVacia()">Agregar Comentario</button>
+
+                <div class="panel panel-default m-b-0 m-t-1" ng-repeat="nota in notas track by $index">
+                	<div class="panel-body">
+                		<button type="button" 
+                    				class="close" 
+                    				aria-label="Cerrar" 
+                    				ng-click="eliminarNota($index)">
+                    				<span aria-hidden="true">&times;</span></button>
+                		<p class="notaContenido" 
+                				editable-textarea="nota.nota" 
+                				e-rows="2" 
+                				buttons="right" 
+                				onaftersave="modificarNota($index,nota.nota)">{{nota.nota || "Click para editar"}}</p>
+                    <div class="clearfix m-t-1">
+                        <div class="notaReferencia pull-left">Fecha Historica: <span editable-text="nota.fechaHistorica" 
+                                 onaftersave="modificarFechaHistorica($index,fechaHistorica)">{{nota.fechaHistorica || "ND"}}</span></div>
+                    </div>
+                    <div class="clearfix m-t-1">
+                    	<div class="notaReferencia pull-left">Referencia: <span editable-text="nota.referencia" 
+                    			 onaftersave="modificarReferencia($index,nota.referencia)">{{nota.referencia || "ND"}}</span></div>
+                    	<div class="notaFecha pull-right">{{nota.fechaCreacion || "Nota Nueva"}}</div>
+                    </div>
+                	</div>
+                </div>
+              </div>
+
+            </div>
         </div>
       </div>
 	  </uib-tab>
 	</uib-tabset>
 </section>
+<footer class="status-bar">
+  <div class="text-right">
+    <strong>Ultima Accion: </strong><span class="status-message p-r-1" ng-bind-html="ultimaAccion">{{ultimaAccion}}</span>
+    <button ng-click='borrarCambios()' class="btn btn-danger m-r-1" ng-disabled="guardarDatos">Borrar cambios</button>
+    <button ng-click='guardarCambios()' class="btn btn-success">Guardar</button>
+  </div>
+</footer>
