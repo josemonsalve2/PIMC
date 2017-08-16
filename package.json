@@ -20,5 +20,8 @@
     "gulp-sass": "^3.1.0",
     "run-sequence": "^2.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "connect": "^2.30.2",
+    "gulp-connect": "^2.3.1"
+  }
 }

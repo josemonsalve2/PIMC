@@ -1,22 +1,31 @@
 <section>
+  <div class="row">
+    <div class="titulo col-sm-12">
+      <h1 class="nombre">
+          <span editable-text="datosPrincipales.nombre" 
+              onbeforesave="editarDatoPrincipal('nombre',$data)"  
+              class="m-l-1"> {{ datosPrincipales.nombre || "Nombre" }}</span>
+              <span class="m-l-1 text-shady_lady">|</span><small class="m-l-1 text-shady_lady">Alias: </small>
+              <small editable-text="datosPrincipales.alias" 
+              onbeforesave="editarDatoPrincipal('alias',$data)"  
+              class="m-l-1"> {{ datosPrincipales.alias || "Alias" }}</small>
+      </h1>
+    </div>
+    <div class="col-sm-12 clearfix">
+        <div class="m-r-1 inline"><h5 class="tituloDato">Banderas:</h5></div>
+        <div class="m-r-1 inline"><span class="valorDato"><span class="flag flag-co m-r-1" alt="Colombia"></span>Colombia</span><span id="naceMuere">(1900 - 1987)</span></div>
+        <div class="m-r-1 inline"><span class="valorDato"><span class="flag flag-es m-r-1" alt="Colombia"></span>España</span><span id="naceMuere">(1900 - 1987)</span></div>
+        <div class="m-r-1 inline"><span class="valorDato"><span class="flag flag-de m-r-1" alt="Colombia"></span>Alemania</span><span id="naceMuere">(1900 - 1987)</span></div>
+        <div class="pull-right"><a href="" class="btn btn-xs btn-primary">Añadir bandera</a></div>
+        <hr>
+      </div>
+  </div>
+
   <uib-tabset active="active">
     <uib-tab index="0" heading="Datos Principales">
       <div id="datosPrincipalesEmbarcacion" class="row p-t-2">
-        <div class="titulo col-sm-12">
-          <h1 id="nombre">La niña<span class="m-l-1 text-shady_lady">|</span><small class="m-l-1" id="alias">Alias: Procrastinador</small></h1>
-          <hr>
-        </div>
         <div class="col-sm-6">
           <ul class="datos">
-            <li>
-              <span class="tituloDato">Banderas</span>
-              <div><span class="valorDato"><div class="flag flag-co m-r-1" alt="Colombia"></div>Colombia</span><span id="naceMuere">(1900 - 1987)</span>
-              </div>
-              <div><span class="valorDato"><div class="flag flag-es m-r-1" alt="Colombia"></div>España</span><span id="naceMuere">(1900 - 1987)</span>
-              </div>
-              <div><span class="valorDato"><div class="flag flag-de m-r-1" alt="Colombia"></div>Alemania</span><span id="naceMuere">(1900 - 1987)</span>
-              </div>
-            </li>
             <li>
               <span class="tituloDato">Tipo de Buque:</span>
               <span class="valorDato">Canoa</span>
@@ -46,10 +55,6 @@
     </uib-tab>
     <uib-tab index="1" heading="Especificaciones Técnicas">
       <div id="datosTecnicosEmbarcacion" class="row p-t-2">
-        <div class="titulo col-sm-12">
-          <h1 id="nombre">La niña<span class="m-l-1 text-shady_lady">|</span><small class="m-l-1" id="alias">Alias: Procrastinador</small></h1>
-          <hr>
-        </div>
         <div class="col-sm-12 col-md-3">
           <ul class="datos">
             <li><span class="tituloDato">Manga:</span><span class="valorDato">10 metros</span>
@@ -76,6 +81,7 @@
           </ul>
         </div>
       </div>
+      <hr>
       <div id="reparacionesTabla">
         <h2>Reparaciones</h2>
         <div ui-grid="tablaReparaciones" ui-grid-auto-resize ui-grid-edit ui-grid-cellnav class="grid" ng-style="{height: (tablaReparaciones.data.length*31)+30+'px'}"></div>
@@ -290,27 +296,52 @@
       </div>
     </uib-tab>
 
-    <uib-tab index="4" heading="Datos Embarcación Según documentación">
-    
-      <div class="row p-t-2">
-        <div class="col-sm-12 col-md-4">
-          <div class="fotoPerfil">
-            <img class="img-responsive img-thumbnail p-a-2" src="images/ninnaPerfil.jpg">
+    <uib-tab index="4" heading="Datos según documentación">
+        <div class="row p-t-2">
+          <div class="col-sm-12 col-md-4">
+            <div class="fotoPerfil">
+              <img class="img-responsive img-thumbnail p-a-2" src="images/ninnaPerfil.jpg" />
+            </div>
+          </div>
+          <div id="notasAdicionales" class="col-sm-12 col-md-8">
+            <div class="panel panel-primary">
+                <header class="panel-heading">
+                  <h4 class="m-a-1">Comentarios</h4>
+                </header>
+              
+                <div class="p-a-1">
+  
+                  <button class="btn btn-primary" ng-click="agregarNotaVacia()">Agregar Comentario</button>
+  
+                  <div class="panel panel-default m-b-0 m-t-1" ng-repeat="nota in notas track by $index">
+                    <div class="panel-body">
+                      <button type="button" 
+                              class="close" 
+                              aria-label="Cerrar" 
+                              ng-click="eliminarNota($index)">
+                              <span aria-hidden="true">&times;</span></button>
+                      <p class="notaContenido" 
+                          editable-textarea="nota.nota" 
+                          e-rows="2" 
+                          buttons="right" 
+                          onaftersave="modificarNota($index,nota.nota)">{{nota.nota || "Click para editar"}}</p>
+                      <div class="clearfix m-t-1">
+                          <div class="notaReferencia pull-left">Fecha Historica: <span editable-text="nota.fechaHistorica" 
+                                   onaftersave="modificarFechaHistorica($index,fechaHistorica)">{{nota.fechaHistorica || "ND"}}</span></div>
+                      </div>
+                      <div class="clearfix m-t-1">
+                        <div class="notaReferencia pull-left">Referencia: <span editable-text="nota.referencia" 
+                             onaftersave="modificarReferencia($index,nota.referencia)">{{nota.referencia || "ND"}}</span></div>
+                        <div class="notaFecha pull-right">{{nota.fechaCreacion || "Nota Nueva"}}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  
+              </div>
           </div>
         </div>
-        <div id="notasAdicionales" class="col-sm-12 col-md-8">
-          <h3>Comentarios</h3>
-          <p>Aca irá eventualmente una lista de comentarios de dicha embarcacion.</p> 
-          <ul> 
-            <li>comentario 1</li> 
-            <li>comentario 2</li> 
-            <li>comentario 3</li> 
-            <li>comentario 4</li> 
-          </ul>
-        </div>
-      </div>
-
-    </uib-tab>
+      </uib-tab>
 
   </uib-tabset>
 

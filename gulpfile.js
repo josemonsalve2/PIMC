@@ -3,7 +3,8 @@
 var gulp      	= require('gulp'),
   	cssnano   	= require('gulp-cssnano'),
   	sass      	= require('gulp-sass'),
-  	runSequence = require('run-sequence');
+    runSequence = require('run-sequence'),
+    connect     = require('gulp-connect');
 
 var supported = [
   'last 2 versions',
@@ -17,19 +18,28 @@ var supported = [
 gulp.task('scss', function(){
   return gulp.src('www/scss/**/*.scss') // Gets all files ending with .scss in app/scss
     .pipe(sass())
-    .pipe(cssnano({
-      autoprefixer: {browsers: supported, add: true}
-    }))
+    .pipe(cssnano({autoprefixer: {browsers: supported, add: true}}))
     .pipe(gulp.dest('www/css'))
+    .pipe(connect.reload());
+});
+
+gulp.task('html', ['scss'], function () {
+  gulp.src('www/**/*.html')
+    .pipe(connect.reload());
 });
 
 gulp.task('watch', ['scss'], function(){
   gulp.watch('www/scss/**/*.scss', ['scss']); 
-  // Other watchers
+  gulp.watch('www/**/*.html', ['html']);
 });
 
-gulp.task('default', function (callback) {
-  runSequence(['scss', 'watch'],
-    callback
-  );
+gulp.task('webserver', function() {
+  connect.server({
+    root: 'www',
+    port: 8888,
+    livereload: true
+  });
 });
+
+gulp.task('default', ['scss', 'webserver', 'watch']);
+
