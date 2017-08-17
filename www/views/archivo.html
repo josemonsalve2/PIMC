@@ -231,7 +231,7 @@
     		<div class="col-sm-12">
     			<table>
 		        <tr><th>Nombre</th><th>Ocupación</th><th>Nacionalidad</th><th>categoria</th><th>documentos Referencia</th></tr>
-		        <tr ng-repeat="personaje in personajes track by $index"><td>{{personaje.nombre}}</td><td>{{personaje.ocupacion}}</td><td>{{personaje.nacionalidad}}</td><td>{{personaje.categoria}}</td><td>{{personaje.documentosReferencias.join(", ")}}</td></tr>
+		        <tr ng-repeat="personaje in personajes track by $index" ng-click="abrirPersonaje(personaje.personajeID)"><td>{{personaje.nombre}}</td><td>{{personaje.ocupacion}}</td><td>{{personaje.nacionalidad}}</td><td>{{personaje.categoria}}</td><td>{{personaje.documentosReferencias.join(", ")}}</td></tr>
 		      </table>
     		</div>
     	</div>

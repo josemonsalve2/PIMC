@@ -7,7 +7,7 @@
     'use strict';
     
     var personajePerfil = angular.module('personajePerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
-    personajePerfil.controller('personajePerfilController', ['$scope', '$sce', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', function($scope, $sce, $http, $window, $location, $filter, $timeout, i18nService, uiGridConstants) {
+    personajePerfil.controller('personajePerfilController', ['$scope', '$sce','$q', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', function($scope, $sce, $q, $http, $window, $location, $filter, $timeout, i18nService, uiGridConstants) {
         $scope.archivoID = -1;
         $scope.documentoID = -1;
         $scope.personajeID = -1;
@@ -427,6 +427,7 @@
         
         $scope.datosGuardados = false;
         $scope.guardarCambios = function() {
+            var conexiones = {}
             //Revisamos datos principales editados
             if ($scope.datosPrincipalesEditado) {
                 $scope.registrarAccion("Actualizando BD Personajes");
@@ -440,7 +441,7 @@
                 for (var key in $scope.datosPrincipales) {
                     var value = $scope.datosPrincipales[key];
                     if (key == 'enfermedades' && value.length != 0) {
-                        parametros[key] = value.join(", ");
+                        parametros[key] = "'" + value.join(", ") + "'";
                         agregado = true;
                     } else if (value != null && value != "" ) {
                         if (typeof value === 'string') {
@@ -453,10 +454,7 @@
                 };
                 
                 if (agregado) {
-                    $http.get(request,{params:parametros}).then(function(data) {
-                        $scope.datosGuardados = true;
-                        console.log(data);
-                    });
+                    conexiones['datosPrincipalesModificados'] = $http.get(request,{params:parametros});
                 }
             }
             // Anotaciones
@@ -466,19 +464,16 @@
                 $scope.notas.forEach(function(nota) {
                     // Insertamos notas nuevas
                     if (nota.fechaCreacion.length == 0 && nota.nota.length != 0)
-                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesNotas',
+                        conexiones['notasCambiosInsertar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesNotas',
                                     {params:{
                                         personajeID: $scope.personajeID,
                                         nota: "'" + nota.nota + "'",
                                         referencia:"'" + nota.referencia + "'"
                                     }}
-                        ).then(function(data) {
-                            $scope.datosGuardados = true;
-                            console.log(data);
-                        });
+                        );
                     // Modificamos notas viejas
                     if (nota.modificada == true) {
-                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/PersonajesNotas',
+                        conexiones['notasCambiosModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/PersonajesNotas',
                                     {params:{
                                         idUnico2:'personajeID',
                                         idUnico:'notaID',
@@ -487,25 +482,19 @@
                                         nota:"'" + nota.nota + "'",
                                         referencia:"'" + nota.referencia + "'"
                                     }}
-                        ).then(function(data) {
-                            $scope.datosGuardados = true;
-                            console.log(data);
-                        });
+                        );
                     }
                 });
                 // Eliminamos notas eliminadas
                 $scope.notasAEliminar.forEach(function(nota) {
-                    $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/PersonajesNotas',
+                    conexiones['notasCambiosEliminar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/PersonajesNotas',
                                 {params:{
                                 idUnico2:'personajeID',
                                 idUnico:'notaID',
                                 notaID:nota.notaID,
                                 personajeID:$scope.personajeID
                                 }}
-                    ).then(function(data) {
-                        $scope.datosGuardados = true;
-                        console.log(data);
-                    });
+                    );
                 });
 
             }
@@ -516,26 +505,20 @@
                 // agregar referencias a personajes existentes
                 $scope.parentescosAgregarReferencia.forEach( function (parentesco) {
                     // Guardamos la relacion directa
-                    $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
+                    conexiones['parentescosInsertarDirecta'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
                         params: {
                             egoID: $scope.personajeID,
                             parienteID: parentesco.parienteID,
                             parentesco: "'" + parentesco.relacionDirecta + "'"
                         }
-                    }).then(function(data) {
-                            $scope.datosGuardados = true;
-                            console.log(data);
                     });
                     // Guardamos la relacion Inversa
-                    $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
+                    conexiones['parentescosInsertarInversa'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
                         params: {
                             egoID: parentesco.parienteID,
                             parienteID: $scope.personajeID,
                             parentesco: "'" + parentesco.relacionInversa + "'"
                         }
-                    }).then(function(data) {
-                            $scope.datosGuardados = true;
-                            console.log(data);
                     });
                 });
                 // Eliminamos referencias existentes
@@ -543,7 +526,7 @@
                     var relacionInversaID = -1;
                     $scope.registrarAccion("Referencia existente eliminada");
                     // Buscamos la relacion inversa
-                    $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/PersonajesParentescos',  {
+                    conexiones['parentescosEliminar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/PersonajesParentescos',  {
                         params: {
                             egoID: personajeRefABorrar.parienteID,
                             parienteID: $scope.personajeID
@@ -581,7 +564,7 @@
                 $scope.parentescosNuevos.forEach( function (pariente) {
                     // revisar si el personaje nombre esta vacio
                     if (pariente.nombrePersonaje !== "") {
-                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Personajes',{
+                        conexiones['parentescosPersonajesNuevos'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Personajes',{
                             params: {
                                 nombre: '"'+pariente.nombrePersonaje+'"'
                             }
@@ -619,8 +602,17 @@
                 });
             }
             // Incializamos todo
-            $timeout(function () {init();},200);                                      
-            };
+            if (Object.keys(conexiones).length != 0) {
+                $scope.datosPrincipalesCargando = true;
+                $scope.datosGuardados = true;
+                $q.all(conexiones).then(function(responses) {
+                    for (var res in responses) {
+                        console.log(res + ' = ' + responses[res].data);
+                    }
+                    init();
+                });
+            }
+        };
             
         
         

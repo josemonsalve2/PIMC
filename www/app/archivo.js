@@ -7,9 +7,15 @@
     'use strict';
 
     var archivoPerfil = angular.module('archivoPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
-    archivoPerfil.controller('archivoPerfilController', ['$scope', '$sce', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', '$scope', function($scope, $sce, $http, $window, $location, $filter, i18nService, uiGridConstants) {
+    archivoPerfil.controller('archivoPerfilController', ['$scope', '$sce', '$q', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', '$scope', function($scope, $sce, $q, $http, $window, $location, $filter, i18nService, uiGridConstants) {
         var init = function() {
             $scope.archivoID = $window.localStorage.getItem("archivoID");
+            // If not set, redirect.
+            if (!$scope.archivoID) {
+                console.log("No hay archivoID" + seleccionado);
+                //TODO Enviar varios seleccionados
+                $window.location.href = "#!/busqueda";
+            }
             if (!$scope.datosGuardados) {
                 $scope.registrarAccion("Archivo <strong>" + $scope.archivoID + "</strong> ha sido cargado");
             } else {
@@ -384,14 +390,22 @@
             $scope.personajes = [];
             var personajesIDs = [];
             $scope.documentos.forEach(function (doc) {
-                $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefPersonajes?documentoID=' + doc.documentoID).then(function(data) {
+                $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefPersonajes',
+                          { params:{
+                              documentoID: doc.documentoID
+                            }
+                }).then(function(data) {
                     if (!String(data.data).startsWith("[WARNING]")) {
                         var listaReferencias = data.data;
                         listaReferencias.forEach (function (referencia) {
                             var personajeID = referencia.personajeID;
                             if (!personajesIDs.includes(personajeID)) {
                                 personajesIDs.push(personajeID);
-                                $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes?personajeID=' + personajeID).then(function(data) {
+                                $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes',
+                                          { params:{
+                                              personajeID: personajeID
+                                            }
+                                }).then(function(data) {
                                     if (!String(data.data).startsWith("[WARNING]")) {
                                         var personaje = data.data[0];
                                         personaje.documentosReferencias = [doc.documentoID];
@@ -410,6 +424,14 @@
                     }
                 });
             });
+        };
+        $scope.abrirPersonaje = function (personajeSel) {
+            console.log("Abriendo documento" + personajeSel);
+            //TODO Enviar varios seleccionados
+            //TODO Preguntar si desea guardar cambios
+            $window.localStorage.setItem("archivoID", $scope.archivoID);
+            $window.localStorage.setItem("personajeID", personajeSel);
+            $window.location.href = "#!/personaje";
         };
         // Cargar Listado Embarcaciones
         $scope.hayEmbarcaciones = false;
@@ -599,37 +621,29 @@
         };
         $scope.datosGuardados = false;
         $scope.guardarCambios = function() {
+            var conexiones = {};
             if ($scope.notasCambios) {
                 $scope.registrarAccion("Actualizando BD notasArchivo");
                 $scope.notasCambios = false;
                 $scope.notas.forEach(function(nota) {
                     // Insertamos notas nuevas
                     if (nota.fechaCreacion.length == 0 && nota.nota.length != 0)
-                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/ArchivosNotas?ArchivoID=' + $scope.archivoID + '&nota="' + nota.nota + '"&referencia="' + nota.referencia + '"').then(function(data) {
-                            $scope.datosGuardados = true;
-                            console.log(data);
-                        });
+                        conexiones['notasCambiosCreacion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/ArchivosNotas?ArchivoID=' + $scope.archivoID + '&nota="' + nota.nota + '"&referencia="' + nota.referencia + '"');
                     // Modificamos notas viejas
                     if (nota.modificada == true) {
-                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/ArchivosNotas?idUnico2=archivoID&idUnico=notaID&notaID=' + nota.notaID + ' &archivoID=' + $scope.archivoID + '&nota="' + nota.nota + '"&referencia="' + nota.referencia + '"').then(function(data) {
-                            $scope.datosGuardados = true;
-                            console.log(data);
-                        });
+                        conexiones['notasCambiosModificada'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/ArchivosNotas?idUnico2=archivoID&idUnico=notaID&notaID=' + nota.notaID + ' &archivoID=' + $scope.archivoID + '&nota="' + nota.nota + '"&referencia="' + nota.referencia + '"');
                     }
                 });
                 // Eliminamos notas eliminadas
                 $scope.notasAEliminar.forEach(function(nota) {
-                    $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/ArchivosNotas?idUnico=archivoID&idUnico2=notaID&notaID=' + nota.notaID + '&archivoID=' + $scope.archivoID).then(function(data) {
-                        $scope.datosGuardados = true;
-                        console.log(data);
-                    });
+                    conexiones['notasCambiosEliminadas'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/ArchivosNotas?idUnico=archivoID&idUnico2=notaID&notaID=' + nota.notaID + '&archivoID=' + $scope.archivoID);
                 });
 
             }
             //Revisamos datos principales editados
             if ($scope.datosPrincipales.editado) {
                 $scope.registrarAccion("Actualizando BD Archivos");
-                $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/Archivos?idUnico=archivoID&archivoID=' + $scope.archivoID +
+                conexiones['datosPrincipalesCambionsModificados'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/Archivos?idUnico=archivoID&archivoID=' + $scope.archivoID +
                     '&titulo="' + $scope.datosPrincipales.archivoTitulo +
                     '"&institucionFondo="' + $scope.datosPrincipales.institucionFondo +
                     '"&numRefDentroFondo="' + $scope.datosPrincipales.numRefDentroFondo +
@@ -644,37 +658,37 @@
                     '"&numPaginas="' + $scope.datosPrincipales.numPaginas +
                     '"&palabrasClaves="' + $scope.datosPrincipales.palabrasClaves.join(', ') +
                     '"&disponibilidad="' + $scope.datosPrincipales.disponibilidad + '"'
-                ).then(function(data) {
-                    $scope.datosGuardados = true;
-                    console.log(data);
-                });
+                );
             }
             // Revisamos documentos
             if ($scope.documentosCambio) {
                 $scope.documentosNuevos.forEach(function (docNuevo) {
                     $scope.registrarAccion("Actualizando BD Documentos")
-                    $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Documentos?archivoID=' + $scope.archivoID + 
+                    conexiones['documentosCambiosInsertados'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Documentos?archivoID=' + $scope.archivoID + 
                             '&tipoDocumento="' + docNuevo.tipoDocumento +
                             '"&formatoDisponible="' + docNuevo.formatoDisponible +
                             '"&listaTemas="' + docNuevo.listaTemas +'"'
-                    ).then(function(data) {
-                        $scope.datosGuardados = true;
-                        console.log(data);
-                    });
+                    );
                 });
                 $scope.documentosAEliminar.forEach(function (docABorrar) {
                     $scope.registrarAccion("Eliminando documento de la base de datos")
-                    $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/Documentos',
+                    conexiones['documentosCambiosEliminados'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/Documentos',
                                 {params: {idUnico:'documentoID',
                                         documentoID: docABorrar.documentoID}}
-                    ).then (function(data) {
-                        $scope.datosGuardados = true;
-                        console.log(data);
-                    });
+                    );
                     
                 });
             }
-            init();
+            if (Object.keys(conexiones).length != 0) {
+                $scope.datosPrincipalesCargando = true;
+                $scope.datosGuardados = true;
+                $q.all(conexiones).then(function(responses) {
+                    for (var res in responses) {
+                        console.log(res.data);
+                    }
+                    init();
+                });
+            }
         };
 
         // Initialization fucntion
