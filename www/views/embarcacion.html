@@ -1,10 +1,28 @@
 <section>
-  <div class="row">
+  <div id="preloading" class="preloader" ng-show="datosPrincipalesCargando"><img src="images/loader.gif"></div>
+  <div class="row" ng-show="!datosPrincipalesCargando">
     <div class="titulo col-sm-12">
       <h1 class="nombre">
-          <span editable-text="datosPrincipales.nombre" 
-              onbeforesave="editarDatoPrincipal('nombre',$data)"  
-              class="m-l-1"> {{ datosPrincipales.nombre || "Nombre" }}</span>
+          <span editable-text="datosPrincipales.nombres[0]" 
+              onbeforesave="listados.modificarBorrar('Nombres',datosPrincipales.nombres,0,datosPrincipales.nombres[0])"  
+              class="m-l-1"> {{ datosPrincipales.nombres[0] || "Agregar un nombre" }}</span>
+                 <ul class="nav nav-pills rounded">
+                      <li role="presentation" class="active" 
+                          onaftersave="listados.modificarBorrar('Nombres',datosPrincipales.nombres,$index,nombre)" 
+                          editable-text="nombre" 
+                          ng-repeat="nombre in datosPrincipales.nombres track by $index" ng-if="$index > 0">
+                          <a href="#" class="bg-mountain_meadow">{{nombre}}</a>
+                      </li>
+                      <li role="presentation" 
+                          editable-text="listados.mensaje" 
+                          onshow="listados.borrarOnShow()"
+                          onbeforesave="listados.agregarALista('Nombres', datosPrincipales.nombres, $data)" 
+                          onaftersave="listados.mensaje='+ Agregar';return"
+                          oncancel="listados.mensaje='+ Agregar'">
+                          <a href="#">{{listados.mensaje || '+ Agregar'}}</a>
+                      </li>
+                </ul>
+          
               <span class="m-l-1 text-shady_lady">|</span><small class="m-l-1 text-shady_lady">Alias: </small>
               <small editable-text="datosPrincipales.alias" 
               onbeforesave="editarDatoPrincipal('alias',$data)"  

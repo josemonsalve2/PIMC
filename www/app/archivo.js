@@ -12,22 +12,23 @@
             $scope.archivoID = $window.localStorage.getItem("archivoID");
             // If not set, redirect.
             if (!$scope.archivoID) {
-                console.log("No hay archivoID" + seleccionado);
+                console.log("No hay archivoID");
                 //TODO Enviar varios seleccionados
                 $window.location.href = "#!/busqueda";
-            }
-            if (!$scope.datosGuardados) {
-                $scope.registrarAccion("Archivo <strong>" + $scope.archivoID + "</strong> ha sido cargado");
             } else {
-                $scope.registrarAccion("Archivo <strong>" + $scope.archivoID + "</strong> ha sido guardado en la base de datos");
-                $scope.datosGuardados = false;
+                if (!$scope.datosGuardados) {
+                    $scope.registrarAccion("Archivo <strong>" + $scope.archivoID + "</strong> ha sido cargado");
+                } else {
+                    $scope.registrarAccion("Archivo <strong>" + $scope.archivoID + "</strong> ha sido guardado en la base de datos");
+                    $scope.datosGuardados = false;
+                }
+                // DATOS PRINCIPALES
+                $scope.cargarDatosPrincipales();
+                // ANOTACIONES
+                $scope.cargarNotas();
+                // DOCUMENTOS
+                $scope.cargarDocumentos();
             }
-            // DATOS PRINCIPALES
-            $scope.cargarDatosPrincipales();
-            // ANOTACIONES
-            $scope.cargarNotas();
-            // DOCUMENTOS
-            $scope.cargarDocumentos();
         };
 
         //Datos principales

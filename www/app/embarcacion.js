@@ -2,9 +2,120 @@
 
     'use strict';    
 
-    var embarcacionPerfil = angular.module('embarcacionPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav']);
-    embarcacionPerfil.controller('embarcacionPerfilController', ['$scope', '$sce', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', function($scope, $sce, $http, $window, $location, $filter, $timeout, i18nService, uiGridConstants) {
-            
+    var embarcacionPerfil = angular.module('embarcacionPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
+    embarcacionPerfil.controller('embarcacionPerfilController', ['$scope', '$sce', '$q', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', function($scope, $sce, $q, $http, $window, $location, $filter, $timeout, i18nService, uiGridConstants) {
+        $scope.embarcacionID = -1;
+        
+        var init = function() {
+            $scope.embarcacionID = $window.localStorage.getItem("embarcacionID");
+            // If not set, redirect.
+            if (!$scope.embarcacionID) {
+                console.log("No hay embarcacionID");
+                //TODO Enviar varios seleccionados
+                $window.location.href = "#!/busqueda";
+            } else {
+                if (!$scope.datosGuardados) {
+                    $scope.registrarAccion("Embarcacion <strong>" + $scope.embarcacionID + "</strong> ha sido cargado");
+                } else {
+                    $scope.registrarAccion("Embarcacion <strong>" + $scope.embarcacionID  + "</strong> ha sido guardado en la base de datos");
+                    $scope.datosGuardados = false;
+                }
+
+                // Cargamoss los datos principales
+                $scope.cargarDatosPrincipales();
+                // Cargamos las anotaciones
+                $scope.cargarNotas();
+            }
+        };
+        
+        
+        //Datos principales
+        $scope.datosPrincipales = {};
+
+        //Bandera para saber cuando guardar o no
+        $scope.datosPrincipalesEditado = false;
+        $scope.datosPrincipalesCargando = true;
+
+        $scope.cargarDatosPrincipales = function() {
+            $scope.datosPrincipalesCargando = true;
+            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Embarcaciones',
+                {params: {embarcacionID: $scope.embarcacionID}}
+            ).then( function(data) {
+                //Obtener los datos JSON
+                var embarcacionesDatos = data.data[0];
+                
+                //Log
+                console.log(embarcacionesDatos);
+                if (embarcacionesDatos) {
+                    try {
+                            
+                            $scope.datosPrincipales = embarcacionesDatos;
+
+                            // Editamos fecha de nacimiento y fallecimiento al formato adecuado
+                            $scope.datosPrincipales.fechaConstruccion = embarcacionesDatos.fechaConstruccion != null ? $filter('date')(new Date(embarcacionesDatos.fechaConstruccion), String(embarcacionesDatos.fechaConstFormato).toLowerCase()) : "";
+                            $scope.datosPrincipales.ultimaFecha = embarcacionesDatos.ultimaFecha != null ? $filter('date')(new Date(embarcacionesDatos.ultimaFecha), String(embarcacionesDatos.ultimaFechaFormato).toLowerCase()) : "";
+
+                            // Lista de enfermedades
+                            if ($scope.datosPrincipales.nombres != null && $scope.datosPrincipales.nombres != "") {
+                                $scope.datosPrincipales.nombres = embarcacionesDatos.nombres.split(",");
+                                $scope.datosPrincipales.nombres = $scope.datosPrincipales.nombres.map(function(e) {
+                                    return e.trim();
+                                });
+                            } else {
+                                $scope.datosPrincipales.nombres = [];
+                            }
+                    }
+                    catch(err) {
+                        console.log("Problema cargando los valores de datos principales del personaje " + err.message);
+                    }
+                }
+                //Limpiamos la bandera de editado
+                $scope.datosPrincipalesEditado = false;
+                
+                // Funcion para datos editados
+                $scope.editarDatoPrincipal = function(campo, valorNuevo) {
+                    if (valorNuevo != $scope.datosPrincipales[campo]) {
+                        $scope.registrarAccion(campo + "modificado");
+                        $scope.datosPrincipalesEditado = true;
+                    }
+                };
+
+                $scope.datosPrincipalesCargando = false;
+            });
+        };
+        
+        
+        // PARA LISTADOS
+        $scope.listados = {mensaje:"+ Agregar"};
+        // Para borrar listaNombres
+        $scope.listados.modificarBorrar = function(listadoNombre, lista, indexEditado, valor) {
+            if (valor == "") {
+                var valorAEliminar = lista[indexEditado];
+                if (valorAEliminar != "") {
+                    $scope.registrarAccion(listadoNombre + "<strong>" + valorAEliminar + "</strong> eliminado");
+                    $scope.datosPrincipalesEditado = true;
+                }
+                lista.splice(indexEditado, 1);
+            } else {
+                var valorModificado = lista[indexEditado];
+                if (valor != valorModificado) {
+                    $scope.registrarAccion(listadoNombre + "<strong>" + valorModificado + "</strong> Modificado a <strong>" + valor + "</strong>");
+                    lista[indexEditado] = valor;
+                    $scope.datosPrincipalesEditado = true;
+                }
+            }
+        }
+        $scope.listados.agregarALista = function(listadoNombre, lista, elemento) {
+            if (!lista.includes(elemento) && elemento.length != 0) {
+                lista.push(elemento);
+                $scope.registrarAccion(listadoNombre + "<strong>" + elemento + "</strong> agregado");
+                $scope.datosPrincipalesEditado = true;
+            }
+        }
+        $scope.listados.borrarOnShow = function() {
+            $scope.listados.mensaje = "";
+        };
+        
         // Definiciones de las pestañas de la aplicación. 
         $scope.tabs = new Map();
         $scope.tabsArray = [];
@@ -339,6 +450,110 @@
             "fechaLlegada": "02-04-2000"
         }];
 
+        // Para guardar borrar y barra de estado
+        $scope.ultimaAccion = $sce.trustAsHtml("Ninguna");
+        // Log
+        $scope.registrarAccion = function(mensaje) {
+            $scope.ultimaAccion = $sce.trustAsHtml(mensaje);
+            console.log(mensaje)
+        }
+        // Button functions
+        $scope.borrarCambios = function() {
+            if (window.confirm("Esta Seguro que quiere borrar los cambios?") === true) {
+                $scope.registrarAccion("Los cambios han sido borrados");
+                init();
+            }
+        };
+        
+        $scope.datosGuardados = false;
+        $scope.guardarCambios = function() {
+            var conexiones = {};
+            //Revisamos datos principales editados
+            if ($scope.datosPrincipalesEditado) {
+                $scope.registrarAccion("Actualizando BD Embarcaciones");
+//                var request = 'http://monsalvediaz.com:5000/PIMC0.1/Modificar/Personajes'
+//                var parametros = {
+//                    idUnico:'personajeID',
+//                    personajeID:$scope.personajeID
+//                }
+//                
+//                var agregado = false;
+//                for (var key in $scope.datosPrincipales) {
+//                    var value = $scope.datosPrincipales[key];
+//                    if (key == 'enfermedades' && value.length != 0) {
+//                        parametros[key] = "'" + value.join(", ") + "'";
+//                        agregado = true;
+//                    } else if (value != null && value != "" ) {
+//                        if (typeof value === 'string') {
+//                            parametros[key] = "'" + value + "'";
+//                        } else {
+//                            parametros[key] = value;
+//                        }
+//                        agregado = true;
+//                    }                          
+//                };
+//                
+//                if (agregado) {
+//                    conexiones['datosPrincipalesModificados'] = $http.get(request,{params:parametros});
+//                }
+            }
+            // Anotaciones
+            if ($scope.notasCambios) {
+                $scope.registrarAccion("Actualizando BD notasEmbarcaciones");
+                $scope.notasCambios = false;
+                $scope.notas.forEach(function(nota) {
+                    // Insertamos notas nuevas
+                    if (nota.fechaCreacion.length == 0 && nota.nota.length != 0)
+                        conexiones['notasCambiosInsertar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/EmbarcacionesNotas',
+                                    {params:{
+                                        personajeID: $scope.personajeID,
+                                        nota: "'" + nota.nota + "'",
+                                        referencia:"'" + nota.referencia + "'"
+                                    }}
+                        );
+                    // Modificamos notas viejas
+                    if (nota.modificada == true) {
+                        conexiones['notasCambiosModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/EmbarcacionesNotas',
+                                    {params:{
+                                        idUnico2:'personajeID',
+                                        idUnico:'notaID',
+                                        notaID:nota.notaID,
+                                        personajeID:$scope.personajeID,
+                                        nota:"'" + nota.nota + "'",
+                                        referencia:"'" + nota.referencia + "'"
+                                    }}
+                        );
+                    }
+                });
+                // Eliminamos notas eliminadas
+                $scope.notasAEliminar.forEach(function(nota) {
+                    conexiones['notasCambiosEliminar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/EmbarcacionesNotas',
+                                {params:{
+                                idUnico2:'personajeID',
+                                idUnico:'notaID',
+                                notaID:nota.notaID,
+                                personajeID:$scope.personajeID
+                                }}
+                    );
+                });
+            }
+            
+            // Incializamos todo
+            if (Object.keys(conexiones).length != 0) {
+                $scope.datosPrincipalesCargando = true;
+                $scope.datosGuardados = true;
+                $q.all(conexiones).then( function(responses) {
+                    for (var res in responses) {
+                        console.log(res + ' = ' + responses[res].data);
+                    }
+                    init();
+                });
+            }
+        };
+        
+        // Initializacion inicial
+        init();
+        
     }]);
 
 })(window.angular);

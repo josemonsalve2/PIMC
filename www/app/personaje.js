@@ -8,28 +8,30 @@
     
     var personajePerfil = angular.module('personajePerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
     personajePerfil.controller('personajePerfilController', ['$scope', '$sce','$q', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', function($scope, $sce, $q, $http, $window, $location, $filter, $timeout, i18nService, uiGridConstants) {
-        $scope.archivoID = -1;
-        $scope.documentoID = -1;
         $scope.personajeID = -1;
         
         var init = function() {
-            $scope.archivoID = $window.localStorage.getItem("archivoID");
-            $scope.documentoID = $window.localStorage.getItem("documentoID");
             $scope.personajeID = $window.localStorage.getItem("personajeID");
-            if (!$scope.datosGuardados) {
-                $scope.registrarAccion("Personaje <strong>" + $scope.personajeID + "</strong> ha sido cargado");
+            // If not set, redirect.
+            if (!$scope.personajeID) {
+                console.log("No hay personajeID");
+                //TODO Enviar varios seleccionados
+                $window.location.href = "#!/busqueda";
             } else {
-                $scope.registrarAccion("Personaje <strong>" + $scope.personajeID  + "</strong> ha sido guardado en la base de datos");
-                $scope.datosGuardados = false;
-            }
+                if (!$scope.datosGuardados) {
+                    $scope.registrarAccion("Personaje <strong>" + $scope.personajeID + "</strong> ha sido cargado");
+                } else {
+                    $scope.registrarAccion("Personaje <strong>" + $scope.personajeID  + "</strong> ha sido guardado en la base de datos");
+                    $scope.datosGuardados = false;
+                }
 
-            // Cargamoss los datos principales
-            $scope.cargarDatosPrincipales();
-            // Cargamos las anotaciones
-            $scope.cargarNotas();
-            // Cargamos parentescos 
-            $scope.cargarParentescos();
-            
+                // Cargamoss los datos principales
+                $scope.cargarDatosPrincipales();
+                // Cargamos las anotaciones
+                $scope.cargarNotas();
+                // Cargamos parentescos 
+                $scope.cargarParentescos();
+            }
         };
         
         //Datos principales
@@ -260,8 +262,6 @@
             if (seleccionado != -1) {
                 console.log("Abriendo documento" + seleccionado);
                 //TODO Enviar varios seleccionados
-                $window.localStorage.setItem("archivoID", $scope.archivoID);
-                $window.localStorage.setItem("documentoID", $scope.documentoID);
                 $window.localStorage.setItem("personajeID", seleccionado);
                 $window.location.reload();
             }
@@ -427,7 +427,7 @@
         
         $scope.datosGuardados = false;
         $scope.guardarCambios = function() {
-            var conexiones = {}
+            var conexiones = {};
             //Revisamos datos principales editados
             if ($scope.datosPrincipalesEditado) {
                 $scope.registrarAccion("Actualizando BD Personajes");
@@ -459,7 +459,7 @@
             }
             // Anotaciones
             if ($scope.notasCambios) {
-                $scope.registrarAccion("Actualizando BD notasArchivo");
+                $scope.registrarAccion("Actualizando BD notasEmbarcaciones");
                 $scope.notasCambios = false;
                 $scope.notas.forEach(function(nota) {
                     // Insertamos notas nuevas
@@ -526,36 +526,34 @@
                     var relacionInversaID = -1;
                     $scope.registrarAccion("Referencia existente eliminada");
                     // Buscamos la relacion inversa
-                    conexiones['parentescosEliminar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/PersonajesParentescos',  {
+                    var promesaConsulta = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/PersonajesParentescos',  {
                         params: {
                             egoID: personajeRefABorrar.parienteID,
                             parienteID: $scope.personajeID
                         }
-                    }).then(function(data) {
+                    })
+                    
+                    conexiones['parentescosEliminar'] = promesaConsulta.then(function(data) {
                             console.log("relacion Inversa" + data);
                             relacionInversaID = data.data[0].parentescoID;
+                            var promises = [];
                             // Eliminamos relacion directa
-                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/PersonajesParentescos',{
+                            promises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/PersonajesParentescos',{
                                 params: {
                                     idUnico: 'parentescoID',
                                     parentescoID: personajeRefABorrar.parentescoID
                                 }
-                            }).then(function(data) {
-                                    $scope.datosGuardados = true;
-                                    console.log(data);
-                            });
+                            }));
                             // Eliminamos relacion inversa
                             if (relacionInversaID != -1) {
-                                $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/PersonajesParentescos',{
+                                conexiones['parentescosEliminarInversa'] = promises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/PersonajesParentescos',{
                                     params: {
                                         idUnico: 'parentescoID',
                                         parentescoID: relacionInversaID
                                     }
-                                }).then(function(data) {
-                                        $scope.datosGuardados = true;
-                                        console.log(data);
-                                });
+                                }));
                             }
+                            return $q.all(promises);
                     });
                     
                     
@@ -564,39 +562,38 @@
                 $scope.parentescosNuevos.forEach( function (pariente) {
                     // revisar si el personaje nombre esta vacio
                     if (pariente.nombrePersonaje !== "") {
-                        conexiones['parentescosPersonajesNuevos'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Personajes',{
+                        var promesaInsertar = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Personajes',{
                             params: {
                                 nombre: '"'+pariente.nombrePersonaje+'"'
                             }
-                        }).then(function(data) {
+                        });
+                        
+                        
+                        conexiones['parentescosPersonajesNuevos'] = promesaInsertar.then(function(data) {
                             $scope.datosGuardados = true;
                             console.log(data);
+                            var promises = [];
                             // Data contains the last insert id
                             if (!String(data.data).startsWith("[WARNING]")) {
                                 var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
                                 // Guardamos la relacion directa
-                                $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
+                                promises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
                                     params: {
                                         egoID: $scope.personajeID,
                                         parienteID: lastInsertID,
                                         parentesco: "'" + pariente.relacionDirecta + "'"
                                     }
-                                }).then(function(data) {
-                                        $scope.datosGuardados = true;
-                                        console.log(data);
-                                });
+                                }));
                                 // Guardamos la relacion Inversa
-                                $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
+                                promises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
                                     params: {
                                         egoID: lastInsertID,
                                         parienteID: $scope.personajeID,
                                         parentesco: "'" + pariente.relacionInversa + "'"
                                     }
-                                }).then(function(data) {
-                                        $scope.datosGuardados = true;
-                                        console.log(data);
-                                });
+                                }));
                             }
+                            return $q.all(promises);
                         });
                     }
                 });
@@ -605,7 +602,7 @@
             if (Object.keys(conexiones).length != 0) {
                 $scope.datosPrincipalesCargando = true;
                 $scope.datosGuardados = true;
-                $q.all(conexiones).then(function(responses) {
+                $q.all(conexiones).then( function(responses) {
                     for (var res in responses) {
                         console.log(res + ' = ' + responses[res].data);
                     }

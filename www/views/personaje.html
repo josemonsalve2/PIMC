@@ -83,17 +83,19 @@
 
           <div id="parentescos" class="col-sm-12 col-md-6">
             <table>
-              <tr><th class="text-center" colspan="3">Parentescos</th></tr>
-                <tr><th>ID</th><th>Personaje</th><th>Relacion</th></tr>
-                <tr ng-click="abrirPersonajeSeleccionado($index,'existente')" ng-repeat="parentesco in parentescos track by $index">
+              <tr><th class="text-center" colspan="4">Parentescos</th></tr>
+                <tr><th>ID</th><th>Personaje</th><th>Relacion</th><th>Abrir personaje</th></tr>
+                <tr ng-repeat="parentesco in parentescos track by $index">
                       <td><button ng-show="borrarParentescoActivado" ng-click='borrarParentescoExistente($index);$event.stopPropagation()' class="btn-danger">-</button>{{parentesco.parentescoID}}</td>
                       <td>{{parentesco.nombrePersonaje}}</td>
                       <td>{{parentesco.relacionDirecta}}</td>
+                      <td ng-click="abrirPersonajeSeleccionado($index,'existente')"> Abrir </td>
                   </tr>
-                  <tr ng-click="abrirPersonajeSeleccionado($index,'nuevaRef')" ng-repeat="parentesco in parentescosAgregarReferencia track by $index">
+                  <tr ng-repeat="parentesco in parentescosAgregarReferencia track by $index">
                       <td><button ng-click='borrarReferenciaNuevoParentesco($index)' class="btn-danger">-</button> (Nueva Ref) {{parentesco.parentescoID}}</td>
                       <td>{{parentesco.nombrePersonaje}}</td>
                       <td><span editable-text="parentesco.relacionDirecta" ng-click="$event.stopPropagation()">{{parentesco.relacionDirecta || "Relacion directa"}}</span> - <span editable-text="parentesco.relacionInversa" ng-click="$event.stopPropagation()">{{parentesco.relacionInversa || "Relacion Inversa"}}</span></td>
+                      <td ng-click="abrirPersonajeSeleccionado($index,'nuevaRef')"> Abrir </td>
                   </tr>
                   <tr ng-repeat="parentesco in parentescosNuevos track by $index">
                       <td><button ng-click='borrarParentescoNuevo($index)' class="btn-danger">-</button> {{"Parentesco Nuevo"}}</td>
@@ -102,6 +104,7 @@
                           <i ng-show="cargandoNombres" class="glyphicon glyphicon-refresh"></i>
                           <div ng-show="parentescosNoResults"><i class="glyphicon glyphicon-remove"></i> No Results Found</div></td>
                       <td><span editable-text="parentesco.relacionDirecta">{{parentesco.relacionDirecta || "Relacion directa"}}</span> - <span editable-text="parentesco.relacionInversa">{{parentesco.relacionInversa || "Relacion Inversa"}}</span></td>
+                      <td></td>
             </table>
               <div class="row">
               <button ng-click='agregarParentesco()' class="btn btn-success m-t-2 m-l-1">Agregar Parentesco</button>
