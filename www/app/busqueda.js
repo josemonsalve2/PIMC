@@ -19,7 +19,8 @@
         $scope.tablaResultados = {
             enableRowSelection: true,
             enableSelectAll: true,
-            multiSelect: false
+            multiSelect: false,
+            data: {}
         };
         $scope.tablaResultados.columnDefs = [
             {field: 'institucionFondo', name: 'institucionFondo', displayName: 'Institución Fondo' },

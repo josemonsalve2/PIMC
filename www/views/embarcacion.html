@@ -5,29 +5,39 @@
       <h1 class="nombre">
           <span editable-text="datosPrincipales.nombres[0]" 
               onbeforesave="listados.modificarBorrar('Nombres',datosPrincipales.nombres,0,datosPrincipales.nombres[0])"  
-              class="m-l-1"> {{ datosPrincipales.nombres[0] || "Agregar un nombre" }}</span>
-                 <ul class="nav nav-pills rounded">
-                      <li role="presentation" class="active" 
-                          onaftersave="listados.modificarBorrar('Nombres',datosPrincipales.nombres,$index,nombre)" 
-                          editable-text="nombre" 
-                          ng-repeat="nombre in datosPrincipales.nombres track by $index" ng-if="$index > 0">
-                          <a href="#" class="bg-mountain_meadow">{{nombre}}</a>
-                      </li>
-                      <li role="presentation" 
-                          editable-text="listados.mensaje" 
-                          onshow="listados.borrarOnShow()"
-                          onbeforesave="listados.agregarALista('Nombres', datosPrincipales.nombres, $data)" 
-                          onaftersave="listados.mensaje='+ Agregar';return"
-                          oncancel="listados.mensaje='+ Agregar'">
-                          <a href="#">{{listados.mensaje || '+ Agregar'}}</a>
-                      </li>
-                </ul>
-          
-              <span class="m-l-1 text-shady_lady">|</span><small class="m-l-1 text-shady_lady">Alias: </small>
-              <small editable-text="datosPrincipales.alias" 
-              onbeforesave="editarDatoPrincipal('alias',$data)"  
-              class="m-l-1"> {{ datosPrincipales.alias || "Alias" }}</small>
-      </h1>
+              class="m-l-1"> {{ datosPrincipales.nombres[0] || "Agregar un nombre" }}</span><br/>
+              <small class="m-l-1 text-shady_lady">Otros nombres</small>
+              <small class="m-l-1"
+                  onaftersave="listados.modificarBorrar('Nombres',datosPrincipales.nombres,$index,nombre)" 
+                  editable-text="nombre" 
+                  ng-repeat="nombre in datosPrincipales.nombres track by $index" ng-if="$index > 0">
+                  <button class="btn btn-xs btn-primary" ng-click="listados.volverPrincipal('Nombres',datosPrincipales.nombres,$index);$event.stopPropagation()">↑</button>{{nombre}}
+              </small>
+              <small class="m-l-1"
+                  editable-text="listados.mensaje" 
+                  onshow="listados.borrarOnShow()"
+                  onbeforesave="listados.agregarALista('Nombres', datosPrincipales.nombres, $data)" 
+                  onaftersave="listados.mensaje='+ Agregar';return"
+                  oncancel="listados.mensaje='+ Agregar'">
+                  {{listados.mensaje || '+ Agregar'}}
+              </small>
+              <span class="m-l-1 text-shady_lady">|</span>
+              <small class="m-l-1 text-shady_lady">Alias: </small>
+              <small class="m-l-1"
+                  onaftersave="listados.modificarBorrar('Alias',datosPrincipales.alias,$index,alias)" 
+                  editable-text="alias" 
+                  ng-repeat="alias in datosPrincipales.alias track by $index" ng-if="$index > 0">
+                  {{alias}}
+              </small>
+              <small class="m-l-1"
+                  editable-text="listados.mensaje" 
+                  onshow="listados.borrarOnShow()"
+                  onbeforesave="listados.agregarALista('Nombres', datosPrincipales.alias, $data)" 
+                  onaftersave="listados.mensaje='+ Agregar';return"
+                  oncancel="listados.mensaje='+ Agregar'">
+                  {{listados.mensaje || '+ Agregar'}}
+              </small>
+     </h1>
     </div>
     <div class="col-sm-12 clearfix">
         <div class="m-r-1 inline"><h5 class="tituloDato">Banderas:</h5></div>
@@ -43,29 +53,55 @@
     <uib-tab index="0" heading="Datos Principales">
       <div id="datosPrincipalesEmbarcacion" class="row p-t-2">
         <div class="col-sm-6">
+            <ul class="datos">
+            <li><span class="tituloDato">Lugar de construcción:</span><span editable-text="datosPrincipales.lugarConstruccion" 
+                          onbeforesave="editarDatoPrincipal('lugarConstruccion',$data)"  
+                          class="valorDato"> {{ datosPrincipales.lugarConstruccion || "No definido" }}</span>
+            </li>
+            <li><span class="tituloDato">Fecha de construcción:</span><span editable-text="datosPrincipales.fechaConstruccion" 
+                          onbeforesave="editarDatoPrincipal('fechaConstruccion',$data)"  
+                          class="valorDato"> {{ datosPrincipales.fechaConstruccion || "No definido" }}</span>
+            </li>
+            <li><span class="tituloDato">Lugar de deserción:</span><span editable-text="datosPrincipales.lugarDesercion" 
+                          onbeforesave="editarDatoPrincipal('lugarDesercion',$data)"  
+                          class="valorDato"> {{ datosPrincipales.lugarDesercion || "No definido" }}</span>
+            </li>
+            <li><span class="tituloDato">Fecha de deserción:</span><span editable-text="datosPrincipales.fechaDesercion" 
+                          onbeforesave="editarDatoPrincipal('fechaDesercion',$data)"  
+                          class="valorDato"> {{ datosPrincipales.fechaDesercion || "No definido" }}</span>
+            </li>
+            <li><span class="tituloDato">Razón de deserción:</span><span editable-text="datosPrincipales.razonDesercion" 
+                          onbeforesave="editarDatoPrincipal('razonDesercion',$data)"  
+                          class="valorDato"> {{ datosPrincipales.razonDesercion || "No definido" }}</span>
+            </li>
+          </ul>
+          
+        </div>
+        <div class="col-sm-6">
           <ul class="datos">
             <li>
-              <span class="tituloDato">Tipo de Buque:</span>
-              <span class="valorDato">Canoa</span>
+              <span class="tituloDato">Tipo de barco:</span><span editable-text="datosPrincipales.tipo" 
+                          onbeforesave="editarDatoPrincipal('tipo',$data)"  
+                          class="valorDato"> {{ datosPrincipales.tipo || "No definido" }}</span>
             </li>
             <li>
               <span class="tituloDato">Usos:</span>
               <ol class="breadcrumb inline m-b-0">
-                <li>Correo</li>
-                <li>Guardacostas</li>
+                <li
+                  onaftersave="listados.modificarBorrar('Usos',datosPrincipales.usos,$index,usos)" 
+                  editable-text="usos" 
+                  ng-repeat="usos in datosPrincipales.usos track by $index" ng-if="$index > 0">
+                  {{usos}}
+              </li>
+              <li 
+                  editable-text="listados.mensaje" 
+                  onshow="listados.borrarOnShow()"
+                  onbeforesave="listados.agregarALista('Usos', datosPrincipales.usos, $data)" 
+                  onaftersave="listados.mensaje='+ Agregar';return"
+                  oncancel="listados.mensaje='+ Agregar'">
+                  {{listados.mensaje || '+ Agregar'}}
+              </li>
               </ol>
-            </li>
-          </ul>
-        </div>
-        <div class="col-sm-6">
-          <ul class="datos">
-            <li><span class="tituloDato">Lugar de construcción:</span><span class="valorDato">Colombia</span>
-            </li>
-            <li><span class="tituloDato">Fecha de construcción:</span><span class="valorDato">12 octubre 1900</span>
-            </li>
-            <li><span class="tituloDato">Lugar de deserción:</span><span class="valorDato">Perú</span>
-            </li>
-            <li><span class="tituloDato">Razón de deserción:</span><span class="valorDato">Ataque pirata</span>
             </li>
           </ul>
         </div>
@@ -75,34 +111,50 @@
       <div id="datosTecnicosEmbarcacion" class="row p-t-2">
         <div class="col-sm-12 col-md-3">
           <ul class="datos">
-            <li><span class="tituloDato">Manga:</span><span class="valorDato">10 metros</span>
+            <li><span class="tituloDato">Manga:</span><span editable-text="datosPrincipales.manga" 
+                          onbeforesave="editarDatoPrincipal('manga',$data)"  
+                          class="valorDato"> {{ (datosPrincipales.manga? datosPrincipales.manga +" Metros": datosPrincipales.manga) || "No definido" }}</span>
             </li>
-            <li><span class="tituloDato">Eslora:</span><span class="valorDato">20 metros</span>
+            <li><span class="tituloDato">Eslora:</span><span editable-text="datosPrincipales.eslora" 
+                          onbeforesave="editarDatoPrincipal('eslora',$data)"  
+                          class="valorDato"> {{ (datosPrincipales.eslora? datosPrincipales.eslora +" Metros": datosPrincipales.eslora) || "No definido" }}</span>
             </li>
-            <li><span class="tituloDato">Puntal:</span><span class="valorDato">40 metros</span>
+            <li><span class="tituloDato">Puntal:</span><span editable-text="datosPrincipales.puntal" 
+                          onbeforesave="editarDatoPrincipal('puntal',$data)"  
+                          class="valorDato"> {{ (datosPrincipales.puntal? datosPrincipales.puntal +" Metros": datosPrincipales.puntal) || "No definido" }}</span>
             </li>
-            <li><span class="tituloDato">Calado:</span><span class="valorDato">30 metros</span>
+            <li><span class="tituloDato">Calado:</span><span editable-text="datosPrincipales.calado" 
+                          onbeforesave="editarDatoPrincipal('calado',$data)"  
+                          class="valorDato"> {{ (datosPrincipales.calado? datosPrincipales.calado +" Metros": datosPrincipales.calado) || "No definido" }}</span>
             </li>
           </ul>
         </div>
         <div class="col-sm-12 col-md-9">
           <ul class="datos">
-            <li><span class="tituloDato">Capacidad de Carga:</span><span class="valorDato">400 Kg</span>
+            <li><span class="tituloDato">Capacidad de Carga:</span><span editable-text="datosPrincipales.capacidadCarga" 
+                          onbeforesave="editarDatoPrincipal('capacidadCarga',$data)"  
+                          class="valorDato"> {{ datosPrincipales.capacidadCarga || "No definido" }}</span><span editable-text="datosPrincipales.capacidadUnidades" 
+                          onbeforesave="editarDatoPrincipal('capacidadUnidades',$data)"  
+                          class="valorDato"> {{ datosPrincipales.capacidadUnidades || "Unidades no definidas" }}</span>
             </li>
-            <li><span class="tituloDato">Otras caracteristicas:</span>
+            <!-- <li><span class="tituloDato">Otras caracteristicas:</span>
               <ol class="breadcrumb inline m-b-0">
                 <li class="valorDato">Color</li>
                 <li class="valorDato">Cabinas</li>
                 <li class="valorDato">Algo especial</li>
               </ol>
-            </li>
+            </li>-->
           </ul>
         </div>
       </div>
       <hr>
       <div id="reparacionesTabla">
         <h2>Reparaciones</h2>
-        <div ui-grid="tablaReparaciones" ui-grid-auto-resize ui-grid-edit ui-grid-cellnav class="grid" ng-style="{height: (tablaReparaciones.data.length*31)+30+'px'}"></div>
+        <div ui-grid="tablaReparaciones" ui-grid-auto-resize ui-grid-edit ui-grid-cellnav class="grid" style="min-height:300px;"></div>
+        <div class="row">
+              <button ng-click='agregarReparacion()' class="btn btn-success m-t-2 m-l-1">Agregar Reparacion</button>
+              <button ng-click='borrarReparacionesActivado = !borrarReparacionesActivado;cambiarBorrarReparaciones(borrarReparacionesActivado)'  class="btn m-t-2">{{borrarReparacionesActivado? "Desabilitar" : "Habilitar"}} borrar reparaciones</button>
+        </div>
       </div>
     </uib-tab>
     <uib-tab index="2" heading="Datos Secundarios">
@@ -364,3 +416,10 @@
   </uib-tabset>
 
 </section>
+<footer class="status-bar">
+  <div class="text-right">
+    <strong>Ultima Accion: </strong><span class="status-message p-r-1" ng-bind-html="ultimaAccion">{{ultimaAccion}}</span>
+    <button ng-click='borrarCambios()' class="btn btn-danger m-r-1" ng-disabled="guardarDatos">Borrar cambios</button>
+    <button ng-click='guardarCambios()' class="btn btn-success">Guardar</button>
+  </div>
+</footer>
