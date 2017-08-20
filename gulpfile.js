@@ -23,14 +23,17 @@ gulp.task('scss', function(){
     .pipe(connect.reload());
 });
 
-gulp.task('html', ['scss'], function () {
+gulp.task('files', ['scss'], function () {
   gulp.src('www/**/*.html')
+    .pipe(connect.reload());
+  gulp.src('www/**/*.js')
     .pipe(connect.reload());
 });
 
 gulp.task('watch', ['scss'], function(){
   gulp.watch('www/scss/**/*.scss', ['scss']); 
-  gulp.watch('www/**/*.html', ['html']);
+  gulp.watch('www/**/*.html', ['files']);
+  gulp.watch('www/**/*.js', ['files']);
 });
 
 gulp.task('webserver', function() {

@@ -20,7 +20,8 @@ NOTA: Estas utilidades solo se requieren si se desea editar el CSS.
 
 3. `$ cd PIMC/ && npm install` 
 
-4. Para compilar CSS, ingresar en una terminal a la carpeta raíz del proyecto (donde está el archivo gulpfile.js) y ejecutar: `$ gulp`. La herramineta vigilará los cambios realizados en Sass y compilará el css automáticamente. Para salir, terminar la tarea con `Ctrl + C`. T
+4. Para compilar CSS, ingresar en una terminal a la carpeta raíz del proyecto (donde está el archivo gulpfile.js) y ejecutar: `$ gulp`. 
+La herramienta vigilará los cambios realizados en archivos Sass, html y javascript, compilará el css automáticamente y recargará la aplicación automáticamente al hacer cualquier cambio en estos tipos de archivos. Para salir, terminar la tarea con `Ctrl + C`.
 
-5. También se puede compilar manualmente, previamente instalado [Sass](http://sass-lang.com/documentation/file.SASS_REFERENCE.html#using_sass) (ver enlace para más detalles).
+6. También se puede compilar manualmente, previamente instalado [Sass](http://sass-lang.com/documentation/file.SASS_REFERENCE.html#using_sass) (ver enlace para más detalles).
 
