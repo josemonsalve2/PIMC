@@ -198,7 +198,7 @@
             $scope.documentosAEliminar = [];
             $scope.documentosCambio = false;
             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Documentos?archivoID=' + $scope.archivoID).then(function(data) {
-                if (!String(data.data).startsWith("[WARNING]")) {
+                if (Object.keys(data.data).length != 0) {
                     $scope.documentos = data.data;
                     
                     $scope.documentos.forEach(function(doc) {
@@ -281,7 +281,7 @@
             $scope.notasAEliminar = [];
             $scope.notasCambio = false;
             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/ArchivosNotas?archivoID=' + $scope.archivoID).then(function(data) {
-                if (!String(data.data).startsWith("[WARNING]")) {
+                if (Object.keys(data.data).length != 0) {
                     $scope.notas = data.data;
                     $scope.notas.forEach(function(nota) {
                         nota.modificada = false;
@@ -396,7 +396,7 @@
                               documentoID: doc.documentoID
                             }
                 }).then(function(data) {
-                    if (!String(data.data).startsWith("[WARNING]")) {
+                    if (Object.keys(data.data).length != 0) {
                         var listaReferencias = data.data;
                         listaReferencias.forEach (function (referencia) {
                             var personajeID = referencia.personajeID;
@@ -407,7 +407,7 @@
                                               personajeID: personajeID
                                             }
                                 }).then(function(data) {
-                                    if (!String(data.data).startsWith("[WARNING]")) {
+                                    if (Object.keys(data.data).length != 0) {
                                         var personaje = data.data[0];
                                         personaje.documentosReferencias = [doc.documentoID];
                                         $scope.personajes.push(personaje);
@@ -442,14 +442,14 @@
             var embarcacionesIDs = [];
             $scope.documentos.forEach(function (doc) {
                 $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefEmbarcacion?documentoID=' + doc.documentoID).then(function(data) {
-                    if (!String(data.data).startsWith("[WARNING]")) {
+                    if (Object.keys(data.data).length != 0) {
                         var listaReferencias = data.data;
                         lstaReferencias.forEach (function (referencia) {
                             var embarcacionID = referencia.embarcacionID;
                             if (!embarcacionesIDs.includes(embarcacionID)) {
                                 embarcacionesIDs.push(embarcacionID);
                                 $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Embarcaciones?embarcacionID=' + embarcacionID).then(function(data) {
-                                    if (!String(data.data).startsWith("[WARNING]")) {
+                                    if (Object.keys(data.data).length != 0) {
                                         var embarcacion = data.data[0];
                                         embarcacion.documentosReferencias = [doc.documentoID];
                                         $scope.embarcaciones.push(embarcacion);
@@ -476,14 +476,14 @@
             var lugaresIDs = [];
             $scope.documentos.forEach(function (doc) {
                 $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefLugares?documentoID=' + doc.documentoID).then(function(data) {
-                    if (!String(data.data).startsWith("[WARNING]")) {
+                    if (Object.keys(data.data).length != 0) {
                         var listaReferencias = data.data;
                         lstaReferencias.forEach (function (referencia) {
                             var lugarID = referencia.lugarID;
                             if (!lugaresIDs.includes(lugarID)) {
                                 lugaresIDs.push(lugarID);
                                 $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Lugares?lugarID=' + lugarID).then(function(data) {
-                                if (!String(data.data).startsWith("[WARNING]")) {
+                                if (Object.keys(data.data).length != 0) {
                                     var lugar = data.data[0];
                                     lugar.documentosReferencias = [doc.documentoID];
                                     $scope.lugares.push(lugar);
@@ -510,14 +510,14 @@
             var actividadesIDs = [];
             $scope.documentos.forEach(function (doc) {
                 $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefActividades?documentoID=' + doc.documentoID).then(function(data) {
-                    if (!String(data.data).startsWith("[WARNING]")) {
+                    if (Object.keys(data.data).length != 0) {
                         var listaReferencias = data.data;
                         lstaReferencias.forEach (function (referencia) {
                             var actividadID = referencia.actividadID;
                             if (!actividadesIDs.includes(actividadID)) {
                                 actividadesIDs.push(actividadID);
                                 $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Actividades?actividadID=' + actividadID).then(function(data) {
-                                    if (!String(data.data).startsWith("[WARNING]")) {
+                                    if (Object.keys(data.data).length != 0) {
                                         var actividad = data.data[0];
                                         actividad.documentosReferencias = [doc.documentoID];
                                         $scope.actividades.push(actividad);
@@ -544,14 +544,14 @@
             var fechasSucesosIDs = [];
             $scope.documentos.forEach(function (doc) {
                 $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefEventos?documentoID=' + doc.documentoID).then(function(data) {
-                    if (!String(data.data).startsWith("[WARNING]")) {
+                    if (Object.keys(data.data).length != 0) {
                         var listaReferencias = data.data;
                         lstaReferencias.forEach (function (referencia) {
                             var eventoID = referencia.eventoID;                          
                             if (!fechasSucesosIDs.includes(eventoID)) {
                                 fechasSucesosIDs.push(eventoID);
                                 $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Eventos?eventoID=' + eventoID).then(function(data) {
-                                    if (!String(data.data).startsWith("[WARNING]")) {
+                                    if (Object.keys(data.data).length != 0) {
                                         var fechaSuceso = data.data[0];
                                         fechaSuceso.documentosReferencias = [doc.documentoID];
                                         $scope.fechasSucesos.push(fechaSuceso);
@@ -578,14 +578,14 @@
             var institucionesIDs = [];
             $scope.documentos.forEach(function (doc) {
                 $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefInstituciones?documentoID=' + doc.documentoID).then(function(data) {
-                    if (!String(data.data).startsWith("[WARNING]")) {
+                    if (Object.keys(data.data).length != 0) {
                         var listaReferencias = data.data;
                         lstaReferencias.forEach (function (referencia) {
                             var institucionID = referencia.institucionID;
                             if (!institucionesIDs.includes(institucionID)) {
                                 institucionesIDs.push(institucionID);
                                 $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Instituciones?institucionID=' + institucionID).then(function(data) {
-                                    if (!String(data.data).startsWith("[WARNING]")) {
+                                    if (Object.keys(data.data).length != 0) {
                                         var institucion = data.data[0];
                                         institucion.documentosReferencias = [doc.documentoID];
                                         $scope.instituciones.push(institucion);

@@ -188,6 +188,12 @@
                     $scope.tablaReparacionesAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
                 }   
             });
+            tablaAPI.edit.on.beginCellEdit($scope, function(rowEntity, colDef) {
+                if (rowEntity[colDef.name] === $scope.valorDatoNuevo) {
+                    rowEntity[colDef.name] = "";
+                    $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+                }
+            });
             tablaAPI.grid.registerRowsProcessor(function (renderableRows){
                     renderableRows.forEach(function(row) {
                         if (row.entity.estadoActual === $scope.datosEstados.ELIMINADO)
@@ -456,8 +462,7 @@
             $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
         }
         
-        // Hoja de servicio y personas
-        
+        // HOJAS DE SERVICIO Y PERSONAL
         // Definiciones de las pestañas de la aplicación. 
         $scope.tabs = new Map();
         $scope.tabsArray = [];
@@ -465,47 +470,49 @@
         // Estas funciones son para agregar y quitar pestañas
         $scope.abrirElemento = function(ElementoId) {
             if (!$scope.tabs.has(ElementoId)) {
-            $scope.tabs.set(ElementoId, {
-                title: 'ComisionSeleccionada' + ($scope.tabs.size + 1),
-                tabIndex: ($scope.tabs.size + 1),
-                content: 'Esta es la ruta' + ElementoId,
-                active: true
-            });
+                $scope.tabs.set(ElementoId, {
+                    title: 'ComisionSeleccionada' + ($scope.tabs.size + 1),
+                    tabIndex: ($scope.tabs.size + 1),
+                    data: 'Esta es la ruta' + ElementoId,
+                    active: true,
+                    editada: false
+                });
             }
             $scope.tabsArray = Array.from($scope.tabs);
         };
         $scope.cerrarElemento = function(ElementoId) {
             if ($scope.tabs.has(ElementoId)) {
-            $scope.tabs.delete(ElementoId);
+                if ($scope.tabs[ElementoId].editada) {
+                    if (window.confirm("Hay cambios sin guardar, esta seguro que quiere cerrar?") === true) {
+                        $scope.registrarAccion("Los cambios en la comisión no han sido guardados");
+                        $scope.tabs.delete(ElementoId);
+                    }
+                } else {
+                    $scope.tabs.delete(ElementoId);
+                }
             }
             $scope.tabsArray = Array.from($scope.tabs);
         }
-
-
-
-        
-        
-
-        // HOJA DE SERVICIO Y PERSONAL
-
         
         $scope.tablaHojaServicioPersonal = {
             enableRowSelection: true,
             multiSelect: false,
             noUnselect: true,
-            enableRowHeaderSelection: false
-            
+            enableRowHeaderSelection: false,
+            data: []
         };
         $scope.hojaServicioPersonalEditado = false;
         $scope.tablaHojaServicioPersonal.columnDefs = [{
-            field: 'id',
-            name: "id",
-            display: "id",
+            field: 'rutaID',
+            name: "rutaID",
+            display: "rutaID",
             hidden: true
         }, {
-            field: 'lugarPartida',
-            name: 'Lugar de Partida',
-            displayName: 'Lugar de Partida',
+            field: 'lugarTerritorioPartida',
+            name: 'lugarTerritorioPartida',
+            displayName: 'Lugar o territorio de Partida',
+            cellTemplate: 'app/templates/lugarTerritorioSelectCell.html',
+            editableCellTemplate: 'app/templates/lugarTerritorioSelectEdit.html',
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 var classToReturn = "";
                 if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
@@ -518,7 +525,7 @@
             }
         }, {
             field: 'fechaPartida',
-            name: 'Fecha de Partida',
+            name: 'fechaPartida',
             displayName: 'Fecha de Partida',
             type: 'date',
             cellFilter: 'date:"dd-MM-yyyy"',
@@ -533,9 +540,11 @@
                 return classToReturn;
             }
         }, {
-            field: 'lugarLlegada',
-            name: 'Lugar de Llegada',
-            displayName: 'Lugar de Llegada',
+            field: 'lugarTerrotorioLlegada',
+            name: 'lugarTerrotorioLlegada',
+            displayName: 'Lugar o territorio de Llegada',
+            cellTemplate: 'app/templates/lugarTerritorioSelectCell.html',
+            editableCellTemplate: 'app/templates/lugarTerritorioSelectEdit.html',
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 var classToReturn = "";
                 if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
@@ -548,7 +557,7 @@
             }
         }, {
             field: 'fechaLlegada',
-            name: 'Fecha de Llegada',
+            name: 'fechaLlegada',
             displayName: 'Fecha de Llegada',
             type: 'date',
             cellFilter: 'date:"dd-MM-yyyy"',
@@ -562,31 +571,117 @@
                 }
                 return classToReturn;
             }
+        }, {
+            name: 'eliminar',
+            displayName: '',
+            width: 30,
+            visible:false,
+            enableCellEdit: false,
+            cellTemplate: '<button class="btn btn-sm btn-danger" ng-click="grid.appScope.borrarDatosSecundarios(row)">-</button>'
         }];
         
-        $scope.tablaHojaServicioPersonal.onRegisterApi = function(gridApi) {
-            $scope.hojaServicioGridApi = gridApi;
-            gridApi.selection.on.rowSelectionChanged($scope, function(row) {
-            var id = row.entity["id"];
-            $scope.abrirElemento(id);
+        $scope.tablaHojaServicioPersonal.onRegisterApi = function(tablaAPI) {
+            $scope.tablaHojaServicioAPI = tablaAPI;
+            tablaAPI.selection.on.rowSelectionChanged($scope, function(row) {
+                var id = row.entity["rutaID"];
+                // Abrimos solamente si no es nuevo. 
+                if (row.entity.estadoActual != $scope.datosEstados.INSERTADO)
+                    $scope.abrirElemento(id);
             });
+            tablaAPI.edit.on.afterCellEdit($scope, function(rowEntity,colDef, newValue, oldValue) {
+                if (newValue != oldValue && rowEntity.estadoActual != $scope.datosEstados.INSERTADO) {
+                    $scope.hojaServicioPersonalEditado = true;
+                    $scope.registrarAccion(colDef.name + " en hoja de servicio y personal <strong>" + rowEntity.reparacionID + "</strong> modificada");
+                    rowEntity.estadoActual = $scope.datosEstados.MODIFICADO;
+                    $scope.tablaHojaServicioAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+                }   
+            });
+            tablaAPI.edit.on.beginCellEdit($scope, function(rowEntity, colDef) {
+                if (rowEntity[colDef.name] === $scope.valorDatoNuevo) {
+                    rowEntity[colDef.name] = "";
+                    $scope.tablaHojaServicioAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+                }
+            });
+            tablaAPI.grid.registerRowsProcessor(function (renderableRows){
+                    renderableRows.forEach(function(row) {
+                        if (row.entity.estadoActual === $scope.datosEstados.ELIMINADO)
+                            row.visible = false;
+                        else 
+                            row.visible = true;
+                    });
+                    return renderableRows;
+            }, 200);
         }
-
-        // Para guardar borrar y barra de estado
-        $scope.ultimaAccion = $sce.trustAsHtml("Ninguna");
-        // Log
-        $scope.registrarAccion = function(mensaje) {
-            $scope.ultimaAccion = $sce.trustAsHtml(mensaje);
-            console.log(mensaje)
-        }
-        // Button functions
-        $scope.borrarCambios = function() {
-            if (window.confirm("Esta Seguro que quiere borrar los cambios?") === true) {
-                $scope.registrarAccion("Los cambios han sido borrados");
-                init();
-            }
+        $scope.cargarHojaServicioPersonal  = function() {
+            $scope.hojaServicioPersonalEditado = true;
+            $scope.tablaHojaServicioPersonal.data = [];
+            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/EmbarcacionesRutas',
+                {params: {embarcacionID: $scope.embarcacionID}}
+            ).then( function(data) {
+                if (Object.keys(data.data).length != 0) {
+                    $scope.tablaHojaServicioPersonal.data = data.data;
+                    for (var ruta in $scope.tablaHojaServicioPersonal.data) {
+                        // Lugar tiene prioridad sobre territorio
+                        if ($scope.tablaHojaServicioPersonal.data[ruta].lugarLlegadaID) {
+                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioLlegada = {lugarOTerritorio:'lugar', 
+                                                                                                  lugarTerritorioID: $scope.tablaHojaServicioPersonal.data[ruta].lugarLlegadaID,
+                                                                                                  lugarTerritorioNombre: ''};
+                            // Cargamos el lugar para obtener el nombre
+                        } else {
+                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioLlegada = {lugarOTerritorio:'territorio', 
+                                                                                                  lugarTerritorioID: $scope.tablaHojaServicioPersonal.data[ruta].territorioLlegadaID,
+                                                                                                  lugarTerritorioNombre: ''};
+                            // Cargamos el lugar para obtener el nombre
+                        }
+                        if ($scope.tablaHojaServicioPersonal.data[ruta].lugarSalidaID) {
+                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioSalida = $scope.tablaHojaServicioPersonal.data[ruta].lugarSalidaID;
+                        } else {
+                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioSalida = $scope.tablaHojaServicioPersonal.data[ruta].territorioSalidaID;
+                        }
+                        $scope.tablaHojaServicioPersonal.data[ruta].estadoActual = $scope.datosEstados.LIMPIO;
+                    }
+                }
+            });
         };
+        $scope.agregarHojaServicioPersonal = function () {
+            $scope.datosSecundariosEditados = true;
+            var nuevoDatoSecundario = {
+                embarcacionID: $scope.embarcacionID,
+                categoria: $scope.valorDatoNuevo,
+                descripcion: $scope.valorDatoNuevo,
+                cantidad: 0,
+                unidades: $scope.valorDatoNuevo,
+                fechaAdicion: new Date(),
+                fechaAdicionFormato: "",
+                fechaRemocion: new Date(),
+                fechaRemocionFormato: "",
+                estadoActual: $scope.datosEstados.INSERTADO
+            };
+            $scope.tablaDatosSecundarios.data.push(nuevoDatoSecundario);
+            $scope.registrarAccion("Entrada agregada a tabla datos secundarios");
+            $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+        };
+        $scope.borrarDatosSecundarios = function(row) {
+            $scope.datosSecundariosEditados = true;
+            if (row.entity.estadoActual == $scope.datosEstados.INSERTADO) {
+                $scope.registrarAccion("datoSecundario nuevo eliminada");
+                var index = $scope.tablaDatosSecundarios.data.indexOf(row.entity);
+                $scope.tablaDatosSecundarios.data.splice(index,1);
+            } else {
+                $scope.registrarAccion("dato Secundario <strong> "+ row.entity.elementoID +" </strong> eliminado");
+                row.entity.estadoActual = $scope.datosEstados.ELIMINADO;
+                $scope.tablasDatosSecundariosAPI.grid.refresh();
+            }
 
+        };
+        $scope.cambiarBorrarDatosSecundarios = function (esActivo) {
+            var lastCol = $scope.tablaDatosSecundarios.columnDefs.length - 1;
+            $scope.tablaDatosSecundarios.columnDefs[lastCol].visible = esActivo;
+            $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
+            $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+        }
+        
+        
         // PARA LISTADOS
         $scope.listados = {mensaje:"+ Agregar"};
         // Para borrar listaNombres
@@ -626,22 +721,7 @@
         }
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        // Anotaciones
+        // ANOTACIONES EMBARCACIONES
         $scope.notas = "";
         $scope.notasAEliminar = [];
         $scope.notasCambio = false;

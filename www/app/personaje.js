@@ -148,7 +148,7 @@
                         }}
             ).then(function(data) {
                 // revisar si existe alguno
-                if (!String(data.data).startsWith("[WARNING]")) {
+                if (Object.keys(data.data).length != 0) {
                     var parentescosReferencias = data.data;
                     parentescosReferencias.forEach(function(referencia) {
                             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes',
@@ -318,7 +318,7 @@
                     personajeID:$scope.personajeID
                 }
             }).then(function(data) {
-                if (!String(data.data).startsWith("[WARNING]")) {
+                if (Object.keys(data.data).length != 0) {
                     $scope.notas = data.data;
                     $scope.notas.forEach(function(nota) {
                         nota.modificada = false;
@@ -574,7 +574,7 @@
                             console.log(data);
                             var promises = [];
                             // Data contains the last insert id
-                            if (!String(data.data).startsWith("[WARNING]")) {
+                            if (Object.keys(data.data).length != 0) {
                                 var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
                                 // Guardamos la relacion directa
                                 promises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{

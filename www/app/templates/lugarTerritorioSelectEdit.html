@@ -1,0 +1,14 @@
+<div>
+  <form
+    name="inputForm">
+    <input
+      type="text"
+      ng-class="'colt' + col.uid"
+      ui-grid-editor
+      ng-model="MODEL_COL_FIELD.lugarTerritorioNombre" />
+      <select ng-class="'colt' + col.uid"
+      ng-model="MODEL_COL_FIELD.lugarOTerritorio"
+      ng-options="lugarTerritorio for lugarTerritorio in ['Lugar','Territorio']">
+      </select>
+  </form>
+</div>

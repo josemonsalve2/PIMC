@@ -269,7 +269,7 @@
         }
         $scope.cargarEmisorReceptor = function () {
             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosEmisorReceptor?documentoID=' + $scope.documentoID).then(function(data) {
-                if (!String(data.data).startsWith("[WARNING]")) {
+                if (Object.keys(data.data).length != 0) {
                     //Obtener los datos JSON
                     var emisorReceptorDatos = data.data[0];
 
@@ -315,7 +315,7 @@
             $scope.notasAEliminar = [];
             $scope.notasCambio = false;
             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosNotas?documentoID=' + $scope.documentoID).then(function(data) {
-                if (!String(data.data).startsWith("[WARNING]")) {
+                if (Object.keys(data.data).length != 0) {
                     $scope.notas = data.data;
                     $scope.notas.forEach(function(nota) {
                         nota.modificada = false;
@@ -399,7 +399,7 @@
             $scope.personajesAgregarReferencia = [];
             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefPersonajes?documentoID=' + $scope.documentoID).then(function(data) {
                 // revisar si existe alguno
-                if (!String(data.data).startsWith("[WARNING]")) {
+                if (Object.keys(data.data).length != 0) {
                     var personajesReferencias = data.data;
                     personajesReferencias.forEach(function(referencia) {
                             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes?personajeID=' + referencia.personajeID).then(function(data) {
@@ -491,7 +491,7 @@
                     personajeID: personaje.personajeID
                     }}).then(function(data) {
                     var infoPersonaje = data.data[0];
-                    if (!String(infoPersonaje).startsWith("[WARNING]")) {
+                    if (Object.keys(data.data).length != 0) {
                         $scope.personajesNuevos.splice(indice,1);
                         var nuevaReferencia = {
                                 personajeID: infoPersonaje.personajeID,
@@ -578,7 +578,7 @@
                         }
             ).then(function(data) {
                 // revisar si existe alguno
-                if (!String(data.data).startsWith("[WARNING]")) {
+                if (Object.keys(data.data).length != 0) {
                     var embarcacionReferencias = data.data;
                     embarcacionReferencias.forEach(function(referencia) {
                             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Embarcaciones',
@@ -699,7 +699,7 @@
                     }}
                 ).then(function(data) {
                     var infoEmbarcacion = data.data[0];
-                    if (!String(infoEmbarcacion).startsWith("[WARNING]")) {
+                    if (Object.keys(data.data).length != 0) {
                         $scope.embarcacionesNuevas.splice(indice,1);
                         var nuevaReferencia = {
                                 embarcacionID: infoEmbarcacion.embarcacionID,
@@ -714,7 +714,7 @@
                             embarcacionID: embarcacion.embarcacionID
                             }}
                         ).then(function(data) {
-                            if (!String(infoEmbarcacion).startsWith("[WARNING]")) {
+                            if (Object.keys(data.data).length != 0) {
                                 var banderas = data.data;
                                 var listaBanderas = [];
                                 banderas.forEach(function(bandera) {
@@ -922,12 +922,12 @@
                         conexiones['embarcacionesInsertar'] = insertarPromise.then(function(data) {
                             $scope.datosGuardados = true;
                             console.log(data);
-                            var primises = [];
+                            var promises = [];
                             // Data contains the last insert id
-                            if (!String(data.data).startsWith("[WARNING]")) {
+                            if (Object.keys(data.data).length != 0) {
                                 // Agregamos las banderas
                                 var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
-                                primises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/DocumentosRefEmbarcacion',{
+                                promises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/DocumentosRefEmbarcacion',{
                                 params: {
                                     documentoID: $scope.documentoID,
                                     embarcacionID: lastInsertID,
@@ -939,7 +939,7 @@
                                     return e.trim();
                                 });
                                 listaBanderas.forEach(function (banderaAgregar) {
-                                    primises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/EmbarcacionesBanderas',{
+                                    promises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/EmbarcacionesBanderas',{
                                     params: {
                                         embarcacionID: lastInsertID,
                                         bandera: "'" + banderaAgregar + "'"
@@ -992,7 +992,7 @@
                             console.log(data);
                             var promises = [];
                             // Data contains the last insert id
-                            if (!String(data.data).startsWith("[WARNING]")) {
+                            if (Object.keys(data.data).length != 0) {
                                 var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
                                 promises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/DocumentosRefPersonajes',{
                                 params: {

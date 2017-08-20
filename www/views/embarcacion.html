@@ -185,7 +185,11 @@
           <uib-tabset active="0">
             <uib-tab index="0" heading="Listado">
               <div id="HojaServiciosDiv">
-                <div ui-grid="tablaHojaServicioPersonal" ui-grid-auto-resize ui-grid-edit ui-grid-selection class="grid" ng-style="{height: (tablaHojaServicioPersonal.data.length*31)+30+'px'}"></div>
+                <div ui-grid="tablaHojaServicioPersonal" ui-grid-auto-resize ui-grid-edit ui-grid-selection class="grid" style="min-height:300px;"></div>
+                <div class="row">
+                  <button ng-click='agregarHojaServicioPersonal()' class="btn btn-success m-t-2 m-l-1">Agregar Hoja de servicio y personal</button>
+                  <button ng-click='borrarHojaServicioPersonalActivado = !borrarHojaServicioPersonalActivado;cambiarBorrarHojaServicioPersona(borrarHojaServicioPersonalActivado)'  class="btn m-t-2">{{borrarHojaServicioPersonalActivado? "Desabilitar" : "Habilitar"}} borrar datos</button>
+                </div>
               </div>
             </uib-tab>
             <uib-tab index="$index + 1" ng-repeat="tab in tabsArray" heading="{{tab[1].title}}">
