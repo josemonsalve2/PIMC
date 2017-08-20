@@ -6,6 +6,20 @@
     embarcacionPerfil.controller('embarcacionPerfilController', ['$scope', '$sce', '$q', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', function($scope, $sce, $q, $http, $window, $location, $filter, $timeout, uiGridConstants, i18nService ) {
         $scope.embarcacionID = -1;
         
+        $scope.datosEstados = {
+            LIMPIO: 0, 
+            MODIFICADO: 1,
+            INSERTADO: 2,
+            ELIMINADO: 3,
+            propiedades: {
+                0: {nombre:'Limpia', value: 0, code: 'L'},
+                1: {nombre:'Modificada', value: 1, code: 'M'},
+                2: {nombre:'Insertada', value: 2, code: 'I'},
+                3: {nombre:'Eliminada', value: 3, code: 'E'}
+            }
+        };
+        $scope.valorDatoNuevo = "<<Nuevo>>";
+        
         var init = function() {
             $scope.embarcacionID = $window.localStorage.getItem("embarcacionID");
             // If not set, redirect.
@@ -25,6 +39,10 @@
                 $scope.cargarDatosPrincipales();
                 // Cargamos las anotaciones
                 $scope.cargarNotas();
+                // Cargamos las reparaciones
+                $scope.cargarReparaciones();
+                // Cargamos datos secundarios
+                $scope.cargarDatosSecundarios();
             }
         };
         
@@ -105,6 +123,7 @@
         
         // REPARACIONES
         $scope.tablaReparaciones = {
+            data:[]
         }
         $scope.reparacionesEditadas = false;
         $scope.tablaReparaciones.columnDefs = [{
@@ -115,10 +134,10 @@
             cellFilter: 'date:"dd-MM-yyyy"',
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 var classToReturn = "";
-                if (row.entity['editado']) {
+                if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
                     classToReturn += " text-info ";
                 }
-                if (row.entity['reparacionID'] == -1) {
+                if (row.entity['estadoActual'] == $scope.datosEstados.INSERTADO) {
                     classToReturn += " text-success ";
                 }
                 return classToReturn;
@@ -129,24 +148,24 @@
             displayName: 'Lugar',
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 var classToReturn = "";
-                if (row.entity['editado']) {
+                if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
                     classToReturn += " text-info ";
                 }
-                if (row.entity['reparacionID'] == -1) {
+                if (row.entity['estadoActual'] == $scope.datosEstados.INSERTADO) {
                     classToReturn += " text-success ";
                 }
                 return classToReturn;
             }
         }, {
-            field: 'reparacion',
-            name: 'reparacion',
+            field: 'notaReparacion',
+            name: 'notaReparacion',
             displayName: 'Nota de Reparación',
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 var classToReturn = "";
-                if (row.entity['editado']) {
+                if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
                     classToReturn += " text-info ";
                 }
-                if (row.entity['reparacionID'] == -1) {
+                if (row.entity['estadoActual'] == $scope.datosEstados.INSERTADO) {
                     classToReturn += " text-success ";
                 }
                 return classToReturn;
@@ -156,66 +175,418 @@
             displayName: '',
             width: 30,
             visible:false,
+            enableCellEdit: false,
             cellTemplate: '<button class="btn btn-sm btn-danger" ng-click="grid.appScope.borrarReparaciones(row)">-</button>'
         }];
         $scope.tablaReparaciones.onRegisterApi = function (tablaAPI) {
             $scope.tablaReparacionesAPI = tablaAPI;
-            tablaAPI.edit.on.afterCellEdit($scope, function(rowEntity,colDef) {
-                if (rowEntity.reparacionID != -1) {
+            tablaAPI.edit.on.afterCellEdit($scope, function(rowEntity,colDef, newValue, oldValue) {
+                if (newValue != oldValue && rowEntity.estadoActual != $scope.datosEstados.INSERTADO) {
+                    $scope.reparacionesEditadas = true;
                     $scope.registrarAccion(colDef.name + " en reparacion <strong>" + rowEntity.reparacionID + "</strong> modificada");
-                    rowEntity.editado = true;
-                }
+                    rowEntity.estadoActual = $scope.datosEstados.MODIFICADO;
+                    $scope.tablaReparacionesAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+                }   
             });
+            tablaAPI.grid.registerRowsProcessor(function (renderableRows){
+                    renderableRows.forEach(function(row) {
+                        if (row.entity.estadoActual === $scope.datosEstados.ELIMINADO)
+                            row.visible = false;
+                        else 
+                            row.visible = true;
+                    });
+                    return renderableRows;
+            }, 200);
         };
         $scope.cargarReparaciones = function() {
             $scope.reparacionesEditadas = false;
-            $scope.reparacionesModificadas = {};
-            $scope.reparacionesNuevas = {};
+            $scope.tablaReparaciones.data = [];
             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/EmbarcacionesReparaciones',
                 {params: {embarcacionID: $scope.embarcacionID}}
             ).then( function(data) {
-                var reparaciones = data.data[0];
-                if (reparaciones) {
-                    $scope.tablaReparaciones.data = reparaciones;
+                if (Object.keys(data.data).length != 0) {
+                    $scope.tablaReparaciones.data = data.data;
                     for (var reparacion in $scope.tablaReparaciones.data) {
-                        $scope.tablaReparaciones.data[reparacion].editado = false;
+                        $scope.tablaReparaciones.data[reparacion].estadoActual = $scope.datosEstados.LIMPIO;
                     }
                 }
             });
         };
         $scope.agregarReparacion = function () {
-            $scope.reparacionesEditadas = false;
+            $scope.reparacionesEditadas = true;
             var nuevaReparacion = {
                 reparacionID: -1,
                 embarcacionID: $scope.embarcacionID,
                 fecha: new Date(),
-                lugar: "",
-                notaReparacion: "",
-                editado: false
+                lugar: $scope.valorDatoNuevo,
+                notaReparacion: $scope.valorDatoNuevo,
+                estadoActual: $scope.datosEstados.INSERTADO
             };
             $scope.tablaReparaciones.data.push(nuevaReparacion);
             $scope.registrarAccion("Entrada agregada a tabla reparaciones");
-            // We set is row selectable accordingly
-            $scope.tablaReparaciones.isRowSelectable = function (row) {
-                return $scope.borrarReparacionesActivado;
-            }
-            $scope.tablaReparacionesAPI.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
             $scope.tablaReparacionesAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
         };
         $scope.borrarReparaciones = function(row) {
-            if (row.entity.reparacionID == -1) {
+            $scope.reparacionesEditadas = true;
+            if (row.entity.estadoActual == $scope.datosEstados.INSERTADO) {
                 $scope.registrarAccion("reparacion nueva eliminada");
+                var index = $scope.tablaReparaciones.data.indexOf(row.entity);
+                $scope.tablaReparaciones.data.splice(index,1);
             } else {
-                $scope.registrarAccion("reparacion <strong> "+ row.entity.reparacionID +" </strong> nueva eliminada");
+                $scope.registrarAccion("reparacion <strong> "+ row.entity.reparacionID +" </strong> eliminada");
+                row.entity.estadoActual = $scope.datosEstados.ELIMINADO;
+                $scope.tablaReparacionesAPI.grid.refresh();
             }
-            var index = $scope.tablaReparaciones.data.indexOf(row.entity);
-            $scope.tablaReparaciones.data.splice(index,1);
+
         };
         $scope.cambiarBorrarReparaciones = function (esActivo) {
             $scope.tablaReparaciones.columnDefs[3].visible = esActivo;
+            $scope.tablaReparacionesAPI.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
             $scope.tablaReparacionesAPI.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
         }
         
+        // DATOS SECUNDARIOS
+        $scope.filtroDropdownContenido = ['Mostrar Todos'];
+        $scope.llenarFiltro = function () {
+            $scope.filtroDropdownContenido = ["Mostrar Todos"];
+            $scope.tablaDatosSecundarios.data.forEach(function(row) {
+                if (!$scope.filtroDropdownContenido.includes(row.categoria) && row.categoria != $scope.valorDatoNuevo) {
+                    $scope.filtroDropdownContenido.push(row.categoria);
+                }
+            });
+        }
+        $scope.valorFiltroCategoria = "Mostrar Todos";
+        $scope.datosSecundariosEditados = false;
+        $scope.tablaDatosSecundarios = {
+            data: []
+        };
+        $scope.tablaDatosSecundarios.columnDefs = [{
+            field: 'categoria',
+            name: 'categoria',
+            displayName: 'Categoria',
+            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+                var classToReturn = "";
+                if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
+                    classToReturn += " text-info ";
+                }
+                if (row.entity['estadoActual'] == $scope.datosEstados.INSERTADO) {
+                    classToReturn += " text-success ";
+                }
+                return classToReturn;
+            }
+        }, {
+            field: 'descripcion',
+            name: 'descripcion',
+            displayName: 'Descripcion del elemento',
+            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+                var classToReturn = "";
+                if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
+                    classToReturn += " text-info ";
+                }
+                if (row.entity['estadoActual'] == $scope.datosEstados.INSERTADO) {
+                    classToReturn += " text-success ";
+                }
+                return classToReturn;
+            }
+        }, {
+            field: 'cantidad',
+            name: 'cantidad',
+            displayName: 'Cantidad',
+            type: 'number',
+            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+                var classToReturn = "";
+                if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
+                    classToReturn += " text-info ";
+                }
+                if (row.entity['estadoActual'] == $scope.datosEstados.INSERTADO) {
+                    classToReturn += " text-success ";
+                }
+                return classToReturn;
+            }
+        }, {
+            field: 'unidades',
+            name: 'unidades',
+            displayName: 'Unidades',
+            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+                var classToReturn = "";
+                if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
+                    classToReturn += " text-info ";
+                }
+                if (row.entity['estadoActual'] == $scope.datosEstados.INSERTADO) {
+                    classToReturn += " text-success ";
+                }
+                return classToReturn;
+            }
+        }, {
+            field: 'fechaAdicion',
+            name: 'fechaAdicion',
+            displayName: 'Fecha Adicion',
+            type: 'date',
+            cellFilter: 'date:"dd-MM-yyyy"',
+            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+                var classToReturn = "";
+                if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
+                    classToReturn += " text-info ";
+                }
+                if (row.entity['estadoActual'] == $scope.datosEstados.INSERTADO) {
+                    classToReturn += " text-success ";
+                }
+                return classToReturn;
+            }
+        }, {
+            field: 'fechaRemocion',
+            name: 'fechaRemocion',
+            displayName: 'Fecha Remocion',
+            type: 'date',
+            cellFilter: 'date:"dd-MM-yyyy"',
+            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+                var classToReturn = "";
+                if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
+                    classToReturn += " text-info ";
+                }
+                if (row.entity['estadoActual'] == $scope.datosEstados.INSERTADO) {
+                    classToReturn += " text-success ";
+                }
+                return classToReturn;
+            }
+        }, {
+            name: 'eliminar',
+            displayName: '',
+            width: 30,
+            visible:false,
+            enableCellEdit: false,
+            cellTemplate: '<button class="btn btn-sm btn-danger" ng-click="grid.appScope.borrarDatosSecundarios(row)">-</button>'
+        }];
+        
+        $scope.tablaDatosSecundarios.onRegisterApi = function(tablaAPI) {
+            $scope.tablasDatosSecundariosAPI = tablaAPI;
+            $scope.tablasDatosSecundariosAPI.grid.registerRowsProcessor(function(renderableRows) {
+                if ($scope.valorFiltroCategoria == "Mostrar Todos") {
+                    renderableRows.forEach(function(row) {
+                        if (row.entity.estadoActual === $scope.datosEstados.ELIMINADO)
+                            row.visible = false;
+                        else
+                            row.visible = true;
+                    });
+                    return renderableRows;
+                }
+                var matcher = new RegExp($scope.valorFiltroCategoria);
+                renderableRows.forEach(function(row) {
+                    if ((!row.entity['categoria'].match(matcher) && row.entity.estadoActual != $scope.datosEstados.INSERTADO) || row.entity.estadoActual === $scope.datosEstados.ELIMINADO) {
+                        row.visible = false;
+                    } else {
+                        row.visible = true;
+                    }
+                });
+                return renderableRows;
+            }, 200);
+            tablaAPI.edit.on.beginCellEdit($scope, function(rowEntity, colDef) {
+                if (rowEntity[colDef.name] === $scope.valorDatoNuevo) {
+                    rowEntity[colDef.name] = "";
+                    $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+                }
+            });
+            tablaAPI.edit.on.afterCellEdit($scope, function(rowEntity,colDef, newValue, oldValue) {
+                if (newValue != oldValue && rowEntity.estadoActual != $scope.datosEstados.INSERTADO) {
+                        $scope.datosSecundariosEditados = true;
+                        $scope.registrarAccion(colDef.name + " en datos Secundarios <strong>" + rowEntity.elementoID + "</strong> modificado");
+                        rowEntity.estadoActual = $scope.datosEstados.MODIFICADO;
+                        $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+                }
+                $scope.llenarFiltro();
+            });
+        };
+        
+        $scope.filtrarDatosSecundarios = function(valorSeleccionado) {
+            $scope.valorFiltroCategoria = valorSeleccionado;
+            $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+            $scope.tablasDatosSecundariosAPI.grid.refresh();
+        };
+        
+        $scope.cargarDatosSecundarios = function() {
+            $scope.datosSecundariosEditados = false;
+            $scope.tablaDatosSecundarios.data = [];
+            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/EmbarcacionesElementos',
+                {params: {embarcacionID: $scope.embarcacionID}}
+            ).then( function(data) {
+                if (Object.keys(data.data).length != 0) {
+                    $scope.tablaDatosSecundarios.data = data.data;
+                    for (var datoSecundario in $scope.tablaDatosSecundarios.data) {
+                        $scope.tablaDatosSecundarios.data[datoSecundario].estadoActual = $scope.datosEstados.LIMPIO;
+                    }
+                    $scope.llenarFiltro();
+                }
+            });
+        };
+        $scope.agregarDatoSecundario = function () {
+            $scope.datosSecundariosEditados = true;
+            var nuevoDatoSecundario = {
+                embarcacionID: $scope.embarcacionID,
+                categoria: $scope.valorDatoNuevo,
+                descripcion: $scope.valorDatoNuevo,
+                cantidad: 0,
+                unidades: $scope.valorDatoNuevo,
+                fechaAdicion: new Date(),
+                fechaAdicionFormato: "",
+                fechaRemocion: new Date(),
+                fechaRemocionFormato: "",
+                estadoActual: $scope.datosEstados.INSERTADO
+            };
+            $scope.tablaDatosSecundarios.data.push(nuevoDatoSecundario);
+            $scope.registrarAccion("Entrada agregada a tabla datos secundarios");
+            $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+        };
+        $scope.borrarDatosSecundarios = function(row) {
+            $scope.datosSecundariosEditados = true;
+            if (row.entity.estadoActual == $scope.datosEstados.INSERTADO) {
+                $scope.registrarAccion("datoSecundario nuevo eliminada");
+                var index = $scope.tablaDatosSecundarios.data.indexOf(row.entity);
+                $scope.tablaDatosSecundarios.data.splice(index,1);
+            } else {
+                $scope.registrarAccion("dato Secundario <strong> "+ row.entity.elementoID +" </strong> eliminado");
+                row.entity.estadoActual = $scope.datosEstados.ELIMINADO;
+                $scope.tablasDatosSecundariosAPI.grid.refresh();
+            }
+
+        };
+        $scope.cambiarBorrarDatosSecundarios = function (esActivo) {
+            var lastCol = $scope.tablaDatosSecundarios.columnDefs.length - 1;
+            $scope.tablaDatosSecundarios.columnDefs[lastCol].visible = esActivo;
+            $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
+            $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+        }
+        
+        // Hoja de servicio y personas
+        
+        // Definiciones de las pestañas de la aplicación. 
+        $scope.tabs = new Map();
+        $scope.tabsArray = [];
+
+        // Estas funciones son para agregar y quitar pestañas
+        $scope.abrirElemento = function(ElementoId) {
+            if (!$scope.tabs.has(ElementoId)) {
+            $scope.tabs.set(ElementoId, {
+                title: 'ComisionSeleccionada' + ($scope.tabs.size + 1),
+                tabIndex: ($scope.tabs.size + 1),
+                content: 'Esta es la ruta' + ElementoId,
+                active: true
+            });
+            }
+            $scope.tabsArray = Array.from($scope.tabs);
+        };
+        $scope.cerrarElemento = function(ElementoId) {
+            if ($scope.tabs.has(ElementoId)) {
+            $scope.tabs.delete(ElementoId);
+            }
+            $scope.tabsArray = Array.from($scope.tabs);
+        }
+
+
+
+        
+        
+
+        // HOJA DE SERVICIO Y PERSONAL
+
+        
+        $scope.tablaHojaServicioPersonal = {
+            enableRowSelection: true,
+            multiSelect: false,
+            noUnselect: true,
+            enableRowHeaderSelection: false
+            
+        };
+        $scope.hojaServicioPersonalEditado = false;
+        $scope.tablaHojaServicioPersonal.columnDefs = [{
+            field: 'id',
+            name: "id",
+            display: "id",
+            hidden: true
+        }, {
+            field: 'lugarPartida',
+            name: 'Lugar de Partida',
+            displayName: 'Lugar de Partida',
+            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+                var classToReturn = "";
+                if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
+                    classToReturn += " text-info ";
+                }
+                if (row.entity['estadoActual'] == $scope.datosEstados.INSERTADO) {
+                    classToReturn += " text-success ";
+                }
+                return classToReturn;
+            }
+        }, {
+            field: 'fechaPartida',
+            name: 'Fecha de Partida',
+            displayName: 'Fecha de Partida',
+            type: 'date',
+            cellFilter: 'date:"dd-MM-yyyy"',
+            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+                var classToReturn = "";
+                if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
+                    classToReturn += " text-info ";
+                }
+                if (row.entity['estadoActual'] == $scope.datosEstados.INSERTADO) {
+                    classToReturn += " text-success ";
+                }
+                return classToReturn;
+            }
+        }, {
+            field: 'lugarLlegada',
+            name: 'Lugar de Llegada',
+            displayName: 'Lugar de Llegada',
+            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+                var classToReturn = "";
+                if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
+                    classToReturn += " text-info ";
+                }
+                if (row.entity['estadoActual'] == $scope.datosEstados.INSERTADO) {
+                    classToReturn += " text-success ";
+                }
+                return classToReturn;
+            }
+        }, {
+            field: 'fechaLlegada',
+            name: 'Fecha de Llegada',
+            displayName: 'Fecha de Llegada',
+            type: 'date',
+            cellFilter: 'date:"dd-MM-yyyy"',
+            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+                var classToReturn = "";
+                if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
+                    classToReturn += " text-info ";
+                }
+                if (row.entity['estadoActual'] == $scope.datosEstados.INSERTADO) {
+                    classToReturn += " text-success ";
+                }
+                return classToReturn;
+            }
+        }];
+        
+        $scope.tablaHojaServicioPersonal.onRegisterApi = function(gridApi) {
+            $scope.hojaServicioGridApi = gridApi;
+            gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+            var id = row.entity["id"];
+            $scope.abrirElemento(id);
+            });
+        }
+
+        // Para guardar borrar y barra de estado
+        $scope.ultimaAccion = $sce.trustAsHtml("Ninguna");
+        // Log
+        $scope.registrarAccion = function(mensaje) {
+            $scope.ultimaAccion = $sce.trustAsHtml(mensaje);
+            console.log(mensaje)
+        }
+        // Button functions
+        $scope.borrarCambios = function() {
+            if (window.confirm("Esta Seguro que quiere borrar los cambios?") === true) {
+                $scope.registrarAccion("Los cambios han sido borrados");
+                init();
+            }
+        };
+
         // PARA LISTADOS
         $scope.listados = {mensaje:"+ Agregar"};
         // Para borrar listaNombres
@@ -254,196 +625,21 @@
             $scope.datosPrincipalesEditado = true;
         }
         
-        // Definiciones de las pestañas de la aplicación. 
-        $scope.tabs = new Map();
-        $scope.tabsArray = [];
-
-        // Estas funciones son para agregar y quitar pestañas
-        $scope.abrirElemento = function(ElementoId) {
-            if (!$scope.tabs.has(ElementoId)) {
-            $scope.tabs.set(ElementoId, {
-                title: 'ComisionSeleccionada' + ($scope.tabs.size + 1),
-                tabIndex: ($scope.tabs.size + 1),
-                content: 'Esta es la ruta' + ElementoId,
-                active: true
-            });
-            }
-            $scope.tabsArray = Array.from($scope.tabs);
-        };
-        $scope.cerrarElemento = function(ElementoId) {
-            if ($scope.tabs.has(ElementoId)) {
-            $scope.tabs.delete(ElementoId);
-            }
-            $scope.tabsArray = Array.from($scope.tabs);
-        }
-
-
-
-        // Tabla datos secundarios
-        $scope.filtroDropdownContenido = ['Todos', 'Velámen', 'Arboladura y otras piezas', 'Armas, municiones y artefactos de fuego']; //TODO fill this whenever the data arrives to the application
-        $scope.valorFiltroCategoria = "Todos";
-        $scope.highlightFilteredHeader = function(row, rowRenderIndex, col, colRenderIndex) {
-            if (col.filters[0].term) {
-            return 'header-filtered';
-            } else {
-            return '';
-            }
-        };
-
-        $scope.tablaDatosSecundarios = {};
-        $scope.tablaDatosSecundarios.onRegisterApi = function(gridApi) {
-            $scope.DatosSecundariosGridApi = gridApi;
-            $scope.DatosSecundariosGridApi.grid.registerRowsProcessor($scope.filtroCategorias, 200);
-        };
-        $scope.tablaDatosSecundarios.columnDefs = [{
-            field: 'categoria',
-            name: 'categoria',
-            displayName: 'Categoria'
-        }, {
-            field: 'elemento',
-            name: 'elemento',
-            displayName: 'Elemento'
-        }, {
-            field: 'cantidad',
-            name: 'cantidad',
-            displayName: 'Cantidad',
-            type: 'number'
-        }, {
-            field: 'unidades',
-            name: 'unidades',
-            displayName: 'Unidades'
-        }, {
-            field: 'fechaAdicion',
-            name: 'fechaAdicion',
-            displayName: 'Fecha Adicion',
-            type: 'date',
-            cellFilter: 'date:"dd-MM-yyyy"'
-        }, {
-            field: 'fechaRemocion',
-            name: 'fechaRemocion',
-            displayName: 'Fecha Remocion',
-            type: 'date',
-            cellFilter: 'date:"dd-MM-yyyy"'
-        }];
-        $scope.tablaDatosSecundarios.data = [{
-            "categoria": "Armas, municiones y artefactos de fuego",
-            "elemento": "Cañón",
-            "cantidad": "3",
-            "unidades": "Cañones",
-            "fechaAdicion": "02-04-1990",
-            "fechaRemocion": "04-02-1990"
-        }, {
-            "categoria": "Velámen",
-            "elemento": "Palo de mesana",
-            "cantidad": "3",
-            "unidades": "Palos",
-            "fechaAdicion": "02-04-1990",
-            "fechaRemocion": "04-02-1990"
-        }, {
-            "categoria": "Arboladura y otras piezas",
-            "elemento": "Cañón",
-            "cantidad": "3",
-            "unidades": "Cañones",
-            "fechaAdicion": "02-04-1990",
-            "fechaRemocion": "04-02-1990"
-        }, {
-            "categoria": "Armas, municiones y artefactos de fuego",
-            "elemento": "Cañón",
-            "cantidad": "3",
-            "unidades": "Cañones",
-            "fechaAdicion": "02-04-1990",
-            "fechaRemocion": "04-02-1990"
-        }, {
-            "categoria": "Velámen",
-            "elemento": "Palo de mesana",
-            "cantidad": "3",
-            "unidades": "Palos",
-            "fechaAdicion": "02-04-1990",
-            "fechaRemocion": "04-02-1990"
-        }, {
-            "categoria": "Arboladura y otras piezas",
-            "elemento": "Cañón",
-            "cantidad": "3",
-            "unidades": "Cañones",
-            "fechaAdicion": "02-04-1990",
-            "fechaRemocion": "04-02-1990"
-        }];
-
-        $scope.filtrar = function(valorSeleccionado) {
-            $scope.valorFiltroCategoria = valorSeleccionado;
-            $scope.DatosSecundariosGridApi.grid.refresh();
-        };
-        $scope.filtroCategorias = function(renderableRows) {
-            if ($scope.valorFiltroCategoria == "Todos") {
-            renderableRows.forEach(function(row) {
-                row.visible = true;
-            });
-            return renderableRows;
-            }
-            var matcher = new RegExp($scope.valorFiltroCategoria);
-            renderableRows.forEach(function(row) {
-            if (!row.entity['categoria'].match(matcher)) {
-                row.visible = false;
-            }
-            });
-            return renderableRows;
-        };
         
-
-        // Tabla hoja de servicio y personal
-        $scope.tablaHojaServicioPersonal = {};
-        $scope.tablaHojaServicioPersonal.columnDefs = [{
-            field: 'id',
-            name: "id",
-            display: "id",
-            hidden: true
-        }, {
-            field: 'lugarPartida',
-            name: 'Lugar de Partida',
-            displayName: 'Lugar de Partida'
-        }, {
-            field: 'fechaPartida',
-            name: 'Fecha de Partida',
-            displayName: 'Fecha de Partida',
-            type: 'date',
-            cellFilter: 'date:"dd-MM-yyyy"'
-        }, {
-            field: 'lugarLlegada',
-            name: 'Lugar de Llegada',
-            displayName: 'Lugar de Llegada'
-        }, {
-            field: 'fechaLlegada',
-            name: 'Fecha de Llegada',
-            displayName: 'Fecha de Llegada',
-            type: 'date',
-            cellFilter: 'date:"dd-MM-yyyy"'
-        }];
-        $scope.tablaHojaServicioPersonal.enableRowSelection = true;
-        $scope.tablaHojaServicioPersonal.multiSelect = false;
-        $scope.tablaHojaServicioPersonal.noUnselect = true;
-        $scope.tablaHojaServicioPersonal.enableRowHeaderSelection = false;
-        $scope.tablaHojaServicioPersonal.onRegisterApi = function(gridApi) {
-            $scope.hojaServicioGridApi = gridApi;
-            gridApi.selection.on.rowSelectionChanged($scope, function(row) {
-            var id = row.entity["id"];
-            $scope.abrirElemento(id);
-            });
-        }
-
-        // Para guardar borrar y barra de estado
-        $scope.ultimaAccion = $sce.trustAsHtml("Ninguna");
-        // Log
-        $scope.registrarAccion = function(mensaje) {
-            $scope.ultimaAccion = $sce.trustAsHtml(mensaje);
-            console.log(mensaje)
-        }
-        // Button functions
-        $scope.borrarCambios = function() {
-            if (window.confirm("Esta Seguro que quiere borrar los cambios?") === true) {
-                $scope.registrarAccion("Los cambios han sido borrados");
-                init();
-            }
-        };
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         // Anotaciones
         $scope.notas = "";
@@ -459,7 +655,7 @@
                     embarcacionID:$scope.embarcacionID
                 }
             }).then(function(data) {
-                if (!String(data.data).startsWith("[WARNING]")) {
+                if (Object.keys(data.data).length != 0) {
                     $scope.notas = data.data;
                     $scope.notas.forEach(function(nota) {
                         nota.modificada = false;
@@ -528,34 +724,6 @@
             }
             $scope.notasCambios = true;
         };
-
-
-        //TODO DELETE THIS
-        $scope.tablaHojaServicioPersonal.data = [{
-            "id": "0",
-            "lugarPartida": "cartagena",
-            "fechaPartida": "02-04-1990",
-            "lugarLlegada": "españa",
-            "fechaLlegada": "02-04-2000"
-        }, {
-            "id": "1",
-            "lugarPartida": "cartagena",
-            "fechaPartida": "02-04-1990",
-            "lugarLlegada": "españa",
-            "fechaLlegada": "02-04-2000"
-        }, {
-            "id": "2",
-            "lugarPartida": "cartagena",
-            "fechaPartida": "02-04-1990",
-            "lugarLlegada": "españa",
-            "fechaLlegada": "02-04-2000"
-        }, {
-            "id": "3",
-            "lugarPartida": "cartagena",
-            "fechaPartida": "02-04-1990",
-            "lugarLlegada": "españa",
-            "fechaLlegada": "02-04-2000"
-        }];
 
         // Para guardar borrar y barra de estado
         $scope.ultimaAccion = $sce.trustAsHtml("Ninguna");
@@ -643,6 +811,119 @@
                                 }}
                     );
                 });
+            }
+            // REPARACIONES
+            if ($scope.reparacionesEditadas) {
+                $scope.registrarAccion("Actualizando BD EmbarcacionesReparaciones");
+                $scope.reparacionesEditadas = false;
+                for (var reparacion in $scope.tablaReparaciones.data) {
+                    var currentElement = $scope.tablaReparaciones.data[reparacion];
+
+                    if (currentElement.estadoActual === $scope.datosEstados.INSERTADO) {
+                        // Borramos los valores de los datos nuevos
+                        for(var columna in currentElement) {
+                            if (currentElement[columna] === $scope.valorDatoNuevo) {
+                                currentElement[columna] = "";
+                            }
+                        }
+                        // Check for new insertions
+                        var valorAInsertar = { 
+                            params: {
+                                embarcacionID: $scope.embarcacionID,
+                                //fecha: currentElement.fecha,
+                                lugar: "'" + currentElement.lugar + "'",
+                                notaReparacion: "'" + currentElement.notaReparacion + "'"
+                            }
+                        }
+                        conexiones['reparacionesInsertar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/EmbarcacionesReparaciones', valorAInsertar);
+                    } else if (currentElement.estadoActual === $scope.datosEstados.MODIFICADO) {
+                        // Check for modifications
+                        var valorAModificar = {
+                            params: {
+                                idUnico: 'reparacionID',
+                                idUnico2: 'embarcacionID',
+                                reparacionID: currentElement.reparacionID,
+                                embarcacionID: $scope.embarcacionID,
+                                //fecha: currentElement.fecha,
+                                lugar: "'" + currentElement.lugar + "'",
+                                notaReparacion: "'" + currentElement.notaReparacion  + "'"
+                            }
+                        }
+                        conexiones['reparacionesModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/EmbarcacionesReparaciones', valorAModificar);
+                    } else if (currentElement.estadoActual === $scope.datosEstados.ELIMINADO) {
+                        // Check for modifications
+                        var valorAEliminar = {
+                            params: {
+                                idUnico: 'reparacionID',
+                                idUnico2: 'embarcacionID',
+                                reparacionID: currentElement.reparacionID,
+                                embarcacionID: $scope.embarcacionID
+                            }
+                        }
+                        conexiones['reparacionesModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/EmbarcacionesReparaciones', valorAEliminar);
+                    }
+                }
+            }
+            // DATOS SECUNDARIOS
+            if ($scope.datosSecundariosEditados) {
+                $scope.registrarAccion("Actualizando BD EmbarcacionesElementos");
+                $scope.datosSecundariosEditados = false;
+                for (var elemento in $scope.tablaDatosSecundarios.data) {
+                    var currentElement = $scope.tablaDatosSecundarios.data[elemento];
+                    if (currentElement.estadoActual === $scope.datosEstados.INSERTADO) {
+                        // Borramos los valores de los datos nuevos
+                        for(var columna in currentElement) {
+                            if (currentElement[columna] === $scope.valorDatoNuevo) {
+                                currentElement[columna] = "";
+                            }
+                        }
+                        // Check for new insertions
+                        var valorAInsertar = { 
+                            params: {
+                                embarcacionID: $scope.embarcacionID,
+                                categoria: "'" + currentElement.categoria + "'",
+                                descripcion: "'" + currentElement.descripcion + "'",
+                                cantidad: currentElement.cantidad,
+                                unidades: "'" + currentElement.unidades + "'",
+                                //fechaAdicion: currentElement.fechaAdicion,
+                                fechaAdicionFormato: "'" + currentElement.fechaAdicionFormato + "'",
+                                //fechaRemocion: currentElement.fechaRemocion,
+                                fechaRemocionFormato: "'" + currentElement.fechaRemocionFormato + "'"
+                            }
+                        }
+                        conexiones['elementosInsertar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/EmbarcacionesElementos', valorAInsertar);
+                    } else if (currentElement.estadoActual === $scope.datosEstados.MODIFICADO) {
+                        // Check for modifications
+                        var valorAModificar = {
+                            params: {
+                                idUnico: 'elementoID',
+                                idUnico2: 'embarcacionID',
+                                elementoID: currentElement.elementoID,
+                                embarcacionID: $scope.embarcacionID,
+                                categoria: "'" + currentElement.categoria + "'",
+                                descripcion: "'" + currentElement.descripcion + "'",
+                                cantidad: currentElement.cantidad,
+                                unidades: "'" + currentElement.unidades + "'",
+                                //fechaAdicion: currentElement.fechaAdicion,
+                                fechaAdicionFormato: "'" + currentElement.fechaAdicionFormato + "'",
+                                //fechaRemocion: currentElement.fechaRemocion,
+                                fechaRemocionFormato: "'" + currentElement.fechaRemocionFormato + "'"
+                            }
+                        }
+                        conexiones['elementosModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/EmbarcacionesElementos', valorAModificar);
+                    } else if (currentElement.estadoActual === $scope.datosEstados.ELIMINADO) {
+                        // Check for modifications
+                        var valorAEliminar = {
+                            params: {
+                                idUnico: 'elementoID',
+                                idUnico2: 'embarcacionID',
+                                elementoID: currentElement.elementoID,
+                                embarcacionID: $scope.embarcacionID
+                            }
+                        }
+                        conexiones['elementosModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/EmbarcacionesElementos', valorAEliminar);
+                    }
+                }
             }
             
             // Incializamos todo

@@ -166,11 +166,15 @@
                 Filtrar por categoría<span class="caret"></span>
               </button>
               <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-                <li ng-repeat="categoria in filtroDropdownContenido" ng-click="filtrar(categoria)"><a href="">{{categoria}}</a>
+                <li ng-repeat="categoria in filtroDropdownContenido" ng-click="filtrarDatosSecundarios(categoria)"><a href="">{{categoria}}</a>
                 </li>
               </ul>
             </div>
-            <div ui-grid="tablaDatosSecundarios" ui-grid-auto-resize ui-grid-edit ui-grid-cellnav class="grid" ng-style="{height: (tablaDatosSecundarios.data.length*31)+30+'px'}"></div>
+            <div ui-grid="tablaDatosSecundarios" ui-grid-auto-resize ui-grid-edit ui-grid-cellnav class="grid" style="min-height:300px;"></div>
+            <div class="row">
+              <button ng-click='agregarDatoSecundario()' class="btn btn-success m-t-2 m-l-1">Agregar Dato</button>
+              <button ng-click='borrarDatosSecundariosActivado = !borrarDatosSecundariosActivado;cambiarBorrarDatosSecundarios(borrarDatosSecundariosActivado)'  class="btn m-t-2">{{borrarDatosSecundariosActivado? "Desabilitar" : "Habilitar"}} borrar datos</button>
+            </div>
           </div>
         </div>
       </div>
