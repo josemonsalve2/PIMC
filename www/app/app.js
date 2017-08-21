@@ -8,6 +8,8 @@
     'archivoPerfil',
     'personajePerfil',
     'embarcacionPerfil',
+    'lugarPerfil',
+    'institucionPerfil',
     'archivosBusqueda',
     'documentoPerfil'
   ]);
@@ -39,6 +41,14 @@
       .when('/documento', {
         templateUrl: 'views/documento.html',
         controller:  'documentoPerfilController'
+      })
+      .when('/lugar', {
+        templateUrl: 'views/lugar.html',
+        controller:  'lugarPerfilController'
+      })
+      .when('/institucion', {
+        templateUrl: 'views/institucion.html',
+        controller:  'institucionPerfilController'
       })
       .otherwise({
         redirectTo:  '/'

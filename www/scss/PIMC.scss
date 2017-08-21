@@ -132,16 +132,17 @@ tr {
   }
 }
 
-.nombre {
+.nombre,.t0 {
   font-size: 32px;
   padding-bottom: 0.6em;
   border-bottom: 0.1em solid $shady_lady;
   margin-bottom: 0.6em;
 }
 
-.ocupacion {
+.ocupacion,.t1 {
   font-size: 18px;
   font-style: italic;
+  margin-bottom: 21px;
 }
 
 .tituloDato {

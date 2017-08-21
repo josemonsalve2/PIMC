@@ -2,28 +2,29 @@
   <uib-tabset active="active">
     <uib-tab index="0" heading="Datos Principales"> 
       <div id="preloading" class="preloader" ng-show="datosPrincipalesCargando"><img src="images/loader.gif"></div>
-        <div class="row p-t-2 p-l-2 p-r-2 " ng-show="!datosPrincipalesCargando">
-          <h1 class="nombre">
-            <span editable-text="datosPrincipales.titulo" 
-                				onbeforesave="editarDatoPrincipal('titulo',$data)"  
-                				class="m-l-1"> {{ datosPrincipales.titulo || "Titulo" }}</span>
-            <span editable-text="datosPrincipales.nombre" 
-                				onbeforesave="editarDatoPrincipal('nombre',$data)"  
-                				class="m-l-1"> {{ datosPrincipales.nombre || "Nombre" }}</span>
-          </h1>
-          <h2 class="ocupacion">
-            Ocupacion Principal: <span editable-text="datosPrincipales.ocupacion" 
-                				onbeforesave="editarDatoPrincipal('ocupacion',$data)"  
-                				class="m-l-1"> {{ datosPrincipales.ocupacion || "Ocupacion" }}</span>
-          </h2>
-            
+        <div class="row p-t-2" ng-show="!datosPrincipalesCargando">
+          <div class="col-sm-12">
+            <h1 class="nombre">
+              <span editable-text="datosPrincipales.titulo" 
+                          onbeforesave="editarDatoPrincipal('titulo',$data)"> 
+                          {{ datosPrincipales.titulo || "Titulo" }}</span>
+              <span editable-text="datosPrincipales.nombre" 
+                          onbeforesave="editarDatoPrincipal('nombre',$data)"> 
+                          {{ datosPrincipales.nombre || "Nombre" }}</span>
+            </h1>
+            <h2 class="ocupacion">Ocupacion Principal: 
+              <span editable-text="datosPrincipales.ocupacion" 
+                          onbeforesave="editarDatoPrincipal('ocupacion',$data)"> 
+                          {{ datosPrincipales.ocupacion || "Ocupacion" }}</span>
+            </h2>
+          </div>
         </div>
-        <div class="row p-l-2 p-r-2">
+        <div class="row">
           <div class="col-sm-12 col-md-6">
             
             <ul class="list-group m-b-0">
                   
-                  <li class="list-group-item">
+                <li class="list-group-item">
                     <span class="label label-primary">Sexo</span>
                     <span editable-text="datosPrincipales.sexo" 
                           onbeforesave="editarDatoPrincipal('sexo',$data)"  
@@ -60,56 +61,56 @@
                           class="m-l-1"> {{ datosPrincipales.fechaFallecimiento || "No definido" }}</span>
                 </li> 
                 <li class="list-group-item">
-                    <span class="label label-primary">Enfermedades</span>
-                    <ul class="nav nav-pills rounded">
-                  <li role="presentation" class="active" 
-                      onaftersave="listaEnfermedades.modificarBorrarEnfermedad($index,enfermedad)" 
-                      editable-text="enfermedad" 
-                      ng-repeat="enfermedad in datosPrincipales.enfermedades track by $index">
-                      <a href="#" class="bg-mountain_meadow">{{enfermedad}}</a>
-                  </li>
-                  <li role="presentation" 
-                      editable-text="listaEnfermedades.enfermedadNueva.mensaje" 
-                      onaftersave="listaEnfermedades.agregarEnfermedadNueva(listaEnfermedades.enfermedadNueva.mensaje)" 
-                      e-ng-focus="listaEnfermedades.borrarCampo()" 
-                      oncancel="listaEnfermedades.mostrarCampo()">
-                      <a href="#">{{listaEnfermedades.enfermedadNueva.mensaje}}</a>
-                  </li>
-                </ul>
+                  <span class="label label-primary">Enfermedades</span>
+                  <ul class="nav nav-pills rounded m-t-1">
+                    <li role="presentation" class="active" 
+                        onaftersave="listaEnfermedades.modificarBorrarEnfermedad($index,enfermedad)" 
+                        editable-text="enfermedad" 
+                        ng-repeat="enfermedad in datosPrincipales.enfermedades track by $index">
+                        <a href="#" class="bg-mountain_meadow">{{enfermedad}}</a>
+                    </li>
+                    <li role="presentation" 
+                        editable-text="listaEnfermedades.enfermedadNueva.mensaje" 
+                        onaftersave="listaEnfermedades.agregarEnfermedadNueva(listaEnfermedades.enfermedadNueva.mensaje)" 
+                        e-ng-focus="listaEnfermedades.borrarCampo()" 
+                        oncancel="listaEnfermedades.mostrarCampo()">
+                        <a href="#">{{listaEnfermedades.enfermedadNueva.mensaje}}</a>
+                    </li>
+                  </ul>
                 </li> 
-                
             </ul>
           </div>
 
           <div id="parentescos" class="col-sm-12 col-md-6">
             <table>
               <tr><th class="text-center" colspan="4">Parentescos</th></tr>
-                <tr><th>ID</th><th>Personaje</th><th>Relacion</th><th>Abrir personaje</th></tr>
-                <tr ng-repeat="parentesco in parentescos track by $index">
-                      <td><button ng-show="borrarParentescoActivado" ng-click='borrarParentescoExistente($index);$event.stopPropagation()' class="btn-danger">-</button>{{parentesco.parentescoID}}</td>
-                      <td>{{parentesco.nombrePersonaje}}</td>
-                      <td>{{parentesco.relacionDirecta}}</td>
-                      <td ng-click="abrirPersonajeSeleccionado($index,'existente')"> Abrir </td>
-                  </tr>
-                  <tr ng-repeat="parentesco in parentescosAgregarReferencia track by $index">
-                      <td><button ng-click='borrarReferenciaNuevoParentesco($index)' class="btn-danger">-</button> (Nueva Ref) {{parentesco.parentescoID}}</td>
-                      <td>{{parentesco.nombrePersonaje}}</td>
-                      <td><span editable-text="parentesco.relacionDirecta" ng-click="$event.stopPropagation()">{{parentesco.relacionDirecta || "Relacion directa"}}</span> - <span editable-text="parentesco.relacionInversa" ng-click="$event.stopPropagation()">{{parentesco.relacionInversa || "Relacion Inversa"}}</span></td>
-                      <td ng-click="abrirPersonajeSeleccionado($index,'nuevaRef')"> Abrir </td>
-                  </tr>
-                  <tr ng-repeat="parentesco in parentescosNuevos track by $index">
-                      <td><button ng-click='borrarParentescoNuevo($index)' class="btn-danger">-</button> {{"Parentesco Nuevo"}}</td>
-                      <td>
-                          <span editable-text="parentesco.nombrePersonaje" e-typeahead-min-length="3" e-uib-typeahead="personajes.nombre for personajes in autocompletarPersonaje($viewValue)" e-typeahead-wait-ms="100" e-typeahead-on-select="actualizarParentescoNuevoExistente($index,$item)" e-typeahead-no-results="parentescosNoResults" e-typeahead-loading="cargandoNombres" onbeforesave="revisarSiParentescoExiste($data)">{{parentesco.nombrePersonaje || "nuevo parentesco"}}</span>
-                          <i ng-show="cargandoNombres" class="glyphicon glyphicon-refresh"></i>
-                          <div ng-show="parentescosNoResults"><i class="glyphicon glyphicon-remove"></i> No Results Found</div></td>
-                      <td><span editable-text="parentesco.relacionDirecta">{{parentesco.relacionDirecta || "Relacion directa"}}</span> - <span editable-text="parentesco.relacionInversa">{{parentesco.relacionInversa || "Relacion Inversa"}}</span></td>
-                      <td></td>
+              <tr><th>ID</th><th>Personaje</th><th>Relacion</th><th>Abrir personaje</th></tr>
+              <tr ng-repeat="parentesco in parentescos track by $index">
+                  <td><button ng-show="borrarParentescoActivado" ng-click='borrarParentescoExistente($index);$event.stopPropagation()' class="btn-danger">-</button>{{parentesco.parentescoID}}</td>
+                  <td>{{parentesco.nombrePersonaje}}</td>
+                  <td>{{parentesco.relacionDirecta}}</td>
+                  <td ng-click="abrirPersonajeSeleccionado($index,'existente')"> Abrir </td>
+              </tr>
+              <tr ng-repeat="parentesco in parentescosAgregarReferencia track by $index">
+                  <td><button ng-click='borrarReferenciaNuevoParentesco($index)' class="btn-danger">-</button> (Nueva Ref) {{parentesco.parentescoID}}</td>
+                  <td>{{parentesco.nombrePersonaje}}</td>
+                  <td><span editable-text="parentesco.relacionDirecta" ng-click="$event.stopPropagation()">{{parentesco.relacionDirecta || "Relacion directa"}}</span> - <span editable-text="parentesco.relacionInversa" ng-click="$event.stopPropagation()">{{parentesco.relacionInversa || "Relacion Inversa"}}</span></td>
+                  <td ng-click="abrirPersonajeSeleccionado($index,'nuevaRef')"> Abrir </td>
+              </tr>
+              <tr ng-repeat="parentesco in parentescosNuevos track by $index">
+                  <td><button ng-click='borrarParentescoNuevo($index)' class="btn-danger">-</button> {{"Parentesco Nuevo"}}</td>
+                  <td>
+                      <span editable-text="parentesco.nombrePersonaje" e-typeahead-min-length="3" e-uib-typeahead="personajes.nombre for personajes in autocompletarPersonaje($viewValue)" e-typeahead-wait-ms="100" e-typeahead-on-select="actualizarParentescoNuevoExistente($index,$item)" e-typeahead-no-results="parentescosNoResults" e-typeahead-loading="cargandoNombres" onbeforesave="revisarSiParentescoExiste($data)">{{parentesco.nombrePersonaje || "nuevo parentesco"}}</span>
+                      <i ng-show="cargandoNombres" class="glyphicon glyphicon-refresh"></i>
+                      <div ng-show="parentescosNoResults"><i class="glyphicon glyphicon-remove"></i> No Results Found</div></td>
+                  <td><span editable-text="parentesco.relacionDirecta">{{parentesco.relacionDirecta || "Relacion directa"}}</span> - <span editable-text="parentesco.relacionInversa">{{parentesco.relacionInversa || "Relacion Inversa"}}</span></td>
+              </tr>
             </table>
-              <div class="row">
+            
+            <div class="row">
               <button ng-click='agregarParentesco()' class="btn btn-success m-t-2 m-l-1">Agregar Parentesco</button>
               <button ng-click='borrarParentescoActivado = !borrarParentescoActivado' class="btn m-t-2">{{borrarParentescoActivado? "Desabilitar" : "Habilitar"}} borrar parentesco existente</button>
-              </div>
+            </div>
               
           </div>
 
