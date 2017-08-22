@@ -46,6 +46,74 @@
             }
         };
         
+        // Funcion para lugares y territorios
+        $scope.autocompletarLugarTerritorio = function (hintLugarTerritorio) {
+            var promiseLugar = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Lugares', {
+                params:{
+                    nombre: '"' + hintLugarTerritorio + '"'
+                }
+            });
+            var promiseTerritorios = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Territorios', {
+                params:{
+                    nombrePrincipal: '"' + hintLugarTerritorio + '"'
+                }
+            });
+            var promiseTerritoriosNombres = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/TerritoriosNombres', {
+                params:{
+                    nombre: '"' + hintLugarTerritorio + '"'
+                }
+            });
+
+            return $q.all([promiseLugar, promiseTerritorios, promiseTerritoriosNombres]).then( function(responses) {
+                var listaLugaresTerritorios = [];
+                var matchPerfecto = false;
+                for (var res in responses) {
+                    var resultados = responses[res].data;
+                    if (resultados != "0") {
+                        resultados.forEach( function (valor) {
+                            var elementoAInsertar = {nombre: '',lugarTerritorioID: -1, lugarOTerritorio: ''}
+
+                            // Para el nombre
+                            if (valor.nombre) {
+                                elementoAInsertar.nombre = valor.nombre;
+                            } else if (valor.nombrePrincipal) {
+                                elementoAInsertar.nombre = valor.nombrePrincipal;
+                            }
+                            if (String(hintLugarTerritorio).toLowerCase().replace(/\s/g, '') == String(elementoAInsertar.nombre).toLowerCase().replace(/\s/g, ''))
+                                    matchPerfecto = true;
+
+                            // Para el lugarTerritorioID
+                            if (valor.lugarID) {
+                                elementoAInsertar.lugarTerritorioID = valor.lugarID;
+                                elementoAInsertar.lugarOTerritorio = 'lugar';
+                                elementoAInsertar.nombre = "(L)" + elementoAInsertar.nombre;
+                            } else if (valor.territorioID) {
+                                elementoAInsertar.lugarTerritorioID = valor.territorioID;
+                                elementoAInsertar.lugarOTerritorio = 'territorio';
+                                elementoAInsertar.nombre = "(T)" + elementoAInsertar.nombre;
+                            }
+                            listaLugaresTerritorios.push(elementoAInsertar);
+                        });
+                    }
+                }
+                if (!matchPerfecto /*&& listaLugaresTerritorios.length != 0*/)
+                    listaLugaresTerritorios.unshift({nombre: hintLugarTerritorio, lugarTerritorioID: -1, lugarOTerritorio: 'insertar'});
+                return listaLugaresTerritorios;
+            }); 
+        };
+        
+        $scope.seleccionarLugarTerritorio = function(lugarTerritorio,elementoSeleccionado) {
+            if (elementoSeleccionado.lugarOTerritorio === 'insertar') {
+                // Lugar es por defecto
+                lugarTerritorio.lugarOTerritorio = 'lugar'
+                lugarTerritorio.insertarNuevo = true;
+            } else {
+                lugarTerritorio.lugarOTerritorio = elementoSeleccionado.lugarOTerritorio;
+            }
+            lugarTerritorio.lugarTerritorioID = elementoSeleccionado.lugarTerritorioID;
+            lugarTerritorio.lugarTerritorioNombre = elementoSeleccionado.nombre;
+                
+        }
         
         //Datos principales
         $scope.datosPrincipales = {};
@@ -502,17 +570,15 @@
             data: []
         };
         $scope.hojaServicioPersonalEditado = false;
-        $scope.tablaHojaServicioPersonal.columnDefs = [{
-            field: 'rutaID',
-            name: "rutaID",
-            display: "rutaID",
-            hidden: true
-        }, {
+        $scope.tablaHojaServicioPersonal.columnDefs = [
+        {
             field: 'lugarTerritorioPartida',
             name: 'lugarTerritorioPartida',
             displayName: 'Lugar o territorio de Partida',
             cellTemplate: 'app/templates/lugarTerritorioSelectCell.html',
             editableCellTemplate: 'app/templates/lugarTerritorioSelectEdit.html',
+            cargarLugaresTypeahead: $scope.autocompletarLugarTerritorio,
+            onSelectLugaresTypeahead: $scope.seleccionarLugarTerritorio,
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 var classToReturn = "";
                 if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
@@ -545,6 +611,8 @@
             displayName: 'Lugar o territorio de Llegada',
             cellTemplate: 'app/templates/lugarTerritorioSelectCell.html',
             editableCellTemplate: 'app/templates/lugarTerritorioSelectEdit.html',
+            cargarLugaresTypeahead: $scope.autocompletarLugarTerritorio,
+            onSelectLugaresTypeahead: $scope.seleccionarLugarTerritorio,
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 var classToReturn = "";
                 if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
@@ -597,8 +665,9 @@
                 }   
             });
             tablaAPI.edit.on.beginCellEdit($scope, function(rowEntity, colDef) {
-                if (rowEntity[colDef.name] === $scope.valorDatoNuevo) {
-                    rowEntity[colDef.name] = "";
+                if ((colDef.name === 'lugarTerritorioPartida' || colDef.name === 'lugarTerrotorioLlegada')
+                    && rowEntity[colDef.name].lugarTerritorioNombre === $scope.valorDatoNuevo) {
+                    rowEntity[colDef.name].lugarTerritorioNombre = "";
                     $scope.tablaHojaServicioAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
                 }
             });
@@ -621,64 +690,73 @@
                 if (Object.keys(data.data).length != 0) {
                     $scope.tablaHojaServicioPersonal.data = data.data;
                     for (var ruta in $scope.tablaHojaServicioPersonal.data) {
+                        // Para Lugar o territorio de partida
+                        // Lugar tiene prioridad sobre territorio
+                        if ($scope.tablaHojaServicioPersonal.data[ruta].lugarPartidaID) {
+                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioPartida = {lugarOTerritorio:'lugar', 
+                                                                                                  lugarTerritorioID: $scope.tablaHojaServicioPersonal.data[ruta].lugarPartidaID,
+                                                                                                  lugarTerritorioNombre: ''};
+                            // Cargamos el lugar para obtener el nombre
+                        } else {
+                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioPartida = {lugarOTerritorio:'territorio', 
+                                                                                                  lugarTerritorioID: $scope.tablaHojaServicioPersonal.data[ruta].territorioPartidaID,
+                                                                                                  lugarTerritorioNombre: ''};
+                            // Cargamos el lugar para obtener el nombre
+                        }
+                        // Para Lugar o territorio de partida
                         // Lugar tiene prioridad sobre territorio
                         if ($scope.tablaHojaServicioPersonal.data[ruta].lugarLlegadaID) {
-                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioLlegada = {lugarOTerritorio:'lugar', 
+                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerrotorioLlegada = {lugarOTerritorio:'lugar', 
                                                                                                   lugarTerritorioID: $scope.tablaHojaServicioPersonal.data[ruta].lugarLlegadaID,
                                                                                                   lugarTerritorioNombre: ''};
                             // Cargamos el lugar para obtener el nombre
                         } else {
-                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioLlegada = {lugarOTerritorio:'territorio', 
+                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerrotorioLlegada = {lugarOTerritorio:'territorio', 
                                                                                                   lugarTerritorioID: $scope.tablaHojaServicioPersonal.data[ruta].territorioLlegadaID,
                                                                                                   lugarTerritorioNombre: ''};
                             // Cargamos el lugar para obtener el nombre
                         }
-                        if ($scope.tablaHojaServicioPersonal.data[ruta].lugarSalidaID) {
-                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioSalida = $scope.tablaHojaServicioPersonal.data[ruta].lugarSalidaID;
-                        } else {
-                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioSalida = $scope.tablaHojaServicioPersonal.data[ruta].territorioSalidaID;
-                        }
-                        $scope.tablaHojaServicioPersonal.data[ruta].estadoActual = $scope.datosEstados.LIMPIO;
                     }
                 }
             });
         };
         $scope.agregarHojaServicioPersonal = function () {
-            $scope.datosSecundariosEditados = true;
-            var nuevoDatoSecundario = {
+            $scope.hojaServicioPersonalEditado = true;
+            var nuevaHojaServicioPersonal = {
                 embarcacionID: $scope.embarcacionID,
-                categoria: $scope.valorDatoNuevo,
-                descripcion: $scope.valorDatoNuevo,
-                cantidad: 0,
-                unidades: $scope.valorDatoNuevo,
-                fechaAdicion: new Date(),
-                fechaAdicionFormato: "",
-                fechaRemocion: new Date(),
-                fechaRemocionFormato: "",
+                lugarTerrotorioLlegada: { lugarOTerritorio:'lugar', 
+                                          lugarTerritorioID: -1,
+                                          lugarTerritorioNombre: $scope.valorDatoNuevo},
+                lugarTerritorioPartida: { lugarOTerritorio:'lugar', 
+                                          lugarTerritorioID: -1,
+                                          lugarTerritorioNombre: $scope.valorDatoNuevo},
+                fechaPartida: new Date(),
+                fechaLlegada: new Date(),
                 estadoActual: $scope.datosEstados.INSERTADO
             };
-            $scope.tablaDatosSecundarios.data.push(nuevoDatoSecundario);
-            $scope.registrarAccion("Entrada agregada a tabla datos secundarios");
-            $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+            $scope.tablaHojaServicioPersonal.data.push(nuevaHojaServicioPersonal);
+            $scope.registrarAccion("Entrada agregada a hoja de servicio y personal");
+            $scope.tablaHojaServicioAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
         };
-        $scope.borrarDatosSecundarios = function(row) {
-            $scope.datosSecundariosEditados = true;
+        $scope.borrarHojaServicioPersonal = function(row) {
+            $scope.hojaServicioPersonalEditado = true;
             if (row.entity.estadoActual == $scope.datosEstados.INSERTADO) {
-                $scope.registrarAccion("datoSecundario nuevo eliminada");
-                var index = $scope.tablaDatosSecundarios.data.indexOf(row.entity);
-                $scope.tablaDatosSecundarios.data.splice(index,1);
+                $scope.registrarAccion("Hoja de servicio y personal nueva eliminada");
+                var index = $scope.tablaHojaServicioPersonal.data.indexOf(row.entity);
+                $scope.tablaHojaServicioPersonal.data.splice(index,1);
             } else {
-                $scope.registrarAccion("dato Secundario <strong> "+ row.entity.elementoID +" </strong> eliminado");
-                row.entity.estadoActual = $scope.datosEstados.ELIMINADO;
-                $scope.tablasDatosSecundariosAPI.grid.refresh();
+                if (window.confirm("Esta Seguro que quiere borrar una hoja de servicio? Se perderan todos los datos de esta ruta") === true) {
+                    $scope.registrarAccion("Hoja de servicio y personal <strong> "+ row.entity.rutaID +" </strong> eliminada");
+                    row.entity.estadoActual = $scope.datosEstados.ELIMINADO;
+                    $scope.tablaHojaServicioAPI.grid.refresh();
+                }
             }
-
         };
-        $scope.cambiarBorrarDatosSecundarios = function (esActivo) {
-            var lastCol = $scope.tablaDatosSecundarios.columnDefs.length - 1;
-            $scope.tablaDatosSecundarios.columnDefs[lastCol].visible = esActivo;
-            $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
-            $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+        $scope.cambiarBorrarHojaDeServicioPersonal = function (esActivo) {
+            var lastCol = $scope.tablaHojaServicioPersonal.columnDefs.length - 1;
+            $scope.tablaHojaServicioPersonal.columnDefs[lastCol].visible = esActivo;
+            $scope.tablaHojaServicioAPI.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
+            $scope.tablaHojaServicioAPI.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
         }
         
         
