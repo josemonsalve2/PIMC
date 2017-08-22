@@ -1,0 +1,159 @@
+<section>
+  <uib-tabset active="active">
+
+    <uib-tab index="0" heading="Datos Principales"> 
+        
+        <div id="preloading" class="preloader" ng-show="datosPrincipalesCargando"><img src="images/loader.gif"></div>
+        
+        <div class="row p-t-2" ng-show="!datosPrincipalesCargando">
+            <div class="col-sm-12">
+                <h1 class="t0">
+                    <span editable-text="datosPrincipales.nombre" 
+                        onbeforesave="editarDatoPrincipal('nombre',$data)"> 
+                        {{ datosPrincipales.nombre || "Nombre de lugar indeterminado" }}</span>
+                </h1>
+                <h2 class="t1">
+                    Tipo de lugar: <span editable-text="datosPrincipales.tipoLugar" 
+                        onbeforesave="editarDatoPrincipal('tipoLugar',$data)"> 
+                        {{ datosPrincipales.tipoLugar || "Indeterminado" }}</span>
+                </h2>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-sm-12 col-md-6">
+                <ul class="list-group m-b-0">
+                    <li class="list-group-item">
+                        <span class="label label-primary">Categoría</span>
+                        <span editable-text="datosPrincipales.categoria" 
+                            onbeforesave="editarDatoPrincipal('categoria',$data)"  
+                            class="m-l-1"> {{ datosPrincipales.categoria || "No definido" }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-primary">Coordenadas</span>
+                        <span editable-text="datosPrincipales.coordenadas" 
+                            onbeforesave="editarDatoPrincipal('coordenadas',$data)"  
+                            class="m-l-1"> {{ datosPrincipales.coordenadas || "No definidas" }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-primary">Fecha inicial</span>
+                        <span editable-text="datosPrincipales.fechaInicial" 
+                            onbeforesave="editarDatoPrincipal('fechaInicial',$data)"  
+                            class="m-l-1"> {{ datosPrincipales.fechaInicial || "No definida" }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-primary">Fecha final</span>
+                        <span editable-text="datosPrincipales.fechaFinal" 
+                            onbeforesave="editarDatoPrincipal('fechaFinal',$data)"  
+                            class="m-l-1"> {{ datosPrincipales.fechaFinal || "No definida" }}</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="mapa" class="col-sm-12 col-md-6">
+                <div class="embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive-item"  scrolling="no" src="http://www.openstreetmap.org/export/embed.html?bbox=-71.72819137573244%2C12.398688643457886%2C-71.60545349121095%2C12.472112374135573&amp;layer=mapnik&amp;marker=12.435403102335345%2C-71.66682243347168"></iframe>
+                </div>
+            </div>
+
+        </div>
+      
+        <div class="bottom"></div>
+
+    </uib-tab>
+
+    <uib-tab index="1" heading="Actividades">
+        <div class="row p-t-2">
+            <div id="actividades" class="col-sm-12">
+                <table class="table table-striped table-hover"> 
+                    <thead>
+                        <tr>
+                            <th>Actividad</th>
+                            <th>Referencia</th>
+                            <th>Fecha inicial</th>
+                            <th>Fecha final</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Reparación de barco</td>
+                            <td>esta es la referencia</td>
+                            <td>10/05/1751</td>
+                            <td>20/07/1751</td>
+                        </tr>
+                        <tr>
+                            <td>Reparación de barco</td>
+                            <td>esta es la referencia</td>
+                            <td>10/05/1751</td>
+                            <td>20/07/1751</td>
+                        </tr>
+                        <tr>
+                            <td>Reparación de barco</td>
+                            <td>esta es la referencia</td>
+                            <td>10/05/1751</td>
+                            <td>20/07/1751</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </uib-tab>
+
+   	<uib-tab index="3" heading="Notas">
+      <div class="row p-t-2">
+        
+        <div id="mapa2" class="col-sm-12 col-md-6">
+            <div class="well">
+                <img src="images/map.jpg" alt="Ubicación" class="img-responsive">
+            </div>
+        </div>
+        
+        <div id="notasAdicionales" class="col-sm-12 col-md-6">
+          <div class="panel panel-primary">
+              <header class="panel-heading">
+                <h4 class="m-a-1">Notas</h4>
+              </header>
+            
+              <div class="p-a-1">
+
+                <button class="btn btn-primary" ng-click="agregarNotaVacia()">Agregar Nota</button>
+
+                <div class="panel panel-default m-b-0 m-t-1" ng-repeat="nota in notas track by $index">
+                	<div class="panel-body">
+                		<button type="button" 
+                    				class="close" 
+                    				aria-label="Cerrar" 
+                    				ng-click="eliminarNota($index)">
+                    				<span aria-hidden="true">&times;</span></button>
+                		<p class="notaContenido" 
+                				editable-textarea="nota.nota" 
+                				e-rows="2" 
+                				buttons="right" 
+                				onaftersave="modificarNota($index,nota.nota)">{{nota.nota || "Click para editar"}}</p>
+                    <div class="clearfix m-t-1">
+                        <div class="notaReferencia pull-left">Fecha Historica: <span editable-text="nota.fechaHistorica" 
+                                 onaftersave="modificarFechaHistorica($index,fechaHistorica)">{{nota.fechaHistorica || "ND"}}</span></div>
+                    </div>
+                    <div class="clearfix m-t-1">
+                    	<div class="notaReferencia pull-left">Referencia: <span editable-text="nota.referencia" 
+                    			 onaftersave="modificarReferencia($index,nota.referencia)">{{nota.referencia || "ND"}}</span></div>
+                    	<div class="notaFecha pull-right">{{nota.fechaCreacion || "Nota Nueva"}}</div>
+                    </div>
+                	</div>
+                </div>
+              </div>
+
+            </div>
+        </div>
+      </div>
+	  </uib-tab>
+	</uib-tabset>
+</section>
+<footer class="status-bar">
+  <div class="text-right">
+    <strong>Ultima Accion: </strong><span class="status-message p-r-1" ng-bind-html="ultimaAccion">{{ultimaAccion}}</span>
+    <button ng-click='borrarCambios()' class="btn btn-danger m-r-1" ng-disabled="guardarDatos">Borrar cambios</button>
+    <button ng-click='guardarCambios()' class="btn btn-success">Guardar</button>
+  </div>
+</footer>
