@@ -138,7 +138,7 @@
                         // Obtenemos el nombre del lugar o territorio de construccion
                         var lugarTerritorioConstruccion = {
                             nombre: "",
-                            id: -1,
+                            lugarTerritorioID: -1,
                             lugarOTerritorio: ""
                         }
                         $scope.datosPrincipales.lugarTerritorioConstruccion = lugarTerritorioConstruccion;
@@ -151,7 +151,7 @@
                                 var lugar = data.data[0];
                                 var lugarTerritorioConstruccion = {
                                     nombre: lugar.nombre,
-                                    id: lugar.lugarID,
+                                    lugarTerritorioID: lugar.lugarID,
                                     lugarOTerritorio: "lugar"
                                 }
                                 $scope.datosPrincipales.lugarTerritorioConstruccion = lugarTerritorioConstruccion;
@@ -165,7 +165,7 @@
                                 var territorio = data.data[0];
                                 lugarTerritorioConstruccion = {
                                     nombre: territorio.nombrePrincipal,
-                                    id: territorio.territorioID,
+                                    lugarTerritorioID: territorio.territorioID,
                                     lugarOTerritorio: "territorio"
                                 }
                                 $scope.datosPrincipales.lugarTerritorioConstruccion = lugarTerritorioConstruccion;
@@ -175,7 +175,7 @@
                         // Obtenemos el nombre del lugar o territorio de construccion
                         var lugarTerritorioDesercion = {
                             nombre: "",
-                            id: -1,
+                            lugarTerritorioID: -1,
                             lugarOTerritorio: ""
                         }
                         $scope.datosPrincipales.lugarTerritorioDesercion = lugarTerritorioDesercion;
@@ -189,7 +189,7 @@
                                 var lugar = data.data[0];
                                 var lugarTerritorioDesercion = {
                                     nombre: lugar.nombre,
-                                    id: lugar.lugarID,
+                                    lugarTerritorioID: lugar.lugarID,
                                     lugarOTerritorio: "lugar"
                                 }
                                 $scope.datosPrincipales.lugarTerritorioDesercion = lugarTerritorioDesercion;
@@ -203,7 +203,7 @@
                                 var territorio = data.data[0];
                                 lugarTerritorioDesercion = {
                                     nombre: territorio.nombrePrincipal,
-                                    id: territorio.territorioID,
+                                    lugarTerritorioID: territorio.territorioID,
                                     lugarOTerritorio: "territorio"
                                 }
                                 $scope.datosPrincipales.lugarTerritorioDesercion = lugarTerritorioDesercion;
