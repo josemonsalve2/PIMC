@@ -62,9 +62,9 @@
                           class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.nombre || "No definido" }}
                 </span>
                 <span editable-select="datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio" 
-                      e-ng-options="s.value as s.text for s in statuses"
+                      e-ng-options="lugarTerritorio for lugarTerritorio in ['Lugar','Territorio']"
                           ng-click="lugarTerritorioCreacionForm.$show()"
-                          onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionNombre',$data)"  
+                          onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionTipo',$data)"  
                           class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.nombre || "No definido" }}
                 </span>
                 </form>
