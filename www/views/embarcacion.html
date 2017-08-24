@@ -63,6 +63,7 @@
                 </span>
                 <span editable-select="datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio" 
                       e-ng-options="lugarTerritorio for lugarTerritorio in ['Lugar','Territorio']"
+                      e-ng-disabled="datosPrincipales.lugarTerritorioConstruccion.id != -1"
                           ng-click="lugarTerritorioCreacionForm.$show()"
                           onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionTipo',$data)"  
                           class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio || "No definido" }}
