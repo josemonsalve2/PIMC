@@ -65,7 +65,7 @@
                       e-ng-options="lugarTerritorio for lugarTerritorio in ['Lugar','Territorio']"
                           ng-click="lugarTerritorioCreacionForm.$show()"
                           onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionTipo',$data)"  
-                          class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.LugarOTerritorio || "No definido" }}
+                          class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio || "No definido" }}
                 </span>
                 </form>
             </li>
