@@ -58,16 +58,16 @@
                 <span class="tituloDato">Lugar de construcción:</span>
                 <span editable-text="datosPrincipales.lugarTerritorioConstruccion.nombre" 
                           ng-click="lugarTerritorioCreacionForm.$show()"
+                          e-typeahead-min-length="3"
+                          e-uib-typeahead="lugares.nombre for lugares in autocompletarLugarTerritorio($data)" 
+                          e-typeahead-wait-ms="100" 
+                          e-typeahead-on-select="seleccionarLugarTerritorio(datosPrincipales.lugarTerritorioConstruccion,$item)"
                           onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionNombre',$data)"  
                           class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.nombre || "No definido" }}
                 </span>
                 <span editable-select="datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio" 
                       e-ng-options="lugarTerritorio for lugarTerritorio in ['Lugar','Territorio']"
                       e-ng-disabled="datosPrincipales.lugarTerritorioConstruccion.lugarTerritorioID != -1"
-                      e-typeahead-min-length="3"
-                      e-uib-typeahead="lugares.nombre for lugares in autocompletarLugarTerritorio($data)" 
-                      e-typeahead-wait-ms="100" 
-                      e-typeahead-on-select="seleccionarLugarTerritorio(datosPrincipales.lugarTerritorioConstruccion,$item)"
                       ng-click="lugarTerritorioCreacionForm.$show()"
                       onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionTipo',$data)"  
                       class="valorDato"> ({{ datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio || "No definido" }})
