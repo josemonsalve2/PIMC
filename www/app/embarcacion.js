@@ -134,39 +134,113 @@
                 console.log(embarcacionesDatos);
                 if (embarcacionesDatos) {
                     try {
-                            
-                            $scope.datosPrincipales = embarcacionesDatos;
-                            // Lista de nombres
-                            if ($scope.datosPrincipales.nombres != null && $scope.datosPrincipales.nombres != "") {
-                                $scope.datosPrincipales.nombres = embarcacionesDatos.nombres.split(",");
-                                $scope.datosPrincipales.nombres = $scope.datosPrincipales.nombres.map(function(e) {
-                                    return e.trim();
-                                });
-                            } else {
-                                $scope.datosPrincipales.nombres = [];
-                            }
-                            // Lista de alias
-                            if ($scope.datosPrincipales.alias != null && $scope.datosPrincipales.alias != "") {
-                                $scope.datosPrincipales.alias = embarcacionesDatos.alias.split(",");
-                                $scope.datosPrincipales.alias = $scope.datosPrincipales.alias.map(function(e) {
-                                    return e.trim();
-                                });
-                            } else {
-                                $scope.datosPrincipales.alias = [];
-                            }
-                            // Lista de usos
-                            if ($scope.datosPrincipales.usos != null && $scope.datosPrincipales.usos != "") {
-                                $scope.datosPrincipales.usos = embarcacionesDatos.usos.split(",");
-                                $scope.datosPrincipales.usos = $scope.datosPrincipales.usos.map(function(e) {
-                                    return e.trim();
-                                });
-                            } else {
-                                $scope.datosPrincipales.usos = [];
-                            }
+                        $scope.datosPrincipales = embarcacionesDatos;
+                        // Obtenemos el nombre del lugar o territorio de construccion
+                        var lugarTerritorioConstruccion = {
+                            nombre: "",
+                            id: -1,
+                            lugarOTerritorio: ""
+                        }
+                        $scope.datosPrincipales.lugarTerritorioConstruccion = lugarTerritorioConstruccion;
+                        if ($scope.datosPrincipales.lugarConstruccion) {
+                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Lugares',{
+                                params: {
+                                    lugarID: $scope.datosPrincipales.lugarConstruccion
+                                }
+                            }).then(function(data) {
+                                var lugar = data.data[0];
+                                var lugarTerritorioConstruccion = {
+                                    nombre: lugar.nombre,
+                                    id: lugar.lugarID,
+                                    lugarOTerritorio: "lugar"
+                                }
+                                $scope.datosPrincipales.lugarTerritorioConstruccion = lugarTerritorioConstruccion;
+                            });
+                        } else if ($scope.datosPrincipales.territorioConstruccion) {
+                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Territorios',{
+                                params: {
+                                    territorioID: $scope.datosPrincipales.territorioConstruccion
+                                }
+                            }).then(function(data) {
+                                var territorio = data.data[0];
+                                lugarTerritorioConstruccion = {
+                                    nombre: territorio.nombrePrincipal,
+                                    id: territorio.territorioID,
+                                    lugarOTerritorio: "territorio"
+                                }
+                                $scope.datosPrincipales.lugarTerritorioConstruccion = lugarTerritorioConstruccion;
+                            });
+                        }
                         
-                            // Editamos fecha de nacimiento y fallecimiento al formato adecuado
-                            $scope.datosPrincipales.fechaConstruccion = embarcacionesDatos.fechaConstruccion != null ? $filter('date')(new Date(embarcacionesDatos.fechaConstruccion), String(embarcacionesDatos.fechaConstFormato).toLowerCase()) : "";
-                            $scope.datosPrincipales.fechaDesercion = embarcacionesDatos.fechaDesercion != null ? $filter('date')(new Date(embarcacionesDatos.fechaDesercion), String(embarcacionesDatos.fechaDesercionFormato).toLowerCase()) : "";
+                        // Obtenemos el nombre del lugar o territorio de construccion
+                        var lugarTerritorioDesercion = {
+                            nombre: "",
+                            id: -1,
+                            lugarOTerritorio: ""
+                        }
+                        $scope.datosPrincipales.lugarTerritorioDesercion = lugarTerritorioDesercion;
+                        
+                        if ($scope.datosPrincipales.lugarDesercion) {
+                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Lugares',{
+                                params: {
+                                    lugarID: $scope.datosPrincipales.lugarConstruccion
+                                }
+                            }).then(function(data) {
+                                var lugar = data.data[0];
+                                var lugarTerritorioDesercion = {
+                                    nombre: lugar.nombre,
+                                    id: lugar.lugarID,
+                                    lugarOTerritorio: "lugar"
+                                }
+                                $scope.datosPrincipales.lugarTerritorioDesercion = lugarTerritorioDesercion;
+                            });
+                        } else if ($scope.datosPrincipales.territorioDesercion) {
+                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Territorios',{
+                                params: {
+                                    territorioID: $scope.datosPrincipales.territorioDesercion
+                                }
+                            }).then(function(data) {
+                                var territorio = data.data[0];
+                                lugarTerritorioDesercion = {
+                                    nombre: territorio.nombrePrincipal,
+                                    id: territorio.territorioID,
+                                    lugarOTerritorio: "territorio"
+                                }
+                                $scope.datosPrincipales.lugarTerritorioDesercion = lugarTerritorioDesercion;
+                            });
+                        }
+
+                        // Lista de nombres
+                        if ($scope.datosPrincipales.nombres != null && $scope.datosPrincipales.nombres != "") {
+                            $scope.datosPrincipales.nombres = embarcacionesDatos.nombres.split(",");
+                            $scope.datosPrincipales.nombres = $scope.datosPrincipales.nombres.map(function(e) {
+                                return e.trim();
+                            });
+                        } else {
+                            $scope.datosPrincipales.nombres = [];
+                        }
+                        // Lista de alias
+                        if ($scope.datosPrincipales.alias != null && $scope.datosPrincipales.alias != "") {
+                            $scope.datosPrincipales.alias = embarcacionesDatos.alias.split(",");
+                            $scope.datosPrincipales.alias = $scope.datosPrincipales.alias.map(function(e) {
+                                return e.trim();
+                            });
+                        } else {
+                            $scope.datosPrincipales.alias = [];
+                        }
+                        // Lista de usos
+                        if ($scope.datosPrincipales.usos != null && $scope.datosPrincipales.usos != "") {
+                            $scope.datosPrincipales.usos = embarcacionesDatos.usos.split(",");
+                            $scope.datosPrincipales.usos = $scope.datosPrincipales.usos.map(function(e) {
+                                return e.trim();
+                            });
+                        } else {
+                            $scope.datosPrincipales.usos = [];
+                        }
+
+                        // Editamos fecha de nacimiento y fallecimiento al formato adecuado
+                        $scope.datosPrincipales.fechaConstruccion = embarcacionesDatos.fechaConstruccion != null ? $filter('date')(new Date(embarcacionesDatos.fechaConstruccion), String(embarcacionesDatos.fechaConstFormato).toLowerCase()) : "";
+                        $scope.datosPrincipales.fechaDesercion = embarcacionesDatos.fechaDesercion != null ? $filter('date')(new Date(embarcacionesDatos.fechaDesercion), String(embarcacionesDatos.fechaDesercionFormato).toLowerCase()) : "";
 
                     }
                     catch(err) {
@@ -178,7 +252,27 @@
                 
                 // Funcion para datos editados
                 $scope.editarDatoPrincipal = function(campo, valorNuevo) {
-                    if (valorNuevo != $scope.datosPrincipales[campo]) {
+                    if (campo == 'lugarTerritorioConstruccionNombre') {
+                        if (valorNuevo != $scope.datosPrincipales.lugarTerritorioConstruccion.nombre) {
+                            $scope.registrarAccion($scope.datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio + " modificado");
+                            $scope.datosPrincipalesEditado = true;
+                        }
+                    } else if (campo == 'lugarTerritorioConstruccionTipo') {
+                        if (valorNuevo != $scope.datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio) {
+                            $scope.registrarAccion($scope.datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio + " construccion modificado a " + valorNuevo + " construccion");
+                            $scope.datosPrincipalesEditado = true;
+                        }
+                    } else if (campo == 'lugarTerritorioDesercionNombre') {
+                        if (valorNuevo != $scope.datosPrincipales.lugarTerritorioDesercion.nombre) {
+                            $scope.registrarAccion($scope.datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio + "  modificado");
+                            $scope.datosPrincipalesEditado = true;
+                        }
+                    } else if (campo == 'lugarTerritorioDesercionTipo') {
+                        if (valorNuevo != $scope.datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio) {
+                            $scope.registrarAccion($scope.datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio + " construccion modificado a " + valorNuevo + " construccion");
+                            $scope.datosPrincipalesEditado = true;
+                        }
+                    } else if (valorNuevo != $scope.datosPrincipales[campo]) {
                         $scope.registrarAccion(campo + "modificado");
                         $scope.datosPrincipalesEditado = true;
                     }
@@ -941,19 +1035,19 @@
                                     {params:{
                                         embarcacionID: $scope.embarcacionID,
                                         nota: "'" + nota.nota + "'",
-                                        referencia:"'" + nota.referencia + "'"
+                                        referencia: "'" + nota.referencia + "'"
                                     }}
                         );
                     // Modificamos notas viejas
                     if (nota.modificada == true) {
                         conexiones['notasCambiosModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/EmbarcacionesNotas',
                                     {params:{
-                                        idUnico2:'embarcacionID',
-                                        idUnico:'notaID',
-                                        notaID:nota.notaID,
-                                        embarcacionID:$scope.embarcacionID,
-                                        nota:"'" + nota.nota + "'",
-                                        referencia:"'" + nota.referencia + "'"
+                                        idUnico2: 'embarcacionID',
+                                        idUnico: 'notaID',
+                                        notaID: nota.notaID,
+                                        embarcacionID: $scope.embarcacionID,
+                                        nota: "'" + nota.nota + "'",
+                                        referencia: "'" + nota.referencia + "'"
                                     }}
                         );
                     }
@@ -962,10 +1056,10 @@
                 $scope.notasAEliminar.forEach(function(nota) {
                     conexiones['notasCambiosEliminar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/EmbarcacionesNotas',
                                 {params:{
-                                idUnico2:'embarcacionID',
-                                idUnico:'notaID',
-                                notaID:nota.notaID,
-                                embarcacionID:$scope.embarcacionID
+                                idUnico2: 'embarcacionID',
+                                idUnico: 'notaID',
+                                notaID: nota.notaID,
+                                embarcacionID: $scope.embarcacionID
                                 }}
                     );
                 });

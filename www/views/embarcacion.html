@@ -54,9 +54,20 @@
       <div id="datosPrincipalesEmbarcacion" class="row p-t-2">
         <div class="col-sm-6">
             <ul class="datos">
-            <li><span class="tituloDato">Lugar de construcción:</span><span editable-text="datosPrincipales.lugarConstruccion" 
-                          onbeforesave="editarDatoPrincipal('lugarConstruccion',$data)"  
-                          class="valorDato"> {{ datosPrincipales.lugarConstruccion || "No definido" }}</span>
+            <li><form editable-form name="lugarTerritorioCreacionForm" blur="submit">
+                <span class="tituloDato">Lugar de construcción:</span>
+                <span editable-text="datosPrincipales.lugarTerritorioConstruccion.nombre" 
+                          ng-click="lugarTerritorioCreacionForm.$show()"
+                          onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionNombre',$data)"  
+                          class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.nombre || "No definido" }}
+                </span>
+                <span editable-select="datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio" 
+                      e-ng-options="s.value as s.text for s in statuses"
+                          ng-click="lugarTerritorioCreacionForm.$show()"
+                          onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionNombre',$data)"  
+                          class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.nombre || "No definido" }}
+                </span>
+                </form>
             </li>
             <li><span class="tituloDato">Fecha de construcción:</span><span editable-text="datosPrincipales.fechaConstruccion" 
                           onbeforesave="editarDatoPrincipal('fechaConstruccion',$data)"  

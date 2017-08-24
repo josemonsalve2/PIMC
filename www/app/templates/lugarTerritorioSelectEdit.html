@@ -16,7 +16,8 @@
       class="PIMCLugarTerritorioDropdown"
       lugar-territorio-ui-grid-editor
       ng-model="MODEL_COL_FIELD.lugarOTerritorio"
-      ng-options="lugarTerritorio for lugarTerritorio in ['Lugar','Territorio']"
+      ng-disabled="MODEL_COL_FIELD.lugarTerritorioID != -1"
+      ng-options="lugarTerritorio.value as lugarTerritorio.text for lugarTerritorio in [{value:1, text:'Lugar'},{value:2, text:'Territorio'}]"
       style="width:49%">
       </select>
   </form>
