@@ -522,7 +522,7 @@
                     });
                 });
                 // Eliminamos referencias existentes
-                $scope.parentescosAEliminar.forEach (function (personajeRefABorrar) {
+                $scope.parentescosAEliminar.forEach(function (personajeRefABorrar) {
                     var relacionInversaID = -1;
                     $scope.registrarAccion("Referencia existente eliminada");
                     // Buscamos la relacion inversa

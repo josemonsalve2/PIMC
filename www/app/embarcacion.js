@@ -1005,9 +1005,77 @@
                 }
                 
                 var agregado = false;
+                var inserciones = {};
                 for (var key in $scope.datosPrincipales) {
                     var value = $scope.datosPrincipales[key];
-                    if ((key == 'nombres' || key == 'alias' || key == 'usos')  && value.length != 0) {
+                    if (key === 'lugarTerritorioConstruccion' ) {
+                        if (value.insertarNuevo) {
+                            // Es necesario crear un lugar o territorio
+                            if (value.lugarOTerritorio === 'lugar') {
+                                inserciones['insertarLugarConstruccion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Lugares',{
+                                    params: {
+                                        nombre:"'" + value.nombre + "'"
+                                    }
+                                }).then( function (data) {
+                                    if (Object.keys(data.data).length != 0) {
+                                        var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
+                                        parametros['lugarConstruccion'] = lastInsertID;
+                                    }
+                                });
+                            } else if (value.lugarOTerritorio === 'territorio') {
+                                inserciones['insertarTerritorioConstruccion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Territorio',{
+                                    params: {
+                                        nombrePrincipal:"'" + value.nombre + "'"
+                                    }
+                                }).then( function (data) {
+                                    if (Object.keys(data.data).length != 0) {
+                                        var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
+                                        parametros['lugarConstruccion'] = lastInsertID;
+                                    }
+                                });
+                            }
+                        } else {
+                            // Simplemente cambiarlo
+                            if (value.lugarOTerritorio === 'lugar') {
+                                parametros['lugarConstruccion'] = value.lugarTerritorioID;
+                            } else if (value.lugarOTerritorio === 'territorio') {
+                                parametros['territorioConstruccion'] = value.lugarTerritorioID;
+                            }
+                        }
+                    } else if (key === 'lugarTerritorioDesercion') {
+                        if (value.insertarNuevo) {
+                            // Es necesario crear un lugar o territorio
+                            if (value.lugarOTerritorio === 'lugar') {
+                                inserciones['insertarLugarDesercion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Lugares',{
+                                    params: {
+                                        nombre:"'" + value.nombre + "'"
+                                    }
+                                }).then( function (data) {
+                                    if (Object.keys(data.data).length != 0) {
+                                        var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
+                                        parametros['lugarDesercion'] = lastInsertID;
+                                    }
+                                });
+                            } else if (value.lugarOTerritorio === 'territorio') {
+                                inserciones['insertarTerritorioDesercion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Territorio',{
+                                    params: {
+                                        nombrePrincipal:"'" + value.nombre + "'"
+                                    }
+                                }).then( function (data) {
+                                    if (Object.keys(data.data).length != 0) {
+                                        var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
+                                        parametros['territorioDesercion'] = lastInsertID;
+                                    }
+                                });
+                            }                        } else {
+                            // Simplemente cambiarlo
+                            if (value.lugarOTerritorio === 'lugar') {
+                                parametros['lugarDesercion'] = value.lugarTerritorioID;
+                            } else if (value.lugarOTerritorio === 'territorio') {
+                                parametros['territorioDesercion'] = value.lugarTerritorioID;
+                            }
+                        }  
+                    } else if ((key == 'nombres' || key == 'alias' || key == 'usos')  && value.length != 0) {
                         parametros[key] = "'" + value.join(", ") + "'";
                         agregado = true;
                     } else if (value != null && value != "" ) {
@@ -1021,7 +1089,9 @@
                 };
                 
                 if (agregado) {
-                    conexiones['datosPrincipalesModificados'] = $http.get(request,{params:parametros});
+                    $q.all(inserciones).then( function(responses) {
+                        conexiones['datosPrincipalesModificados'] = $http.get(request,{params:parametros});
+                    });
                 }
             }
             // Anotaciones
