@@ -54,17 +54,51 @@
       <div id="datosPrincipalesEmbarcacion" class="row p-t-2">
         <div class="col-sm-6">
             <ul class="datos">
-            <li><span class="tituloDato">Lugar de construcción:</span><span editable-text="datosPrincipales.lugarConstruccion" 
-                          onbeforesave="editarDatoPrincipal('lugarConstruccion',$data)"  
-                          class="valorDato"> {{ datosPrincipales.lugarConstruccion || "No definido" }}</span>
+            <li><form editable-form name="lugarTerritorioConstruccionForm" blur="submit">
+                <span class="tituloDato">Lugar de construcción:</span>
+                <span editable-text="datosPrincipales.lugarTerritorioConstruccion.nombre" 
+                          ng-click="lugarTerritorioConstruccionForm.$show()"
+                          e-typeahead-min-length="3"
+                          e-uib-typeahead="lugares.nombre for lugares in autocompletarLugarTerritorio($data)" 
+                          e-typeahead-wait-ms="100" 
+                          e-typeahead-on-select="seleccionarLugarTerritorio(datosPrincipales.lugarTerritorioConstruccion,$item)"
+                          onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionNombre',$data)"  
+                          class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.nombre || "No definido" }}
+                </span>
+                <span editable-select="datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio" 
+                      e-ng-options="lugarTerritorio for lugarTerritorio in ['lugar','territorio']"
+                      e-ng-disabled="datosPrincipales.lugarTerritorioConstruccion.lugarTerritorioID != -1"
+                      e-ng-show="datosPrincipales.lugarTerritorioDesercion.lugarTerritorioID == -1"
+                      ng-click="lugarTerritorioConstruccionForm.$show()"
+                      onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionTipo',$data)"  
+                      class="valorDato"> ({{ datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio || "No definido" }})
+                </span>
+                </form>
             </li>
             <li><span class="tituloDato">Fecha de construcción:</span><span editable-text="datosPrincipales.fechaConstruccion" 
                           onbeforesave="editarDatoPrincipal('fechaConstruccion',$data)"  
                           class="valorDato"> {{ datosPrincipales.fechaConstruccion || "No definido" }}</span>
             </li>
-            <li><span class="tituloDato">Lugar de deserción:</span><span editable-text="datosPrincipales.lugarDesercion" 
-                          onbeforesave="editarDatoPrincipal('lugarDesercion',$data)"  
-                          class="valorDato"> {{ datosPrincipales.lugarDesercion || "No definido" }}</span>
+            <li><form editable-form name="lugarTerritorioDesercionForm" blur="submit">
+                <span class="tituloDato">Lugar de deserción:</span>
+                <span editable-text="datosPrincipales.lugarTerritorioDesercion.nombre" 
+                          ng-click="lugarTerritorioDesercionForm.$show()"
+                          e-typeahead-min-length="3"
+                          e-uib-typeahead="lugares.nombre for lugares in autocompletarLugarTerritorio($data)" 
+                          e-typeahead-wait-ms="100" 
+                          e-typeahead-on-select="seleccionarLugarTerritorio(datosPrincipales.lugarTerritorioDesercion,$item)"
+                          onbeforesave="editarDatoPrincipal('lugarTerritorioDesercionNombre',$data)"  
+                          class="valorDato"> {{ datosPrincipales.lugarTerritorioDesercion.nombre || "No definido" }}
+                </span>
+                <span editable-select="datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio" 
+                      e-ng-options="lugarTerritorio for lugarTerritorio in ['lugar','territorio']"
+                      e-ng-disabled="datosPrincipales.lugarTerritorioDesercion.lugarTerritorioID != -1"
+                      e-ng-show="datosPrincipales.lugarTerritorioDesercion.lugarTerritorioID == -1"
+                      ng-click="lugarTerritorioDesercionForm.$show()"
+                      onbeforesave="editarDatoPrincipal('lugarTerritorioDesercionTipo',$data)"  
+                      class="valorDato"> ({{ datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio || "No definido" }})
+                </span>
+                </form>
             </li>
             <li><span class="tituloDato">Fecha de deserción:</span><span editable-text="datosPrincipales.fechaDesercion" 
                           onbeforesave="editarDatoPrincipal('fechaDesercion',$data)"  

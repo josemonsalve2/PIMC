@@ -4,11 +4,21 @@
     <input
       type="text"
       ng-class="'colt' + col.uid"
-      ui-grid-editor
-      ng-model="MODEL_COL_FIELD.lugarTerritorioNombre" />
+      lugar-territorio-ui-grid-editor
+      typeahead-min-length="3"
+      uib-typeahead="lugares.nombre for lugares in col.colDef.cargarLugaresTypeahead($viewValue)" 
+      typeahead-wait-ms="100" 
+      typeahead-on-select="col.colDef.onSelectLugaresTypeahead(MODEL_COL_FIELD,$item)"
+      class="PIMCLugarTerritorioInput"
+      ng-model="MODEL_COL_FIELD.lugarTerritorioNombre" 
+           style="width:49%"/>
       <select ng-class="'colt' + col.uid"
+      class="PIMCLugarTerritorioDropdown"
+      lugar-territorio-ui-grid-editor
       ng-model="MODEL_COL_FIELD.lugarOTerritorio"
-      ng-options="lugarTerritorio for lugarTerritorio in ['Lugar','Territorio']">
+      ng-disabled="MODEL_COL_FIELD.lugarTerritorioID != -1"
+      ng-options="lugarTerritorio for lugarTerritorio in ['lugar','territorio']"
+      style="width:49%">
       </select>
   </form>
 </div>

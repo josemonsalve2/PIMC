@@ -46,6 +46,74 @@
             }
         };
         
+        // Funcion para lugares y territorios
+        $scope.autocompletarLugarTerritorio = function (hintLugarTerritorio) {
+            var promiseLugar = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Lugares', {
+                params:{
+                    nombre: '"' + hintLugarTerritorio + '"'
+                }
+            });
+            var promiseTerritorios = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Territorios', {
+                params:{
+                    nombrePrincipal: '"' + hintLugarTerritorio + '"'
+                }
+            });
+            var promiseTerritoriosNombres = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/TerritoriosNombres', {
+                params:{
+                    nombre: '"' + hintLugarTerritorio + '"'
+                }
+            });
+
+            return $q.all([promiseLugar, promiseTerritorios, promiseTerritoriosNombres]).then( function(responses) {
+                var listaLugaresTerritorios = [];
+                var matchPerfecto = false;
+                for (var res in responses) {
+                    var resultados = responses[res].data;
+                    if (resultados != "0") {
+                        resultados.forEach( function (valor) {
+                            var elementoAInsertar = {nombre: '',lugarTerritorioID: -1, lugarOTerritorio: ''}
+
+                            // Para el nombre
+                            if (valor.nombre) {
+                                elementoAInsertar.nombre = valor.nombre;
+                            } else if (valor.nombrePrincipal) {
+                                elementoAInsertar.nombre = valor.nombrePrincipal;
+                            }
+                            if (String(hintLugarTerritorio).toLowerCase().replace(/\s/g, '') == String(elementoAInsertar.nombre).toLowerCase().replace(/\s/g, ''))
+                                    matchPerfecto = true;
+
+                            // Para el lugarTerritorioID
+                            if (valor.lugarID) {
+                                elementoAInsertar.lugarTerritorioID = valor.lugarID;
+                                elementoAInsertar.lugarOTerritorio = 'lugar';
+                                elementoAInsertar.nombre = "(L)" + elementoAInsertar.nombre;
+                            } else if (valor.territorioID) {
+                                elementoAInsertar.lugarTerritorioID = valor.territorioID;
+                                elementoAInsertar.lugarOTerritorio = 'territorio';
+                                elementoAInsertar.nombre = "(T)" + elementoAInsertar.nombre;
+                            }
+                            listaLugaresTerritorios.push(elementoAInsertar);
+                        });
+                    }
+                }
+                if (!matchPerfecto /*&& listaLugaresTerritorios.length != 0*/)
+                    listaLugaresTerritorios.unshift({nombre: hintLugarTerritorio, lugarTerritorioID: -1, lugarOTerritorio: 'insertar'});
+                return listaLugaresTerritorios;
+            }); 
+        };
+        
+        $scope.seleccionarLugarTerritorio = function(lugarTerritorio,elementoSeleccionado) {
+            if (elementoSeleccionado.lugarOTerritorio === 'insertar') {
+                // Lugar es por defecto
+                lugarTerritorio.lugarOTerritorio = 'lugar'
+                lugarTerritorio.insertarNuevo = true;
+            } else {
+                lugarTerritorio.lugarOTerritorio = elementoSeleccionado.lugarOTerritorio;
+            }
+            lugarTerritorio.lugarTerritorioID = elementoSeleccionado.lugarTerritorioID;
+            lugarTerritorio.lugarTerritorioNombre = elementoSeleccionado.nombre;
+                
+        }
         
         //Datos principales
         $scope.datosPrincipales = {};
@@ -66,39 +134,113 @@
                 console.log(embarcacionesDatos);
                 if (embarcacionesDatos) {
                     try {
-                            
-                            $scope.datosPrincipales = embarcacionesDatos;
-                            // Lista de nombres
-                            if ($scope.datosPrincipales.nombres != null && $scope.datosPrincipales.nombres != "") {
-                                $scope.datosPrincipales.nombres = embarcacionesDatos.nombres.split(",");
-                                $scope.datosPrincipales.nombres = $scope.datosPrincipales.nombres.map(function(e) {
-                                    return e.trim();
-                                });
-                            } else {
-                                $scope.datosPrincipales.nombres = [];
-                            }
-                            // Lista de alias
-                            if ($scope.datosPrincipales.alias != null && $scope.datosPrincipales.alias != "") {
-                                $scope.datosPrincipales.alias = embarcacionesDatos.alias.split(",");
-                                $scope.datosPrincipales.alias = $scope.datosPrincipales.alias.map(function(e) {
-                                    return e.trim();
-                                });
-                            } else {
-                                $scope.datosPrincipales.alias = [];
-                            }
-                            // Lista de usos
-                            if ($scope.datosPrincipales.usos != null && $scope.datosPrincipales.usos != "") {
-                                $scope.datosPrincipales.usos = embarcacionesDatos.usos.split(",");
-                                $scope.datosPrincipales.usos = $scope.datosPrincipales.usos.map(function(e) {
-                                    return e.trim();
-                                });
-                            } else {
-                                $scope.datosPrincipales.usos = [];
-                            }
+                        $scope.datosPrincipales = embarcacionesDatos;
+                        // Obtenemos el nombre del lugar o territorio de construccion
+                        var lugarTerritorioConstruccion = {
+                            nombre: "",
+                            lugarTerritorioID: -1,
+                            lugarOTerritorio: ""
+                        }
+                        $scope.datosPrincipales.lugarTerritorioConstruccion = lugarTerritorioConstruccion;
+                        if ($scope.datosPrincipales.lugarConstruccion) {
+                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Lugares',{
+                                params: {
+                                    lugarID: $scope.datosPrincipales.lugarConstruccion
+                                }
+                            }).then(function(data) {
+                                var lugar = data.data[0];
+                                var lugarTerritorioConstruccion = {
+                                    nombre: lugar.nombre,
+                                    lugarTerritorioID: lugar.lugarID,
+                                    lugarOTerritorio: "lugar"
+                                }
+                                $scope.datosPrincipales.lugarTerritorioConstruccion = lugarTerritorioConstruccion;
+                            });
+                        } else if ($scope.datosPrincipales.territorioConstruccion) {
+                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Territorios',{
+                                params: {
+                                    territorioID: $scope.datosPrincipales.territorioConstruccion
+                                }
+                            }).then(function(data) {
+                                var territorio = data.data[0];
+                                lugarTerritorioConstruccion = {
+                                    nombre: territorio.nombrePrincipal,
+                                    lugarTerritorioID: territorio.territorioID,
+                                    lugarOTerritorio: "territorio"
+                                }
+                                $scope.datosPrincipales.lugarTerritorioConstruccion = lugarTerritorioConstruccion;
+                            });
+                        }
                         
-                            // Editamos fecha de nacimiento y fallecimiento al formato adecuado
-                            $scope.datosPrincipales.fechaConstruccion = embarcacionesDatos.fechaConstruccion != null ? $filter('date')(new Date(embarcacionesDatos.fechaConstruccion), String(embarcacionesDatos.fechaConstFormato).toLowerCase()) : "";
-                            $scope.datosPrincipales.fechaDesercion = embarcacionesDatos.fechaDesercion != null ? $filter('date')(new Date(embarcacionesDatos.fechaDesercion), String(embarcacionesDatos.fechaDesercionFormato).toLowerCase()) : "";
+                        // Obtenemos el nombre del lugar o territorio de construccion
+                        var lugarTerritorioDesercion = {
+                            nombre: "",
+                            lugarTerritorioID: -1,
+                            lugarOTerritorio: ""
+                        }
+                        $scope.datosPrincipales.lugarTerritorioDesercion = lugarTerritorioDesercion;
+                        
+                        if ($scope.datosPrincipales.lugarDesercion) {
+                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Lugares',{
+                                params: {
+                                    lugarID: $scope.datosPrincipales.lugarDesercion
+                                }
+                            }).then(function(data) {
+                                var lugar = data.data[0];
+                                var lugarTerritorioDesercion = {
+                                    nombre: lugar.nombre,
+                                    lugarTerritorioID: lugar.lugarID,
+                                    lugarOTerritorio: "lugar"
+                                }
+                                $scope.datosPrincipales.lugarTerritorioDesercion = lugarTerritorioDesercion;
+                            });
+                        } else if ($scope.datosPrincipales.territorioDesercion) {
+                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Territorios',{
+                                params: {
+                                    territorioID: $scope.datosPrincipales.territorioDesercion
+                                }
+                            }).then(function(data) {
+                                var territorio = data.data[0];
+                                lugarTerritorioDesercion = {
+                                    nombre: territorio.nombrePrincipal,
+                                    lugarTerritorioID: territorio.territorioID,
+                                    lugarOTerritorio: "territorio"
+                                }
+                                $scope.datosPrincipales.lugarTerritorioDesercion = lugarTerritorioDesercion;
+                            });
+                        }
+
+                        // Lista de nombres
+                        if ($scope.datosPrincipales.nombres != null && $scope.datosPrincipales.nombres != "") {
+                            $scope.datosPrincipales.nombres = embarcacionesDatos.nombres.split(",");
+                            $scope.datosPrincipales.nombres = $scope.datosPrincipales.nombres.map(function(e) {
+                                return e.trim();
+                            });
+                        } else {
+                            $scope.datosPrincipales.nombres = [];
+                        }
+                        // Lista de alias
+                        if ($scope.datosPrincipales.alias != null && $scope.datosPrincipales.alias != "") {
+                            $scope.datosPrincipales.alias = embarcacionesDatos.alias.split(",");
+                            $scope.datosPrincipales.alias = $scope.datosPrincipales.alias.map(function(e) {
+                                return e.trim();
+                            });
+                        } else {
+                            $scope.datosPrincipales.alias = [];
+                        }
+                        // Lista de usos
+                        if ($scope.datosPrincipales.usos != null && $scope.datosPrincipales.usos != "") {
+                            $scope.datosPrincipales.usos = embarcacionesDatos.usos.split(",");
+                            $scope.datosPrincipales.usos = $scope.datosPrincipales.usos.map(function(e) {
+                                return e.trim();
+                            });
+                        } else {
+                            $scope.datosPrincipales.usos = [];
+                        }
+
+                        // Editamos fecha de nacimiento y fallecimiento al formato adecuado
+                        $scope.datosPrincipales.fechaConstruccion = embarcacionesDatos.fechaConstruccion != null ? $filter('date')(new Date(embarcacionesDatos.fechaConstruccion), String(embarcacionesDatos.fechaConstFormato).toLowerCase()) : "";
+                        $scope.datosPrincipales.fechaDesercion = embarcacionesDatos.fechaDesercion != null ? $filter('date')(new Date(embarcacionesDatos.fechaDesercion), String(embarcacionesDatos.fechaDesercionFormato).toLowerCase()) : "";
 
                     }
                     catch(err) {
@@ -110,7 +252,27 @@
                 
                 // Funcion para datos editados
                 $scope.editarDatoPrincipal = function(campo, valorNuevo) {
-                    if (valorNuevo != $scope.datosPrincipales[campo]) {
+                    if (campo == 'lugarTerritorioConstruccionNombre') {
+                        if (valorNuevo != $scope.datosPrincipales.lugarTerritorioConstruccion.nombre) {
+                            $scope.registrarAccion($scope.datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio + " modificado");
+                            $scope.datosPrincipalesEditado = true;
+                        }
+                    } else if (campo == 'lugarTerritorioConstruccionTipo') {
+                        if (valorNuevo != $scope.datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio) {
+                            $scope.registrarAccion($scope.datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio + " construccion modificado a " + valorNuevo + " construccion");
+                            $scope.datosPrincipalesEditado = true;
+                        }
+                    } else if (campo == 'lugarTerritorioDesercionNombre') {
+                        if (valorNuevo != $scope.datosPrincipales.lugarTerritorioDesercion.nombre) {
+                            $scope.registrarAccion($scope.datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio + "  modificado");
+                            $scope.datosPrincipalesEditado = true;
+                        }
+                    } else if (campo == 'lugarTerritorioDesercionTipo') {
+                        if (valorNuevo != $scope.datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio) {
+                            $scope.registrarAccion($scope.datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio + " construccion modificado a " + valorNuevo + " construccion");
+                            $scope.datosPrincipalesEditado = true;
+                        }
+                    } else if (valorNuevo != $scope.datosPrincipales[campo]) {
                         $scope.registrarAccion(campo + "modificado");
                         $scope.datosPrincipalesEditado = true;
                     }
@@ -502,17 +664,15 @@
             data: []
         };
         $scope.hojaServicioPersonalEditado = false;
-        $scope.tablaHojaServicioPersonal.columnDefs = [{
-            field: 'rutaID',
-            name: "rutaID",
-            display: "rutaID",
-            hidden: true
-        }, {
+        $scope.tablaHojaServicioPersonal.columnDefs = [
+        {
             field: 'lugarTerritorioPartida',
             name: 'lugarTerritorioPartida',
             displayName: 'Lugar o territorio de Partida',
             cellTemplate: 'app/templates/lugarTerritorioSelectCell.html',
             editableCellTemplate: 'app/templates/lugarTerritorioSelectEdit.html',
+            cargarLugaresTypeahead: $scope.autocompletarLugarTerritorio,
+            onSelectLugaresTypeahead: $scope.seleccionarLugarTerritorio,
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 var classToReturn = "";
                 if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
@@ -545,6 +705,8 @@
             displayName: 'Lugar o territorio de Llegada',
             cellTemplate: 'app/templates/lugarTerritorioSelectCell.html',
             editableCellTemplate: 'app/templates/lugarTerritorioSelectEdit.html',
+            cargarLugaresTypeahead: $scope.autocompletarLugarTerritorio,
+            onSelectLugaresTypeahead: $scope.seleccionarLugarTerritorio,
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 var classToReturn = "";
                 if (row.entity['estadoActual'] == $scope.datosEstados.MODIFICADO) {
@@ -597,8 +759,9 @@
                 }   
             });
             tablaAPI.edit.on.beginCellEdit($scope, function(rowEntity, colDef) {
-                if (rowEntity[colDef.name] === $scope.valorDatoNuevo) {
-                    rowEntity[colDef.name] = "";
+                if ((colDef.name === 'lugarTerritorioPartida' || colDef.name === 'lugarTerrotorioLlegada')
+                    && rowEntity[colDef.name].lugarTerritorioNombre === $scope.valorDatoNuevo) {
+                    rowEntity[colDef.name].lugarTerritorioNombre = "";
                     $scope.tablaHojaServicioAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
                 }
             });
@@ -621,64 +784,73 @@
                 if (Object.keys(data.data).length != 0) {
                     $scope.tablaHojaServicioPersonal.data = data.data;
                     for (var ruta in $scope.tablaHojaServicioPersonal.data) {
+                        // Para Lugar o territorio de partida
+                        // Lugar tiene prioridad sobre territorio
+                        if ($scope.tablaHojaServicioPersonal.data[ruta].lugarPartidaID) {
+                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioPartida = {lugarOTerritorio:'lugar', 
+                                                                                                  lugarTerritorioID: $scope.tablaHojaServicioPersonal.data[ruta].lugarPartidaID,
+                                                                                                  lugarTerritorioNombre: ''};
+                            // Cargamos el lugar para obtener el nombre
+                        } else {
+                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioPartida = {lugarOTerritorio:'territorio', 
+                                                                                                  lugarTerritorioID: $scope.tablaHojaServicioPersonal.data[ruta].territorioPartidaID,
+                                                                                                  lugarTerritorioNombre: ''};
+                            // Cargamos el lugar para obtener el nombre
+                        }
+                        // Para Lugar o territorio de partida
                         // Lugar tiene prioridad sobre territorio
                         if ($scope.tablaHojaServicioPersonal.data[ruta].lugarLlegadaID) {
-                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioLlegada = {lugarOTerritorio:'lugar', 
+                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerrotorioLlegada = {lugarOTerritorio:'lugar', 
                                                                                                   lugarTerritorioID: $scope.tablaHojaServicioPersonal.data[ruta].lugarLlegadaID,
                                                                                                   lugarTerritorioNombre: ''};
                             // Cargamos el lugar para obtener el nombre
                         } else {
-                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioLlegada = {lugarOTerritorio:'territorio', 
+                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerrotorioLlegada = {lugarOTerritorio:'territorio', 
                                                                                                   lugarTerritorioID: $scope.tablaHojaServicioPersonal.data[ruta].territorioLlegadaID,
                                                                                                   lugarTerritorioNombre: ''};
                             // Cargamos el lugar para obtener el nombre
                         }
-                        if ($scope.tablaHojaServicioPersonal.data[ruta].lugarSalidaID) {
-                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioSalida = $scope.tablaHojaServicioPersonal.data[ruta].lugarSalidaID;
-                        } else {
-                            $scope.tablaHojaServicioPersonal.data[ruta].lugarTerritorioSalida = $scope.tablaHojaServicioPersonal.data[ruta].territorioSalidaID;
-                        }
-                        $scope.tablaHojaServicioPersonal.data[ruta].estadoActual = $scope.datosEstados.LIMPIO;
                     }
                 }
             });
         };
         $scope.agregarHojaServicioPersonal = function () {
-            $scope.datosSecundariosEditados = true;
-            var nuevoDatoSecundario = {
+            $scope.hojaServicioPersonalEditado = true;
+            var nuevaHojaServicioPersonal = {
                 embarcacionID: $scope.embarcacionID,
-                categoria: $scope.valorDatoNuevo,
-                descripcion: $scope.valorDatoNuevo,
-                cantidad: 0,
-                unidades: $scope.valorDatoNuevo,
-                fechaAdicion: new Date(),
-                fechaAdicionFormato: "",
-                fechaRemocion: new Date(),
-                fechaRemocionFormato: "",
+                lugarTerrotorioLlegada: { lugarOTerritorio:'lugar', 
+                                          lugarTerritorioID: -1,
+                                          lugarTerritorioNombre: $scope.valorDatoNuevo},
+                lugarTerritorioPartida: { lugarOTerritorio:'lugar', 
+                                          lugarTerritorioID: -1,
+                                          lugarTerritorioNombre: $scope.valorDatoNuevo},
+                fechaPartida: new Date(),
+                fechaLlegada: new Date(),
                 estadoActual: $scope.datosEstados.INSERTADO
             };
-            $scope.tablaDatosSecundarios.data.push(nuevoDatoSecundario);
-            $scope.registrarAccion("Entrada agregada a tabla datos secundarios");
-            $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+            $scope.tablaHojaServicioPersonal.data.push(nuevaHojaServicioPersonal);
+            $scope.registrarAccion("Entrada agregada a hoja de servicio y personal");
+            $scope.tablaHojaServicioAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
         };
-        $scope.borrarDatosSecundarios = function(row) {
-            $scope.datosSecundariosEditados = true;
+        $scope.borrarHojaServicioPersonal = function(row) {
+            $scope.hojaServicioPersonalEditado = true;
             if (row.entity.estadoActual == $scope.datosEstados.INSERTADO) {
-                $scope.registrarAccion("datoSecundario nuevo eliminada");
-                var index = $scope.tablaDatosSecundarios.data.indexOf(row.entity);
-                $scope.tablaDatosSecundarios.data.splice(index,1);
+                $scope.registrarAccion("Hoja de servicio y personal nueva eliminada");
+                var index = $scope.tablaHojaServicioPersonal.data.indexOf(row.entity);
+                $scope.tablaHojaServicioPersonal.data.splice(index,1);
             } else {
-                $scope.registrarAccion("dato Secundario <strong> "+ row.entity.elementoID +" </strong> eliminado");
-                row.entity.estadoActual = $scope.datosEstados.ELIMINADO;
-                $scope.tablasDatosSecundariosAPI.grid.refresh();
+                if (window.confirm("Esta Seguro que quiere borrar una hoja de servicio? Se perderan todos los datos de esta ruta") === true) {
+                    $scope.registrarAccion("Hoja de servicio y personal <strong> "+ row.entity.rutaID +" </strong> eliminada");
+                    row.entity.estadoActual = $scope.datosEstados.ELIMINADO;
+                    $scope.tablaHojaServicioAPI.grid.refresh();
+                }
             }
-
         };
-        $scope.cambiarBorrarDatosSecundarios = function (esActivo) {
-            var lastCol = $scope.tablaDatosSecundarios.columnDefs.length - 1;
-            $scope.tablaDatosSecundarios.columnDefs[lastCol].visible = esActivo;
-            $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
-            $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+        $scope.cambiarBorrarHojaDeServicioPersonal = function (esActivo) {
+            var lastCol = $scope.tablaHojaServicioPersonal.columnDefs.length - 1;
+            $scope.tablaHojaServicioPersonal.columnDefs[lastCol].visible = esActivo;
+            $scope.tablaHojaServicioAPI.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
+            $scope.tablaHojaServicioAPI.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
         }
         
         
@@ -832,25 +1004,91 @@
                     embarcacionID:$scope.embarcacionID
                 }
                 
-                var agregado = false;
+                var inserciones = {};
                 for (var key in $scope.datosPrincipales) {
                     var value = $scope.datosPrincipales[key];
-                    if ((key == 'nombres' || key == 'alias' || key == 'usos')  && value.length != 0) {
+                    if (key === 'lugarTerritorioConstruccion' ) {
+                        if (value.insertarNuevo) {
+                            // Es necesario crear un lugar o territorio
+                            if (value.lugarOTerritorio === 'lugar') {
+                                inserciones['insertarLugarConstruccion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Lugares',{
+                                    params: {
+                                        nombre:'"' + value.nombre + '"'
+                                    }
+                                }).then( function (data) {
+                                    if (Object.keys(data.data).length != 0) {
+                                        var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
+                                        parametros['lugarConstruccion'] = lastInsertID;
+                                    }
+                                });
+                            } else if (value.lugarOTerritorio === 'territorio') {
+                                inserciones['insertarTerritorioConstruccion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Territorio',{
+                                    params: {
+                                        nombrePrincipal:'"' + value.nombre + '"'
+                                    }
+                                }).then( function (data) {
+                                    if (Object.keys(data.data).length != 0) {
+                                        var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
+                                        parametros['lugarConstruccion'] = lastInsertID;
+                                    }
+                                });
+                            }
+                        } else {
+                            // Simplemente cambiarlo
+                            if (value.lugarOTerritorio === 'lugar') {
+                                parametros['lugarConstruccion'] = value.lugarTerritorioID;
+                            } else if (value.lugarOTerritorio === 'territorio') {
+                                parametros['territorioConstruccion'] = value.lugarTerritorioID;
+                            }
+                        }
+                        
+                    } else if (key === 'lugarTerritorioDesercion') {
+                        if (value.insertarNuevo) {
+                            // Es necesario crear un lugar o territorio
+                            if (value.lugarOTerritorio === 'lugar') {
+                                inserciones['insertarLugarDesercion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Lugares',{
+                                    params: {
+                                        nombre:'"' + value.nombre + '"'
+                                    }
+                                }).then( function (data) {
+                                    if (Object.keys(data.data).length != 0) {
+                                        var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
+                                        parametros['lugarDesercion'] = lastInsertID;
+                                    }
+                                });
+                            } else if (value.lugarOTerritorio === 'territorio') {
+                                inserciones['insertarTerritorioDesercion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Territorio',{
+                                    params: {
+                                        nombrePrincipal:'"' + value.nombre + '"'
+                                    }
+                                }).then( function (data) {
+                                    if (Object.keys(data.data).length != 0) {
+                                        var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
+                                        parametros['territorioDesercion'] = lastInsertID;
+                                    }
+                                });
+                            }                        } else {
+                            // Simplemente cambiarlo
+                            if (value.lugarOTerritorio === 'lugar') {
+                                parametros['lugarDesercion'] = value.lugarTerritorioID;
+                            } else if (value.lugarOTerritorio === 'territorio') {
+                                parametros['territorioDesercion'] = value.lugarTerritorioID;
+                            }
+                        }  
+                    } else if ((key == 'nombres' || key == 'alias' || key == 'usos')  && value.length != 0) {
                         parametros[key] = "'" + value.join(", ") + "'";
-                        agregado = true;
-                    } else if (value != null && value != "" ) {
+                    } else if (key != "lugarConstruccion" && key != "lugarDisercion" && key != "territorioConstruccion" && key != "territorioDisercion"  && value != null && value != "" ) {
                         if (typeof value === 'string') {
                             parametros[key] = "'" + value + "'";
                         } else {
                             parametros[key] = value;
                         }
-                        agregado = true;
                     }                          
                 };
                 
-                if (agregado) {
+                $q.all(inserciones).then( function(responses) {
                     conexiones['datosPrincipalesModificados'] = $http.get(request,{params:parametros});
-                }
+                });
             }
             // Anotaciones
             if ($scope.notasCambios) {
@@ -863,19 +1101,19 @@
                                     {params:{
                                         embarcacionID: $scope.embarcacionID,
                                         nota: "'" + nota.nota + "'",
-                                        referencia:"'" + nota.referencia + "'"
+                                        referencia: "'" + nota.referencia + "'"
                                     }}
                         );
                     // Modificamos notas viejas
                     if (nota.modificada == true) {
                         conexiones['notasCambiosModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/EmbarcacionesNotas',
                                     {params:{
-                                        idUnico2:'embarcacionID',
-                                        idUnico:'notaID',
-                                        notaID:nota.notaID,
-                                        embarcacionID:$scope.embarcacionID,
-                                        nota:"'" + nota.nota + "'",
-                                        referencia:"'" + nota.referencia + "'"
+                                        idUnico2: 'embarcacionID',
+                                        idUnico: 'notaID',
+                                        notaID: nota.notaID,
+                                        embarcacionID: $scope.embarcacionID,
+                                        nota: "'" + nota.nota + "'",
+                                        referencia: "'" + nota.referencia + "'"
                                     }}
                         );
                     }
@@ -884,10 +1122,10 @@
                 $scope.notasAEliminar.forEach(function(nota) {
                     conexiones['notasCambiosEliminar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/EmbarcacionesNotas',
                                 {params:{
-                                idUnico2:'embarcacionID',
-                                idUnico:'notaID',
-                                notaID:nota.notaID,
-                                embarcacionID:$scope.embarcacionID
+                                idUnico2: 'embarcacionID',
+                                idUnico: 'notaID',
+                                notaID: nota.notaID,
+                                embarcacionID: $scope.embarcacionID
                                 }}
                     );
                 });
