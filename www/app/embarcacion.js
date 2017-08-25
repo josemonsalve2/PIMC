@@ -1004,7 +1004,6 @@
                     embarcacionID:$scope.embarcacionID
                 }
                 
-                var agregado = false;
                 var inserciones = {};
                 for (var key in $scope.datosPrincipales) {
                     var value = $scope.datosPrincipales[key];
@@ -1042,6 +1041,7 @@
                                 parametros['territorioConstruccion'] = value.lugarTerritorioID;
                             }
                         }
+                        
                     } else if (key === 'lugarTerritorioDesercion') {
                         if (value.insertarNuevo) {
                             // Es necesario crear un lugar o territorio
@@ -1077,22 +1077,18 @@
                         }  
                     } else if ((key == 'nombres' || key == 'alias' || key == 'usos')  && value.length != 0) {
                         parametros[key] = "'" + value.join(", ") + "'";
-                        agregado = true;
                     } else if (key != "lugarConstruccion" && key != "lugarDisercion" && key != "territorioConstruccion" && key != "territorioDisercion"  && value != null && value != "" ) {
                         if (typeof value === 'string') {
                             parametros[key] = "'" + value + "'";
                         } else {
                             parametros[key] = value;
                         }
-                        agregado = true;
                     }                          
                 };
                 
-                if (agregado) {
-                    $q.all(inserciones).then( function(responses) {
-                        conexiones['datosPrincipalesModificados'] = $http.get(request,{params:parametros});
-                    });
-                }
+                $q.all(inserciones).then( function(responses) {
+                    conexiones['datosPrincipalesModificados'] = $http.get(request,{params:parametros});
+                });
             }
             // Anotaciones
             if ($scope.notasCambios) {
