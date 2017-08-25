@@ -68,7 +68,7 @@
                 <span editable-select="datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio" 
                       e-ng-options="lugarTerritorio for lugarTerritorio in ['Lugar','Territorio']"
                       e-ng-disabled="datosPrincipales.lugarTerritorioConstruccion.lugarTerritorioID != -1"
-                      e-ng-show="datosPrincipales.lugarTerritorioDesercion.lugarTerritorioID != -1"
+                      e-ng-show="datosPrincipales.lugarTerritorioDesercion.lugarTerritorioID == -1"
                       ng-click="lugarTerritorioConstruccionForm.$show()"
                       onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionTipo',$data)"  
                       class="valorDato"> ({{ datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio || "No definido" }})
@@ -93,7 +93,7 @@
                 <span editable-select="datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio" 
                       e-ng-options="lugarTerritorio for lugarTerritorio in ['Lugar','Territorio']"
                       e-ng-disabled="datosPrincipales.lugarTerritorioDesercion.lugarTerritorioID != -1"
-                      e-ng-show="datosPrincipales.lugarTerritorioDesercion.lugarTerritorioID != -1"
+                      e-ng-show="datosPrincipales.lugarTerritorioDesercion.lugarTerritorioID == -1"
                       ng-click="lugarTerritorioDesercionForm.$show()"
                       onbeforesave="editarDatoPrincipal('lugarTerritorioDesercionTipo',$data)"  
                       class="valorDato"> ({{ datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio || "No definido" }})
