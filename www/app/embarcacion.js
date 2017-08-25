@@ -183,7 +183,7 @@
                         if ($scope.datosPrincipales.lugarDesercion) {
                             $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Lugares',{
                                 params: {
-                                    lugarID: $scope.datosPrincipales.lugarConstruccion
+                                    lugarID: $scope.datosPrincipales.lugarDesercion
                                 }
                             }).then(function(data) {
                                 var lugar = data.data[0];
@@ -1014,7 +1014,7 @@
                             if (value.lugarOTerritorio === 'lugar') {
                                 inserciones['insertarLugarConstruccion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Lugares',{
                                     params: {
-                                        nombre:"'" + value.nombre + "'"
+                                        nombre:'"' + value.nombre + '"'
                                     }
                                 }).then( function (data) {
                                     if (Object.keys(data.data).length != 0) {
@@ -1025,7 +1025,7 @@
                             } else if (value.lugarOTerritorio === 'territorio') {
                                 inserciones['insertarTerritorioConstruccion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Territorio',{
                                     params: {
-                                        nombrePrincipal:"'" + value.nombre + "'"
+                                        nombrePrincipal:'"' + value.nombre + '"'
                                     }
                                 }).then( function (data) {
                                     if (Object.keys(data.data).length != 0) {
@@ -1048,7 +1048,7 @@
                             if (value.lugarOTerritorio === 'lugar') {
                                 inserciones['insertarLugarDesercion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Lugares',{
                                     params: {
-                                        nombre:"'" + value.nombre + "'"
+                                        nombre:'"' + value.nombre + '"'
                                     }
                                 }).then( function (data) {
                                     if (Object.keys(data.data).length != 0) {
@@ -1059,7 +1059,7 @@
                             } else if (value.lugarOTerritorio === 'territorio') {
                                 inserciones['insertarTerritorioDesercion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Territorio',{
                                     params: {
-                                        nombrePrincipal:"'" + value.nombre + "'"
+                                        nombrePrincipal:'"' + value.nombre + '"'
                                     }
                                 }).then( function (data) {
                                     if (Object.keys(data.data).length != 0) {
@@ -1078,7 +1078,7 @@
                     } else if ((key == 'nombres' || key == 'alias' || key == 'usos')  && value.length != 0) {
                         parametros[key] = "'" + value.join(", ") + "'";
                         agregado = true;
-                    } else if (value != null && value != "" ) {
+                    } else if (key != "lugarConstruccion" && key != "lugarDisercion" && key != "territorioConstruccion" && key != "territorioDisercion"  && value != null && value != "" ) {
                         if (typeof value === 'string') {
                             parametros[key] = "'" + value + "'";
                         } else {
