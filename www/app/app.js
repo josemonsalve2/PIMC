@@ -11,6 +11,7 @@
     'lugarPerfil',
     'institucionPerfil',
     'actividadPerfil',
+    'eventoPerfil',
     'archivosBusqueda',
     'documentoPerfil'
   ]);
@@ -54,6 +55,10 @@
       .when('/actividad', {
         templateUrl: 'views/actividad.html',
         controller:  'actividadPerfilController'
+      })
+      .when('/evento', {
+        templateUrl: 'views/evento.html',
+        controller:  'eventoPerfilController'
       })
       .otherwise({
         redirectTo:  '/'
