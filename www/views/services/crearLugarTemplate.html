@@ -4,7 +4,54 @@
     </div>
     <div class="modal-body" id="modal-body">
         <ul>
+            <div class="row p-t-2" ng-show="!datosPrincipalesCargando">
+            <div class="col-sm-12">
+                <h1 class="t0">
+                    <span editable-text="nombre"> 
+                        {{ nombre || "Nombre del lugar" }}</span>
+                </h1>
+                <h2 class="t1">
+                    Tipo de lugar: <span editable-text="tipo"> 
+                        {{ tipo || "tipo del lugar" }}</span>
+                </h2>
+            </div>
+        </div>
 
+        <div class="row">
+
+            <div class="col-sm-12 col-md-6">
+                <ul class="list-group m-b-0">
+                    <li class="list-group-item">
+                        <span class="label label-primary">Categoría</span>
+                        <span editable-text="categoria" class="m-l-1"> 
+                            {{ categoria || "No definida" }}
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-primary">Coordenadas</span>
+                        <span class="m-l-1"> 
+                            {{ coordenadas || "no especificadas" }}
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-primary">Rango Fechas</span>
+                        <span editable-text="fechaInicial" class="m-l-1">
+                            {{ fechaInicial || "No definida" }}
+                        </span>
+                        -
+                        <span editable-text="fechaFinal" class="m-l-1"> 
+                            {{ fechaFinal || "No definida" }}
+                        </span>
+                </ul>
+            </div>
+
+            <div id="mapa" class="col-sm-12 col-md-6">
+                <div class="embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive-item"  scrolling="no" src="http://www.openstreetmap.org/export/embed.html?bbox=-71.72819137573244%2C12.398688643457886%2C-71.60545349121095%2C12.472112374135573&amp;layer=mapnik&amp;marker=12.435403102335345%2C-71.66682243347168"></iframe>
+                </div>
+            </div>
+
+        </div>
         </ul>
     </div>
     <div class="modal-footer">

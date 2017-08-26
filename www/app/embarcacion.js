@@ -103,7 +103,7 @@
             }); 
         };
         
-        $scope.seleccionarLugarTerritorio = function(lugarTerritorio,elementoSeleccionado) {
+        $scope.seleccionarLugarTerritorio = function(lugarTerritorio, elementoSeleccionado) {
             if (elementoSeleccionado.lugarOTerritorio === 'insertar') {
                 // Lugar es por defecto
                 crearLugar.show(elementoSeleccionado.nombre).then(function (resultado){
