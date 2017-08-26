@@ -106,7 +106,9 @@
         $scope.seleccionarLugarTerritorio = function(lugarTerritorio,elementoSeleccionado) {
             if (elementoSeleccionado.lugarOTerritorio === 'insertar') {
                 // Lugar es por defecto
-                crearLugar.show();
+                crearLugar.show().then(function (resultado){
+                                       alert(resultado);
+                });
                 lugarTerritorio.lugarOTerritorio = 'lugar'
                 lugarTerritorio.insertarNuevo = true;
             } else {
