@@ -108,6 +108,8 @@
                 // Lugar es por defecto
                 crearLugar.show().then(function (resultado){
                                        alert(resultado);
+                }, function (resultado) {
+                    alert("cancelado"+resultado);
                 });
                 lugarTerritorio.lugarOTerritorio = 'lugar'
                 lugarTerritorio.insertarNuevo = true;
