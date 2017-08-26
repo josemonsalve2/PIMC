@@ -1,8 +1,8 @@
 (function (angular) {
     'use strict';
   
-    angular.module('crearLugarModal',['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
-  var crearLugar = angular.module('crearLugarModal').service('crearLugar',['$uibModal', function($uibModal){
+    var crearLugarModule = angular.module('crearLugarModal',['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
+    crearLugarModule.service('crearLugar',['$uibModal', function($uibModal){
         var modalOptionsDefault = {
           animation: true,
           templateUrl: 'views/services/crearLugarTemplate.html',
@@ -19,24 +19,24 @@
         this.show = function (customModalOptions) {
             var modalOptions = {};
             if (!customModalOptions) modalOptions = modalOptionsDefault;
-            
+
             return $uibModal.open(modalOptions).result;
         };
-}]);
+    }]);
                                                           
- var crearLugarController = angular.module('crearLugarModal').controller('ModalInstanceCtrl', function ($uibModalInstance) {
-  var $ctrl = this;
-  $ctrl.resultado = -1;
+    crearLugarModule.controller('ModalInstanceCtrl', function ($uibModalInstance) {
+        var $ctrl = this;
+        $ctrl.resultado = -1;
 
-  $ctrl.ok = function () {
-      alert(1);
-    $uibModalInstance.close($ctrl.resultado);
-  };
+        $ctrl.ok = function () {
+          alert(1);
+        $uibModalInstance.close($ctrl.resultado);
+        };
 
-  $ctrl.cancel = function () {
-    $uibModalInstance.dismiss('cancelar');
-  };
-});
+        $ctrl.cancel = function () {
+        $uibModalInstance.dismiss('cancelar');
+        };
+    });
       
       
 })(window.angular);
