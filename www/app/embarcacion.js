@@ -108,8 +108,10 @@
                 // Lugar es por defecto
                 crearLugar.show(elementoSeleccionado.nombre).then(function (resultado){
                                        alert(resultado);
+                    lugarTerritorio.lugarOTerritorio = 'lugar'
+                    lugarTerritorio.lugarTerritorioID = resultado.lugarID;
+                    lugarTerritorio.lugarTerritorioNombre = resultado.nombre;
                 }, function () {
-                    elementoSeleccionado.nombre = "";
                     lugarTerritorio.lugarOTerritorio = 'lugar'
                     lugarTerritorio.lugarTerritorioID = -1;
                     lugarTerritorio.lugarTerritorioNombre = "";
