@@ -1,7 +1,8 @@
 (function (angular) {
     'use strict';
   
-  angular.module('crearLugarModal').service('crearLugar',['$uibModal', function($uibModal){
+    angular.module('crearLugarModal',['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
+  var crearLugar = angular.module('crearLugarModal').service('crearLugar',['$uibModal', function($uibModal){
         var modalOptionsDefault = {
           animation: true,
           templateUrl: 'views/services/crearLugarTemplate.html',
@@ -23,7 +24,7 @@
         };
 }]);
                                                           
-angular.module('crearLugarModal').controller('ModalInstanceCtrl', function ($uibModalInstance) {
+ var crearLugarController = angular.module('crearLugarModal').controller('ModalInstanceCtrl', function ($uibModalInstance) {
   var $ctrl = this;
   $ctrl.resultado = -1;
 
