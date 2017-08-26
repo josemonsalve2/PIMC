@@ -3,7 +3,8 @@
     'use strict';    
 
     var embarcacionPerfil = angular.module('embarcacionPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
-    embarcacionPerfil.controller('embarcacionPerfilController', ['$scope', '$sce', '$q', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', function($scope, $sce, $q, $http, $window, $location, $filter, $timeout, uiGridConstants, i18nService ) {
+    
+    embarcacionPerfil.controller('embarcacionPerfilController', ['$scope', '$sce', '$q', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', 'crearLugar', function($scope, $sce, $q, $http, $window, $location, $filter, $timeout, uiGridConstants, i18nService, crearLugar ) {
         $scope.embarcacionID = -1;
         
         $scope.datosEstados = {
