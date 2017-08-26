@@ -31,7 +31,7 @@
         var $ctrl = this;
         $ctrl.datosLugar = {
             lugarID: -1,
-            nombre: '',
+            nombre: valorInicial,
             tipoLugar: '',
             categoria: '',
             coordenadas: '',
@@ -42,7 +42,6 @@
         };
 
         $ctrl.ok = function () {
-            alert(valorInicial);
             $uibModalInstance.close($ctrl.datosLugar);
         };
 
