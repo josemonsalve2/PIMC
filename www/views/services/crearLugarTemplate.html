@@ -6,12 +6,12 @@
             <div class="row" ng-show="!datosPrincipalesCargando">
             <div class="col-sm-12">
                 <h1 class="t0">
-                    <span editable-text="nombre"> 
-                        {{ nombre || "Nombre del lugar" }}</span>
+                    <span editable-text="$ctrl.datosLugar.nombre"> 
+                        {{ $ctrl.datosLugar.nombre || "Nombre del lugar" }}</span>
                 </h1>
                 <h2 class="t1">
-                    Tipo de lugar: <span editable-text="tipo"> 
-                        {{ tipo || "tipo del lugar" }}</span>
+                    Tipo de lugar: <span editable-text="$ctrl.datosLugar.tipoLugar"> 
+                        {{ tipoLugar || "tipo del lugar" }}</span>
                 </h2>
             </div>
         </div>
@@ -21,24 +21,24 @@
                 <ul class="list-group">
                     <li class="list-group-item">
                         <span class="label label-primary">Categoría</span>
-                        <span editable-text="categoria" class="m-l-1"> 
-                            {{ categoria || "No definida" }}
+                        <span editable-text="$ctrl.datosLugar.categoria" class="m-l-1"> 
+                            {{ $ctrl.datosLugar.categoria || "No definida" }}
                         </span>
                     </li>
                     <li class="list-group-item">
                         <span class="label label-primary">Coordenadas</span>
                         <span class="m-l-1"> 
-                            {{ coordenadas || "no especificadas" }}
+                            {{ $ctrl.datosLugar.coordenadas || "no especificadas" }}
                         </span>
                     </li>
                     <li class="list-group-item">
                         <span class="label label-primary">Rango Fechas</span>
-                        <span editable-text="fechaInicial" class="m-l-1">
-                            {{ fechaInicial || "No definida" }}
+                        <span editable-text="$ctrl.datosLugar.fechaInicial" class="m-l-1">
+                            {{ $ctrl.datosLugar.fechaInicial || "No definida" }}
                         </span>
-                        -
-                        <span editable-text="fechaFinal" class="m-l-1"> 
-                            {{ fechaFinal || "No definida" }}
+                        <span> - </span>
+                        <span editable-text="$ctrl.datosLugar.fechaFinal" class="m-l-1"> 
+                            {{ $ctrl.datosLugar.fechaFinal || "No definida" }}
                         </span>
                 </ul>
             </div>

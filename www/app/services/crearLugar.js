@@ -29,11 +29,21 @@
                                                           
     crearLugarModule.controller('ModalInstanceCtrl', function ($uibModalInstance, valorInicial) {
         var $ctrl = this;
-        $ctrl.resultado = -1;
+        $ctrl.datosLugar = {
+            lugarID: -1,
+            nombre: '',
+            tipoLugar: '',
+            categoria: '',
+            coordenadas: '',
+            fechaInicial: '',
+            fechaInicialFormato: '',
+            fechaFinal: '',
+            feachaFinalFormato:''
+        };
 
         $ctrl.ok = function () {
             alert(valorInicial);
-            $uibModalInstance.close($ctrl.resultado);
+            $uibModalInstance.close($ctrl.datosLugar);
         };
 
         $ctrl.cancel = function () {
