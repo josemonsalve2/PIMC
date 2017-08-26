@@ -108,17 +108,18 @@
                 // Lugar es por defecto
                 crearLugar.show(elementoSeleccionado.nombre).then(function (resultado){
                                        alert(resultado);
-                }, function (resultado) {
+                }, function () {
                     elementoSeleccionado.nombre = "";
+                    lugarTerritorio.lugarOTerritorio = 'lugar'
+                    lugarTerritorio.lugarTerritorioID = -1;
+                    lugarTerritorio.lugarTerritorioNombre = "";
                 });
-                lugarTerritorio.lugarOTerritorio = 'lugar'
-                lugarTerritorio.insertarNuevo = true;
+                
             } else {
                 lugarTerritorio.lugarOTerritorio = elementoSeleccionado.lugarOTerritorio;
+                lugarTerritorio.lugarTerritorioID = elementoSeleccionado.lugarTerritorioID;
+                lugarTerritorio.lugarTerritorioNombre = elementoSeleccionado.nombre;
             }
-            lugarTerritorio.lugarTerritorioID = elementoSeleccionado.lugarTerritorioID;
-            lugarTerritorio.lugarTerritorioNombre = elementoSeleccionado.nombre;
-                
         }
         
         //Datos principales
