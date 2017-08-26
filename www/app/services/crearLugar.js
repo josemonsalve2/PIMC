@@ -8,7 +8,7 @@
         $ctrl.resultado = {};
         var modalOptionsDefault = {
           animation: true,
-          templateUrl: 'views/services/crearLugarTemplate.html',
+          templateUrl: '/views/services/crearLugarTemplate.html',
           controller: 'ModalInstanceCtrl',
           controllerAs: '$ctrl',
           size: 'lg',
