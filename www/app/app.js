@@ -10,6 +10,8 @@
     'embarcacionPerfil',
     'lugarPerfil',
     'institucionPerfil',
+    'actividadPerfil',
+    'eventoPerfil',
     'archivosBusqueda',
     'documentoPerfil'
   ]);
@@ -49,6 +51,14 @@
       .when('/institucion', {
         templateUrl: 'views/institucion.html',
         controller:  'institucionPerfilController'
+      })
+      .when('/actividad', {
+        templateUrl: 'views/actividad.html',
+        controller:  'actividadPerfilController'
+      })
+      .when('/evento', {
+        templateUrl: 'views/evento.html',
+        controller:  'eventoPerfilController'
       })
       .otherwise({
         redirectTo:  '/'

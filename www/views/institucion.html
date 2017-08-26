@@ -17,83 +17,88 @@
             </div>
         </div>
         <div class="row">
-          <div class="col-sm-12 col-md-6">
-            <ul class="list-group m-b-0">
-                <li class="list-group-item">
-                    <span class="label label-primary">Fecha de creación</span>
-                    <span editable-text="datosPrincipales.fechaCreacion" 
-                          onbeforesave="editarDatoPrincipal('fechaCreacion',$data)"  
-                          class="m-l-1"> {{ datosPrincipales.fechaCreacion || "No definida" }}</span>
-                </li> 
-                <li class="list-group-item">
-                    <span class="label label-primary">Fecha de terminación</span>
-                    <span editable-text="datosPrincipales.fechaTerminacion" 
-                          onbeforesave="editarDatoPrincipal('fechaTerminacion',$data)"  
-                          class="m-l-1"> {{ datosPrincipales.fechaTerminacion || "No definida" }}</span>
-                </li> 
-                <li class="list-group-item">
-                    <span class="label label-primary">Categoría</span>
-                    <span editable-text="datosPrincipales.categoria" 
-                          onbeforesave="editarDatoPrincipal('categoria',$data)"  
-                          class="m-l-1"> {{ datosPrincipales.categoria || "No definido" }}</span>
-                </li> 
-                <li class="list-group-item">
-                  <span class="label label-primary">Funciones</span>
-                  <ul class="nav nav-pills rounded m-t-1">
-                    <li role="presentation" class="active" 
-                        onaftersave="listaFunciones.modificarBorrarFuncion($index,funcion)" 
-                        editable-text="funcion" 
-                        ng-repeat="funcion in datosPrincipales.funcion track by $index">
-                        <a href="#" class="bg-mountain_meadow">{{funcion}}</a>
-                    </li>
-                    <li role="presentation" 
-                        editable-text="listaFunciones.funcionNueva.mensaje" 
-                        onaftersave="listaFunciones.agregarFuncionNueva(listaFunciones.funcionNueva.mensaje)" 
-                        e-ng-focus="listaFunciones.borrarCampo()" 
-                        oncancel="listaFunciones.mostrarCampo()">
-                        <a href="#">{{listaFunciones.funcionNueva.mensaje}}</a>
-                    </li>
-                  </ul>
-                </li> 
-            </ul>
-          </div>
-
-          <div id="parentescos" class="col-sm-12 col-md-6">
-            <table>
-                <tr><th class="text-center" colspan="4">Parentescos</th></tr>
-                <tr><th>ID</th><th>Personaje</th><th>Relacion</th><th>Abrir personaje</th></tr>
-                <tr ng-repeat="parentesco in parentescos track by $index">
-                    <td><button ng-show="borrarParentescoActivado" ng-click='borrarParentescoExistente($index);$event.stopPropagation()' class="btn-danger">-</button>{{parentesco.parentescoID}}</td>
-                    <td>{{parentesco.nombrePersonaje}}</td>
-                    <td>{{parentesco.relacionDirecta}}</td>
-                    <td ng-click="abrirPersonajeSeleccionado($index,'existente')"> Abrir </td>
-                </tr>
-                <tr ng-repeat="parentesco in parentescosAgregarReferencia track by $index">
-                    <td><button ng-click='borrarReferenciaNuevoParentesco($index)' class="btn-danger">-</button> (Nueva Ref) {{parentesco.parentescoID}}</td>
-                    <td>{{parentesco.nombrePersonaje}}</td>
-                    <td><span editable-text="parentesco.relacionDirecta" ng-click="$event.stopPropagation()">{{parentesco.relacionDirecta || "Relacion directa"}}</span> - <span editable-text="parentesco.relacionInversa" ng-click="$event.stopPropagation()">{{parentesco.relacionInversa || "Relacion Inversa"}}</span></td>
-                    <td ng-click="abrirPersonajeSeleccionado($index,'nuevaRef')"> Abrir </td>
-                </tr>
-                <tr ng-repeat="parentesco in parentescosNuevos track by $index">
-                    <td><button ng-click='borrarParentescoNuevo($index)' class="btn-danger">-</button> {{"Parentesco Nuevo"}}</td>
-                    <td>
-                        <span editable-text="parentesco.nombrePersonaje" e-typeahead-min-length="3" e-uib-typeahead="personajes.nombre for personajes in autocompletarPersonaje($viewValue)" e-typeahead-wait-ms="100" e-typeahead-on-select="actualizarParentescoNuevoExistente($index,$item)" e-typeahead-no-results="parentescosNoResults" e-typeahead-loading="cargandoNombres" onbeforesave="revisarSiParentescoExiste($data)">{{parentesco.nombrePersonaje || "nuevo parentesco"}}</span>
-                        <i ng-show="cargandoNombres" class="glyphicon glyphicon-refresh"></i>
-                        <div ng-show="parentescosNoResults"><i class="glyphicon glyphicon-remove"></i> No Results Found</div></td>
-                    <td><span editable-text="parentesco.relacionDirecta">{{parentesco.relacionDirecta || "Relacion directa"}}</span> - <span editable-text="parentesco.relacionInversa">{{parentesco.relacionInversa || "Relacion Inversa"}}</span></td>
-                </tr>
-            </table>
-            
-            <div class="row">
-                <button ng-click='agregarParentesco()' class="btn btn-success m-t-2 m-l-1">Agregar Parentesco</button>
-                <button ng-click='borrarParentescoActivado = !borrarParentescoActivado' class="btn m-t-2">{{borrarParentescoActivado? "Desabilitar" : "Habilitar"}} borrar parentesco existente</button>
+            <div class="col-sm-12 col-md-6">
+                <ul class="list-group m-b-0">
+                    <li class="list-group-item">
+                        <span class="label label-primary">Fecha de creación</span>
+                        <span editable-text="datosPrincipales.fechaCreacion" 
+                            onbeforesave="editarDatoPrincipal('fechaCreacion',$data)"  
+                            class="m-l-1"> {{ datosPrincipales.fechaCreacion || "No definida" }}</span>
+                    </li> 
+                    <li class="list-group-item">
+                        <span class="label label-primary">Fecha de terminación</span>
+                        <span editable-text="datosPrincipales.fechaTerminacion" 
+                            onbeforesave="editarDatoPrincipal('fechaTerminacion',$data)"  
+                            class="m-l-1"> {{ datosPrincipales.fechaTerminacion || "No definida" }}</span>
+                    </li> 
+                    <li class="list-group-item">
+                        <span class="label label-primary">Categoría</span>
+                        <span editable-text="datosPrincipales.categoria" 
+                            onbeforesave="editarDatoPrincipal('categoria',$data)"  
+                            class="m-l-1"> {{ datosPrincipales.categoria || "No definido" }}</span>
+                    </li> 
+                    <li class="list-group-item">
+                    <span class="label label-primary">Funciones</span>
+                    <ul class="nav nav-pills rounded m-t-1">
+                        <li role="presentation" class="active" 
+                            onaftersave="listaFunciones.modificarBorrarFuncion($index,funcion)" 
+                            editable-text="funcion" 
+                            ng-repeat="funcion in datosPrincipales.funcion track by $index">
+                            <a href="#" class="bg-mountain_meadow">{{funcion}}</a>
+                        </li>
+                        <li role="presentation" 
+                            editable-text="listaFunciones.funcionNueva.mensaje" 
+                            onaftersave="listaFunciones.agregarFuncionNueva(listaFunciones.funcionNueva.mensaje)" 
+                            e-ng-focus="listaFunciones.borrarCampo()" 
+                            oncancel="listaFunciones.mostrarCampo()">
+                            <a href="#">{{listaFunciones.funcionNueva.mensaje}}</a>
+                        </li>
+                    </ul>
+                    </li> 
+                </ul>
             </div>
+
+            <div id="fotos" class="col-sm-12 col-md-6">
+            
+                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#myCarousel" data-slide-to="1"></li>
+                        <li data-target="#myCarousel" data-slide-to="2"></li>
+                    </ol>
+                
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active">
+                            <img src="http://placekitten.com/g/600/400" alt="Uno" style="width:100%;">
+                        </div>
+                    
+                        <div class="item">
+                            <img src="http://placekitten.com/g/600/400" alt="Dos" style="width:100%;">
+                        </div>
+                        
+                        <div class="item">
+                            <img src="http://placekitten.com/g/600/400" alt="Tres" style="width:100%;">
+                        </div>
+                    </div>
+                
+                    <!-- Left and right controls -->
+                    <a class="left carousel-control" data-target="#myCarousel" href="javascript:void(0);" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                        <span class="sr-only">Anterior</span>
+                    </a>
+                    <a class="right carousel-control" data-target="#myCarousel" href="javascript:void(0);" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                        <span class="sr-only">Siguiente</span>
+                    </a>
+                </div>
               
-          </div>
+            </div>
 
         </div>
       
-      <div class="bottom"></div>
+        <div class="bottom"></div>
 
     </uib-tab>
 
@@ -115,11 +120,11 @@
                 <uib-tab index="0" heading="Listado">
                     <div class="p-t-1"> 
                         <table class="table-left">
-                            <tr ng-click="abrirElemento(0)"><th>Carrera</th><th>Clase</th><th>Institución</th><th>Al mando de</th><th>Lugar</th><th>Fecha</th></tr>
-                            <tr ng-click="abrirElemento(1)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
-                            <tr ng-click="abrirElemento(2)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
-                            <tr ng-click="abrirElemento(3)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
-                            <tr ng-click="abrirElemento(4)"><td>Carrera de armas</td><td>Una clase</td><td>Comando General</td><td>alguien</td><td>Puerto B</td><td>Enero 2016</td></tr>
+                            <tr ng-click="abrirElemento(0)"><th>Nombre</th><th>Descripción</th><th>Notas</th></tr>
+                            <tr ng-click="abrirElemento(1)"><td>Juan Peregrino</td><td>Chévere ese man</td><td>No hay notas</td></tr>
+                            <tr ng-click="abrirElemento(2)"><td>Juan Peregrino</td><td>Chévere ese man</td><td>No hay notas</td></tr>
+                            <tr ng-click="abrirElemento(3)"><td>Juan Peregrino</td><td>Chévere ese man</td><td>No hay notas</td></tr>
+                            <tr ng-click="abrirElemento(4)"><td>Juan Peregrino</td><td>Chévere ese man</td><td>No hay notas</td></tr>
                         </table>
                     </div>
                 </uib-tab>
