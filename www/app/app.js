@@ -6,7 +6,6 @@
     'ngRoute',
     'indexModule',
     'archivoPerfil',
-    'crearLugarModule',
     'personajePerfil',
     'embarcacionPerfil',
     'lugarPerfil',
@@ -14,7 +13,8 @@
     'actividadPerfil',
     'eventoPerfil',
     'archivosBusqueda',
-    'documentoPerfil'
+    'documentoPerfil',
+    'crearLugarModule'
   ]);
 
   pimc.controller('AppController', function($scope) {});
