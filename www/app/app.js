@@ -14,7 +14,7 @@
     'eventoPerfil',
     'archivosBusqueda',
     'documentoPerfil',
-    'crearLugarModule'
+    'crearLugarModal'
   ]);
 
   pimc.controller('AppController', function($scope) {});
