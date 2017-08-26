@@ -4,7 +4,8 @@
   
     var crearLugarModule = angular.module('crearLugarModal',['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
     crearLugarModule.service('crearLugar',['$uibModal', function($uibModal){
-        this.resultado = {};
+        var $ctrl = this; 
+        $ctrl.resultado = {};
         var modalOptionsDefault = {
           animation: true,
           templateUrl: 'views/services/crearLugarTemplate.html',
@@ -13,7 +14,7 @@
           size: 'lg',
           resolve: {
             resultado: function () {
-              return this.resultado;
+              return $ctrl.resultado;
             }
           }
         }
