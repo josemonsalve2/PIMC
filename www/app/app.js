@@ -6,6 +6,7 @@
     'ngRoute',
     'indexModule',
     'archivoPerfil',
+    'crearLugarModulo',
     'personajePerfil',
     'embarcacionPerfil',
     'lugarPerfil',
