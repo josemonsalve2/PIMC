@@ -1,55 +1,61 @@
 <div>
     <div class="modal-header">
-        <h3 class="modal-title" id="modal-title">Agregar lugar nuevo</h3>
+        <h3 class="modal-title" id="modal-title">Agregar lugar o territorio nuevo</h3>
     </div>
-    <div class="modal-body" id="modal-body">
-            <div class="row" ng-show="!datosPrincipalesCargando">
-            <div class="col-sm-12">
-                <h1 class="t0">
-                    <span editable-text="$ctrl.datosLugar.nombre"> 
-                        {{ $ctrl.datosLugar.nombre || "Nombre del lugar" }}</span>
-                </h1>
-                <h2 class="t1">
-                    Tipo de lugar: <span editable-text="$ctrl.datosLugar.tipoLugar"> 
-                        {{ tipoLugar || "tipo del lugar" }}</span>
-                </h2>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-12 col-md-6">
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        <span class="label label-primary">Categoría</span>
-                        <span editable-text="$ctrl.datosLugar.categoria" class="m-l-1"> 
-                            {{ $ctrl.datosLugar.categoria || "No definida" }}
-                        </span>
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-primary">Coordenadas</span>
-                        <span class="m-l-1"> 
-                            {{ $ctrl.datosLugar.coordenadas || "no especificadas" }}
-                        </span>
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-primary">Rango Fechas</span>
-                        <span editable-text="$ctrl.datosLugar.fechaInicial" class="m-l-1">
-                            {{ $ctrl.datosLugar.fechaInicial || "No definida" }}
-                        </span>
-                        <span> - </span>
-                        <span editable-text="$ctrl.datosLugar.fechaFinal" class="m-l-1"> 
-                            {{ $ctrl.datosLugar.fechaFinal || "No definida" }}
-                        </span>
-                </ul>
-            </div>
-
-            <div id="mapa" class="col-sm-12 col-md-6">
-                <div class="embed-responsive embed-responsive-16by9">
-                    <iframe class="embed-responsive-item"  scrolling="no" src="http://www.openstreetmap.org/export/embed.html?bbox=-71.72819137573244%2C12.398688643457886%2C-71.60545349121095%2C12.472112374135573&amp;layer=mapnik&amp;marker=12.435403102335345%2C-71.66682243347168"></iframe>
+    <select ng-model="$ctrl.lugarOTerritorio" ng-options="lugarTerritorio for lugarTerritorio in ['lugar','territorio']"> </select>
+    <div ng-show="$ctrl.lugarOTerritorio === 'lugar'"> 
+        <div class="modal-body" id="modal-body">
+                <div class="row" ng-show="!datosPrincipalesCargando">
+                <div class="col-sm-12">
+                    <h1 class="t0">
+                        <span editable-text="$ctrl.datosLugar.nombre"> 
+                            {{ $ctrl.datosLugar.nombre || "Nombre del lugar" }}</span>
+                    </h1>
+                    <h2 class="t1">
+                        Tipo de lugar: <span editable-text="$ctrl.datosLugar.tipoLugar"> 
+                            {{ tipoLugar || "tipo del lugar" }}</span>
+                    </h2>
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <span class="label label-primary">Categoría</span>
+                            <span editable-text="$ctrl.datosLugar.categoria" class="m-l-1"> 
+                                {{ $ctrl.datosLugar.categoria || "No definida" }}
+                            </span>
+                        </li>
+                        <li class="list-group-item">
+                            <span class="label label-primary">Coordenadas</span>
+                            <span class="m-l-1"> 
+                                {{ $ctrl.datosLugar.coordenadas || "no especificadas" }}
+                            </span>
+                        </li>
+                        <li class="list-group-item">
+                            <span class="label label-primary">Rango Fechas</span>
+                            <span editable-text="$ctrl.datosLugar.fechaInicial" class="m-l-1">
+                                {{ $ctrl.datosLugar.fechaInicial || "No definida" }}
+                            </span>
+                            <span> - </span>
+                            <span editable-text="$ctrl.datosLugar.fechaFinal" class="m-l-1"> 
+                                {{ $ctrl.datosLugar.fechaFinal || "No definida" }}
+                            </span>
+                    </ul>
+                </div>
+
+                <div id="mapa" class="col-sm-12 col-md-6">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item"  scrolling="no" src="http://www.openstreetmap.org/export/embed.html?bbox=-71.72819137573244%2C12.398688643457886%2C-71.60545349121095%2C12.472112374135573&amp;layer=mapnik&amp;marker=12.435403102335345%2C-71.66682243347168"></iframe>
+                    </div>
+                </div>
+
+            </div>
         </div>
+    </div>
+    <div ng-show="$ctrl.lugarOTerritorio === 'lugar'"> 
+        
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
