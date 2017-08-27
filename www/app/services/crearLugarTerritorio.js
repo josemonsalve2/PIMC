@@ -43,35 +43,80 @@
             fechaFinalFormato:''
         };
         
+        $ctrl.datosTerritorio = {
+            territorioID: -1,
+            nombre: valorInicial,
+            tipoTerritorio: '',
+            //fechaInicial: '',
+            fechaInicialFormato: '',
+            //fechaFinal: '',
+            fechaFinalFormato:''
+        };
+        
         $ctrl.ok = function () {
             // Insertar lugar en base de datos
             // revisar si el personaje nombre esta vacio
-            if ($ctrl.datosLugar.nombre !== "") {
-                var config = {params: {}};
-                // removemos el lugarID
-                for (var key in $ctrl.datosLugar) {
-                    if (key != 'lugarID') {
-                        if (typeof $ctrl.datosLugar[key] === 'string') {
-                            config.params[key] = "'" + $ctrl.datosLugar[key] + "'";
-                        } else {
-                            config.params[key] = $ctrl.datosLugar[key];
+            if ($ctrl.lugarOTerritorio === 'lugar') {
+                if ($ctrl.datosLugar.nombre !== "") {
+                    var config = {params: {}};
+                    // removemos el lugarID
+                    for (var key in $ctrl.datosLugar) {
+                        if (key != 'lugarID') {
+                            if (typeof $ctrl.datosLugar[key] === 'string') {
+                                config.params[key] = "'" + $ctrl.datosLugar[key] + "'";
+                            } else {
+                                config.params[key] = $ctrl.datosLugar[key];
+                            }
                         }
                     }
-                }
-                
-                $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Lugares', config).then(function(data) {
-                    console.log(data);
-                    // Data contains the last insert id
-                    if (Object.keys(data.data).length != 0) {
-                        var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
-                        $ctrl.datosLugar.lugarID = lastInsertID;
-                        $uibModalInstance.close($ctrl.datosLugar);
-                    } else {
-                        $uibModalInstance.close({});
-                    }
-                });
-            }
 
+                    $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Lugares', config).then(function(data) {
+                        console.log(data);
+                        // Data contains the last insert id
+                        if (Object.keys(data.data).length != 0) {
+                            var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
+                            $ctrl.datosLugar.lugarID = lastInsertID;
+                            $ctrl.datosLugar.lugarOTerritorio = "lugar";
+                            $uibModalInstance.close($ctrl.datosLugar);
+                        } else {
+                            $uibModalInstance.close({});
+                        }
+                    });
+                } else {
+                        $uibModalInstance.close({});
+                }
+            } else if ($ctrl.lugarOTerritorio === 'territorio') {
+                if ($ctrl.datosTerritorio.nombre !== "") {
+                    var config = {params: {}};
+                    // removemos el lugarID
+                    for (var key in $ctrl.datosTerritorio) {
+                        if (key != 'territorioID') {
+                            if (typeof $ctrl.datosTerritorio[key] === 'string') {
+                                config.params[key] = "'" + $ctrl.datosTerritorio[key] + "'";
+                            } else {
+                                config.params[key] = $ctrl.datosTerritorio[key];
+                            }
+                        }
+                    }
+
+                    $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Territorios', config).then(function(data) {
+                        console.log(data);
+                        // Data contains the last insert id
+                        if (Object.keys(data.data).length != 0) {
+                            var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
+                            $ctrl.datosTerritorio.territorioID = lastInsertID;
+                            $ctrl.datosTerritorio.lugarOTerritorio = "territorio";
+                            $uibModalInstance.close($ctrl.datosTerritorio);
+                        } else {
+                            $uibModalInstance.close({});
+                        }
+                    });
+                } else {
+                    $uibModalInstance.close({});
+                }
+            } else {
+                $uibModalInstance.close({});
+            }
         };
 
         $ctrl.cancel = function () {
