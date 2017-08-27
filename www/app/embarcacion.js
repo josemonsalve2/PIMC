@@ -51,13 +51,13 @@
         $scope.autocompletarLugarTerritorio = function (hintLugarTerritorio) {
             var promiseLugar = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Lugares', {
                 params: {
-                    nombre: '"' + hintLugarTerritorio + '"'
+                    nombre: hintLugarTerritorio
                 }
             });
             var promiseTerritorios = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Territorios', {
                 params: {
-                    nombre: '"' + hintLugarTerritorio + '"',
-                    otrosNombres: '"' + hintLugarTerritorio + '"'
+                    nombre: hintLugarTerritorio,
+                    otrosNombres: hintLugarTerritorio
                 }
             });
             
