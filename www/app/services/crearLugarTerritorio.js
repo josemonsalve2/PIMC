@@ -46,16 +46,16 @@
             // Insertar lugar en base de datos
             // revisar si el personaje nombre esta vacio
             if ($ctrl.datosLugar.nombre !== "") {
-                var parametros = {};
+                var config = {params: {}};
                 // removemos el lugarID
                 for (var key in $ctrl.datosLugar) {
                     if (key != 'lugarID') {
-                        parametros[key] = $ctrl.datosLugar[key];
+                        config.params[key] = $ctrl.datosLugar[key];
                     }
                 }
                 
                 $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Lugares',{
-                    params: parametros
+                    config
                 }).then(function(data) {
                     console.log(data);
                     // Data contains the last insert id
