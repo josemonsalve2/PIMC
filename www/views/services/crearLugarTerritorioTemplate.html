@@ -3,8 +3,11 @@
         <h3 class="modal-title" id="modal-title">Agregar lugar o territorio nuevo</h3>
     </div>
         <div class="modal-body" id="modal-body">
-            <div class="row m-l-2">
-                Insertar: <select class="form-control"  ng-model="$ctrl.lugarOTerritorio" ng-init="$ctrl.lugarOTerritorio = 'lugar'" ng-options="lugarTerritorio for lugarTerritorio in ['lugar','territorio']"> </select>
+            <div class="row">
+                <div class="form-group">
+                    <label>Insertar</label>
+                    <select class="form-control"  ng-model="$ctrl.lugarOTerritorio" ng-init="$ctrl.lugarOTerritorio = 'lugar'" ng-options="lugarTerritorio for lugarTerritorio in ['lugar','territorio']"> </select>
+                </div>
             </div>
             <div ng-show="$ctrl.lugarOTerritorio === 'lugar'"> 
                 <div class="row" ng-show="!datosPrincipalesCargando">
