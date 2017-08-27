@@ -106,11 +106,11 @@
             if (elementoSeleccionado.lugarOTerritorio === 'insertar') {
                 // Lugar es por defecto
                 crearLugarTerritorio .show(elementoSeleccionado.nombre).then(function (resultado){
-                    lugarTerritorio.lugarOTerritorio = 'lugar'
+                    lugarTerritorio.lugarOTerritorio = resultado.lugarOTerritorio;
                     lugarTerritorio.lugarTerritorioID = resultado.lugarID;
                     lugarTerritorio.lugarTerritorioNombre = resultado.nombre;
                 }, function () {
-                    lugarTerritorio.lugarOTerritorio = 'lugar'
+                    lugarTerritorio.lugarOTerritorio = ''
                     lugarTerritorio.lugarTerritorioID = -1;
                     lugarTerritorio.lugarTerritorioNombre = "";
                 });
