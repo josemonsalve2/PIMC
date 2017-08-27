@@ -39,7 +39,7 @@
             //fechaInicial: '',
             fechaInicialFormato: '',
             //fechaFinal: '',
-            feachaFinalFormato:''
+            fechaFinalFormato:''
         };
         
         $ctrl.ok = function () {
