@@ -59,9 +59,9 @@
                 <span editable-text="datosPrincipales.lugarTerritorioConstruccion.LugarTerritorioNombre" 
                           ng-click="lugarTerritorioConstruccionForm.$show()"
                           e-typeahead-min-length="3"
-                          e-uib-typeahead="lugares.nombreMostrar for lugares in autocompletarLugarTerritorio($data)" 
+                          e-uib-typeahead="lugares.nombre as lugares.nombreMostrar for lugares in autocompletarLugarTerritorio($data)" 
                           e-typeahead-wait-ms="100" 
-                          e-typeahead-on-select="seleccionarLugarTerritorio(datosPrincipales.lugarTerritorioConstruccion, $item);$model = $item.nombre;"
+                          e-typeahead-on-select="seleccionarLugarTerritorio(datosPrincipales.lugarTerritorioConstruccion, $item)"
                           onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionNombre',$data)"  
                           class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.LugarTerritorioNombre || "No definido" }} ({{ datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio || "No definido" }})
                 </span>
