@@ -121,6 +121,7 @@
                 lugarTerritorio.lugarTerritorioID = elementoSeleccionado.lugarTerritorioID;
                 lugarTerritorio.lugarTerritorioNombre = elementoSeleccionado.nombre;
             }
+            elementoSeleccionado.nombreMostrar = elementoSeleccionado.nombre;
         }
         
         //Datos principales
