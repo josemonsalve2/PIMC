@@ -50,7 +50,11 @@
                 // removemos el lugarID
                 for (var key in $ctrl.datosLugar) {
                     if (key != 'lugarID') {
-                        config.params[key] = $ctrl.datosLugar[key];
+                        if (typeof $ctrl.datosLugar[key] === 'string') {
+                            config.params[key] = "'" + $ctrl.datosLugar[key] + "'";
+                        } else {
+                            config.params[key] = $ctrl.datosLugar[key];
+                        }
                     }
                 }
                 
