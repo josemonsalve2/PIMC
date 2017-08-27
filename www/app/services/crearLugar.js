@@ -29,20 +29,46 @@
                                                           
     crearLugarModule.controller('ModalInstanceCtrl', function ($uibModalInstance, valorInicial) {
         var $ctrl = this;
+        
         $ctrl.datosLugar = {
             lugarID: -1,
             nombre: valorInicial,
             tipoLugar: '',
             categoria: '',
             coordenadas: '',
-            fechaInicial: '',
+            //fechaInicial: '',
             fechaInicialFormato: '',
-            fechaFinal: '',
+            //fechaFinal: '',
             feachaFinalFormato:''
         };
-
+        
         $ctrl.ok = function () {
-            $uibModalInstance.close($ctrl.datosLugar);
+            // Insertar lugar en base de datos
+            // revisar si el personaje nombre esta vacio
+            if ($ctrl.datosLugar.nombre !== "") {
+                var parametros = {};
+                // removemos el lugarID
+                for (key in $ctrl.datosLugar) {
+                    if (key != lugarID) {
+                        parametros[key] = $ctrl.datosLugar[key];
+                    }
+                }
+                
+                $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Lugares',{
+                    params: parametros
+                }).then(function(data) {
+                    console.log(data);
+                    // Data contains the last insert id
+                    if (Object.keys(data.data).length != 0) {
+                        var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
+                        $ctrl.datosLugar.lugarID = lastInsertID;
+                        $uibModalInstance.close($ctrl.datosLugar);
+                    } else {
+                        $uibModalInstance.close({});
+                    }
+                });
+            }
+
         };
 
         $ctrl.cancel = function () {

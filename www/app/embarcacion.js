@@ -56,16 +56,12 @@
             });
             var promiseTerritorios = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Territorios', {
                 params:{
-                    nombrePrincipal: '"' + hintLugarTerritorio + '"'
+                    nombre: '"' + hintLugarTerritorio + '"',
+                    otrosNombres: '"' + hintLugarTerritorio + '"'
                 }
             });
-            var promiseTerritoriosNombres = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/TerritoriosNombres', {
-                params:{
-                    nombre: '"' + hintLugarTerritorio + '"'
-                }
-            });
-
-            return $q.all([promiseLugar, promiseTerritorios, promiseTerritoriosNombres]).then( function(responses) {
+            
+            return $q.all([promiseLugar, promiseTerritorios]).then( function(responses) {
                 var listaLugaresTerritorios = [];
                 var matchPerfecto = false;
                 for (var res in responses) {
@@ -77,9 +73,17 @@
                             // Para el nombre
                             if (valor.nombre) {
                                 elementoAInsertar.nombre = valor.nombre;
-                            } else if (valor.nombrePrincipal) {
-                                elementoAInsertar.nombre = valor.nombrePrincipal;
+                            } else if (valor.otrosNombres && valor.otrosNombres != "") {
+                                var listaOtrosNombres = valor.otrosNombres.split(",");
+                                listaOtrosNombres = listaOtrosNombres.map(function(e) {
+                                    var nombre = e.trim();
+                                    var matcher = new RegExp(hintLugarTerritorio);
+                                    if (nombre.match(matcher)) {
+                                        elementoAInsertar.nombre = nombre;
+                                    }
+                                });
                             }
+                            
                             if (String(hintLugarTerritorio).toLowerCase().replace(/\s/g, '') == String(elementoAInsertar.nombre).toLowerCase().replace(/\s/g, ''))
                                     matchPerfecto = true;
 
@@ -87,18 +91,16 @@
                             if (valor.lugarID) {
                                 elementoAInsertar.lugarTerritorioID = valor.lugarID;
                                 elementoAInsertar.lugarOTerritorio = 'lugar';
-                                elementoAInsertar.nombre = "(L)" + elementoAInsertar.nombre;
                             } else if (valor.territorioID) {
                                 elementoAInsertar.lugarTerritorioID = valor.territorioID;
                                 elementoAInsertar.lugarOTerritorio = 'territorio';
-                                elementoAInsertar.nombre = "(T)" + elementoAInsertar.nombre;
                             }
                             listaLugaresTerritorios.push(elementoAInsertar);
                         });
                     }
                 }
-                if (!matchPerfecto /*&& listaLugaresTerritorios.length != 0*/)
-                    listaLugaresTerritorios.unshift({nombre: hintLugarTerritorio, lugarTerritorioID: -1, lugarOTerritorio: 'insertar'});
+                //if (!matchPerfecto && listaLugaresTerritorios.length != 0)
+                    listaLugaresTerritorios.unshift({nombre: '(Insertar) ' + hintLugarTerritorio, lugarTerritorioID: -1, lugarOTerritorio: 'insertar'});
                 return listaLugaresTerritorios;
             }); 
         };
@@ -106,7 +108,7 @@
         $scope.seleccionarLugarTerritorio = function(lugarTerritorio, elementoSeleccionado) {
             if (elementoSeleccionado.lugarOTerritorio === 'insertar') {
                 // Lugar es por defecto
-                return crearLugar.show(elementoSeleccionado.nombre).then(function (resultado){
+                crearLugar.show(elementoSeleccionado.nombre).then(function (resultado){
                                        alert(resultado);
                     lugarTerritorio.lugarOTerritorio = 'lugar'
                     lugarTerritorio.lugarTerritorioID = resultado.lugarID;

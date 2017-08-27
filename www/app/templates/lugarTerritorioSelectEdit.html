@@ -12,13 +12,15 @@
       class="PIMCLugarTerritorioInput"
       ng-model="MODEL_COL_FIELD.lugarTerritorioNombre" 
            style="width:49%"/>
-      <select ng-class="'colt' + col.uid"
-      class="PIMCLugarTerritorioDropdown"
-      lugar-territorio-ui-grid-editor
-      ng-model="MODEL_COL_FIELD.lugarOTerritorio"
-      ng-disabled="MODEL_COL_FIELD.lugarTerritorioID != -1"
-      ng-options="lugarTerritorio for lugarTerritorio in ['lugar','territorio']"
-      style="width:49%">
-      </select>
+      <!--
+          <select ng-class="'colt' + col.uid"
+          class="PIMCLugarTerritorioDropdown"
+          lugar-territorio-ui-grid-editor
+          ng-model="MODEL_COL_FIELD.lugarOTerritorio"
+          ng-disabled="MODEL_COL_FIELD.lugarTerritorioID != -1"
+          ng-options="lugarTerritorio for lugarTerritorio in ['lugar','territorio']"
+          style="width:49%">
+          </select>
+      -->
   </form>
 </div>
