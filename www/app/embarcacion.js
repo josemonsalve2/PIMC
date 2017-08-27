@@ -97,7 +97,7 @@
                         });
                     }
                 }
-                listaLugaresTerritorios.unshift({nombre: hintLugarTerritorio, nombreMostrar: "(Insertar) " + hintLugarTerritorio, lugarTerritorioID: -1, lugarOTerritorio: 'insertar'});
+                listaLugaresTerritorios.push({nombre: hintLugarTerritorio, nombreMostrar: "(Insertar) " + hintLugarTerritorio, lugarTerritorioID: -1, lugarOTerritorio: 'insertar'});
                 return listaLugaresTerritorios;
             }); 
         };
@@ -145,7 +145,7 @@
                         $scope.datosPrincipales = embarcacionesDatos;
                         // Obtenemos el nombre del lugar o territorio de construccion
                         var lugarTerritorioConstruccion = {
-                            nombre: "",
+                            lugarTerritorioNombre: "",
                             lugarTerritorioID: -1,
                             lugarOTerritorio: ""
                         }
@@ -158,7 +158,7 @@
                             }).then(function(data) {
                                 var lugar = data.data[0];
                                 var lugarTerritorioConstruccion = {
-                                    nombre: lugar.nombre,
+                                    lugarTerritorioNombre: lugar.nombre,
                                     lugarTerritorioID: lugar.lugarID,
                                     lugarOTerritorio: "lugar"
                                 }
@@ -172,7 +172,7 @@
                             }).then(function(data) {
                                 var territorio = data.data[0];
                                 lugarTerritorioConstruccion = {
-                                    nombre: territorio.nombrePrincipal,
+                                    lugarTerritorioNombre: territorio.nombrePrincipal,
                                     lugarTerritorioID: territorio.territorioID,
                                     lugarOTerritorio: "territorio"
                                 }
@@ -182,7 +182,7 @@
                         
                         // Obtenemos el nombre del lugar o territorio de construccion
                         var lugarTerritorioDesercion = {
-                            nombre: "",
+                            lugarTerritorioNombre: "",
                             lugarTerritorioID: -1,
                             lugarOTerritorio: ""
                         }
@@ -196,7 +196,7 @@
                             }).then(function(data) {
                                 var lugar = data.data[0];
                                 var lugarTerritorioDesercion = {
-                                    nombre: lugar.nombre,
+                                    lugarTerritorioNombre: lugar.nombre,
                                     lugarTerritorioID: lugar.lugarID,
                                     lugarOTerritorio: "lugar"
                                 }
@@ -210,7 +210,7 @@
                             }).then(function(data) {
                                 var territorio = data.data[0];
                                 lugarTerritorioDesercion = {
-                                    nombre: territorio.nombrePrincipal,
+                                    lugarTerritorioNombre: territorio.nombre,
                                     lugarTerritorioID: territorio.territorioID,
                                     lugarOTerritorio: "territorio"
                                 }

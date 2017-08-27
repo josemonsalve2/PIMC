@@ -56,14 +56,14 @@
             <ul class="datos">
             <li><form editable-form name="lugarTerritorioConstruccionForm" blur="submit">
                 <span class="tituloDato">Lugar de construcción:</span>
-                <span editable-text="datosPrincipales.lugarTerritorioConstruccion.nombre" 
+                <span editable-text="datosPrincipales.lugarTerritorioConstruccion.LugarTerritorioNombre" 
                           ng-click="lugarTerritorioConstruccionForm.$show()"
                           e-typeahead-min-length="3"
                           e-uib-typeahead="lugares.nombreMostrar for lugares in autocompletarLugarTerritorio($data)" 
                           e-typeahead-wait-ms="100" 
                           e-typeahead-on-select="seleccionarLugarTerritorio(datosPrincipales.lugarTerritorioConstruccion,$item)"
                           onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionNombre',$data)"  
-                          class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.nombre || "No definido" }} ({{ datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio || "No definido" }})
+                          class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.LugarTerritorioNombre || "No definido" }} ({{ datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio || "No definido" }})
                 </span>
                 </form>
             </li>
@@ -73,14 +73,14 @@
             </li>
             <li><form editable-form name="lugarTerritorioDesercionForm" blur="submit">
                 <span class="tituloDato">Lugar de deserción:</span>
-                <span editable-text="datosPrincipales.lugarTerritorioDesercion.nombre" 
+                <span editable-text="datosPrincipales.lugarTerritorioDesercion.LugarTerritorioNombre" 
                           ng-click="lugarTerritorioDesercionForm.$show()"
                           e-typeahead-min-length="3"
                           e-uib-typeahead="lugares.nombreMostrar for lugares in autocompletarLugarTerritorio($data)" 
                           e-typeahead-wait-ms="100" 
                           e-typeahead-on-select="seleccionarLugarTerritorio(datosPrincipales.lugarTerritorioDesercion,$item)"
                           onbeforesave="editarDatoPrincipal('lugarTerritorioDesercionNombre',$data)"  
-                          class="valorDato"> {{ datosPrincipales.lugarTerritorioDesercion.nombre || "No definido" }} ({{ datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio || "No definido" }})
+                          class="valorDato"> {{ datosPrincipales.lugarTerritorioDesercion.LugarTerritorioNombre || "No definido" }} ({{ datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio || "No definido" }})
                 </span>
                 </form>
             </li>
