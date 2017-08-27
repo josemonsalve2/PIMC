@@ -76,7 +76,7 @@
                 <span editable-text="datosPrincipales.lugarTerritorioDesercion.LugarTerritorioNombre" 
                           ng-click="lugarTerritorioDesercionForm.$show()"
                           e-typeahead-min-length="3"
-                          e-uib-typeahead="lugares.nombreMostrar for lugares in autocompletarLugarTerritorio($data)" 
+                          e-uib-typeahead="lugares.nombre as lugares.nombreMostrar for lugares in autocompletarLugarTerritorio($data)" 
                           e-typeahead-wait-ms="100" 
                           e-typeahead-on-select="seleccionarLugarTerritorio(datosPrincipales.lugarTerritorioDesercion,$item)"
                           onbeforesave="editarDatoPrincipal('lugarTerritorioDesercionNombre',$data)"  
