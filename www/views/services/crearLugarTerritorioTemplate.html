@@ -2,7 +2,7 @@
     <div class="modal-header">
         <h3 class="modal-title" id="modal-title">Agregar lugar o territorio nuevo</h3>
     </div>
-    <select ng-model="$ctrl.lugarOTerritorio" ng-options="lugarTerritorio for lugarTerritorio in ['lugar','territorio']"> </select>
+    <select ng-model="$ctrl.lugarOTerritorio" ng-init="$ctrl.lugarOTerritorio = 'lugar'" ng-options="lugarTerritorio for lugarTerritorio in ['lugar','territorio']"> </select>
     <div ng-show="$ctrl.lugarOTerritorio === 'lugar'"> 
         <div class="modal-body" id="modal-body">
                 <div class="row" ng-show="!datosPrincipalesCargando">
