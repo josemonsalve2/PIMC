@@ -27,7 +27,7 @@
         };
     }]);
                                                           
-    crearLugarTerritorioModule.controller('ModalInstanceCtrl',['$http', function ($uibModalInstance, valorInicial, $http) {
+    crearLugarTerritorioModule.controller('ModalInstanceCtrl', ['$http', function ($http, $uibModalInstance, valorInicial ) {
         var $ctrl = this;
         
         $ctrl.datosLugar = {
