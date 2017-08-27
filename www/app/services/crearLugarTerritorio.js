@@ -74,7 +74,7 @@
         $ctrl.cancel = function () {
             $uibModalInstance.dismiss('cancelar');
         };
-    }]);
+    });
       
       
 })(window.angular);
