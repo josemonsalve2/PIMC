@@ -4,7 +4,7 @@
 
     var embarcacionPerfil = angular.module('embarcacionPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
     
-    embarcacionPerfil.controller('embarcacionPerfilController', ['$scope', '$sce', '$q', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', 'crearLugar', function($scope, $sce, $q, $http, $window, $location, $filter, $timeout, uiGridConstants, i18nService, crearLugar ) {
+    embarcacionPerfil.controller('embarcacionPerfilController', ['$scope', '$sce', '$q', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', 'crearLugarTerritorio', function($scope, $sce, $q, $http, $window, $location, $filter, $timeout, uiGridConstants, i18nService, crearLugarTerritorio ) {
         $scope.embarcacionID = -1;
         
         $scope.datosEstados = {
@@ -50,12 +50,12 @@
         // Funcion para lugares y territorios
         $scope.autocompletarLugarTerritorio = function (hintLugarTerritorio) {
             var promiseLugar = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Lugares', {
-                params:{
+                params: {
                     nombre: '"' + hintLugarTerritorio + '"'
                 }
             });
             var promiseTerritorios = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Territorios', {
-                params:{
+                params: {
                     nombre: '"' + hintLugarTerritorio + '"',
                     otrosNombres: '"' + hintLugarTerritorio + '"'
                 }
@@ -68,7 +68,7 @@
                     var resultados = responses[res].data;
                     if (resultados != "0") {
                         resultados.forEach( function (valor) {
-                            var elementoAInsertar = {nombre: '',lugarTerritorioID: -1, lugarOTerritorio: ''}
+                            var elementoAInsertar = {nombre: '',nombreMostrar: '',lugarTerritorioID: -1, lugarOTerritorio: ''}
 
                             // Para el nombre
                             if (valor.nombre) {
@@ -83,24 +83,21 @@
                                     }
                                 });
                             }
-                            
-                            if (String(hintLugarTerritorio).toLowerCase().replace(/\s/g, '') == String(elementoAInsertar.nombre).toLowerCase().replace(/\s/g, ''))
-                                    matchPerfecto = true;
 
                             // Para el lugarTerritorioID
                             if (valor.lugarID) {
                                 elementoAInsertar.lugarTerritorioID = valor.lugarID;
                                 elementoAInsertar.lugarOTerritorio = 'lugar';
+                                elementoAInsertar.nombreMostrar = '(L) ' + elementoAInsertar.nombre;
                             } else if (valor.territorioID) {
                                 elementoAInsertar.lugarTerritorioID = valor.territorioID;
-                                elementoAInsertar.lugarOTerritorio = 'territorio';
+                                elementoAInsertar.lugarOTerritorio = 'territorio';                               elementoAInsertar.nombreMostrar = '(T) ' + elementoAInsertar.nombre;
                             }
                             listaLugaresTerritorios.push(elementoAInsertar);
                         });
                     }
                 }
-                //if (!matchPerfecto && listaLugaresTerritorios.length != 0)
-                    listaLugaresTerritorios.unshift({nombre: '(Insertar) ' + hintLugarTerritorio, lugarTerritorioID: -1, lugarOTerritorio: 'insertar'});
+                listaLugaresTerritorios.unshift({nombre: hintLugarTerritorio, nombreMostrar: "(Insertar) " + hintLugarTerritorio, lugarTerritorioID: -1, lugarOTerritorio: 'insertar'});
                 return listaLugaresTerritorios;
             }); 
         };
