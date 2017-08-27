@@ -63,15 +63,7 @@
                           e-typeahead-wait-ms="100" 
                           e-typeahead-on-select="seleccionarLugarTerritorio(datosPrincipales.lugarTerritorioConstruccion,$item)"
                           onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionNombre',$data)"  
-                          class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.nombre || "No definido" }}
-                </span>
-                <span editable-select="datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio" 
-                      e-ng-options="lugarTerritorio for lugarTerritorio in ['lugar','territorio']"
-                      e-ng-disabled="datosPrincipales.lugarTerritorioConstruccion.lugarTerritorioID != -1"
-                      e-ng-show="datosPrincipales.lugarTerritorioDesercion.lugarTerritorioID == -1"
-                      ng-click="lugarTerritorioConstruccionForm.$show()"
-                      onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionTipo',$data)"  
-                      class="valorDato"> ({{ datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio || "No definido" }})
+                          class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.nombre || "No definido" }} ({{ datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio || "No definido" }})
                 </span>
                 </form>
             </li>
@@ -88,15 +80,7 @@
                           e-typeahead-wait-ms="100" 
                           e-typeahead-on-select="seleccionarLugarTerritorio(datosPrincipales.lugarTerritorioDesercion,$item)"
                           onbeforesave="editarDatoPrincipal('lugarTerritorioDesercionNombre',$data)"  
-                          class="valorDato"> {{ datosPrincipales.lugarTerritorioDesercion.nombre || "No definido" }}
-                </span>
-                <span editable-select="datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio" 
-                      e-ng-options="lugarTerritorio for lugarTerritorio in ['lugar','territorio']"
-                      e-ng-disabled="datosPrincipales.lugarTerritorioDesercion.lugarTerritorioID != -1"
-                      e-ng-show="datosPrincipales.lugarTerritorioDesercion.lugarTerritorioID == -1"
-                      ng-click="lugarTerritorioDesercionForm.$show()"
-                      onbeforesave="editarDatoPrincipal('lugarTerritorioDesercionTipo',$data)"  
-                      class="valorDato"> ({{ datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio || "No definido" }})
+                          class="valorDato"> {{ datosPrincipales.lugarTerritorioDesercion.nombre || "No definido" }} ({{ datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio || "No definido" }})
                 </span>
                 </form>
             </li>
