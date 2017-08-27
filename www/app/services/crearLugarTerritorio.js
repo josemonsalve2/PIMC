@@ -5,6 +5,7 @@
     var crearLugarTerritorioModule = angular.module('crearLugarTerritorioModal',['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
     crearLugarTerritorioModule.service('crearLugarTerritorio', ['$uibModal', '$http', function($uibModal, $http){
         var $ctrl = this; 
+        $ctrl.lugarOTerritorio = 'lugar';
         $ctrl.valorInicial = {};
         var modalOptionsDefault = {
           animation: true,
