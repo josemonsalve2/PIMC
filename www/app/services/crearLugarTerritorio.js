@@ -48,7 +48,7 @@
             if ($ctrl.datosLugar.nombre !== "") {
                 var parametros = {};
                 // removemos el lugarID
-                for (key in $ctrl.datosLugar) {
+                for (var key in $ctrl.datosLugar) {
                     if (key != lugarID) {
                         parametros[key] = $ctrl.datosLugar[key];
                     }
