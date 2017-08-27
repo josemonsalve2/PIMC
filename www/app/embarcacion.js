@@ -106,7 +106,6 @@
             if (elementoSeleccionado.lugarOTerritorio === 'insertar') {
                 // Lugar es por defecto
                 crearLugarTerritorio .show(elementoSeleccionado.nombre).then(function (resultado){
-                                       alert(resultado);
                     lugarTerritorio.lugarOTerritorio = 'lugar'
                     lugarTerritorio.lugarTerritorioID = resultado.lugarID;
                     lugarTerritorio.lugarTerritorioNombre = resultado.nombre;
