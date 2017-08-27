@@ -3,7 +3,7 @@
     'use strict';
   
     var crearLugarTerritorioModule = angular.module('crearLugarTerritorioModal',['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
-    crearLugarTerritorioModule.service('crearLugarTerritorio',['$uibModal', function($uibModal){
+    crearLugarTerritorioModule.service('crearLugarTerritorio', ['$uibModal', '$http', function($uibModal, $http){
         var $ctrl = this; 
         $ctrl.valorInicial = {};
         var modalOptionsDefault = {
@@ -27,7 +27,7 @@
         };
     }]);
                                                           
-    crearLugarTerritorioModule.controller('ModalInstanceCtrl', ['$http', function ($uibModalInstance, $http, valorInicial ) {
+    crearLugarTerritorioModule.controller('ModalInstanceCtrl', function ($http, $uibModalInstance, valorInicial ) {
         var $ctrl = this;
         
         $ctrl.datosLugar = {
