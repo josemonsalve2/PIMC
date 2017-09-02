@@ -9,7 +9,7 @@
         $ctrl.valorInicial = {};
         var modalOptionsDefault = {
           animation: true,
-          templateUrl: 'views/services/crearLugarTerritorioTemplate.html',
+          templateUrl: 'views/lugar/crearLugarTerritorioTemplate.html',
           controller: 'ModalInstanceCtrl',
           controllerAs: '$ctrl',
           size: 'lg',

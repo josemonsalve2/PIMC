@@ -46,7 +46,7 @@
         controller:  'documentoPerfilController'
       })
       .when('/lugar', {
-        templateUrl: 'views/lugar.html',
+        templateUrl: 'views/lugar/lugar.html',
         controller:  'lugarPerfilController'
       })
       .when('/institucion', {
