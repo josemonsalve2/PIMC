@@ -676,8 +676,8 @@
             field: 'lugarTerritorioPartida',
             name: 'lugarTerritorioPartida',
             displayName: 'Lugar o territorio de Partida',
-            cellTemplate: 'app/templates/lugarTerritorioSelectCell.html',
-            editableCellTemplate: 'app/templates/lugarTerritorioSelectEdit.html',
+            cellTemplate: 'views/global/lugarTerritorio/lugarTerritorioSelectCell.html',
+            editableCellTemplate: 'views/global/lugarTerritorio/lugarTerritorioSelectEdit.html',
             cargarLugaresTypeahead: $scope.autocompletarLugarTerritorio,
             onSelectLugaresTypeahead: $scope.seleccionarLugarTerritorio,
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
@@ -710,8 +710,8 @@
             field: 'lugarTerrotorioLlegada',
             name: 'lugarTerrotorioLlegada',
             displayName: 'Lugar o territorio de Llegada',
-            cellTemplate: 'app/templates/lugarTerritorioSelectCell.html',
-            editableCellTemplate: 'app/templates/lugarTerritorioSelectEdit.html',
+            cellTemplate: 'views/global/lugarTerritorio/lugarTerritorioSelectCell.html',
+            editableCellTemplate: 'views/global/lugarTerritorio/lugarTerritorioSelectEdit.html',
             cargarLugaresTypeahead: $scope.autocompletarLugarTerritorio,
             onSelectLugaresTypeahead: $scope.seleccionarLugarTerritorio,
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {

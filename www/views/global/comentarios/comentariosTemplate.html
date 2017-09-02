@@ -1,0 +1,28 @@
+<div class="p-a-1">
+
+  <button class="btn btn-primary" ng-click="$ctrl.agregarNotaVacia()">Agregar Comentario</button>
+
+  <div class="panel panel-default m-b-0 m-t-1" ng-repeat="nota in $ctrl.notas track by $index">
+    <div class="panel-body">
+      <button type="button" 
+              class="close" 
+              aria-label="Cerrar" 
+              ng-click="$ctrl.eliminarNota($index)">
+              <span aria-hidden="true">&times;</span></button>
+      <p class="notaContenido" 
+          editable-textarea="nota.nota" 
+          e-rows="2" 
+          buttons="right" 
+          onaftersave="modificarNota($index,nota.nota)">{{nota.nota || "Click para editar"}}</p>
+      <div class="clearfix m-t-1">
+          <div class="notaReferencia pull-left">Fecha Historica: <span editable-text="nota.fechaHistorica" 
+                   onaftersave="$ctrl.modificarFechaHistorica($index,fechaHistorica)">{{nota.fechaHistorica || "ND"}}</span></div>
+      </div>
+      <div class="clearfix m-t-1">
+        <div class="notaReferencia pull-left">Referencia: <span editable-text="nota.referencia" 
+             onaftersave="$ctrl.modificarReferencia($index,nota.referencia)">{{nota.referencia || "ND"}}</span></div>
+        <div class="notaFecha pull-right">{{nota.fechaCreacion || "Nota Nueva"}}</div>
+      </div>
+    </div>
+  </div>
+</div>
