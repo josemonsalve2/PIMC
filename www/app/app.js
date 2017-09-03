@@ -94,4 +94,57 @@
     }
   }]);
 
+  pimc.service('pimcService',['$window', function($window){
+      var pimcService = this;
+      // PARA BACKEND
+      pimcService.backEndURL = "http://monsalvediaz.com:5000/PIMC0.1"; // sin / al final
+      // crea la URL 
+      pimcService.crearURLOperacion = function(operacion, elementoRelacional) {
+          return pimcService.backEndURL + "/" + String(operacion) + "/" + String(elementoRelacional);
+      }
+      
+      // OPCION DEBUGGING
+      pimcService.debugMode = true;
+
+      if (pimcService.debugMode)
+          pimcService.debug = console.log.bind(window.console)
+      else
+          pimcService.debug = function(){}
+          
+      // ESTADO DE DATOS
+      pimcService.datosEstados = {
+            LIMPIO: 0, 
+            MODIFICADO: 1,
+            INSERTADO: 2,
+            ELIMINADO: 3,
+            propiedades: {
+                0: {nombre:'Limpia', value: 0, code: 'L'},
+                1: {nombre:'Modificada', value: 1, code: 'M'},
+                2: {nombre:'Insertada', value: 2, code: 'I'},
+                3: {nombre:'Eliminada', value: 3, code: 'E'}
+            }
+      };  
+    
+      // IDs Elementos relacionales
+      pimcService.idElementoRelaciona = {
+          Embarcaciones: "embarcacionID",
+          Archivos: "archivoID",
+          Documentos: "documentoID",
+          Personajes: "personajeID"
+      }
+
+      }]);
+    
+    pimc.filter('estadoNoEliminado', [ 'pimcService', function(pimcService) {
+      return function(items) {
+        var filtered = [];
+        angular.forEach(items, function(el) {
+          if(el.estado && el.estado != pimcService.datosEstados.ELIMINADO) {
+            filtered.push(el);
+          }
+        });
+        return filtered;
+      }
+    }]);
+
 })(window.angular);
