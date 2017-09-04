@@ -29,10 +29,7 @@
     barraEstadoModule.controller('barraEstadoComponentController', ['$scope', 'pimcService', 'pimcBarraEstadoService', function($scope, pimcService, pimcBarraEstadoService) {
         var barraEstadoCtrl = this;
         barraEstadoCtrl.ultimaAccion = pimcBarraEstadoService.ultimaAccion;
-//        $scope.$watch('pimcBarraEstadoService.ultimaAccion', function() {
-//            barraEstadoCtrl.ultimaAccion = pimcBarraEstadoService.ultimaAccion;
-//        });
-        
+
         barraEstadoCtrl.guardarCambiosInterno = function() {
             pimcBarraEstadoService.registrarAccion("Guardando cambios ...");
             barraEstadoCtrl.guardarCambios();

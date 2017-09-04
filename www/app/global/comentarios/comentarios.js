@@ -78,11 +78,11 @@
 
     }]);
 
-    comentariosModule.controller('comentariosComponentController',['pimcService', function(pimcService) {
+    comentariosModule.controller('comentariosComponentController',['pimcService', 'pimcBarraEstadoService', function(pimcService, pimcBarraEstadoService) {
         var controladorComentarios = this;
         controladorComentarios.notas = [];
         controladorComentarios.agregarNotaVacia = function() {
-            // $scope.registrarAccion("Nota vacia agregada");
+            pimcBarraEstadoService.registrarAccion("Nota vacia agregada");
             controladorComentarios.notas.push({
                 estado:pimcService.datosEstados.INSERTADO,
                 contenido: {
@@ -97,7 +97,7 @@
             controladorComentarios.reportarCambio();
         }
         controladorComentarios.eliminarNota = function(indexNota) {
-            //$scope.registrarAccion("Nota <strong>" + indexNota + "</strong> eliminada");
+            pimcBarraEstadoService.registrarAccion("Nota <strong>" + indexNota + "</strong> eliminada");
             if (controladorComentarios.notas[indexNota].estado === pimcService.datosEstados.INSERTADO) {
                 controladorComentarios.notas.splice(indexNota, 1);
             } else {
@@ -106,7 +106,7 @@
             controladorComentarios.reportarCambio();
         };
         controladorComentarios.modificarNota = function(indexNota, elementoModificado) {
-            //$scope.registrarAccion("Nota <strong>" + indexNota + "</strong> modificada");
+            pimcBarraEstadoService.registrarAccion("Nota <strong>" + indexNota + "</strong> modificada");
             if (controladorComentarios.notas[indexNota].estado === pimcService.datosEstados.INSERTADO) {
                 controladorComentarios.notas[indexNota].estado = pimcService.datosEstados.MODIFICADO;
             }

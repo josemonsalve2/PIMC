@@ -8,7 +8,7 @@
         $scope.embarcacionID = -1;
         
         $scope.datosEstados = {
-            LIMPIO: 0, 
+            LIMPIO: 0,
             MODIFICADO: 1,
             INSERTADO: 2,
             ELIMINADO: 3,
@@ -1020,42 +1020,8 @@
             if ($scope.notasCambios) {
                 pimcBarraEstadoService.registrarAccion("Actualizando BD notasEmbarcaciones");
                 $scope.notasCambios = false;
-//                $scope.notas.forEach(function(nota) {
-//                    // Insertamos notas nuevas
-//                    if (nota.fechaCreacion.length == 0 && nota.nota.length != 0)
-//                        conexiones['notasCambiosInsertar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/EmbarcacionesNotas',
-//                                    {params:{
-//                                        embarcacionID: $scope.embarcacionID,
-//                                        nota: "'" + nota.nota + "'",
-//                                        referencia: "'" + nota.referencia + "'"
-//                                    }}
-//                        );
-//                    // Modificamos notas viejas
-//                    if (nota.modificada == true) {
-//                        conexiones['notasCambiosModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/EmbarcacionesNotas',
-//                                    {params:{
-//                                        idUnico2: 'embarcacionID',
-//                                        idUnico: 'notaID',
-//                                        notaID: nota.notaID,
-//                                        embarcacionID: $scope.embarcacionID,
-//                                        nota: "'" + nota.nota + "'",
-//                                        referencia: "'" + nota.referencia + "'"
-//                                    }}
-//                        );
-//                    }
-//                });
-//                // Eliminamos notas eliminadas
-//                $scope.notasAEliminar.forEach(function(nota) {
-//                    conexiones['notasCambiosEliminar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/EmbarcacionesNotas',
-//                                {params:{
-//                                idUnico2: 'embarcacionID',
-//                                idUnico: 'notaID',
-//                                notaID: nota.notaID,
-//                                embarcacionID: $scope.embarcacionID
-//                                }}
-//                    );
-//                });
             }
+
             // REPARACIONES
             if ($scope.reparacionesEditadas) {
                 pimcBarraEstadoService.registrarAccion("Actualizando BD EmbarcacionesReparaciones");
