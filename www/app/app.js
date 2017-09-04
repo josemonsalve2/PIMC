@@ -36,7 +36,7 @@
         controller:  'archivoPerfilController'
       })
       .when('/embarcacion', {
-        templateUrl: 'views/embarcacion.html',
+        templateUrl: 'views/embarcacion/embarcacion.html',
         controller:  'embarcacionPerfilController'
       })
       .when('/busqueda', {
