@@ -2,12 +2,12 @@
 
   <button class="btn btn-primary" ng-click="controladorComentarios.agregarNotaVacia()">Agregar Comentario</button>
 
-  <div class="panel panel-default m-b-0 m-t-1" ng-repeat="nota in controladorComentarios.notas track by $index | controladorComentarios.filtrarEliminados">
+  <div class="panel panel-default m-b-0 m-t-1" ng-repeat="nota in controladorComentarios.notas | filtrarEliminados track by $index">
     <div class="panel-body">
       <button type="button" 
               class="close" 
               aria-label="Cerrar" 
-              ng-click="$ctrl.eliminarNota($index)">
+              ng-click="controladorComentarios.eliminarNota($index)">
               <span aria-hidden="true">&times;</span></button>
       <p class="notaContenido" 
           editable-textarea="nota.contenido.nota" 

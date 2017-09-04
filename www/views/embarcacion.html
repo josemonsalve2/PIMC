@@ -400,41 +400,14 @@
             </div>
           </div>
           <div id="notasAdicionales" class="col-sm-12 col-md-8">
-            <div class="panel panel-primary">
+            
+              <div class="panel panel-primary">
                 <header class="panel-heading">
                   <h4 class="m-a-1">Comentarios</h4>
                 </header>
-              
-                <div class="p-a-1">
+              <pimc-comentarios-anotaciones notas="notas" reportar-cambio="notificarNotasCambios()"></pimc-comentarios-anotaciones>
   
-                  <button class="btn btn-primary" ng-click="agregarNotaVacia()">Agregar Comentario</button>
-  
-                  <div class="panel panel-default m-b-0 m-t-1" ng-repeat="nota in notas track by $index">
-                    <div class="panel-body">
-                      <button type="button" 
-                              class="close" 
-                              aria-label="Cerrar" 
-                              ng-click="eliminarNota($index)">
-                              <span aria-hidden="true">&times;</span></button>
-                      <p class="notaContenido" 
-                          editable-textarea="nota.nota" 
-                          e-rows="2" 
-                          buttons="right" 
-                          onaftersave="modificarNota($index,nota.nota)">{{nota.nota || "Click para editar"}}</p>
-                      <div class="clearfix m-t-1">
-                          <div class="notaReferencia pull-left">Fecha Historica: <span editable-text="nota.fechaHistorica" 
-                                   onaftersave="modificarFechaHistorica($index,fechaHistorica)">{{nota.fechaHistorica || "ND"}}</span></div>
-                      </div>
-                      <div class="clearfix m-t-1">
-                        <div class="notaReferencia pull-left">Referencia: <span editable-text="nota.referencia" 
-                             onaftersave="modificarReferencia($index,nota.referencia)">{{nota.referencia || "ND"}}</span></div>
-                        <div class="notaFecha pull-right">{{nota.fechaCreacion || "Nota Nueva"}}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-  
-              </div>
+              </div> 
           </div>
         </div>
       </uib-tab>
@@ -442,10 +415,11 @@
   </uib-tabset>
 
 </section>
-<footer class="status-bar">
+<pimc-barra-estado guardar-cambios="guardarCambios()" borrar-cambios="borrarCambios()"></pimc-barra-estado>
+<!--- <footer class="status-bar">
   <div class="text-right">
     <strong>Ultima Accion: </strong><span class="status-message p-r-1" ng-bind-html="ultimaAccion">{{ultimaAccion}}</span>
     <button ng-click='borrarCambios()' class="btn btn-danger m-r-1" ng-disabled="guardarDatos">Borrar cambios</button>
     <button ng-click='guardarCambios()' class="btn btn-success">Guardar</button>
   </div>
-</footer>
+</footer> -->

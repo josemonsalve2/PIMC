@@ -2,11 +2,11 @@
 
     'use strict';
 
-    var comentariosModule = angular.module('comentariosModule',['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
+    var comentariosModule = angular.module('comentariosModule',['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'xeditable']);
 
     // Service para comentarios. Cargar y guardar notas
     comentariosModule.service('pimcComentarios', ['$http', '$q', 'pimcService', function($http, $q, pimcService){
-        var cometariosController = this;
+        var comentariosController = this;
 
         comentariosController.cargarNotas = function(elementoRelacional, elementoID) {
             // Obtenemos URL de consulta
@@ -17,20 +17,24 @@
             parametros[pimcService.idElementoRelaciona[elementoRelacional]] = elementoID;
 
             // Realizamos la consulta en la base de datos
-            return $http.get(consultaComentarios, {parametros}).then(function(data) {
-                var resultadoConsulta = data.data;
-                var notas = [];
-                if (Object.keys(resultadoConsulta).length != 0) {
-                    resultadoConsulta;
-                    resultadoConsulta.forEach(function(notaDB) {
-                        var nuevaNota = {};
-                        nota.estado = pimcService.datosEstados.LIMPIO;
-                        nota.contenido = notaDB;
-                    });
-                    // LOG
-                    pimcService.debug(notas);
+            return $http.get(consultaComentarios, {params:parametros}).then(function(data) {
+                if (Object.keys(data.data).length != 0) {
+                    var resultadoConsulta = data.data;
+                    var notas = [];
+                    if (Object.keys(resultadoConsulta).length != 0) {
+                        resultadoConsulta;
+                        resultadoConsulta.forEach(function(notaDB) {
+                            var nuevaNota = {};
+                            nota.estado = pimcService.datosEstados.LIMPIO;
+                            nota.contenido = notaDB;
+                        });
+                        // LOG
+                        pimcService.debug(notas);
+                    }
+                    return notas;
+                } else {
+                    return [];
                 }
-                return notas;
             });
 
         };
@@ -43,14 +47,14 @@
                 if (nota.estado === pimcService.datosEstados.INSERTADO) {
                     // Obtenemos URL de consulta
                     var URLInsertar = pimcService.crearURLOperacion('Insertar', elementoRelacional + "Notas");
-                    conexiones.push($http.get(URLInsertar, {nota.contenido}));
+                    conexiones.push($http.get(URLInsertar, {params:nota.contenido}));
                 } else if (nota.estado === pimcService.datosEstados.MODIFICADO) {
                     // Modificamos notas viejas
                     // Obtenemos URL de consulta
                     var URLModificar = pimcService.crearURLOperacion('Modificar', elementoRelacional + "Notas");
                     var parametros = nota.contenido;
                     parametros.idUnico = "notaID";
-                    conexiones.push($http.get(URLModificar, {parametros}));
+                    conexiones.push($http.get(URLModificar, {params:parametros}));
                 } else if (nota.estado === pimcService.datosEstados.ELIMINADO) {
                     // Obtenemos URL de consulta
                     var URLEliminar = pimcService.crearURLOperacion('Eliminar', elementoRelacional + "Notas");
@@ -60,6 +64,15 @@
                     };
                     conexiones.push($http.get(URLEliminar, {params:data}));
                 };
+            });
+            return $q.all(conexiones).then( function(responses) {
+                    for (var res in responses) {
+                        pimcService.debug(res + ' = ' + responses[res].data);
+                    }
+                }, function(responses) {
+                for (var res in responses) {
+                        pimcService.debug("[ERROR]" + res + ' = ' + responses[res]);
+                    }
             });
         };
 
@@ -98,17 +111,29 @@
                 controladorComentarios.notas[indexNota].estado = pimcService.datosEstados.MODIFICADO;
             }
         };
-        controladorComentarios.filtrarEliminados = function(item) {
-            return item.estado != pimcService.datosEstados.ELIMINADO;
-        }
+        
     }]);
 
+    comentariosModule.filter('filtrarEliminados',['pimcService' ,function(pimcService) {
+            return function (notas) {
+                if (!notas) return [];
+                var filtrados = [];
+                angular.forEach(notas, function(key,val) {
+                    if (val.estado != pimcService.datosEstados.ELIMINADO) {
+                        filtrados.push(val);
+                    }
+                });
+                return filtrados;
+            }
+        }]);
+    
     comentariosModule.component('pimcComentariosAnotaciones', {
         bindings:{
+            notas:'=',
             reportarCambio:'&'
         },
-        controller: comentariosComponentController,
-        controllerAs: controladorComentarios,
+        controller: 'comentariosComponentController',
+        controllerAs: 'controladorComentarios',
         templateUrl: 'views/global/comentarios/comentariosTemplate.html'
     });
 

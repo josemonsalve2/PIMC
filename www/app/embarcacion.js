@@ -4,7 +4,7 @@
 
     var embarcacionPerfil = angular.module('embarcacionPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
     
-    embarcacionPerfil.controller('embarcacionPerfilController', ['$scope', '$sce', '$q', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', 'crearLugarTerritorio', function($scope, $sce, $q, $http, $window, $location, $filter, $timeout, uiGridConstants, i18nService, crearLugarTerritorio ) {
+    embarcacionPerfil.controller('embarcacionPerfilController', ['$scope', '$q', '$http', '$window', '$filter', 'uiGridConstants', 'i18nService', 'crearLugarTerritorio','pimcService', 'pimcComentarios', 'pimcBarraEstadoService', function($scope, $q, $http, $window, $filter,  uiGridConstants, i18nService, crearLugarTerritorio, pimcService, pimcComentarios, pimcBarraEstadoService  ) {
         $scope.embarcacionID = -1;
         
         $scope.datosEstados = {
@@ -30,9 +30,9 @@
                 $window.location.href = "#!/busqueda";
             } else {
                 if (!$scope.datosGuardados) {
-                    $scope.registrarAccion("Embarcacion <strong>" + $scope.embarcacionID + "</strong> ha sido cargado");
+                    pimcBarraEstadoService.registrarAccion("Embarcacion <strong>" + $scope.embarcacionID + "</strong> ha sido cargado");
                 } else {
-                    $scope.registrarAccion("Embarcacion <strong>" + $scope.embarcacionID  + "</strong> ha sido guardado en la base de datos");
+                    pimcBarraEstadoService.registrarAccion("Embarcacion <strong>" + $scope.embarcacionID  + "</strong> ha sido guardado en la base de datos");
                     $scope.datosGuardados = false;
                 }
 
@@ -261,26 +261,26 @@
                 $scope.editarDatoPrincipal = function(campo, valorNuevo) {
                     if (campo == 'lugarTerritorioConstruccionNombre') {
                         if (valorNuevo != $scope.datosPrincipales.lugarTerritorioConstruccion.nombre) {
-                            $scope.registrarAccion($scope.datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio + " modificado");
+                            pimcBarraEstadoService.registrarAccion($scope.datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio + " modificado");
                             $scope.datosPrincipalesEditado = true;
                         }
                     } else if (campo == 'lugarTerritorioConstruccionTipo') {
                         if (valorNuevo != $scope.datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio) {
-                            $scope.registrarAccion($scope.datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio + " construccion modificado a " + valorNuevo + " construccion");
+                            pimcBarraEstadoService.registrarAccion($scope.datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio + " construccion modificado a " + valorNuevo + " construccion");
                             $scope.datosPrincipalesEditado = true;
                         }
                     } else if (campo == 'lugarTerritorioDesercionNombre') {
                         if (valorNuevo != $scope.datosPrincipales.lugarTerritorioDesercion.nombre) {
-                            $scope.registrarAccion($scope.datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio + "  modificado");
+                            pimcBarraEstadoService.registrarAccion($scope.datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio + "  modificado");
                             $scope.datosPrincipalesEditado = true;
                         }
                     } else if (campo == 'lugarTerritorioDesercionTipo') {
                         if (valorNuevo != $scope.datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio) {
-                            $scope.registrarAccion($scope.datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio + " construccion modificado a " + valorNuevo + " construccion");
+                            pimcBarraEstadoService.registrarAccion($scope.datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio + " construccion modificado a " + valorNuevo + " construccion");
                             $scope.datosPrincipalesEditado = true;
                         }
                     } else if (valorNuevo != $scope.datosPrincipales[campo]) {
-                        $scope.registrarAccion(campo + "modificado");
+                        pimcBarraEstadoService.registrarAccion(campo + " modificado");
                         $scope.datosPrincipalesEditado = true;
                     }
                 };
@@ -352,7 +352,7 @@
             tablaAPI.edit.on.afterCellEdit($scope, function(rowEntity,colDef, newValue, oldValue) {
                 if (newValue != oldValue && rowEntity.estadoActual != $scope.datosEstados.INSERTADO) {
                     $scope.reparacionesEditadas = true;
-                    $scope.registrarAccion(colDef.name + " en reparacion <strong>" + rowEntity.reparacionID + "</strong> modificada");
+                    pimcBarraEstadoService.registrarAccion(colDef.name + " en reparacion <strong>" + rowEntity.reparacionID + "</strong> modificada");
                     rowEntity.estadoActual = $scope.datosEstados.MODIFICADO;
                     $scope.tablaReparacionesAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
                 }   
@@ -398,17 +398,17 @@
                 estadoActual: $scope.datosEstados.INSERTADO
             };
             $scope.tablaReparaciones.data.push(nuevaReparacion);
-            $scope.registrarAccion("Entrada agregada a tabla reparaciones");
+            pimcBarraEstadoService.registrarAccion("Entrada agregada a tabla reparaciones");
             $scope.tablaReparacionesAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
         };
         $scope.borrarReparaciones = function(row) {
             $scope.reparacionesEditadas = true;
             if (row.entity.estadoActual == $scope.datosEstados.INSERTADO) {
-                $scope.registrarAccion("reparacion nueva eliminada");
+                pimcBarraEstadoService.registrarAccion("reparacion nueva eliminada");
                 var index = $scope.tablaReparaciones.data.indexOf(row.entity);
                 $scope.tablaReparaciones.data.splice(index,1);
             } else {
-                $scope.registrarAccion("reparacion <strong> "+ row.entity.reparacionID +" </strong> eliminada");
+                pimcBarraEstadoService.registrarAccion("reparacion <strong> "+ row.entity.reparacionID +" </strong> eliminada");
                 row.entity.estadoActual = $scope.datosEstados.ELIMINADO;
                 $scope.tablaReparacionesAPI.grid.refresh();
             }
@@ -564,7 +564,7 @@
             tablaAPI.edit.on.afterCellEdit($scope, function(rowEntity,colDef, newValue, oldValue) {
                 if (newValue != oldValue && rowEntity.estadoActual != $scope.datosEstados.INSERTADO) {
                         $scope.datosSecundariosEditados = true;
-                        $scope.registrarAccion(colDef.name + " en datos Secundarios <strong>" + rowEntity.elementoID + "</strong> modificado");
+                        pimcBarraEstadoService.registrarAccion(colDef.name + " en datos Secundarios <strong>" + rowEntity.elementoID + "</strong> modificado");
                         rowEntity.estadoActual = $scope.datosEstados.MODIFICADO;
                         $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
                 }
@@ -608,17 +608,17 @@
                 estadoActual: $scope.datosEstados.INSERTADO
             };
             $scope.tablaDatosSecundarios.data.push(nuevoDatoSecundario);
-            $scope.registrarAccion("Entrada agregada a tabla datos secundarios");
+            pimcBarraEstadoService.registrarAccion("Entrada agregada a tabla datos secundarios");
             $scope.tablasDatosSecundariosAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
         };
         $scope.borrarDatosSecundarios = function(row) {
             $scope.datosSecundariosEditados = true;
             if (row.entity.estadoActual == $scope.datosEstados.INSERTADO) {
-                $scope.registrarAccion("datoSecundario nuevo eliminada");
+                pimcBarraEstadoService.registrarAccion("datoSecundario nuevo eliminada");
                 var index = $scope.tablaDatosSecundarios.data.indexOf(row.entity);
                 $scope.tablaDatosSecundarios.data.splice(index,1);
             } else {
-                $scope.registrarAccion("dato Secundario <strong> "+ row.entity.elementoID +" </strong> eliminado");
+                pimcBarraEstadoService.registrarAccion("dato Secundario <strong> "+ row.entity.elementoID +" </strong> eliminado");
                 row.entity.estadoActual = $scope.datosEstados.ELIMINADO;
                 $scope.tablasDatosSecundariosAPI.grid.refresh();
             }
@@ -653,7 +653,7 @@
             if ($scope.tabs.has(ElementoId)) {
                 if ($scope.tabs[ElementoId].editada) {
                     if (window.confirm("Hay cambios sin guardar, esta seguro que quiere cerrar?") === true) {
-                        $scope.registrarAccion("Los cambios en la comisión no han sido guardados");
+                        pimcBarraEstadoService.registrarAccion("Los cambios en la comisión no han sido guardados");
                         $scope.tabs.delete(ElementoId);
                     }
                 } else {
@@ -760,7 +760,7 @@
             tablaAPI.edit.on.afterCellEdit($scope, function(rowEntity,colDef, newValue, oldValue) {
                 if (newValue != oldValue && rowEntity.estadoActual != $scope.datosEstados.INSERTADO) {
                     $scope.hojaServicioPersonalEditado = true;
-                    $scope.registrarAccion(colDef.name + " en hoja de servicio y personal <strong>" + rowEntity.reparacionID + "</strong> modificada");
+                    pimcBarraEstadoService.registrarAccion(colDef.name + " en hoja de servicio y personal <strong>" + rowEntity.reparacionID + "</strong> modificada");
                     rowEntity.estadoActual = $scope.datosEstados.MODIFICADO;
                     $scope.tablaHojaServicioAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
                 }   
@@ -836,18 +836,18 @@
                 estadoActual: $scope.datosEstados.INSERTADO
             };
             $scope.tablaHojaServicioPersonal.data.push(nuevaHojaServicioPersonal);
-            $scope.registrarAccion("Entrada agregada a hoja de servicio y personal");
+            pimcBarraEstadoService.registrarAccion("Entrada agregada a hoja de servicio y personal");
             $scope.tablaHojaServicioAPI.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
         };
         $scope.borrarHojaServicioPersonal = function(row) {
             $scope.hojaServicioPersonalEditado = true;
             if (row.entity.estadoActual == $scope.datosEstados.INSERTADO) {
-                $scope.registrarAccion("Hoja de servicio y personal nueva eliminada");
+                pimcBarraEstadoService.registrarAccion("Hoja de servicio y personal nueva eliminada");
                 var index = $scope.tablaHojaServicioPersonal.data.indexOf(row.entity);
                 $scope.tablaHojaServicioPersonal.data.splice(index,1);
             } else {
                 if (window.confirm("Esta Seguro que quiere borrar una hoja de servicio? Se perderan todos los datos de esta ruta") === true) {
-                    $scope.registrarAccion("Hoja de servicio y personal <strong> "+ row.entity.rutaID +" </strong> eliminada");
+                    pimcBarraEstadoService.registrarAccion("Hoja de servicio y personal <strong> "+ row.entity.rutaID +" </strong> eliminada");
                     row.entity.estadoActual = $scope.datosEstados.ELIMINADO;
                     $scope.tablaHojaServicioAPI.grid.refresh();
                 }
@@ -868,14 +868,14 @@
             if (valor == "") {
                 var valorAEliminar = lista[indexEditado];
                 if (valorAEliminar != "") {
-                    $scope.registrarAccion(listadoNombre + "<strong>" + valorAEliminar + "</strong> eliminado");
+                    pimcBarraEstadoService.registrarAccion(listadoNombre + "<strong>" + valorAEliminar + "</strong>  eliminado");
                     $scope.datosPrincipalesEditado = true;
                 }
                 lista.splice(indexEditado, 1);
             } else {
                 var valorModificado = lista[indexEditado];
                 if (valor != valorModificado) {
-                    $scope.registrarAccion(listadoNombre + "<strong>" + valorModificado + "</strong> Modificado a <strong>" + valor + "</strong>");
+                    pimcBarraEstadoService.registrarAccion(listadoNombre + "<strong>" + valorModificado + "</strong>  Modificado a <strong>" + valor + "</strong>");
                     lista[indexEditado] = valor;
                     $scope.datosPrincipalesEditado = true;
                 }
@@ -884,7 +884,7 @@
         $scope.listados.agregarALista = function(listadoNombre, lista, elemento) {
             if (!lista.includes(elemento) && elemento.length != 0) {
                 lista.push(elemento);
-                $scope.registrarAccion(listadoNombre + "<strong>" + elemento + "</strong> agregado");
+                pimcBarraEstadoService.registrarAccion(listadoNombre + "<strong>" + elemento + "</strong> agregado");
                 $scope.datosPrincipalesEditado = true;
             }
         }
@@ -895,108 +895,27 @@
             var tmp = lista[0];
             lista[0] = lista[indice];
             lista[indice] = tmp;
-            $scope.registrarAccion(listadoNombre + "<strong>" + lista[0] + "</strong> principal");
+            pimcBarraEstadoService.registrarAccion(listadoNombre + "<strong>" + lista[0] + "</strong> principal");
             $scope.datosPrincipalesEditado = true;
         }
         
         
         // ANOTACIONES EMBARCACIONES
-        $scope.notas = "";
-        $scope.notasAEliminar = [];
-        $scope.notasCambio = false;
+        $scope.notas = [];
+        $scope.notasCambios = false;
         $scope.cargarNotas = function() {
-            $scope.notas = "";
-            $scope.notasAEliminar = [];
-            $scope.notasCambio = false;
-            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/EmbarcacionesNotas', 
-            {
-                params:{
-                    embarcacionID:$scope.embarcacionID
-                }
-            }).then(function(data) {
-                if (Object.keys(data.data).length != 0) {
-                    $scope.notas = data.data;
-                    $scope.notas.forEach(function(nota) {
-                        nota.modificada = false;
-                    });
-                    // LOG
-                    console.log($scope.notas);
-                }
+            pimcComentarios.cargarNotas('Embarcaciones',$scope.embarcacionID).then( function(notas) {
+                $scope.notas = notas;
             });
+        };
+        $scope.notificarNotasCambios = function() {
+            $scope.notasCambios = true;
+        };
+        
 
-        };
-        $scope.agregarNotaVacia = function() {
-            $scope.registrarAccion("Nota vacia agregada");
-            // Una nota que no tiene fecha de creacion es una nota que no existe en la base de datos aun
-            if ($scope.notas === "") {
-                $scope.notas = [{
-                    nota: "",
-                    referencia: "",
-                    fechaCreacion: "",
-                    fechaHistorica: "",
-                    fechaHistFormato: "",
-                    modificada: false
-                }];
-            } else {
-                $scope.notas.push({
-                    nota: "",
-                    referencia: "",
-                    fechaCreacion: "",
-                    fechaHistorica: "",
-                    fechaHistFormato: "",
-                    modificada: false
-                });
-            }
-            $scope.notasCambios = true;
-        }
-        $scope.eliminarNota = function(indexNota) {
-            $scope.registrarAccion("Nota <strong>" + indexNota + "</strong> eliminada");
-            if ($scope.notas[indexNota].fechaCreacion != "") {
-                $scope.notasAEliminar.push($scope.notas[indexNota]);
-            }
-            $scope.notas.splice(indexNota, 1);
-            $scope.notasCambios = true;
-        };
-        $scope.modificarNota = function(indexNota, nuevaNota) {
-            $scope.registrarAccion("Nota <strong>" + indexNota + "</strong> modificada");
-            $scope.notas[indexNota].nota = nuevaNota;
-            // fecha creacion esta vacia cuando la nota aun no se encuentra
-            // en la base de dats
-            if ($scope.notas[indexNota].fechaCreacion != "") {
-                $scope.notas[indexNota].modificada = true;
-            };
-            $scope.notasCambios = true;
-        };
-        $scope.modificarReferencia = function(indexNota, nuevaReferencia) {
-            $scope.registrarAccion("Referencia de nota <strong>" + indexNota + "</strong> modificada");
-            $scope.notas[indexNota].referencia = nuevaReferencia;
-            if ($scope.notas[indexNota].fechaCreacion != "") {
-                $scope.notas[indexNota].modificada = true;
-            }
-            $scope.notasCambios = true;
-        };
-        $scope.modificarFechaHistorica = function(indexNota, nuevaFechaHistorica) {
-            $scope.registrarAccion("Fecha Historica de nota <strong>" + indexNota + "</strong> modificada");
-            $scope.notas[indexNota].fechaHistorica = nuevaFechaHistorica;
-            if ($scope.notas[indexNota].fechaCreacion != "") {
-                $scope.notas[indexNota].modificada = true;
-            }
-            $scope.notasCambios = true;
-        };
-
-        // Para guardar borrar y barra de estado
-        $scope.ultimaAccion = $sce.trustAsHtml("Ninguna");
-        // Log
-        $scope.registrarAccion = function(mensaje) {
-            $scope.ultimaAccion = $sce.trustAsHtml(mensaje);
-            console.log(mensaje)
-        }
         // Button functions
         $scope.borrarCambios = function() {
-            if (window.confirm("Esta Seguro que quiere borrar los cambios?") === true) {
-                $scope.registrarAccion("Los cambios han sido borrados");
                 init();
-            }
         };
         
         $scope.datosGuardados = false;
@@ -1004,7 +923,7 @@
             var conexiones = {};
             //Revisamos datos principales editados
             if ($scope.datosPrincipalesEditado) {
-                $scope.registrarAccion("Actualizando BD Embarcaciones");
+                pimcBarraEstadoService.registrarAccion("Actualizando BD Embarcaciones");
                 var request = 'http://monsalvediaz.com:5000/PIMC0.1/Modificar/Embarcaciones'
                 var parametros = {
                     idUnico:'embarcacionID',
@@ -1099,47 +1018,47 @@
             }
             // Anotaciones
             if ($scope.notasCambios) {
-                $scope.registrarAccion("Actualizando BD notasEmbarcaciones");
+                pimcBarraEstadoService.registrarAccion("Actualizando BD notasEmbarcaciones");
                 $scope.notasCambios = false;
-                $scope.notas.forEach(function(nota) {
-                    // Insertamos notas nuevas
-                    if (nota.fechaCreacion.length == 0 && nota.nota.length != 0)
-                        conexiones['notasCambiosInsertar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/EmbarcacionesNotas',
-                                    {params:{
-                                        embarcacionID: $scope.embarcacionID,
-                                        nota: "'" + nota.nota + "'",
-                                        referencia: "'" + nota.referencia + "'"
-                                    }}
-                        );
-                    // Modificamos notas viejas
-                    if (nota.modificada == true) {
-                        conexiones['notasCambiosModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/EmbarcacionesNotas',
-                                    {params:{
-                                        idUnico2: 'embarcacionID',
-                                        idUnico: 'notaID',
-                                        notaID: nota.notaID,
-                                        embarcacionID: $scope.embarcacionID,
-                                        nota: "'" + nota.nota + "'",
-                                        referencia: "'" + nota.referencia + "'"
-                                    }}
-                        );
-                    }
-                });
-                // Eliminamos notas eliminadas
-                $scope.notasAEliminar.forEach(function(nota) {
-                    conexiones['notasCambiosEliminar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/EmbarcacionesNotas',
-                                {params:{
-                                idUnico2: 'embarcacionID',
-                                idUnico: 'notaID',
-                                notaID: nota.notaID,
-                                embarcacionID: $scope.embarcacionID
-                                }}
-                    );
-                });
+//                $scope.notas.forEach(function(nota) {
+//                    // Insertamos notas nuevas
+//                    if (nota.fechaCreacion.length == 0 && nota.nota.length != 0)
+//                        conexiones['notasCambiosInsertar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/EmbarcacionesNotas',
+//                                    {params:{
+//                                        embarcacionID: $scope.embarcacionID,
+//                                        nota: "'" + nota.nota + "'",
+//                                        referencia: "'" + nota.referencia + "'"
+//                                    }}
+//                        );
+//                    // Modificamos notas viejas
+//                    if (nota.modificada == true) {
+//                        conexiones['notasCambiosModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/EmbarcacionesNotas',
+//                                    {params:{
+//                                        idUnico2: 'embarcacionID',
+//                                        idUnico: 'notaID',
+//                                        notaID: nota.notaID,
+//                                        embarcacionID: $scope.embarcacionID,
+//                                        nota: "'" + nota.nota + "'",
+//                                        referencia: "'" + nota.referencia + "'"
+//                                    }}
+//                        );
+//                    }
+//                });
+//                // Eliminamos notas eliminadas
+//                $scope.notasAEliminar.forEach(function(nota) {
+//                    conexiones['notasCambiosEliminar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/EmbarcacionesNotas',
+//                                {params:{
+//                                idUnico2: 'embarcacionID',
+//                                idUnico: 'notaID',
+//                                notaID: nota.notaID,
+//                                embarcacionID: $scope.embarcacionID
+//                                }}
+//                    );
+//                });
             }
             // REPARACIONES
             if ($scope.reparacionesEditadas) {
-                $scope.registrarAccion("Actualizando BD EmbarcacionesReparaciones");
+                pimcBarraEstadoService.registrarAccion("Actualizando BD EmbarcacionesReparaciones");
                 $scope.reparacionesEditadas = false;
                 for (var reparacion in $scope.tablaReparaciones.data) {
                     var currentElement = $scope.tablaReparaciones.data[reparacion];
@@ -1191,7 +1110,7 @@
             }
             // DATOS SECUNDARIOS
             if ($scope.datosSecundariosEditados) {
-                $scope.registrarAccion("Actualizando BD EmbarcacionesElementos");
+                pimcBarraEstadoService.registrarAccion("Actualizando BD EmbarcacionesElementos");
                 $scope.datosSecundariosEditados = false;
                 for (var elemento in $scope.tablaDatosSecundarios.data) {
                     var currentElement = $scope.tablaDatosSecundarios.data[elemento];

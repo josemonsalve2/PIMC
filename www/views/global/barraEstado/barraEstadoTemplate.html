@@ -1,0 +1,7 @@
+<footer class="status-bar">
+  <div class="text-right">
+    <strong>Ultima Accion: </strong><span class="status-message p-r-1" ng-bind-html="barraEstadoCtrl.ultimaAccion.mensaje">{{barraEstadoCtrl.ultimaAccion.mensaje}}</span>
+    <button ng-click='barraEstadoCtrl.borrarCambiosInterno()' class="btn btn-danger m-r-1">Borrar cambios</button>
+    <button ng-click='barraEstadoCtrl.guardarCambiosInterno()' class="btn btn-success">Guardar</button>
+  </div>
+</footer>
