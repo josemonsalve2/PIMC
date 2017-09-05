@@ -2,7 +2,9 @@
     
     'use strict';
   
-    var crearLugarTerritorioModule = angular.module('crearLugarTerritorioModal',['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
+    // Definidio inicialmente en lugarTerritorio.js
+    var crearLugarTerritorioModule = angular.module('crearLugarTerritorioModal');
+    
     crearLugarTerritorioModule.service('crearLugarTerritorio', ['$uibModal', '$http', function($uibModal, $http){
         var $ctrl = this; 
         $ctrl.lugarOTerritorio = 'lugar';

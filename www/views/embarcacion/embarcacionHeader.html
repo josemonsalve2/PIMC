@@ -1,0 +1,47 @@
+<div class="titulo col-sm-12">
+  <h1 class="nombre">
+    <span editable-text="datosPrincipales.nombres[0]" 
+          onbeforesave="listados.modificarBorrar('Nombres',datosPrincipales.nombres,0,datosPrincipales.nombres[0])"  
+          class="m-l-1"> {{ datosPrincipales.nombres[0] || "Agregar un nombre" }}</span><br/>
+    <small class="m-l-1 text-shady_lady">Otros nombres</small>
+    <small class="m-l-1"
+           onaftersave="listados.modificarBorrar('Nombres',datosPrincipales.nombres,$index,nombre)" 
+           editable-text="nombre" 
+           ng-repeat="nombre in datosPrincipales.nombres track by $index" ng-if="$index > 0">
+      <button class="btn btn-xs btn-primary" ng-click="listados.volverPrincipal('Nombres',datosPrincipales.nombres,$index);$event.stopPropagation()">↑</button>{{nombre}}
+    </small>
+    <small class="m-l-1"
+           editable-text="listados.mensaje" 
+           onshow="listados.borrarOnShow()"
+           onbeforesave="listados.agregarALista('Nombres', datosPrincipales.nombres, $data)" 
+           onaftersave="listados.mensaje='+ Agregar';return"
+           oncancel="listados.mensaje='+ Agregar'">
+      {{listados.mensaje || '+ Agregar'}}
+    </small>
+    <span class="m-l-1 text-shady_lady">|</span>
+    <small class="m-l-1 text-shady_lady">Alias: </small>
+    <small class="m-l-1"
+           onaftersave="listados.modificarBorrar('Alias',datosPrincipales.alias,$index,alias)" 
+           editable-text="alias" 
+           ng-repeat="alias in datosPrincipales.alias track by $index" ng-if="$index > 0">
+      {{alias}}
+    </small>
+    <small class="m-l-1"
+           editable-text="listados.mensaje" 
+           onshow="listados.borrarOnShow()"
+           onbeforesave="listados.agregarALista('Nombres', datosPrincipales.alias, $data)" 
+           onaftersave="listados.mensaje='+ Agregar';return"
+           oncancel="listados.mensaje='+ Agregar'">
+      {{listados.mensaje || '+ Agregar'}}
+    </small>
+  </h1>
+</div>
+<div class="col-sm-12 clearfix">
+  <div class="m-r-1 inline"><h5 class="tituloDato">Banderas:</h5></div>
+  <div class="m-r-1 inline"><span class="valorDato"><span class="flag flag-co m-r-1" alt="Colombia"></span>Colombia</span><span id="naceMuere">(1900 - 1987)</span></div>
+  <div class="m-r-1 inline"><span class="valorDato"><span class="flag flag-es m-r-1" alt="Colombia"></span>España</span><span id="naceMuere">(1900 - 1987)</span></div>
+  <div class="m-r-1 inline"><span class="valorDato"><span class="flag flag-de m-r-1" alt="Colombia"></span>Alemania</span><span id="naceMuere">(1900 - 1987)</span></div>
+  <div class="pull-right"><a href="" class="btn btn-xs btn-primary">Añadir bandera</a></div>
+  <hr>
+</div>
+</div>

@@ -1,0 +1,74 @@
+<div id="datosPrincipalesEmbarcacion" class="row p-t-2">
+  <div class="col-sm-6">
+    <ul class="datos">
+      <li>
+        <form editable-form name="lugarTerritorioConstruccionForm" blur="submit">
+          <span class="tituloDato">Lugar de construcción:</span>
+          <span editable-text="datosPrincipales.lugarTerritorioConstruccion.LugarTerritorioNombre" 
+                ng-click="lugarTerritorioConstruccionForm.$show()"
+                e-typeahead-min-length="3"
+                e-uib-typeahead="lugares.nombre as lugares.nombreMostrar for lugares in autocompletarLugarTerritorio($data)" 
+                e-typeahead-wait-ms="100" 
+                e-typeahead-on-select="seleccionarLugarTerritorio(datosPrincipales.lugarTerritorioConstruccion, $item)"
+                onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionNombre',$data)"  
+                class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.LugarTerritorioNombre || "No definido" }} ({{ datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio || "No definido" }})
+          </span>
+        </form>
+      </li>
+      <li><span class="tituloDato">Fecha de construcción:</span><span editable-text="datosPrincipales.fechaConstruccion" 
+                                                                      onbeforesave="editarDatoPrincipal('fechaConstruccion',$data)"  
+                                                                      class="valorDato"> {{ datosPrincipales.fechaConstruccion || "No definido" }}</span>
+      </li>
+      <li><form editable-form name="lugarTerritorioDesercionForm" blur="submit">
+        <span class="tituloDato">Lugar de deserción:</span>
+        <span editable-text="datosPrincipales.lugarTerritorioDesercion.LugarTerritorioNombre" 
+              ng-click="lugarTerritorioDesercionForm.$show()"
+              e-typeahead-min-length="3"
+              e-uib-typeahead="lugares.nombre as lugares.nombreMostrar for lugares in autocompletarLugarTerritorio($data)" 
+              e-typeahead-wait-ms="100" 
+              e-typeahead-on-select="seleccionarLugarTerritorio(datosPrincipales.lugarTerritorioDesercion,$item)"
+              onbeforesave="editarDatoPrincipal('lugarTerritorioDesercionNombre',$data)"  
+              class="valorDato"> {{ datosPrincipales.lugarTerritorioDesercion.LugarTerritorioNombre || "No definido" }} ({{ datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio || "No definido" }})
+        </span>
+        </form>
+      </li>
+      <li><span class="tituloDato">Fecha de deserción:</span><span editable-text="datosPrincipales.fechaDesercion" 
+                                                                   onbeforesave="editarDatoPrincipal('fechaDesercion',$data)"  
+                                                                   class="valorDato"> {{ datosPrincipales.fechaDesercion || "No definido" }}</span>
+      </li>
+      <li><span class="tituloDato">Razón de deserción:</span><span editable-text="datosPrincipales.razonDesercion" 
+                                                                   onbeforesave="editarDatoPrincipal('razonDesercion',$data)"  
+                                                                   class="valorDato"> {{ datosPrincipales.razonDesercion || "No definido" }}</span>
+      </li>
+    </ul>
+
+  </div>
+  <div class="col-sm-6">
+    <ul class="datos">
+      <li>
+        <span class="tituloDato">Tipo de barco:</span><span editable-text="datosPrincipales.tipo" 
+                                                            onbeforesave="editarDatoPrincipal('tipo',$data)"  
+                                                            class="valorDato"> {{ datosPrincipales.tipo || "No definido" }}</span>
+      </li>
+      <li>
+        <span class="tituloDato">Usos:</span>
+        <ol class="breadcrumb inline m-b-0">
+          <li
+              onaftersave="listados.modificarBorrar('Usos',datosPrincipales.usos,$index,usos)" 
+              editable-text="usos" 
+              ng-repeat="usos in datosPrincipales.usos track by $index" ng-if="$index > 0">
+            {{usos}}
+          </li>
+          <li 
+              editable-text="listados.mensaje" 
+              onshow="listados.borrarOnShow()"
+              onbeforesave="listados.agregarALista('Usos', datosPrincipales.usos, $data)" 
+              onaftersave="listados.mensaje='+ Agregar';return"
+              oncancel="listados.mensaje='+ Agregar'">
+            {{listados.mensaje || '+ Agregar'}}
+          </li>
+        </ol>
+      </li>
+    </ul>
+  </div>
+</div>
