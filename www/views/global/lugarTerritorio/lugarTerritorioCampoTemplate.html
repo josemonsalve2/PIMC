@@ -1,0 +1,10 @@
+<form editable-form name="lugarTerritorioForm" blur="submit">
+  <span editable-text="pimcLugarTerritorioCampoCtrl.lugarTerritorio.LugarTerritorioNombre" 
+        ng-click="lugarTerritorioForm.$show()"
+        e-typeahead-min-length="3"
+        e-uib-typeahead="lugaresTerritorios.nombre as lugaresTerritorios.nombreMostrar for lugaresTerritorios in pimcLugarTerritorioCampoCtrl.autocompletarLugarTerritorio($data)" 
+        e-typeahead-wait-ms="50" 
+        e-typeahead-on-select="pimcLugarTerritorioCampoCtrl.seleccionarLugarTerritorio($item)"
+        class="valorDato"> {{ pimcLugarTerritorioCampoCtrl.lugarTerritorio.LugarTerritorioNombre || "No definido" }} ({{ pimcLugarTerritorioCampoCtrl.lugarTerritorio.lugarOTerritorio || "No definido" }})
+  </span>
+</form>

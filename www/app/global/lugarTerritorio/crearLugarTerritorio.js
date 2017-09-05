@@ -3,9 +3,9 @@
     'use strict';
   
     // Definidio inicialmente en lugarTerritorio.js
-    var crearLugarTerritorioModule = angular.module('crearLugarTerritorioModal');
+    var lugarTerritorioModule = angular.module('lugarTerritorioModule');
     
-    crearLugarTerritorioModule.service('crearLugarTerritorio', ['$uibModal', '$http', function($uibModal, $http){
+    lugarTerritorioModule.service('crearLugarTerritorio', ['$uibModal', '$http', function($uibModal, $http){
         var $ctrl = this; 
         $ctrl.lugarOTerritorio = 'lugar';
         $ctrl.valorInicial = {};
@@ -30,7 +30,7 @@
         };
     }]);
                                                           
-    crearLugarTerritorioModule.controller('ModalInstanceCtrl', function ($http, $uibModalInstance, valorInicial ) {
+    lugarTerritorioModule.controller('ModalInstanceCtrl', function ($http, $uibModalInstance, valorInicial ) {
         var $ctrl = this;
         
         $ctrl.datosLugar = {

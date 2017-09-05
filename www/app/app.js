@@ -14,7 +14,7 @@
     'eventoPerfil',
     'archivosBusqueda',
     'documentoPerfil',
-    'crearLugarTerritorioModal',
+    'lugarTerritorioModule',
     'comentariosModule',
     'barraEstadoModule',
     'pimcListadoModule'

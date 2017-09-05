@@ -103,66 +103,9 @@
     var embarcacionDatosPrincipalesCtrl = this;
 
 
-    // Lista de nombres
-    if ($scope.datosPrincipales.nombres != null && $scope.datosPrincipales.nombres != "") {
-      $scope.datosPrincipales.nombres = embarcacionesDatos.nombres.split(",");
-      $scope.datosPrincipales.nombres = $scope.datosPrincipales.nombres.map(function(e) {
-        return e.trim();
-      });
-    } else {
-      $scope.datosPrincipales.nombres = [];
-    }
-    // Lista de alias
-    if ($scope.datosPrincipales.alias != null && $scope.datosPrincipales.alias != "") {
-      $scope.datosPrincipales.alias = embarcacionesDatos.alias.split(",");
-      $scope.datosPrincipales.alias = $scope.datosPrincipales.alias.map(function(e) {
-        return e.trim();
-      });
-    } else {
-      $scope.datosPrincipales.alias = [];
-    }
-    // Lista de usos
-    if ($scope.datosPrincipales.usos != null && $scope.datosPrincipales.usos != "") {
-      $scope.datosPrincipales.usos = embarcacionesDatos.usos.split(",");
-      $scope.datosPrincipales.usos = $scope.datosPrincipales.usos.map(function(e) {
-        return e.trim();
-      });
-    } else {
-      $scope.datosPrincipales.usos = [];
-    }
-
-    // Editamos fecha de nacimiento y fallecimiento al formato adecuado
-    $scope.datosPrincipales.fechaConstruccion = embarcacionesDatos.fechaConstruccion != null ? $filter('date')(new Date(embarcacionesDatos.fechaConstruccion), String(embarcacionesDatos.fechaConstFormato).toLowerCase()) : "";
-    $scope.datosPrincipales.fechaDesercion = embarcacionesDatos.fechaDesercion != null ? $filter('date')(new Date(embarcacionesDatos.fechaDesercion), String(embarcacionesDatos.fechaDesercionFormato).toLowerCase()) : "";
-
-
-
     // Funcion para datos editados
-    $scope.editarDatoPrincipal = function(campo, valorNuevo) {
-      if (campo == 'lugarTerritorioConstruccionNombre') {
-        if (valorNuevo != $scope.datosPrincipales.lugarTerritorioConstruccion.nombre) {
-          pimcBarraEstadoService.registrarAccion($scope.datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio + " modificado");
-          $scope.datosPrincipalesEditado = true;
-        }
-      } else if (campo == 'lugarTerritorioConstruccionTipo') {
-        if (valorNuevo != $scope.datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio) {
-          pimcBarraEstadoService.registrarAccion($scope.datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio + " construccion modificado a " + valorNuevo + " construccion");
-          $scope.datosPrincipalesEditado = true;
-        }
-      } else if (campo == 'lugarTerritorioDesercionNombre') {
-        if (valorNuevo != $scope.datosPrincipales.lugarTerritorioDesercion.nombre) {
-          pimcBarraEstadoService.registrarAccion($scope.datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio + "  modificado");
-          $scope.datosPrincipalesEditado = true;
-        }
-      } else if (campo == 'lugarTerritorioDesercionTipo') {
-        if (valorNuevo != $scope.datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio) {
-          pimcBarraEstadoService.registrarAccion($scope.datosPrincipales.lugarTerritorioDesercion.lugarOTerritorio + " construccion modificado a " + valorNuevo + " construccion");
-          $scope.datosPrincipalesEditado = true;
-        }
-      } else if (valorNuevo != $scope.datosPrincipales[campo]) {
-        pimcBarraEstadoService.registrarAccion(campo + " modificado");
-        $scope.datosPrincipalesEditado = true;
-      }
+    embarcacionDatosPrincipalesCtrl.editarDatoPrincipal = function(campo, valorNuevo) {
+      
     };
 
 
