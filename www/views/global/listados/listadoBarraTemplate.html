@@ -1,0 +1,23 @@
+<ol class="breadcrumb inline m-b-0">
+  <li
+      onaftersave="listadoCtrl.modificarBorrar($index,elementoLista)" 
+      editable-text="elementoLista" 
+      ng-repeat="elementoLista in listadoCtrl.listado track by $index" ng-if="!listadoCtrl.ignorarPrimeroActivado || $index > 0">
+    <a href="#" class="bg-mountain_meadow">
+      <button class="btn btn-xs btn-primary" 
+              ng-click="listadoCtrl.volverPrincipal($index); $event.stopPropagation()"
+              ng-show='listadoCtrl.volverPrincipalActivado'> 
+        ↑
+      </button>
+      {{elementoLista}}
+    </a>
+  </li>
+  <li
+      editable-text="listadoCtrl.agregarNuevo.mensaje"
+      onshow="listadoCtrl.borrarOnShow()"
+      onbeforesave="listadoCtrl.agregarALista($data)" 
+      onaftersave="listadoCtrl.agregarNuevo.mensaje='+ Agregar';return"
+      oncancel="listadoCtrl.agregarNuevo.mensaje='+ Agregar'">
+    <a href="#">{{listadoCtrl.agregarNuevo.mensaje}}</a>
+  </li>
+</ol>

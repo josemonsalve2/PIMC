@@ -3,7 +3,7 @@
   <div class="col-sm-12 p-b-1">
     <form class="form-inline">
       <div class="form-group">
-        <input type="text" class="form-control" ng-model="valorBusqueda" ng-keydown="$event.keyCode === 13 && realizarBusqueda()"></input>
+        <input type="text" class="form-control" ng-model="valorBusqueda" ng-keydown="$event.keyCode === 13 && realizarBusqueda()">
       </div>
       <button ng-click='realizarBusqueda()' class="btn btn-primary">buscar...</button>
     </form>
@@ -16,5 +16,4 @@
   <div class="col-sm-12 text-right p-t-1">
     <button ng-click='abrirArchivosSeleccionados()' class="btn btn-success">Abrir Seleccionados</button>
 	</div>
-	
 </section>

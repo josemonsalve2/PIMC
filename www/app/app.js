@@ -16,7 +16,8 @@
     'documentoPerfil',
     'crearLugarTerritorioModal',
     'comentariosModule',
-    'barraEstadoModule'
+    'barraEstadoModule',
+    'pimcListadoModule'
   ]);
 
   pimc.controller('AppController', function($scope) {});
