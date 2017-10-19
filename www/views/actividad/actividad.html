@@ -1,0 +1,67 @@
+<section>
+  <uib-tabset active="active">
+    <uib-tab index="0" heading="Datos Principales"> 
+        <div id="preloading" class="preloader" ng-show="datosPrincipalesCargando"><img src="images/loader.gif"></div>
+        <div class="row p-t-2" ng-show="!datosPrincipalesCargando">
+            <div class="col-sm-12">
+                <h1 class="t0">
+                <span editable-text="datosPrincipales.contenido.nombre" 
+                            onbeforesave="editarDatoPrincipal('nombre',$data)"> 
+                            {{ datosPrincipales.contenido.nombre || "Nombre Indeterminado" }}</span>
+                </h1>
+                <h2 class="t1">Tipo de actividad: 
+                <span editable-text="datosPrincipales.contenido.tipoActividad" 
+                            onbeforesave="editarDatoPrincipal('tipoActividad',$data)"> 
+                            {{ datosPrincipales.contenido.tipoActividad || "Indeterminada" }}</span>
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-sm-12 col-md-6">
+                <ul class="list-group m-b-0">
+                    <li class="list-group-item">
+                        <span class="label label-primary">Descripción</span>
+                        <span editable-text="datosPrincipales.contenido.descripcion" 
+                            onbeforesave="editarDatoPrincipal('descripcion',$data)"  
+                            class="m-l-1"> {{ datosPrincipales.contenido.descripcion || "No definida" }}</span>
+                    </li> 
+                    <li class="list-group-item">
+                        <span class="label label-primary">Personajes involucrados</span>
+                        <span editable-text="datosPrincipales.contenido.personajesInvolucrados" 
+                            onbeforesave="editarDatoPrincipal('personajesInvolucrados',$data)"  
+                            class="m-l-1"> {{ datosPrincipales.contenido.personajesInvolucrados || "No definida" }}</span>
+                    </li> 
+                    <li class="list-group-item">
+                        <span class="label label-primary">Herramientas</span>
+                        <span editable-text="datosPrincipales.contenido.herramientas" 
+                            onbeforesave="editarDatoPrincipal('herramientas',$data)"  
+                            class="m-l-1"> {{ datosPrincipales.contenido.herramientas || "No definido" }}</span>
+                    </li> 
+                    <li class="list-group-item">
+                        <span class="label label-primary">Materiales</span>
+                        <span editable-text="datosPrincipales.contenido.materiales" 
+                            onbeforesave="editarDatoPrincipal('materiales',$data)"  
+                            class="m-l-1"> {{ datosPrincipales.contenido.materiales || "No definido" }}</span>
+                    </li> 
+                </ul>
+            </div>
+
+            <div id="notasAdicionales" class="col-sm-12 col-md-6">
+              <div class="panel panel-primary">
+                <header class="panel-heading">
+                  <h4 class="m-a-1">Comentarios</h4>
+                </header>
+                <pimc-comentarios-anotaciones notas="notas.notas" reportar-cambio="notificarNotasCambios()"></pimc-comentarios-anotaciones>
+              </div>
+            </div>
+
+        </div>
+      
+        <div class="bottom"></div>
+
+    </uib-tab>
+  </uib-tabset>
+</section>
+<pimc-barra-estado guardar-cambios="guardarCambios()" borrar-cambios="borrarCambios()"></pimc-barra-estado>
+
