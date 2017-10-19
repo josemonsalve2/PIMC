@@ -17,7 +17,8 @@
     'lugarTerritorioModule',
     'comentariosModule',
     'barraEstadoModule',
-    'pimcListadoModule'
+    'pimcListadoModule',
+    'fechaConFormatoModule'
   ]);
 
   pimc.controller('AppController', function($scope) {});
@@ -57,7 +58,7 @@
         controller:  'institucionPerfilController'
       })
       .when('/actividad', {
-        templateUrl: 'views/actividad.html',
+        templateUrl: 'views/actividad/actividad.html',
         controller:  'actividadPerfilController'
       })
       .when('/evento', {
@@ -133,7 +134,8 @@
           Embarcaciones: "embarcacionID",
           Archivos: "archivoID",
           Documentos: "documentoID",
-          Personajes: "personajeID"
+          Personajes: "personajeID",
+          Actividades: "actividadID"
       }
 
       }]);
