@@ -54,7 +54,7 @@
     //testInsertar();
     //testConsulta();
     //testEliminar();
-    testModificar();
+    //testModificar();
   }]);
   
 })(window.angular);
