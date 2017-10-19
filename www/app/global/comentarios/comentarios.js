@@ -23,10 +23,11 @@
                     var notas = [];
                     if (Object.keys(resultadoConsulta).length != 0) {
                         resultadoConsulta;
-                        resultadoConsulta.forEach(function(notaDB) {
+                        angular.forEach(resultadoConsulta, function(notaDB, key) {
                             var nuevaNota = {};
-                            nota.estado = pimcService.datosEstados.LIMPIO;
-                            nota.contenido = notaDB;
+                            nuevaNota.estado = pimcService.datosEstados.LIMPIO;
+                            nuevaNota.contenido = notaDB;
+                            notas.push(nuevaNota);
                         });
                         // LOG
                         pimcService.debug(notas);
