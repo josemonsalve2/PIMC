@@ -2,18 +2,9 @@
   <div class="col-sm-6">
     <ul class="datos">
       <li>
-        <form editable-form name="lugarTerritorioConstruccionForm" blur="submit">
+        
           <span class="tituloDato">Lugar de construcción:</span>
-          <span editable-text="datosPrincipales.lugarTerritorioConstruccion.LugarTerritorioNombre" 
-                ng-click="lugarTerritorioConstruccionForm.$show()"
-                e-typeahead-min-length="3"
-                e-uib-typeahead="lugares.nombre as lugares.nombreMostrar for lugares in autocompletarLugarTerritorio($data)" 
-                e-typeahead-wait-ms="100" 
-                e-typeahead-on-select="seleccionarLugarTerritorio(datosPrincipales.lugarTerritorioConstruccion, $item)"
-                onbeforesave="editarDatoPrincipal('lugarTerritorioConstruccionNombre',$data)"  
-                class="valorDato"> {{ datosPrincipales.lugarTerritorioConstruccion.LugarTerritorioNombre || "No definido" }} ({{ datosPrincipales.lugarTerritorioConstruccion.lugarOTerritorio || "No definido" }})
-          </span>
-        </form>
+          <pimc-lugar-territorio-campo luger-territorio="embarcacionDatosPrincipalesCtrl.datosPrincipales.datosLugarTerritorioConstruccion" reportar-cambio="embarcacionDatosPrincipalesCtrl.reportarCambioLugar()"></pimc-lugar-territorio-campo>
       </li>
       <li><span class="tituloDato">Fecha de construcción:</span><span editable-text="datosPrincipales.fechaConstruccion" 
                                                                       onbeforesave="editarDatoPrincipal('fechaConstruccion',$data)"  
