@@ -7,7 +7,7 @@
     'use strict';
     
     var archivosBusqueda = angular.module('archivosBusqueda',  ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav']);
-    archivosBusqueda.controller('archivosBusquedaController', ['pimcService', '$scope', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', '$scope', function (pimcService, $scope, $http, $window, $location, $filter, i18nService, uiGridConstants) {
+    archivosBusqueda.controller('archivosBusquedaController', ['pimcService', '$scope', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', '$scope', function(pimcService, $scope, $http, $window, $location, $filter, i18nService, uiGridConstants) {
 
         // Entreda de busquedas y botones
         $scope.valorBusqueda = "";
@@ -35,16 +35,20 @@
             $scope.tablaResultadosGridApi.grid.registerRowsProcessor($scope.filtrarBusquedas, 200);
         };
         
-        $http.get('http://monsalvediaz.com:5000/PIMC0.1/ConsultaArchivo').then(function (data) {
-            data.data.forEach(function changeDates(row, index) {
-            if (row.fechaInicial !== null) {
-                row.fechaInicial = $filter('date')(new Date(row.fechaInicial), String(row.fechaInicialFormato).toLowerCase());
-                row.fechaFinal = $filter('date')(new Date(row.fechaFinal), String(row.fechaInicialFormato).toLowerCase());
-            }
+        $scope.init = function() {
+            var consultaTodosArchivos = pimcService.crearURLOperacion('ConsultarTodos', 'Archivos');
+            // Cargamos los archivos
+            return $http.get(consultaTodosArchivos).then(function (data) {
+                data.data.forEach(function changeDates(row, index) {
+                    if (row.fechaInicial !== null) {
+                        row.fechaInicial = $filter('date')(new Date(row.fechaInicial), String(row.fechaInicialFormato).toLowerCase());
+                        row.fechaFinal = $filter('date')(new Date(row.fechaFinal), String(row.fechaInicialFormato).toLowerCase());
+                    }
+                });
+                $scope.tablaResultados.data = data.data;
+                pimcService.debug("Archivos Cargados", data);
             });
-            $scope.tablaResultados.data = data.data;
-            console.log(data);
-        });
+        };
 
         //Funcion que se registra en el API
         $scope.filtrarBusquedas = function (renderableRows) {
@@ -82,6 +86,8 @@
             $window.localStorage.setItem("archivoID", seleccionados[0].archivoID);
             $window.location.href = "#!/archivo";
         };
+
+        $scope.init();
 
     }]);
 
