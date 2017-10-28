@@ -34,7 +34,7 @@
         controller:  'personajePerfilController'
       })
       .when('/archivo', {
-        templateUrl: 'views/archivo.html',
+        templateUrl: 'views/archivo/archivo.html',
         controller:  'archivoPerfilController'
       })
       .when('/embarcacion', {
