@@ -7,7 +7,7 @@
     'use strict';
     
     var archivosBusqueda = angular.module('archivosBusqueda',  ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav']);
-    archivosBusqueda.controller('archivosBusquedaController', ['$scope', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', '$scope', function ($scope, $http, $window, $location, $filter, i18nService, uiGridConstants) {
+    archivosBusqueda.controller('archivosBusquedaController', ['pimcService', '$scope', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', '$scope', function (pimcService, $scope, $http, $window, $location, $filter, i18nService, uiGridConstants) {
 
         // Entreda de busquedas y botones
         $scope.valorBusqueda = "";
@@ -34,7 +34,7 @@
             // Para filtrar los resultados
             $scope.tablaResultadosGridApi.grid.registerRowsProcessor($scope.filtrarBusquedas, 200);
         };
-
+        
         $http.get('http://monsalvediaz.com:5000/PIMC0.1/ConsultaArchivo').then(function (data) {
             data.data.forEach(function changeDates(row, index) {
             if (row.fechaInicial !== null) {
