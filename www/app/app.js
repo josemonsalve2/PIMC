@@ -148,9 +148,9 @@
           Actividades: "actividadID"
       }
 
-      }]);
+    }]);
     
-    pimc.filter('estadoNoEliminado', [ 'pimcService', function(pimcService) {
+    pimc.filter('estadoNoEliminado', ['pimcService', function(pimcService) {
       return function(items) {
         var filtered = [];
         angular.forEach(items, function(el) {
