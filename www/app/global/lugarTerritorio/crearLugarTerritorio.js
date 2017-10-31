@@ -72,7 +72,7 @@
                         }
                     }
 
-                    $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Lugares', config).then(function(data) {
+                    $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/Lugares', config).then(function(data) {
                         console.log(data);
                         // Data contains the last insert id
                         if (Object.keys(data.data).length != 0) {
@@ -101,7 +101,7 @@
                         }
                     }
 
-                    $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Territorios', config).then(function(data) {
+                    $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/Territorios', config).then(function(data) {
                         console.log(data);
                         // Data contains the last insert id
                         if (Object.keys(data.data).length != 0) {

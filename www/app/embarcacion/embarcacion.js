@@ -49,12 +49,12 @@
         
         // Funcion para lugares y territorios
         $scope.autocompletarLugarTerritorio = function (hintLugarTerritorio) {
-            var promiseLugar = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Lugares', {
+            var promiseLugar = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Autocompletar/Lugares', {
                 params: {
                     nombre: hintLugarTerritorio
                 }
             });
-            var promiseTerritorios = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Territorios', {
+            var promiseTerritorios = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Autocompletar/Territorios', {
                 params: {
                     nombre: hintLugarTerritorio,
                     otrosNombres: hintLugarTerritorio
@@ -131,7 +131,7 @@
 
         $scope.cargarDatosPrincipales = function() {
             $scope.datosPrincipalesCargando = true;
-            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Embarcaciones',
+            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Embarcaciones',
                 {params: {embarcacionID: $scope.embarcacionID}}
             ).then( function(data) {
                 //Obtener los datos JSON
@@ -150,7 +150,7 @@
                         }
                         $scope.datosPrincipales.lugarTerritorioConstruccion = lugarTerritorioConstruccion;
                         if ($scope.datosPrincipales.lugarConstruccion) {
-                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Lugares',{
+                            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Lugares',{
                                 params: {
                                     lugarID: $scope.datosPrincipales.lugarConstruccion
                                 }
@@ -164,7 +164,7 @@
                                 $scope.datosPrincipales.lugarTerritorioConstruccion = lugarTerritorioConstruccion;
                             });
                         } else if ($scope.datosPrincipales.territorioConstruccion) {
-                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Territorios',{
+                            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Territorios',{
                                 params: {
                                     territorioID: $scope.datosPrincipales.territorioConstruccion
                                 }
@@ -188,7 +188,7 @@
                         $scope.datosPrincipales.lugarTerritorioDesercion = lugarTerritorioDesercion;
                         
                         if ($scope.datosPrincipales.lugarDesercion) {
-                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Lugares',{
+                            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Lugares',{
                                 params: {
                                     lugarID: $scope.datosPrincipales.lugarDesercion
                                 }
@@ -202,7 +202,7 @@
                                 $scope.datosPrincipales.lugarTerritorioDesercion = lugarTerritorioDesercion;
                             });
                         } else if ($scope.datosPrincipales.territorioDesercion) {
-                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Territorios',{
+                            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Territorios',{
                                 params: {
                                     territorioID: $scope.datosPrincipales.territorioDesercion
                                 }
@@ -376,7 +376,7 @@
         $scope.cargarReparaciones = function() {
             $scope.reparacionesEditadas = false;
             $scope.tablaReparaciones.data = [];
-            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/EmbarcacionesReparaciones',
+            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/EmbarcacionesReparaciones',
                 {params: {embarcacionID: $scope.embarcacionID}}
             ).then( function(data) {
                 if (Object.keys(data.data).length != 0) {
@@ -581,7 +581,7 @@
         $scope.cargarDatosSecundarios = function() {
             $scope.datosSecundariosEditados = false;
             $scope.tablaDatosSecundarios.data = [];
-            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/EmbarcacionesElementos',
+            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/EmbarcacionesElementos',
                 {params: {embarcacionID: $scope.embarcacionID}}
             ).then( function(data) {
                 if (Object.keys(data.data).length != 0) {
@@ -785,7 +785,7 @@
         $scope.cargarHojaServicioPersonal  = function() {
             $scope.hojaServicioPersonalEditado = true;
             $scope.tablaHojaServicioPersonal.data = [];
-            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/EmbarcacionesRutas',
+            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/EmbarcacionesRutas',
                 {params: {embarcacionID: $scope.embarcacionID}}
             ).then( function(data) {
                 if (Object.keys(data.data).length != 0) {
@@ -924,7 +924,7 @@
             //Revisamos datos principales editados
             if ($scope.datosPrincipalesEditado) {
                 pimcBarraEstadoService.registrarAccion("Actualizando BD Embarcaciones");
-                var request = 'http://monsalvediaz.com:5000/PIMC0.1/Modificar/Embarcaciones'
+                var request = 'http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Modificar/Embarcaciones'
                 var parametros = {
                     idUnico:'embarcacionID',
                     embarcacionID:$scope.embarcacionID
@@ -937,7 +937,7 @@
                         if (value.insertarNuevo) {
                             // Es necesario crear un lugar o territorio
                             if (value.lugarOTerritorio === 'lugar') {
-                                inserciones['insertarLugarConstruccion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Lugares',{
+                                inserciones['insertarLugarConstruccion'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/Lugares',{
                                     params: {
                                         nombre:'"' + value.nombre + '"'
                                     }
@@ -948,7 +948,7 @@
                                     }
                                 });
                             } else if (value.lugarOTerritorio === 'territorio') {
-                                inserciones['insertarTerritorioConstruccion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Territorio',{
+                                inserciones['insertarTerritorioConstruccion'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/Territorio',{
                                     params: {
                                         nombrePrincipal:'"' + value.nombre + '"'
                                     }
@@ -972,7 +972,7 @@
                         if (value.insertarNuevo) {
                             // Es necesario crear un lugar o territorio
                             if (value.lugarOTerritorio === 'lugar') {
-                                inserciones['insertarLugarDesercion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Lugares',{
+                                inserciones['insertarLugarDesercion'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/Lugares',{
                                     params: {
                                         nombre:'"' + value.nombre + '"'
                                     }
@@ -983,7 +983,7 @@
                                     }
                                 });
                             } else if (value.lugarOTerritorio === 'territorio') {
-                                inserciones['insertarTerritorioDesercion'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Territorio',{
+                                inserciones['insertarTerritorioDesercion'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/Territorio',{
                                     params: {
                                         nombrePrincipal:'"' + value.nombre + '"'
                                     }
@@ -1045,7 +1045,7 @@
                                 notaReparacion: "'" + currentElement.notaReparacion + "'"
                             }
                         }
-                        conexiones['reparacionesInsertar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/EmbarcacionesReparaciones', valorAInsertar);
+                        conexiones['reparacionesInsertar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/EmbarcacionesReparaciones', valorAInsertar);
                     } else if (currentElement.estadoActual === $scope.datosEstados.MODIFICADO) {
                         // Check for modifications
                         var valorAModificar = {
@@ -1059,7 +1059,7 @@
                                 notaReparacion: "'" + currentElement.notaReparacion  + "'"
                             }
                         }
-                        conexiones['reparacionesModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/EmbarcacionesReparaciones', valorAModificar);
+                        conexiones['reparacionesModificar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Modificar/EmbarcacionesReparaciones', valorAModificar);
                     } else if (currentElement.estadoActual === $scope.datosEstados.ELIMINADO) {
                         // Check for modifications
                         var valorAEliminar = {
@@ -1070,7 +1070,7 @@
                                 embarcacionID: $scope.embarcacionID
                             }
                         }
-                        conexiones['reparacionesModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/EmbarcacionesReparaciones', valorAEliminar);
+                        conexiones['reparacionesModificar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Eliminar/EmbarcacionesReparaciones', valorAEliminar);
                     }
                 }
             }
@@ -1101,7 +1101,7 @@
                                 fechaRemocionFormato: "'" + currentElement.fechaRemocionFormato + "'"
                             }
                         }
-                        conexiones['elementosInsertar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/EmbarcacionesElementos', valorAInsertar);
+                        conexiones['elementosInsertar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/EmbarcacionesElementos', valorAInsertar);
                     } else if (currentElement.estadoActual === $scope.datosEstados.MODIFICADO) {
                         // Check for modifications
                         var valorAModificar = {
@@ -1120,7 +1120,7 @@
                                 fechaRemocionFormato: "'" + currentElement.fechaRemocionFormato + "'"
                             }
                         }
-                        conexiones['elementosModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/EmbarcacionesElementos', valorAModificar);
+                        conexiones['elementosModificar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Modificar/EmbarcacionesElementos', valorAModificar);
                     } else if (currentElement.estadoActual === $scope.datosEstados.ELIMINADO) {
                         // Check for modifications
                         var valorAEliminar = {
@@ -1131,7 +1131,7 @@
                                 embarcacionID: $scope.embarcacionID
                             }
                         }
-                        conexiones['elementosModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/EmbarcacionesElementos', valorAEliminar);
+                        conexiones['elementosModificar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Eliminar/EmbarcacionesElementos', valorAEliminar);
                     }
                 }
             }

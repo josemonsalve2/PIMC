@@ -60,7 +60,7 @@
 
         $scope.cargarDatosPrincipales = function() {
             $scope.datosPrincipalesCargando = true;
-            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Documentos?documentoID=' + $scope.documentoID).then(function(data) {
+            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Documentos?documentoID=' + $scope.documentoID).then(function(data) {
                 //Obtener los datos JSON
                 var documentoDatos = data.data[0];
                 
@@ -268,7 +268,7 @@
             }
         }
         $scope.cargarEmisorReceptor = function () {
-            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosEmisorReceptor?documentoID=' + $scope.documentoID).then(function(data) {
+            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/DocumentosEmisorReceptor?documentoID=' + $scope.documentoID).then(function(data) {
                 if (Object.keys(data.data).length != 0) {
                     //Obtener los datos JSON
                     var emisorReceptorDatos = data.data[0];
@@ -314,7 +314,7 @@
             $scope.notas = "";
             $scope.notasAEliminar = [];
             $scope.notasCambio = false;
-            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosNotas?documentoID=' + $scope.documentoID).then(function(data) {
+            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/DocumentosNotas?documentoID=' + $scope.documentoID).then(function(data) {
                 if (Object.keys(data.data).length != 0) {
                     $scope.notas = data.data;
                     $scope.notas.forEach(function(nota) {
@@ -397,12 +397,12 @@
             $scope.personajesNuevos = [];
             $scope.personajesAEliminar = [];
             $scope.personajesAgregarReferencia = [];
-            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefPersonajes?documentoID=' + $scope.documentoID).then(function(data) {
+            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/DocumentosRefPersonajes?documentoID=' + $scope.documentoID).then(function(data) {
                 // revisar si existe alguno
                 if (Object.keys(data.data).length != 0) {
                     var personajesReferencias = data.data;
                     personajesReferencias.forEach(function(referencia) {
-                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes?personajeID=' + referencia.personajeID).then(function(data) {
+                            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Personajes?personajeID=' + referencia.personajeID).then(function(data) {
                                 var personaje = data.data[0];
                                 personaje.referenciaID = referencia.referenciaID;
                                 $scope.personajes.push(personaje);
@@ -441,7 +441,7 @@
             $scope.registrarAccion("Nueva referencia a personaje borrada");
         };
         $scope.autocompletarPersonaje = function (hintNombre) {
-            return $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Personajes?nombre=' + hintNombre).then(function(data) {
+            return $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Autocompletar/Personajes?nombre=' + hintNombre).then(function(data) {
                 var listaNombres = [];
                 var resultados = data.data;
                 var matchPerfecto = false;
@@ -486,7 +486,7 @@
             });
             
             if (!alreadyExist && personaje.personajeID !== -1) {
-                $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes', {
+                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Personajes', {
                     params: {
                     personajeID: personaje.personajeID
                     }}).then(function(data) {
@@ -571,7 +571,7 @@
             $scope.embarcacionesNuevas = [];
             $scope.embarcacionesAEliminar = [];
             $scope.embarcacionesAgregarReferencia = [];
-            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/DocumentosRefEmbarcacion',
+            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/DocumentosRefEmbarcacion',
                         { params: {
                             documentoID:$scope.documentoID
                         }
@@ -581,7 +581,7 @@
                 if (Object.keys(data.data).length != 0) {
                     var embarcacionReferencias = data.data;
                     embarcacionReferencias.forEach(function(referencia) {
-                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Embarcaciones',
+                            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Embarcaciones',
                                     { params: {
                                         embarcacionID:referencia.embarcacionID
                                         }
@@ -590,7 +590,7 @@
                                 var embarcacion = data.data[0];
                                 embarcacion.referenciaID = referencia.referenciaID;
                                 embarcacion.comentario = referencia.comentario;
-                                $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/EmbarcacionesBanderas',
+                                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/EmbarcacionesBanderas',
                                     { params: {
                                         embarcacionID:referencia.embarcacionID
                                         }
@@ -643,7 +643,7 @@
             $scope.registrarAccion("Nueva referencia a embarcación borrada");
         };
         $scope.autocompletarEmbarcacion = function (hintNombre) {
-            return $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Embarcaciones',
+            return $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Autocompletar/Embarcaciones',
                             { params: {
                                 nombres:hintNombre
                                 }
@@ -693,7 +693,7 @@
             });
             
             if (!alreadyExist && embarcacion.embarcacionID !== -1) {
-                $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Embarcaciones', {
+                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Embarcaciones', {
                     params: {
                     embarcacionID: embarcacion.embarcacionID
                     }}
@@ -709,7 +709,7 @@
                                 categoria: infoEmbarcacion.categoria,
                                 comentario: infoEmbarcacion.comentario
                         }
-                        $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/EmbarcacionesBanderas', {
+                        $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/EmbarcacionesBanderas', {
                             params: {
                             embarcacionID: embarcacion.embarcacionID
                             }}
@@ -802,7 +802,7 @@
             //Revisamos datos principales editados
             if ($scope.datosPrincipalesEditado) {
                 $scope.registrarAccion("Actualizando BD Documentos");
-                var request = 'http://monsalvediaz.com:5000/PIMC0.1/Modificar/Documentos';
+                var request = 'http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Modificar/Documentos';
                 
                 var parameters = {
                     idUnico:documentoID,
@@ -836,7 +836,7 @@
                 $scope.notas.forEach(function(nota) {
                     // Insertamos notas nuevas
                     if (nota.fechaCreacion.length == 0 && nota.nota.length != 0)
-                        conexiones['anotacionesInsertar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/DocumentosNotas',
+                        conexiones['anotacionesInsertar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/DocumentosNotas',
                                                                       { params: {
                                                                             documentoID:$scope.documentoID,
                                                                             nota:"'" + nota.nota + "'",
@@ -854,7 +854,7 @@
                                         referencia:"'" + nota.referencia + "'"
                                         }
                                       };
-                        conexiones['anotacionesModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/DocumentosNotas',config);
+                        conexiones['anotacionesModificar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Modificar/DocumentosNotas',config);
                     }
                 });
                 // Eliminamos notas eliminadas
@@ -865,7 +865,7 @@
                                         notaID:nota.notaID,
                                         documentoID:$scope.documentoID
                                 }};
-                    conexiones['anotacionesEliminar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/DocumentosNotas');
+                    conexiones['anotacionesEliminar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Eliminar/DocumentosNotas');
                 });
 
             }
@@ -875,7 +875,7 @@
                 $scope.emisorReceptor.forEach( function (entrada) {
                     // Agregar a la base de datos
     //                  if (entrada.emisorReceptorID == -1) {
-    //                      $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/DocumentosEmisorReceptor?documentoID=' + $scope.documentoID + '&nota="' + nota.nota + '"&referencia="' + nota.referencia + '"').then(function(data) {
+    //                      $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/DocumentosEmisorReceptor?documentoID=' + $scope.documentoID + '&nota="' + nota.nota + '"&referencia="' + nota.referencia + '"').then(function(data) {
     //                          $scope.datosGuardados = true;
     //                          console.log(data);
     //                      });
@@ -887,7 +887,7 @@
             if ($scope.embarcacionesCambios) {
                 // agregar referencias a embarcaciones existentes
                 $scope.embarcacionesAgregarReferencia.forEach( function (embarcacion) {
-                    conexiones['embarcacionesInsertarReferencia'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/DocumentosRefEmbarcacion',{
+                    conexiones['embarcacionesInsertarReferencia'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/DocumentosRefEmbarcacion',{
                         params: {
                             documentoID: $scope.documentoID,
                             embarcacionID: embarcacion.embarcacionID,
@@ -898,7 +898,7 @@
                 // Eliminamos referencias existentes
                 $scope.embarcacionesAEliminar.forEach (function (embarcacionRefABorrar) {
                     $scope.registrarAccion("Referencia a embarcacion existente eliminada");
-                    conexiones['embarcacionesEliminar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/DocumentosRefEmbarcacion',{
+                    conexiones['embarcacionesEliminar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Eliminar/DocumentosRefEmbarcacion',{
                         params: {
                             idUnico: 'referenciaID',
                             referenciaID: embarcacionRefABorrar.referenciaID
@@ -909,7 +909,7 @@
                 $scope.embarcacionesNuevas.forEach( function (embarcacion) {
                     // revisar si el personaje nombre esta vacio
                     if (embarcacion.nombres !== "") {
-                        var insertarPromise = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Embarcaciones',{
+                        var insertarPromise = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/Embarcaciones',{
                             params: {
                                     nombres: '"'+embarcacion.nombres+'"',
                                     alias: '"'+embarcacion.alias+'"',
@@ -927,7 +927,7 @@
                             if (Object.keys(data.data).length != 0) {
                                 // Agregamos las banderas
                                 var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
-                                promises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/DocumentosRefEmbarcacion',{
+                                promises.push($http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/DocumentosRefEmbarcacion',{
                                 params: {
                                     documentoID: $scope.documentoID,
                                     embarcacionID: lastInsertID,
@@ -939,7 +939,7 @@
                                     return e.trim();
                                 });
                                 listaBanderas.forEach(function (banderaAgregar) {
-                                    promises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/EmbarcacionesBanderas',{
+                                    promises.push($http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/EmbarcacionesBanderas',{
                                     params: {
                                         embarcacionID: lastInsertID,
                                         bandera: "'" + banderaAgregar + "'"
@@ -957,7 +957,7 @@
             if ($scope.personajesCambios) {
                 // agregar referencias a personajes existentes
                 $scope.personajesAgregarReferencia.forEach( function (personaje) {
-                    conexiones['personajesInsertarReferencia'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/DocumentosRefPersonajes',{
+                    conexiones['personajesInsertarReferencia'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/DocumentosRefPersonajes',{
                         params: {
                             documentoID: $scope.documentoID,
                             personajeID: personaje.personajeID
@@ -967,7 +967,7 @@
                 // Eliminamos referencias existentes
                 $scope.personajesAEliminar.forEach (function (personajeRefABorrar) {
                     $scope.registrarAccion("Referencia existente eliminada");
-                    conexiones['personajesEliminar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/DocumentosRefPersonajes',{
+                    conexiones['personajesEliminar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Eliminar/DocumentosRefPersonajes',{
                         params: {
                             idUnico: 'referenciaID',
                             referenciaID: personajeRefABorrar.referenciaID
@@ -978,7 +978,7 @@
                 $scope.personajesNuevos.forEach( function (personaje) {
                     // revisar si el personaje nombre esta vacio
                     if (personaje.nombre !== "") {
-                        var insertarPersonajePromise = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Personajes',{
+                        var insertarPersonajePromise = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/Personajes',{
                             params: {
                                 nombre: '"'+personaje.nombre+'"',
                                 ocupacion: '"'+personaje.ocupacion+'"',
@@ -994,7 +994,7 @@
                             // Data contains the last insert id
                             if (Object.keys(data.data).length != 0) {
                                 var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
-                                promises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/DocumentosRefPersonajes',{
+                                promises.push($http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/DocumentosRefPersonajes',{
                                 params: {
                                     documentoID: $scope.documentoID,
                                     personajeID: lastInsertID

@@ -101,7 +101,7 @@
   pimc.service('pimcService', ['$window', '$http', function($window, $http){
       var pimcService = this;
       // PARA BACKEND
-      pimcService.backEndURL = "http://monsalvediaz.com:5000/PIMC0.2"; // sin / al final
+      pimcService.backEndURL = "http://pimcapi.fundacionproyectonavio.org/PIMC0.2"; // sin / al final
       // crea la URL 
       pimcService.crearURLOperacion = function(operacion, elementoRelacional) {
           return pimcService.backEndURL + "/" + String(operacion) + "/" + String(elementoRelacional);
