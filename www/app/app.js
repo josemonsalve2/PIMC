@@ -124,6 +124,8 @@
           pimcService.debug = console.log.bind(window.console)
       else
           pimcService.debug = function(){}
+      
+      pimcService.error = console.error.bind(window.console)
           
       // ESTADO DE DATOS
       pimcService.datosEstados = {
