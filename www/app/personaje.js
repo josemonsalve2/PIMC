@@ -43,7 +43,7 @@
 
         $scope.cargarDatosPrincipales = function() {
             $scope.datosPrincipalesCargando = true;
-            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes',
+            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Personajes',
                 {params: {personajeID: $scope.personajeID}}
             ).then(function(data) {
                 //Obtener los datos JSON
@@ -142,7 +142,7 @@
             $scope.parentescosNuevos = [];
             $scope.parentescosAEliminar = [];
             $scope.parentescosAgregarReferencia = [];
-            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/PersonajesParentescos',
+            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/PersonajesParentescos',
                         {params:{
                             egoID:$scope.personajeID
                         }}
@@ -151,7 +151,7 @@
                 if (Object.keys(data.data).length != 0) {
                     var parentescosReferencias = data.data;
                     parentescosReferencias.forEach(function(referencia) {
-                            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/Personajes',
+                            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Personajes',
                                     {params: {
                                         personajeID:referencia.parienteID 
                                     }}
@@ -198,7 +198,7 @@
             $scope.parentescosAgregarReferencia.splice(indice,1);
         };
         $scope.autocompletarPersonaje = function (hintNombre) {
-            return $http.get('http://monsalvediaz.com:5000/PIMC0.1/Autocompletar/Personajes?nombre=' + hintNombre).then(function(data) {
+            return $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Autocompletar/Personajes?nombre=' + hintNombre).then(function(data) {
                 var listaNombres = [];
                 var resultados = data.data;
                 var matchPerfecto = false;
@@ -312,7 +312,7 @@
             $scope.notas = "";
             $scope.notasAEliminar = [];
             $scope.notasCambio = false;
-            $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/PersonajesNotas', 
+            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/PersonajesNotas', 
             {
                 params:{
                     personajeID:$scope.personajeID
@@ -431,7 +431,7 @@
             //Revisamos datos principales editados
             if ($scope.datosPrincipalesEditado) {
                 $scope.registrarAccion("Actualizando BD Personajes");
-                var request = 'http://monsalvediaz.com:5000/PIMC0.1/Modificar/Personajes'
+                var request = 'http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Modificar/Personajes'
                 var parametros = {
                     idUnico:'personajeID',
                     personajeID:$scope.personajeID
@@ -464,7 +464,7 @@
                 $scope.notas.forEach(function(nota) {
                     // Insertamos notas nuevas
                     if (nota.fechaCreacion.length == 0 && nota.nota.length != 0)
-                        conexiones['notasCambiosInsertar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesNotas',
+                        conexiones['notasCambiosInsertar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/PersonajesNotas',
                                     {params:{
                                         personajeID: $scope.personajeID,
                                         nota: "'" + nota.nota + "'",
@@ -473,7 +473,7 @@
                         );
                     // Modificamos notas viejas
                     if (nota.modificada == true) {
-                        conexiones['notasCambiosModificar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Modificar/PersonajesNotas',
+                        conexiones['notasCambiosModificar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Modificar/PersonajesNotas',
                                     {params:{
                                         idUnico2:'personajeID',
                                         idUnico:'notaID',
@@ -487,7 +487,7 @@
                 });
                 // Eliminamos notas eliminadas
                 $scope.notasAEliminar.forEach(function(nota) {
-                    conexiones['notasCambiosEliminar'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/PersonajesNotas',
+                    conexiones['notasCambiosEliminar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Eliminar/PersonajesNotas',
                                 {params:{
                                 idUnico2:'personajeID',
                                 idUnico:'notaID',
@@ -505,7 +505,7 @@
                 // agregar referencias a personajes existentes
                 $scope.parentescosAgregarReferencia.forEach( function (parentesco) {
                     // Guardamos la relacion directa
-                    conexiones['parentescosInsertarDirecta'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
+                    conexiones['parentescosInsertarDirecta'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/PersonajesParentescos',{
                         params: {
                             egoID: $scope.personajeID,
                             parienteID: parentesco.parienteID,
@@ -513,7 +513,7 @@
                         }
                     });
                     // Guardamos la relacion Inversa
-                    conexiones['parentescosInsertarInversa'] = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
+                    conexiones['parentescosInsertarInversa'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/PersonajesParentescos',{
                         params: {
                             egoID: parentesco.parienteID,
                             parienteID: $scope.personajeID,
@@ -526,7 +526,7 @@
                     var relacionInversaID = -1;
                     $scope.registrarAccion("Referencia existente eliminada");
                     // Buscamos la relacion inversa
-                    var promesaConsulta = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Consulta/PersonajesParentescos',  {
+                    var promesaConsulta = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/PersonajesParentescos',  {
                         params: {
                             egoID: personajeRefABorrar.parienteID,
                             parienteID: $scope.personajeID
@@ -538,7 +538,7 @@
                             relacionInversaID = data.data[0].parentescoID;
                             var promises = [];
                             // Eliminamos relacion directa
-                            promises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/PersonajesParentescos',{
+                            promises.push($http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Eliminar/PersonajesParentescos',{
                                 params: {
                                     idUnico: 'parentescoID',
                                     parentescoID: personajeRefABorrar.parentescoID
@@ -546,7 +546,7 @@
                             }));
                             // Eliminamos relacion inversa
                             if (relacionInversaID != -1) {
-                                conexiones['parentescosEliminarInversa'] = promises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Eliminar/PersonajesParentescos',{
+                                conexiones['parentescosEliminarInversa'] = promises.push($http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Eliminar/PersonajesParentescos',{
                                     params: {
                                         idUnico: 'parentescoID',
                                         parentescoID: relacionInversaID
@@ -562,7 +562,7 @@
                 $scope.parentescosNuevos.forEach( function (pariente) {
                     // revisar si el personaje nombre esta vacio
                     if (pariente.nombrePersonaje !== "") {
-                        var promesaInsertar = $http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/Personajes',{
+                        var promesaInsertar = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/Personajes',{
                             params: {
                                 nombre: '"'+pariente.nombrePersonaje+'"'
                             }
@@ -577,7 +577,7 @@
                             if (Object.keys(data.data).length != 0) {
                                 var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
                                 // Guardamos la relacion directa
-                                promises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
+                                promises.push($http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/PersonajesParentescos',{
                                     params: {
                                         egoID: $scope.personajeID,
                                         parienteID: lastInsertID,
@@ -585,7 +585,7 @@
                                     }
                                 }));
                                 // Guardamos la relacion Inversa
-                                promises.push($http.get('http://monsalvediaz.com:5000/PIMC0.1/Insertar/PersonajesParentescos',{
+                                promises.push($http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/PersonajesParentescos',{
                                     params: {
                                         egoID: lastInsertID,
                                         parienteID: $scope.personajeID,
