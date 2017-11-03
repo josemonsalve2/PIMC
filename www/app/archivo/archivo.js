@@ -7,7 +7,7 @@
     'use strict';
 
     var archivoPerfil = angular.module('archivoPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
-    archivoPerfil.controller('archivoPerfilController', ['$scope', '$sce', '$q', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', function($scope, $sce, $q, $http, $window, $location, $filter, i18nService, uiGridConstants) {
+    archivoPerfil.controller('archivoPerfilController', [ 'pimcService', 'pimcArchivoDatosPrincipalesService', 'pimcBarraEstadoService', 'pimcComentarios', '$scope', '$sce', '$q', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', function( pimcService, pimcArchivoDatosPrincipalesService, pimcBarraEstadoService, pimcComentarios, $scope, $sce, $q, $http, $window, $location, $filter, i18nService, uiGridConstants) {
         var init = function() {
             $scope.archivoID = $window.localStorage.getItem("archivoID");
             // If not set, redirect.
@@ -31,153 +31,40 @@
             }
         };
 
-        //Datos principales
-        $scope.datosPrincipales = {
-            archivoTitulo: "",
-            archivoFondo: "",
-            institucionFondo: "",
-            seccion: "",
-            numRefDentroFondo: "",
-            fechaInicial: "",
-            fechaFinal: "",
-            folioInicial: "",
-            folioFinal: "",
-            legajo: "",
-            numOrden: "",
-            numPaginas: "",
-            palabrasClaves: {},
-            disponibilidad: "",
-        };
+        ///////// DATOS PRINCIPALES
 
-        //Bandera para saber cuando guardar o no
-        $scope.datosPrincipales.editado = false;
+        // Inicializamos datos principales
+        $scope.datosPrincipales = pimcArchivoDatosPrincipalesService.crearVacio();
+
+        //Bandera para saber cuando esta cargando
         $scope.datosPrincipalesCargando = true;
 
         $scope.cargarDatosPrincipales = function() {
             $scope.datosPrincipalesCargando = true;
-            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/ConsultaArchivo?archivoID=' + $scope.archivoID).then(function(data) {
-                //Obtener los datos JSON
-                var archivoDatos = data.data[0];
-                //Log
-                console.log(archivoDatos);
-
-                //Llenamos los datos del archivo
-                $scope.datosPrincipales.archivoTitulo = archivoDatos.titulo;
-                $scope.datosPrincipales.archivoFondo = archivoDatos.fondo;
-                $scope.datosPrincipales.institucionFondo = archivoDatos.institucionFondo;
-                $scope.datosPrincipales.seccion = archivoDatos.seccion;
-                $scope.datosPrincipales.numRefDentroFondo = archivoDatos.numRefDentroFondo;
-                $scope.datosPrincipales.fechaInicial = $filter('date')(new Date(archivoDatos.fechaInicial), String(archivoDatos.fechaInicialFormato).toLowerCase());
-                $scope.datosPrincipales.fechaFinal = $filter('date')(new Date(archivoDatos.fechaFinal), String(archivoDatos.fechaFinalFormato).toLowerCase());
-                $scope.datosPrincipales.folioInicial = archivoDatos.folioInicial;
-                $scope.datosPrincipales.folioFinal = archivoDatos.folioFinal;
-                $scope.datosPrincipales.legajo = archivoDatos.legajo;
-                $scope.datosPrincipales.numOrden = archivoDatos.numOrden;
-                $scope.datosPrincipales.numPaginas = archivoDatos.numPaginas;
-                $scope.datosPrincipales.palabrasClaves = archivoDatos.palabrasClaves.split(",");
-                $scope.datosPrincipales.palabrasClaves = $scope.datosPrincipales.palabrasClaves.map(function(e) {
-                    return e.trim();
-                });
-                $scope.datosPrincipales.disponibilidad = archivoDatos.disponibilidad;
-
-                //Limpiamos la bandera de editado
-                $scope.datosPrincipales.editado = false;
-
-                //Para palabras claves
-                $scope.palabrasClaves.palabraNueva = {
-                    mensaje: "+ Agregar"
-                };
+            pimcArchivoDatosPrincipalesService.cargarDatosPrincipales($scope.archivoID).then(function(datosPrincipales) {
+                $scope.datosPrincipales = datosPrincipales;
                 $scope.datosPrincipalesCargando = false;
             });
         };
-        $scope.datosPrincipales.datoEditado = function(campo, valorNuevo) {
-            switch (campo) {
-                case "titulo":
-                    if (valorNuevo != $scope.datosPrincipales.archivoTitulo) {
-                        $scope.registrarAccion("Titulo modificado");
-                        $scope.datosPrincipales.editado = true;
-                    }
-                    break;
-                case "fondo":
-                    if (valorNuevo != $scope.datosPrincipales.archivoFondo) {
-                        $scope.registrarAccion("Fondo modificado");
-                        $scope.datosPrincipales.editado = true;
-                    }
-                    break;
-                case "institucion":
-                    if (valorNuevo != $scope.datosPrincipales.institucionFondo) {
-                        $scope.registrarAccion("Institucion Fondo modificada");
-                        $scope.datosPrincipales.editado = true;
-                    }
-                    break;
-                case "seccion":
-                    if (valorNuevo != $scope.datosPrincipales.seccion) {
-                        $scope.registrarAccion("Seccion modificada");
-                        $scope.datosPrincipales.editado = true;
-                    }
-                    break;
-                case "numReferencia":
-                    if (valorNuevo != $scope.datosPrincipales.numRefDentroFondo) {
-                        $scope.registrarAccion("Numero Referencia dentro del fondo modificado");
-                        $scope.datosPrincipales.editado = true;
-                    }
-                    break;
-                case "fechaInicial":
-                    if (valorNuevo != $scope.datosPrincipales.fechaInicial) {
-                        $scope.registrarAccion("Fecha Inicial modificada");
-                        $scope.datosPrincipales.editado = true;
-                    }
-                    break;
-                case "fechaFinal":
-                    if (valorNuevo != $scope.datosPrincipales.fechaFinal) {
-                        $scope.registrarAccion("Fecha Fianl modificada");
-                        $scope.datosPrincipales.editado = true;
-                    }
-                    break;
-                case "folioInicial":
-                    if (valorNuevo != $scope.datosPrincipales.folioInicial) {
-                        $scope.registrarAccion("Folio Inicial modificado");
-                        $scope.datosPrincipales.editado = true;
-                    }
-                    break;
-                case "folioFinal":
-                    if (valorNuevo != $scope.datosPrincipales.folioFinal) {
-                        $scope.registrarAccion("Folio Final modificado");
-                        $scope.datosPrincipales.editado = true;
-                    }
-                    break;
-                case "legajo":
-                    if (valorNuevo != $scope.datosPrincipales.legajo) {
-                        $scope.registrarAccion("Legajo modificado");
-                        $scope.datosPrincipales.editado = true;
-                    }
-                    break;
-                case "numOrden":
-                    if (valorNuevo != $scope.datosPrincipales.numOrden) {
-                        $scope.registrarAccion("Numero de Orden modificado");
-                        $scope.datosPrincipales.editado = true;
-                    }
-                    break;
-                case "numPaginas":
-                    if (valorNuevo != $scope.datosPrincipales.numPaginas) {
-                        $scope.registrarAccion("Numero de Paginas modificado");
-                        $scope.datosPrincipales.editado = true;
-                    }
-                    break;
-                case "disponibilidadConsulta":
-                    if (valorNuevo != $scope.datosPrincipales.disponibilidad) {
-                        $scope.registrarAccion("Disponibilidad de consulta modificada");
-                        $scope.datosPrincipales.editado = true;
-                    }
-                    break;
-                default:
-                    $scope.registrarAccion("[ERROR] No se pueden modificar datos principales.");
-                    break;
-            }
-
-        }
         
-        // DOCUMENTOS
+        $scope.datosPrincipalesEditados = function (datosPrincipales, notas) {
+            $scope.datosPrincipales = datosPrincipales;
+            $scope.notas = notas;
+        };
+
+        // Anotaciones
+        $scope.notas = [];
+        $scope.notasCambio = false;
+        $scope.cargarNotas = function() {
+            $scope.notas = "";
+            pimcComentarios.cargarNotas('Archivos',$scope.archivoID).then( function(notas) {
+                $scope.notas = notas;
+            });
+        };
+        
+        
+        //// DOCUMENTOS
+
         //Variables necessarias
         $scope.documentos = [];
         $scope.documentosResumen = [];
@@ -230,7 +117,7 @@
                         }
                     });
                     // LOG
-                    console.log($scope.notas);
+                    console.log($scope.documentos);
                     // PERSONAJES
                     $scope.cargarPersonajes();  
                 }
@@ -272,77 +159,7 @@
         };
 
 
-        // Anotaciones
-        $scope.notas = "";
-        $scope.notasAEliminar = [];
-        $scope.notasCambio = false;
-        $scope.cargarNotas = function() {
-            $scope.notas = "";
-            $scope.notasAEliminar = [];
-            $scope.notasCambio = false;
-            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/ArchivosNotas?archivoID=' + $scope.archivoID).then(function(data) {
-                if (Object.keys(data.data).length != 0) {
-                    $scope.notas = data.data;
-                    $scope.notas.forEach(function(nota) {
-                        nota.modificada = false;
-                    });
-                    // LOG
-                    console.log($scope.notas);
-                }
-            });
-
-        };
-        $scope.agregarNotaVacia = function() {
-            $scope.registrarAccion("Nota vacia agregada");
-            // Una nota que no tiene fecha de creacion es una nota que no existe en la base de datos aun
-            if ($scope.notas === "") {
-                $scope.notas = [{
-                    nota: "",
-                    referencia: "",
-                    fechaCreacion: "",
-                    fechaHistorica: "",
-                    fechaHistFormato: "",
-                    modificada: false
-                }];
-            } else {
-                $scope.notas.push({
-                    nota: "",
-                    referencia: "",
-                    fechaCreacion: "",
-                    fechaHistorica: "",
-                    fechaHistFormato: "",
-                    modificada: false
-                });
-            }
-            $scope.notasCambios = true;
-        }
-        $scope.eliminarNota = function(indexNota) {
-            $scope.registrarAccion("Nota <strong>" + indexNota + "</strong> eliminada");
-            if ($scope.notas[indexNota].fechaCreacion != "") {
-                $scope.notasAEliminar.push($scope.notas[indexNota]);
-            }
-            $scope.notas.splice(indexNota, 1);
-            $scope.notasCambios = true;
-        };
-        $scope.modificarNota = function(indexNota, nuevaNota) {
-            $scope.registrarAccion("Nota <strong>" + indexNota + "</strong> modificada");
-            $scope.notas[indexNota].nota = nuevaNota;
-            // fecha creacion esta vacia cuando la nota aun no se encuentra
-            // en la base de dats
-            if ($scope.notas[indexNota].fechaCreacion != "") {
-                $scope.notas[indexNota].modificada = true;
-            };
-            $scope.notasCambios = true;
-        };
-        $scope.modificarReferencia = function(indexNota, nuevaReferencia) {
-            $scope.registrarAccion("Referencia de nota <strong>" + indexNota + "</strong> modificada");
-            $scope.notas[indexNota].referencia = nuevaReferencia;
-            if ($scope.notas[indexNota].fechaCreacion != "") {
-                $scope.notas[indexNota].modificada = true;
-            }
-            $scope.notasCambios = true;
-
-        };
+        
 
 
         // Palabras claves
@@ -623,45 +440,13 @@
         $scope.datosGuardados = false;
         $scope.guardarCambios = function() {
             var conexiones = {};
-            if ($scope.notasCambios) {
-                $scope.registrarAccion("Actualizando BD notasArchivo");
-                $scope.notasCambios = false;
-                $scope.notas.forEach(function(nota) {
-                    // Insertamos notas nuevas
-                    if (nota.fechaCreacion.length == 0 && nota.nota.length != 0)
-                        conexiones['notasCambiosCreacion'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/ArchivosNotas?ArchivoID=' + $scope.archivoID + '&nota="' + nota.nota + '"&referencia="' + nota.referencia + '"');
-                    // Modificamos notas viejas
-                    if (nota.modificada == true) {
-                        conexiones['notasCambiosModificada'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Modificar/ArchivosNotas?idUnico2=archivoID&idUnico=notaID&notaID=' + nota.notaID + ' &archivoID=' + $scope.archivoID + '&nota="' + nota.nota + '"&referencia="' + nota.referencia + '"');
-                    }
-                });
-                // Eliminamos notas eliminadas
-                $scope.notasAEliminar.forEach(function(nota) {
-                    conexiones['notasCambiosEliminadas'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Eliminar/ArchivosNotas?idUnico=archivoID&idUnico2=notaID&notaID=' + nota.notaID + '&archivoID=' + $scope.archivoID);
-                });
 
-            }
-            //Revisamos datos principales editados
-            if ($scope.datosPrincipales.editado) {
-                $scope.registrarAccion("Actualizando BD Archivos");
-                conexiones['datosPrincipalesCambionsModificados'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Modificar/Archivos?idUnico=archivoID&archivoID=' + $scope.archivoID +
-                    '&titulo="' + $scope.datosPrincipales.archivoTitulo +
-                    '"&institucionFondo="' + $scope.datosPrincipales.institucionFondo +
-                    '"&numRefDentroFondo="' + $scope.datosPrincipales.numRefDentroFondo +
-                    //'"&fechaInicial="' + $scope.datosPrincipales.fechaInicial +
-                    //'"&fechaFinal="' + $scope.datosPrincipales.fechaFinal +
-                    '"&seccion="' + $scope.datosPrincipales.seccion +
-                    '"&fondo="' + $scope.datosPrincipales.archivoFondo +
-                    '"&legajo="' + $scope.datosPrincipales.legajo +
-                    '"&numOrden="' + $scope.datosPrincipales.numOrden +
-                    '"&folioInicial="' + $scope.datosPrincipales.folioInicial +
-                    '"&folioFinal="' + $scope.datosPrincipales.folioFinal +
-                    '"&numPaginas="' + $scope.datosPrincipales.numPaginas +
-                    '"&palabrasClaves="' + $scope.datosPrincipales.palabrasClaves.join(', ') +
-                    '"&disponibilidad="' + $scope.datosPrincipales.disponibilidad + '"'
-                );
-            }
-            // Revisamos documentos
+            // Guardar datos principales
+            pimcArchivoDatosPrincipalesService.guardarDatosPrincipales($scope.datosPrincipales);
+            // Guardar notas
+            pimcComentarios.guardarNotas('Archivos', $scope.archivoID, $scope.notas);
+
+           // Revisamos documentos
             if ($scope.documentosCambio) {
                 $scope.documentosNuevos.forEach(function (docNuevo) {
                     $scope.registrarAccion("Actualizando BD Documentos")

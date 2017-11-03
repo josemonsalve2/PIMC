@@ -45,7 +45,7 @@
     barraEstadoModule.component('pimcBarraEstado', {
         bindings:{
             borrarCambios: '&',
-            guardarCambios:'&'
+            guardarCambios: '&'
         },
         controller: 'barraEstadoComponentController',
         controllerAs: 'barraEstadoCtrl',

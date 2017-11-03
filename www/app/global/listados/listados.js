@@ -4,54 +4,74 @@
 
   var pimcListadoModule = angular.module('pimcListadoModule',['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'xeditable']);
 
-  pimcListadoModule.controller('pimcListadoController', ['$scope', 'pimcService', 'pimcBarraEstadoService', function($scope, pimcService, pimcBarraEstadoService) {
+  pimcListadoModule.controller('pimcListadoController', ['$scope', 'pimcService', 'pimcBarraEstadoService','$window', function($scope, pimcService, pimcBarraEstadoService, $window) {
     var listadoCtrl = this;
+
+    listadoCtrl.nombreInt = "";
+    listadoCtrl.csvStringInt = "";
+    listadoCtrl.listadoInt = [];
+
     // Init function
     listadoCtrl.$onInit = function () {
       listadoCtrl.agregarNuevo = {mensaje:"+ Agregar"}; // Elemento de ayuda para agregar
-      if(!listadoCtrl.nombre) listadoCtrl.nombre = "";
-      if(!listadoCtrl.listado) listadoCtrl.listado = [];
-      if(!listadoCtrl.csvString) listadoCtrl.csvString = ""; // Elementos separados por coma
+      if(!listadoCtrl.nombre) listadoCtrl.nombreInt = "";
+      else listadoCtrl.nombreInt = listadoCtrl.nombre;
+      if(!listadoCtrl.csvString) listadoCtrl.csvStringInt = ""; // Elementos separados por coma
+      else listadoCtrl.csvStringInt = $window.angular.copy(listadoCtrl.csvString);
+
       if(!listadoCtrl.ignorarPrimeroActivado) listadoCtrl.ignorarPrimeroActivado = false; // permite ignorar el primer elemento en caso de querer mostrarlo diferente
       if(!listadoCtrl.volverPrincipalActivado) listadoCtrl.volverPrincipalActivado = false; // Agrega un boton al lado de cada elemento para volver ese elemento principal
-      if (listadoCtrl.listado.length != 0) {
-        listadoCtrl.actualizarCsvString();
-      } else if (listadoCtrl.csvString != "") {
-        listadoCtrl.listado = listadoCtrl.csvString.split(",");
-        listadoCtrl.listado = listadoCtrl.listado.map(function(e) {
+
+      if(listadoCtrl.csvStringInt != "") {
+        listadoCtrl.listadoInt = listadoCtrl.csvString.split(",");
+        listadoCtrl.listadoInt = listadoCtrl.listadoInt.map(function(e) {
           return e.trim();
         });
       }
     }
 
+    listadoCtrl.$onChanges = function (changes) {
+      if (changes.csvString) {
+        if (listadoCtrl.csvStringInt != listadoCtrl.csvString) {
+          listadoCtrl.csvStringInt = $window.angular.copy(listadoCtrl.csvString); // Notas
+          if (listadoCtrl.csvStringInt != "") {
+            listadoCtrl.listadoInt = listadoCtrl.csvString.split(",");
+            listadoCtrl.listadoInt = listadoCtrl.listadoInt.map(function (e) {
+              return e.trim();
+            });
+          }
+          listadoCtrl.reportarCambio({ listado: listadoCtrl.listadoInt, csvString: listadoCtrl.csvStringInt });
+        }
+      }
+    } 
+
     // Para borrar listaNombres
     listadoCtrl.modificarBorrar = function(indexEditado, valor) {
       if (valor === "") {
-        var valorAEliminar = listadoCtrl.listado[indexEditado];
+        var valorAEliminar = listadoCtrl.listadoInt[indexEditado];
         if (valorAEliminar != "") {
           pimcBarraEstadoService.registrarAccion(listadoCtrl.nombre + " <strong> " + valorAEliminar + " </strong>  eliminado");
         }
-        listadoCtrl.listado.splice(indexEditado, 1);
-        listadoCtrl.reportarCambio();
+        listadoCtrl.listadoInt.splice(indexEditado, 1);
       } else {
-        var valorModificado = listadoCtrl.listado[indexEditado];
+        var valorModificado = listadoCtrl.listadoInt[indexEditado];
         if (valor != valorModificado) {
           pimcBarraEstadoService.registrarAccion(listadoCtrl.nombre + " <strong> " + valorModificado + " </strong>  Modificado a <strong>" + valor + "</strong>");
-          listadoCtrl.listado[indexEditado] = valor;
-          listadoCtrl.reportarCambio();
+          listadoCtrl.listadoInt[indexEditado] = valor;
         }
-      }
-      listadoCtrl.actualizarCsvString();
+        listadoCtrl.actualizarCsvString();
+        listadoCtrl.reportarCambio({ listado: listadoCtrl.listadoInt, csvString: listadoCtrl.csvStringInt });
+      }      
     }
 
     // funcion para agregar valores a la list
     listadoCtrl.agregarALista = function(elemento) {
-      if (!listadoCtrl.listado.includes(elemento) && elemento.length != 0) {
-        listadoCtrl.listado.push(elemento);
+      if (!listadoCtrl.listadoInt.includes(elemento) && elemento.length != 0) {
+        listadoCtrl.listadoInt.push(elemento);
         pimcBarraEstadoService.registrarAccion(listadoCtrl.nombre + " <strong> " + elemento + " </strong> agregado");
-        listadoCtrl.reportarCambio();
+        listadoCtrl.actualizarCsvString();
+        listadoCtrl.reportarCambio({ listado: listadoCtrl.listadoInt, csvString: listadoCtrl.csvStringInt });
       }
-      listadoCtrl.actualizarCsvString();
     }
 
     // Funcion de ayuda para borrar el mensaje de +Agregar
@@ -61,17 +81,17 @@
 
     // Funcion para volver cualquier elemento el elemento principal
     listadoCtrl.volverPrincipal = function(indice) {
-      var tmp = listadoCtrl.listado[0];
-      listadoCtrl.listado[0] = listadoCtrl.listado[indice];
-      listadoCtrl.listado[indice] = tmp;
-      pimcBarraEstadoService.registrarAccion(listadoCtrl.nombre + " <strong> " + listadoCtrl.listado[0] + " </strong>  principal");
+      var tmp = listadoCtrl.listadoInt[0];
+      listadoCtrl.listadoInt[0] = listadoCtrl.listadoInt[indice];
+      listadoCtrl.listadoInt[indice] = tmp;
+      pimcBarraEstadoService.registrarAccion(listadoCtrl.nombre + " <strong> " + listadoCtrl.listadoInt[0] + " </strong>  principal");
       listadoCtrl.actualizarCsvString();
-      listadoCtrl.reportarCambio();
+      listadoCtrl.reportarCambio({ listado: listadoCtrl.listadoInt, csvString: listadoCtrl.csvStringInt });
     }
 
     // Funcion de ayuda para mantener el csvString actualizado
     listadoCtrl.actualizarCsvString = function() {
-      listadoCtrl.csvString = listadoCtrl.listado.join(", ");
+      listadoCtrl.csvString = listadoCtrl.listadoInt.join(", ");
     }
   }]);
 
@@ -79,8 +99,7 @@
   pimcListadoModule.component('pimcListado', {
     bindings: {
       nombre: '@',
-      listado: '=',
-      csvString: '=',
+      csvString: '<',
       ignorarPrimeroActivado: '<',
       volverPrincipalActivado: '<',
       reportarCambio :'&'

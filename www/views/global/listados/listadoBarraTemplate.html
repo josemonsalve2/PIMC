@@ -2,7 +2,7 @@
   <li
       onaftersave="listadoCtrl.modificarBorrar($index,elementoLista)" 
       editable-text="elementoLista" 
-      ng-repeat="elementoLista in listadoCtrl.listado track by $index" ng-if="!listadoCtrl.ignorarPrimeroActivado || $index > 0">
+      ng-repeat="elementoLista in listadoCtrl.listadoInt track by $index" ng-if="!listadoCtrl.ignorarPrimeroActivado || $index > 0">
     <a href="#" class="bg-mountain_meadow">
       <button class="btn btn-xs btn-primary" 
               ng-click="listadoCtrl.volverPrincipal($index); $event.stopPropagation()"

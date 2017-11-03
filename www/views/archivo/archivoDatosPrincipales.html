@@ -1,0 +1,146 @@
+<div class="row p-t-2" ng-if="archivoDatosPrincipalesCtrl.activo">
+            <div id="datosPrincipalesArchivo" class="col-sm-12 col-md-8">
+    
+              <div class="panel panel-primary m-b-2">
+    
+                <header class="panel-heading">
+                  <h3 class="m-a-1" editable-text="archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.titulo" 
+                        buttons="right" 
+                        onbeforesave="archivoDatosPrincipalesCtrl.datoEditado('titulo',$data)" 
+                        e-rows="2">{{ archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.titulo }}</h3>
+                </header>
+    
+                <div class="panel-body">
+    
+                  <ul class="list-group m-b-0 dos-columnas">
+                    
+                    <li class="list-group-item">
+                        <span class="label label-primary">Fondo documental</span>
+                        <span editable-text="archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fondo" 
+                                    onbeforesave="archivoDatosPrincipalesCtrl.datoEditado('fondo',$data)"  
+                                    class="m-l-1"> {{ archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fondo }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-primary">Institución fondo</span>
+                        <span editable-text="archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.institucionFondo" 
+                                    onbeforesave="archivoDatosPrincipalesCtrl.datoEditado('institucion',$data)"  
+                                    class="m-l-1"> {{ archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.institucionFondo }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-primary">Sección</span> 
+                        <span editable-text="archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.seccion" 
+                                    onbeforesave="archivoDatosPrincipalesCtrl.datoEditado('seccion',$data)"  
+                                    class="m-l-1"> {{ archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.seccion }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-primary">Número de referencia</span>
+                        <span editable-text="archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numRefDentroFondo" 
+                                    onbeforesave="archivoDatosPrincipalesCtrl.datoEditado('numReferencia',$data)"  
+                                    class="m-l-1"> {{archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numRefDentroFondo}}</span>
+                    </li>
+                    <li class="list-group-item fechas-grupo">
+                        <span class="label label-primary">Rango de fechas</span> 
+                        <span editable-text="archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicial" 
+                                    onbeforesave="archivoDatosPrincipalesCtrl.datoEditado('fechaInicial',$data)"  
+                                    class="fechaInicial m-l-1"> {{ archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicial }}</span> 
+                        <span editable-text="archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinal" 
+                                    onbeforesave="archivoDatosPrincipalesCtrl.datoEditado('fechaFinal',$data)"
+                                    class="fechaFinal">{{ archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinal }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-primary">Folio inicial</span> 
+                        <span editable-text="archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.folioInicial" 
+                                    onbeforesave="archivoDatosPrincipalesCtrl.datoEditado('folioInicial',$data)"  
+                                    class="m-l-1"> {{ archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.folioInicial }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-primary">Folio final</span> 
+                        <span editable-text="archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.folioFinal" 
+                                    onbeforesave="archivoDatosPrincipalesCtrl.datoEditado('folioFinal',$data)"  
+                                    class="m-l-1"> {{ archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.folioFinal }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-primary">Legajo</span> 
+                        <span editable-text="archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.legajo" 
+                                    onbeforesave="archivoDatosPrincipalesCtrl.datoEditado('legajo',$data)"  
+                                    class="m-l-1"> {{ archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.legajo }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-primary">Numero de orden</span> 
+                        <span editable-text="archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numOrden" 
+                                    onbeforesave="archivoDatosPrincipalesCtrl.datoEditado('numOrden',$data)"  
+                                    class="m-l-1"> {{ archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numOrden }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-primary">Numero de páginas</span> 
+                        <span editable-text="archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numPaginas" 
+                                    onbeforesave="archivoDatosPrincipalesCtrl.datoEditado('numPaginas',$data)"  
+                                    class="m-l-1"> {{ archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numPaginas }}</span>
+                    </li>
+    
+                  </ul>
+                </div>
+    
+                <footer class="footer"></footer>
+    
+              </div>
+    
+              <div id="sinopsisComentarios">
+    
+                <div class="panel panel-primary">
+    
+                  <header class="panel-heading">
+                    <h4 class="m-a-1">Sinopsis general y comentarios</h4>
+                  </header>
+                  <pimc-comentarios-anotaciones 
+                    notas="archivoDatosPrincipalesCtrl.notasInt"
+                    reportar-cambio="archivoDatosPrincipalesCtrl.notificarNotasCambios(notas)">
+                  </pimc-comentarios-anotaciones>
+    
+                </div>
+    
+              </div>
+            </div>
+    
+            <div id="otrosDatosArchivoColDerecha" class="col-sm-12 col-md-4">
+    
+              <div class="panel panel-primary">
+                <header class="panel-heading">
+                  <h4>Palabras Claves</h4>
+                </header>
+                <div class="panel-body">
+                        <pimc-listado 
+                            nombre="palabrasClaves" 
+                            csv-string="archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.palabrasClaves" 
+                            reportar-cambio="archivoDatosPrincipalesCtrl.listadoEditado(listado, csvString)">
+                        </pimc-listado>
+                </div>
+              </div>
+              
+              <div class="panel panel-primary">
+                <header class="panel-heading">
+                  <h4>Anotaciones Catalogación</h4>
+                </header>
+                <div class="panel-body">
+                </div>
+              </div>
+              
+              <div class="panel panel-primary">
+                <header class="panel-heading">
+                  <h4>Estado de Conservación</h4>
+                </header>
+                <div class="panel-body">
+                </div>
+              </div>
+              
+              <div class="panel panel-primary">
+                <header class="panel-heading">
+                  <h4>disponibilidad de consulta</h4>
+                </header>
+                <div class="panel-body">
+                  <p editable-text="archivoDatosPrincipalesCtrl.datosPrincipalesInt.disponibilidad" onbeforesave="archivoDatosPrincipalesCtrl.datoEditado('disponibilidadConsulta',$data)">{{archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.disponibilidad}}</p>
+                </div>
+              </div>
+            </div>
+    
+          </div><!-- .row -->

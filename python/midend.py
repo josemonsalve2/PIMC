@@ -306,7 +306,7 @@ def autocompletarElementoRelacionar(elemento_relacional):
 
 
 
-@app.route("/PIMC0.2/Insertar/<elemento_relacional>", methods=['GET','POST'])
+@app.route("/PIMC0.2/Insertar/<elemento_relacional>", methods=['POST'])
 def insertarElementoRelacionalPIMC0_2(elemento_relacional):
   if request.method == 'POST':
     data = request.get_json()

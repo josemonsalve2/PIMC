@@ -2,25 +2,25 @@
 
   <button class="btn btn-primary" ng-click="controladorComentarios.agregarNotaVacia()">Agregar Comentario</button>
 
-  <div class="panel panel-default m-b-0 m-t-1" ng-repeat="nota in controladorComentarios.notas | filtrarEliminados track by $index">
+  <div class="panel panel-default m-b-0 m-t-1" ng-repeat="nota in controladorComentarios.notasInt | filtrarEliminados track by $index">
     <div class="panel-body">
       <button type="button" 
               class="close" 
               aria-label="Cerrar" 
-              ng-click="controladorComentarios.eliminarNota($index)">
+              ng-click="controladorComentarios.eliminarNota(nota)">
               <span aria-hidden="true">&times;</span></button>
       <p class="notaContenido" 
           editable-textarea="nota.contenido.nota" 
           e-rows="2" 
           buttons="right" 
-          onaftersave="controladorComentarios.modificarNota($index,'nota')">{{nota.contenido.nota || "Click para editar"}}</p>
+          onaftersave="controladorComentarios.modificarNota(nota,'nota')">{{nota.contenido.nota || "Click para editar"}}</p>
       <div class="clearfix m-t-1">
           <div class="notaReferencia pull-left">Fecha Historica: <span editable-text="nota.contenido.fechaHistorica" 
-                   onaftersave="controladorComentarios.modificarNota($index,'fechaHistorica')">{{nota.contenido.fechaHistorica || "ND"}}</span></div>
+                   onaftersave="controladorComentarios.modificarNota(nota,'fechaHistorica')">{{nota.contenido.fechaHistorica || "ND"}}</span></div>
       </div>
       <div class="clearfix m-t-1">
         <div class="notaReferencia pull-left">Referencia: <span editable-text="nota.contenido.referencia" 
-             onaftersave="controladorComentarios.modificarNota($index,'referencia')">{{nota.contenido.referencia || "ND"}}</span></div>
+             onaftersave="controladorComentarios.modificarNota(nota,'referencia')">{{nota.contenido.referencia || "ND"}}</span></div>
         <div class="notaFecha pull-right">{{nota.contenido.fechaCreacion || "Nota Nueva"}}</div>
       </div>
     </div>

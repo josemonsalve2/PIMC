@@ -4,7 +4,7 @@
     <!-- DATOS PRINCIPALES-->
     <uib-tab index="0" heading="Datos Principales"> 
         <div id="preloading" class="preloader" ng-show="datosPrincipalesCargando"><img src="images/loader.gif"></div>
-    	<div class="row p-t-2" ng-show="!datosPrincipalesCargando">
+    	<!-- <div class="row p-t-2" ng-show="!datosPrincipalesCargando">
 
         <div id="datosPrincipalesArchivo" class="col-sm-12 col-md-8">
 
@@ -182,7 +182,14 @@
           </div>
         </div>
 
-      </div><!-- .row -->
+      </div>.row -->
+      <pimc-archivo-datos-principales
+        ng-if="!datosPrincipalesCargando"
+        datos-principales = "datosPrincipales"
+        activo = "!datosPrincipalesCargando"
+        notas = "notas"
+        reportar-cambio="datosPrincipalesEditados(datosPrincipales, notas)">
+      </pimc-archivo-datos-principales>
 
     </uib-tab>
 
@@ -316,8 +323,8 @@
     </uib-tab>
   </uib-tabset>
 </section>
-
-<footer class="status-bar">
+<pimc-barra-estado guardar-cambios="guardarCambios()" borrar-cambios="borrarCambios()"></pimc-barra-estado>
+<!-- <footer class="status-bar">
     <div class="row">
       <div class="col-sm-6">
           <span class="overflow-ellipsis"><strong>Archivo Actual [{{archivoID}}]:</strong> {{datosPrincipales.archivoTitulo}}</span>
@@ -328,4 +335,4 @@
         <button ng-click='guardarCambios()' class="btn btn-success">Guardar</button>
       </div>
     </div>
-</footer>
+</footer> -->
