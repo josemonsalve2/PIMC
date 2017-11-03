@@ -25,6 +25,7 @@ def eliminarElemento(elementoRelacional, parametrosJSON):
       querry = '''DELETE FROM %s WHERE %s = %d '''
       try:
         numEntradasBorradas = cur.execute(querry % (elementoRelacional, idElementoRelacional, int(idValor)))
+        mysql.commit()
         return jsonify(numEntradasBorradas)
       except (MySQLdb.Error, MySQLdb.Warning) as e:
         raise ValueError("MYSQL ERROR = ", str(e))
