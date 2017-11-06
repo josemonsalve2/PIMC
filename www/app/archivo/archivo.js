@@ -442,9 +442,9 @@
             var conexiones = {};
 
             // Guardar datos principales
-            pimcArchivoDatosPrincipalesService.guardarDatosPrincipales($scope.datosPrincipales);
+            conexiones['datosPrincipales'] = pimcArchivoDatosPrincipalesService.guardarDatosPrincipales($scope.datosPrincipales);
             // Guardar notas
-            pimcComentarios.guardarNotas('Archivos', $scope.archivoID, $scope.notas);
+            conexiones['commentarios'] = pimcComentarios.guardarNotas('Archivos', $scope.archivoID, $scope.notas);
 
            // Revisamos documentos
             if ($scope.documentosCambio) {
