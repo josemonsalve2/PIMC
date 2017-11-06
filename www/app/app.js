@@ -46,7 +46,7 @@
         controller:  'archivosBusquedaController'
       })
       .when('/documento', {
-        templateUrl: 'views/documento.html',
+        templateUrl: 'views/documento/documento.html',
         controller:  'documentoPerfilController'
       })
       .when('/lugar', {
