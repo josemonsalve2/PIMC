@@ -84,7 +84,7 @@
             console.log(seleccionados);
             //TODO Enviar varios seleccionados
             $window.localStorage.setItem("archivoID", seleccionados[0].archivoID);
-            $window.location.href = "#!/archivo";
+            $window.location.href = "#!/archivos";
         };
 
         $scope.init();

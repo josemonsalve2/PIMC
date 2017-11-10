@@ -24,44 +24,45 @@
   pimc.controller('AppController', function($scope) {});
 
   pimc.config(function($routeProvider){
+    $routeProvider.caseInsensitiveMatch = true;    
     $routeProvider
       .when('/', {
         templateUrl: 'views/home.html',
         controller:  'indexController'
       })
-      .when('/personaje', {
+      .when('/personajes', {
         templateUrl: 'views/personaje.html',
         controller:  'personajePerfilController'
       })
-      .when('/archivo', {
+      .when('/archivos', {
         templateUrl: 'views/archivo/archivo.html',
         controller:  'archivoPerfilController'
       })
-      .when('/embarcacion', {
+      .when('/embarcaciones', {
         templateUrl: 'views/embarcacion/embarcacion.html',
         controller:  'embarcacionPerfilController'
       })
-      .when('/busqueda', {
+      .when('/busquedas', {
         templateUrl: 'views/busqueda.html',
         controller:  'archivosBusquedaController'
       })
-      .when('/documento', {
+      .when('/documentos', {
         templateUrl: 'views/documento/documento.html',
         controller:  'documentoPerfilController'
       })
-      .when('/lugar', {
+      .when('/lugares', {
         templateUrl: 'views/lugar/lugar.html',
         controller:  'lugarPerfilController'
       })
-      .when('/institucion', {
+      .when('/instituciones', {
         templateUrl: 'views/institucion.html',
         controller:  'institucionPerfilController'
       })
-      .when('/actividad', {
+      .when('/actividades', {
         templateUrl: 'views/actividad/actividad.html',
         controller:  'actividadPerfilController'
       })
-      .when('/evento', {
+      .when('/eventos', {
         templateUrl: 'views/evento.html',
         controller:  'eventoPerfilController'
       })

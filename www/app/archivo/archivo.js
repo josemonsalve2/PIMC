@@ -155,7 +155,7 @@
             //TODO Enviar varios seleccionados
             $window.localStorage.setItem("archivoID", $scope.archivoID);
             $window.localStorage.setItem("documentoID", seleccionado);
-            $window.location.href = "#!/documento";
+            $window.location.href = "#!/documentos";
         };
 
 
@@ -249,7 +249,7 @@
             //TODO Preguntar si desea guardar cambios
             $window.localStorage.setItem("archivoID", $scope.archivoID);
             $window.localStorage.setItem("personajeID", personajeSel);
-            $window.location.href = "#!/personaje";
+            $window.location.href = "#!/personajes";
         };
         // Cargar Listado Embarcaciones
         $scope.hayEmbarcaciones = false;
