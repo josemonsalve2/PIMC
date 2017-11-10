@@ -38,6 +38,12 @@
 
                 // Embarcaciones
                 $scope.cargarEmbarcaciones();
+
+                // Actividades 
+                $scope.cargarActividades();
+
+                // Instituciones 
+                $scope.cargarInstituciones();
             }
         };
         
@@ -437,6 +443,57 @@
             $scope.embarcaciones = valores;
         };
 
+        // ACTIVIDADES
+        $scope.actividades = [];
+        $scope.actividadesColumnas = ['tipo', 'descripcion', 'personalInvolucrado', 'herramientas', 'materiales', 'categoria'];
+        $scope.actividadesNombresColumnas = {
+            tipo: "Tipo de Actividad", 
+            descripcion: "Descripción del proceso",
+            personalInvolucrado: "Personal involucrado",
+            herramientas: "Herramientas Usadas",
+            materiales: "Materiales",
+            categoria: "Categoria"
+        }
+        $scope.autocompletaractividadesOpciones = {
+            camposAutocompletar: ['tipo']
+        };
+        $scope.cargarActividades = function () {
+            return pimcTablaRefElementoService.cargarElementos('Actividades', $scope.documentoID).then(
+                function(data) {
+                    $scope.actividades = data;
+                });
+        };
+        $scope.guardarActividades = function () {
+            return pimcTablaRefElementoService.guardarElementos('Actividades', $scope.documentoID, $scope.actividades);
+        };
+        $scope.actividadesCambios = function (valores) {
+            $scope.actividades = valores;
+        };
+
+        // INSTITUCIONES
+        $scope.instituciones = [];
+        $scope.institucionesColumnas = ['nombre', 'tipoInstitucion', 'categoria'];
+        $scope.institucionesNombresColumnas = {
+            nombre: "Nombre", 
+            tipoInstitucion: "Tipo de Institucion",
+            categoria: "Categoria"
+        }
+        $scope.autocompletarInstitucionesOpciones = {
+            camposAutocompletar: ['nombre']
+        };
+        $scope.cargarInstituciones = function () {
+            return pimcTablaRefElementoService.cargarElementos('Instituciones', $scope.documentoID).then(
+                function(data) {
+                    $scope.instituciones = data;
+                });
+        };
+        $scope.guardarInstituciones = function () {
+            return pimcTablaRefElementoService.guardarElementos('Instituciones', $scope.documentoID, $scope.instituciones);
+        };
+        $scope.institucionesCambios = function (valores) {
+            $scope.instituciones = valores;
+        };
+
         // Button functions
         $scope.borrarCambios = function() {
             pimcBarraEstadoService.registrarAccion("Los cambios han sido borrados");
@@ -529,17 +586,21 @@
                 });
             }
             
-            // EMBARCACIONES
-            conexiones['embarcacionesGuardads'] = $scope.guardarEmbarcaciones();
-                
             // PERSONAJES
             conexiones['personajesGuardados'] = ($scope.guardarPersonajes());
+            // EMBARCACIONES
+            conexiones['embarcacionesGuardads'] = $scope.guardarEmbarcaciones();
+            // ACTIVIDADES
+            conexiones['actividadesGuardadas'] = $scope.guardarActividades();
+            // INSTITUCIONES
+            conexiones['institucionesGuardadas'] = $scope.guardarInstituciones();
+
             // Incializamos todo
             if (Object.keys(conexiones).length != 0) {
                 $scope.datosPrincipalesCargando = true;
                 $scope.datosGuardados = true;
                 var guardoAlgo = false;
-                $q.all(conexiones).then(function(responses) {
+                $q.all(conexiones).then(function (responses) {
                     for (var res in responses) {
                         if (res && responses[res]) {
                             guardoAlgo = true;
@@ -555,9 +616,15 @@
                         init();
                     } else {
                         $scope.datosPrincipalesCargando = false;
-                        $scope.datosGuardados = false; 
+                        $scope.datosGuardados = false;
                     }
-                });
+                    return true;
+                },
+                    function (rejectedResponse) {
+                        pimcService.debug("[ERROR][GUARDANDO DOCUMENTO = " + $scope.documentoID + " ] " + rejectedResponse);
+                        init();                        
+                        return false;
+                    });
             }
         };
         

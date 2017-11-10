@@ -291,16 +291,12 @@
 
     <!-- ACTIVIDADES -->
     <uib-tab index="5" heading="Actividades">
-    	<div class="row p-t-2">
-    		<div class="col-sm-12">
-		      <table id="ActividadesTabla">
-		        <tr><th>Tipo</th><th>Descripción del proceso</th><th>Personal</th><th>Herramientas</th><th>Materiales</th><th>Cita/Anotación</th></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td><td>ASADFA</td></tr>
-		      </table>
-	      </div>
-      </div>
+        <div class="row p-t-2">
+            <div class="col-sm-12">
+                <pimc-tabla-ref-elemento-relacional elemento-relacional='"Actividades"' valores='actividades' campos-columnas='actividadesColumnas'
+                    nombres-columnas='actividadesNombresColumnas' autocompletar-opciones='autocompletarActividadesOpciones' reportar-cambio='actividadesCambios(valores)'></pimc-tabla-ref-elemento-relacional>
+            </div>
+        </div>
     </uib-tab>
 
     <!-- FECHAS Y SUCESOS -->
@@ -321,12 +317,8 @@
     <uib-tab index="7" heading="Instituciones">
     	<div class="row p-t-2">
     		<div class="col-sm-12">
-		      <table id="institucionesTabla">
-		        <tr><th>Nombre</th><th>Cita/Anotación</th></tr>
-		        <tr><td>Example</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>ASADFA</td></tr>
-		      </table>
+                <pimc-tabla-ref-elemento-relacional elemento-relacional='"Instituciones"' valores='instituciones' campos-columnas='institucionesColumnas'
+                    nombres-columnas='institucionesNombresColumnas' autocompletar-opciones='autocompletarInstitucionesOpciones' reportar-cambio='institucionesCambios(valores)'></pimc-tabla-ref-elemento-relacional>
 		    </div>
 		  </div>
     </uib-tab>

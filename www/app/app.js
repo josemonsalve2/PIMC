@@ -148,7 +148,8 @@
           Archivos: "archivoID",
           Documentos: "documentoID",
           Personajes: "personajeID",
-          Actividades: "actividadID"
+          Actividades: "actividadID",
+          Instituciones: "institucionID"
       }
 
     }]);

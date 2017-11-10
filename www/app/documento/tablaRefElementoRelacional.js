@@ -73,10 +73,10 @@
                         }
                         // Obtenemos URL de consulta
                         var URLInsertarElemento = pimcService.crearURLOperacion('Insertar', elementoRelacional);
-                        conexiones.push($http.post(URLInsertar, elementoGuardar.contenido).then(function (valorInsertado) {
+                        conexiones.push($http.post(URLInsertarElemento, elementoGuardar.contenido).then(function (valorInsertado) {
                             // Una vez creado el elemento podemos agregar la entrada
                             if (Object.keys(valorInsertado.data).length != 0) {
-                                var nuevoElemento = valorInsertado.data;
+                                var nuevoElemento = valorInsertado.data[0];
                                 var idNombre = pimcService.idElementoRelaciona[elementoRelacional];
 
                                 // Revisamos que si exista un ID
@@ -87,8 +87,9 @@
                                     relacionContenido[idNombre] = nuevoElemento[idNombre];
                                     relacionContenido.comentario = elementoGuardar.comentario;
                                     relacionContenido.referencia = elementoGuardar.referencia;
-                                    conexiones.push($http.post(URLInsertarRelacion, relacionContenido));
+                                    return $http.post(URLInsertarRelacion, relacionContenido);
                                 }
+                                return $q.reject("Error guardando la nueva referencia. El elemento fue creado"); // No deberia pasar
                             }
                         }));
                     } else if (elementoGuardar.estado === pimcService.datosEstados.MODIFICADO) {
@@ -124,11 +125,9 @@
                             pimcService.debug(res + ' = ' + responses[res].data);
                         }
                         return true;
-                    }, function (responses) {
-                        for (var res in responses) {
-                            pimcService.debug("[ERROR][GUARDANDO REF = " + elementoRelacional + "]" + res + ' = ' + responses[res]);
-                        }
-                        return false;
+                    }, function (response) {
+                        pimcService.debug("[ERROR][GUARDANDO REF = " + elementoRelacional + "] " + response);
+                        return $q.reject("Error en tabla referencia " +  elementoRelacional + " elementos relacional");
                     });
                 } else {
                     return false;
@@ -199,6 +198,8 @@
                 if (changes.autocompletarOpciones) {
                     refTablaCtrl.autocompletarOpcionesInt = $window.angular.copy(refTablaCtrl.autocompletarOpciones);
                     // Nos aseguramos de que hayan valores por defecto
+                    if (!refTablaCtrl.autocompletarOpcionesInt) refTablaCtrl.autocompletarOpcionesInt = {};
+                    if (!refTablaCtrl.autocompletarOpcionesInt.camposAutocompletar) refTablaCtrl.autocompletarOpcionesInt.camposAutocompletar = [];
                     if (!refTablaCtrl.autocompletarOpcionesInt.delay) refTablaCtrl.autocompletarOpcionesInt.delay = 300;
                     if (!refTablaCtrl.autocompletarOpcionesInt.minLength) refTablaCtrl.autocompletarOpcionesInt.minLength = 3;
                 }
