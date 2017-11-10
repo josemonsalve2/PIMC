@@ -315,8 +315,8 @@ def insertarElementoRelacionalPIMC0_2(elemento_relacional):
         return pimcAPI.insertarNuevoElemento(elemento_relacional, data)
       except ValueError as e:
         raise InvalidUsage("ERROR: " + str(e), status_code = 400)
-      #except Exception as e:
-      #  raise InvalidUsage("ERROR: " + str(e), status_code = 400)
+      except Exception as e:
+        raise InvalidUsage("ERROR: " + str(e), status_code = 400)
     else:
       raise InvalidUsage('No se enviaron argumentos', status_code = 400)
   else:
