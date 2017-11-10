@@ -42,7 +42,7 @@
         templateUrl: 'views/embarcacion/embarcacion.html',
         controller:  'embarcacionPerfilController'
       })
-      .when('/busquedas', {
+      .when('/busqueda', {
         templateUrl: 'views/busqueda.html',
         controller:  'archivosBusquedaController'
       })
