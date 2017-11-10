@@ -38,7 +38,7 @@ def insertarNuevoElemento(elementoRelacional, parametrosJSON):
       if isinstance(parametrosJSON[campo], str):
         querry = querry + '"' + parametrosJSON[campo] + '"' + ', '
       else:
-        querry = querry + parametrosJSON[campo] + ', '
+        querry = querry + str(parametrosJSON[campo]) + ', '
   
   # borramos la ultima coma
   querry = querry[:-2] + ')'
