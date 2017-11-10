@@ -12,14 +12,14 @@
             $scope.archivoID = $window.localStorage.getItem("archivoID");
             // If not set, redirect.
             if (!$scope.archivoID) {
-                console.log("No hay archivoID");
+                pimcService.debug("No hay archivoID");
                 //TODO Enviar varios seleccionados
                 $window.location.href = "#!/busqueda";
             } else {
                 if (!$scope.datosGuardados) {
-                    $scope.registrarAccion("Archivo <strong>" + $scope.archivoID + "</strong> ha sido cargado");
+                    pimcBarraEstadoService.registrarAccion("Archivo <strong>" + $scope.archivoID + "</strong> ha sido cargado");
                 } else {
-                    $scope.registrarAccion("Archivo <strong>" + $scope.archivoID + "</strong> ha sido guardado en la base de datos");
+                    pimcBarraEstadoService.registrarAccion("Archivo <strong>" + $scope.archivoID + "</strong> ha sido guardado en la base de datos");
                     $scope.datosGuardados = false;
                 }
                 // DATOS PRINCIPALES
@@ -117,7 +117,7 @@
                         }
                     });
                     // LOG
-                    console.log($scope.documentos);
+                    pimcService.debug($scope.documentos);
                     // PERSONAJES
                     $scope.cargarPersonajes();  
                 }
@@ -151,7 +151,7 @@
         }
         $scope.abrirDocumentoSeleccionado = function (indexDocumento) {
             var seleccionado = $scope.documentos[indexDocumento].documentoID;
-            console.log("Abriendo documento" + seleccionado);
+            pimcService.debug("Abriendo documento" + seleccionado);
             //TODO Enviar varios seleccionados
             $window.localStorage.setItem("archivoID", $scope.archivoID);
             $window.localStorage.setItem("documentoID", seleccionado);
@@ -169,14 +169,14 @@
             if (palabra == "") {
                 var palabraEliminada = $scope.datosPrincipales.palabrasClaves[indexEditada];
                 if (palabraEliminada != "") {
-                    $scope.registrarAccion("palabra clave <strong>" + palabraEliminada + "</strong> eliminada");
+                    pimcBarraEstadoService.registrarAccion("palabra clave <strong>" + palabraEliminada + "</strong> eliminada");
                     $scope.datosPrincipales.editado = true;
                 }
                 $scope.datosPrincipales.palabrasClaves.splice(indexEditada, 1);
             } else {
                 var palabraModificada = $scope.datosPrincipales.palabrasClaves[indexEditada];
                 if (palabra != palabraModificada) {
-                    $scope.registrarAccion("palabra clave <strong>" + palabraModificada + "</strong> Modificada a <strong>" + palabra + "</strong>");
+                    pimcBarraEstadoService.registrarAccion("palabra clave <strong>" + palabraModificada + "</strong> Modificada a <strong>" + palabra + "</strong>");
                     $scope.datosPrincipales.palabrasClaves[indexEditada] = palabra;
                     $scope.datosPrincipales.editado = true;
                 }
@@ -195,7 +195,7 @@
         $scope.palabrasClaves.agregarPalabraNueva = function(palabra) {
             if (!$scope.datosPrincipales.palabrasClaves.includes(palabra) && palabra.length != 0) {
                 $scope.datosPrincipales.palabrasClaves.push(palabra);
-                $scope.registrarAccion("palabra clave <strong>" + palabra + "</strong> agregada");
+                pimcBarraEstadoService.registrarAccion("palabra clave <strong>" + palabra + "</strong> agregada");
                 $scope.datosPrincipales.editado = true;
             }
             $scope.palabrasClaves.palabraNueva.mensaje = "+ Agregar";
@@ -244,7 +244,7 @@
             });
         };
         $scope.abrirPersonaje = function (personajeSel) {
-            console.log("Abriendo documento" + personajeSel);
+            pimcService.debug("Abriendo documento" + personajeSel);
             //TODO Enviar varios seleccionados
             //TODO Preguntar si desea guardar cambios
             $window.localStorage.setItem("archivoID", $scope.archivoID);
@@ -423,17 +423,10 @@
         };
         
         
-        // Para guardar borrar y barra de estado
-        $scope.ultimaAccion = $sce.trustAsHtml("Ninguna");
-        // Log
-        $scope.registrarAccion = function(mensaje) {
-            $scope.ultimaAccion = $sce.trustAsHtml(mensaje);
-            console.log(mensaje)
-        }
         // Button functions
         $scope.borrarCambios = function() {
             if (window.confirm("Esta Seguro que quiere borrar los cambios?") === true) {
-                $scope.registrarAccion("Los cambios han sido borrados");
+                pimcBarraEstadoService.registrarAccion("Los cambios han sido borrados");
                 init();
             }
         };
@@ -449,7 +442,7 @@
            // Revisamos documentos
             if ($scope.documentosCambio) {
                 $scope.documentosNuevos.forEach(function (docNuevo) {
-                    $scope.registrarAccion("Actualizando BD Documentos")
+                    pimcBarraEstadoService.registrarAccion("Actualizando BD Documentos")
                     conexiones['documentosCambiosInsertados'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/Documentos?archivoID=' + $scope.archivoID + 
                             '&tipoDocumento="' + docNuevo.tipoDocumento +
                             '"&formatoDisponible="' + docNuevo.formatoDisponible +
@@ -457,7 +450,7 @@
                     );
                 });
                 $scope.documentosAEliminar.forEach(function (docABorrar) {
-                    $scope.registrarAccion("Eliminando documento de la base de datos")
+                    pimcBarraEstadoService.registrarAccion("Eliminando documento de la base de datos")
                     conexiones['documentosCambiosEliminados'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Eliminar/Documentos',
                                 {params: {idUnico:'documentoID',
                                         documentoID: docABorrar.documentoID}}
@@ -470,7 +463,7 @@
                 $scope.datosGuardados = true;
                 $q.all(conexiones).then(function(responses) {
                     for (var res in responses) {
-                        console.log(res.data);
+                        pimcService.debug(res.data);
                     }
                     init();
                 });
