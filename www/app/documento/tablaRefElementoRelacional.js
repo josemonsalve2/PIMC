@@ -4,8 +4,8 @@
     
         var tablaRefElementoRelacionalModule = angular.module('documentoPerfil');
     
-        // Service para comentarios. Cargar y guardar notas
-        tablaRefElementoRelacionalModule.service('pimcTablaRefElementoService', ['$http', '$q', 'pimcService', function ($http, $q, pimcService) {
+        // Service para comentarios. Cargar y guardar referenciasElementos
+        tablaRefElementoRelacionalModule.service('pimcTablaRefElementoService', ['$http', '$q', 'pimcService','pimcBarraEstadoService', function ($http, $q, pimcService, pimcBarraEstadoService) {
             var tablaRefElementoServiceCtrl = this;
 
             tablaRefElementoServiceCtrl.cargarElementos = function (elementoRelacional, documentoID) {
@@ -40,6 +40,8 @@
                                 nuevoElemento.referenciaID = referencia.referenciaID;
                                 nuevoElemento.estado = pimcService.datosEstados.LIMPIO;
                                 nuevoElemento.contenido = datosContenido;
+                                nuevoElemento.referencia = "";
+                                nuevoElemento.comentario = "";
                                 elementos.push(nuevoElemento);
                             }));
                         }); 
@@ -52,8 +54,85 @@
                 });
             };
     
-            tablaRefElementoServiceCtrl.guardarElementos = function(elementoRelacional, idElementoRelaciona, notas) {
-                
+            tablaRefElementoServiceCtrl.guardarElementos = function(elementoRelacional, documentoID, elementos) {
+                pimcService.debug("Guardando tabla de referencia para " + elementoRelacional);
+                var conexiones = [];
+                // Realizamos cambios de acuerdo al estado
+                angular.forEach(elementos, function(elementoGuardar) {
+                    // Limpiamos el contenido, quitamos informacion no subministrada
+                    angular.forEach(elementoGuardar.contenido, function(val, key) {
+                        if (!val || val.length === 0) {
+                            delete elementoGuardar.contenido[key]; // Eliminamos valores vacios
+                        }
+                    });
+                    // Insertamos elementos nuevos
+                    if (elementoGuardar.estado === pimcService.datosEstados.INSERTADO) {
+                        // Evitar elementos vacias
+                        if (Object.keys(elementoGuardar.contenido).length === 0) {
+                            return;
+                        }
+                        // Obtenemos URL de consulta
+                        var URLInsertarElemento = pimcService.crearURLOperacion('Insertar', elementoRelacional);
+                        conexiones.push($http.post(URLInsertar, elementoGuardar.contenido).then(function (valorInsertado) {
+                            // Una vez creado el elemento podemos agregar la entrada
+                            if (Object.keys(valorInsertado.data).length != 0) {
+                                var nuevoElemento = valorInsertado.data;
+                                var idNombre = pimcService.idElementoRelaciona[elementoRelacional];
+
+                                // Revisamos que si exista un ID
+                                if (nuevoElemento[idNombre]) {
+                                    var URLInsertarRelacion = pimcService.crearURLOperacion('Insertar', 'DocumentosRef' + elementoRelacional);
+                                    var relacionContenido = {};
+                                    relacionContenido['documentoID'] = documentoID;
+                                    relacionContenido[idNombre] = nuevoElemento[idNombre];
+                                    relacionContenido.comentario = elementoGuardar.comentario;
+                                    relacionContenido.referencia = elementoGuardar.referencia;
+                                    conexiones.push($http.post(URLInsertarRelacion, relacionContenido));
+                                }
+                            }
+                        }));
+                    } else if (elementoGuardar.estado === pimcService.datosEstados.MODIFICADO) {
+                        // Esto quiere decir que el elemento existe en la base de datos pero 
+                        // la relacion no. Hay que simplemente agregar la relacion
+                        var idNombre = pimcService.idElementoRelaciona[elementoRelacional];
+
+                        // Revisamos que si exista un ID
+                        if (elementoGuardar.contenido[idNombre]) {
+                            var URLInsertarRelacion = pimcService.crearURLOperacion('Insertar', 'DocumentosRef' + elementoRelacional);
+                            var relacionContenido = {};
+                            relacionContenido['documentoID'] = documentoID;
+                            relacionContenido[idNombre] = elementoGuardar.contenido[idNombre];
+                            relacionContenido.comentario = elementoGuardar.comentario;
+                            relacionContenido.referencia = elementoGuardar.referencia;
+                            conexiones.push($http.post(URLInsertarRelacion, relacionContenido));
+                        }
+                    } else if (elementoGuardar.estado === pimcService.datosEstados.ELIMINADO) {
+                        // Obtenemos URL de consulta
+                        var URLEliminar = pimcService.crearURLOperacion('Eliminar', 'DocumentosRef' + elementoRelacional);
+                        var config = {
+                            params: {
+                                referenciaID: elementoGuardar.referenciaID
+                            }
+                          }
+                        conexiones.push($http.delete(URLEliminar, config));
+                    };
+                });
+                if (conexiones.length != 0) {
+                    pimcBarraEstadoService.registrarAccion(elementoRelacional + " guardados");                    
+                    return $q.all(conexiones).then(function (responses) {
+                        for (var res in responses) {
+                            pimcService.debug(res + ' = ' + responses[res].data);
+                        }
+                        return true;
+                    }, function (responses) {
+                        for (var res in responses) {
+                            pimcService.debug("[ERROR][GUARDANDO REF = " + elementoRelacional + "]" + res + ' = ' + responses[res]);
+                        }
+                        return false;
+                    });
+                } else {
+                    return false;
+                }
             };
 
             tablaRefElementoServiceCtrl.autocompletarElemento = function (elementoRelacional, campoAutocompletar, hint) {
@@ -165,6 +244,7 @@
                     refTablaCtrl.valoresInt.splice(index, 1);
                     pimcBarraEstadoService.registrarAccion(" Referencia a " + refTablaCtrl.elementoRelacionalInt + " eliminada ");
                 }
+                refTablaCtrl.reportarCambio({valores: refTablaCtrl.valoresInt});
             }
 
             // revisa si el campo que se envia deberia tener autocompletar
@@ -213,8 +293,9 @@
                     // Usamos MODIFICADO para elementos que existen en la base de datos
                     // Pero que no tenemos que crear un nuevo personaje
                     valor.estado = pimcService.datosEstados.MODIFICADO;
+                    pimcBarraEstadoService.registrarAccion(" Referencia" + valor.contenido[idNombre] + " a " + refTablaCtrl.elementoRelacionalInt + " agregada.");
                 }
-
+                refTablaCtrl.reportarCambio({valores: refTablaCtrl.valoresInt});
             }
 
             // Agregar nuevo
@@ -228,9 +309,16 @@
                     nuevoElemento.contenido[val] = "";
                 });
                 nuevoElemento.referenciaID = -1;
+                nuevoElemento.comentario = "";
+                nuevoElemento.referencia = "";
                 refTablaCtrl.valoresInt.push(nuevoElemento);
+                refTablaCtrl.reportarCambio({valores: refTablaCtrl.valoresInt});                
             }
 
+            // Reportar cambios de alguno de los datos de un elemento nuevo
+            refTablaCtrl.reportarCambio = function () {
+                refTablaCtrl.reportarCambio({valores: refTablaCtrl.valoresInt});                
+            }
         }]);
     
         tablaRefElementoRelacionalModule.filter('filtrosExistentesNuevasRef', ['pimcService', function (pimcService) {

@@ -1,10 +1,11 @@
 <section>
-  <uib-tabset active="active">
+  <div id="preloading" class="preloader" ng-show="datosPrincipalesCargando"><img src="images/loader.gif"></div>
+  <uib-tabset active="active" ng-show="!datosPrincipalesCargando">
 
     <!-- DATOS PRINCIPALES-->
     <uib-tab index="0" heading="Datos Principales"> 
-        <div id="preloading" class="preloader" ng-show="datosPrincipalesCargando"><img src="images/loader.gif"></div>
-    	<div class="row p-t-2" ng-show="!datosPrincipalesCargando">
+        
+    	<div class="row p-t-2">
 
         <div class="col-sm-12 col-md-4">
 
@@ -237,39 +238,9 @@
     <uib-tab index="2" heading="Personajes">
     	<div class="row p-t-2">
     		<div class="col-sm-12">
-    			<table id="personajesTabla">
-		        <tr><th>Personaje ID</th><th>Nombre</th><th>Ocupación</th><th>Nacionalidad</th><th>Sexo</th><th>categoria</th></tr>
-		        <tr ng-click="abrirPersonajeSeleccionado($index,'existente')" ng-repeat="personaje in personajes track by $index">
-                    <td><button ng-show="borrarPersonajesActivado" ng-click='borrarPersonajeExistente($index);$event.stopPropagation()' class="btn-danger">-</button>{{personaje.personajeID}}</td>
-                    <td>{{personaje.nombre}}</td>
-                    <td>{{personaje.ocupacion}}</td>
-                    <td>{{personaje.nacionalidad}}</td>
-                    <td>{{personaje.sexo}}</td>
-                    <td>{{personaje.categoria}}</td>
-                </tr>
-                <tr ng-click="abrirPersonajeSeleccionado($index,'nuevaRef')" ng-repeat="personaje in personajesAgregarReferencia track by $index">
-                    <td><button ng-click='borrarReferenciaNuevaPersonaje($index)' class="btn-danger">-</button> (Nueva Ref) {{personaje.personajeID}}</td>
-                    <td>{{personaje.nombre}}</td>
-                    <td>{{personaje.ocupacion}}</td>
-                    <td>{{personaje.nacionalidad}}</td>
-                    <td>{{personaje.sexo}}</td>
-                    <td>{{personaje.categoria}}</td>
-                </tr>
-                <tr ng-repeat="personaje in personajesNuevos track by $index">
-                    <td><button ng-click='borrarNuevoPersonaje($index)' class="btn-danger">-</button> {{"Personaje Nuevo"}}</td>
-                    <td>
-                        <span editable-text="personaje.nombre" e-typeahead-min-length="3" e-uib-typeahead="personajes.nombre for personajes in autocompletarPersonaje($viewValue)" e-typeahead-wait-ms="100" e-typeahead-on-select="actualizarPersonajeNuevoExistente($index,$item)" e-typeahead-no-results="personajesNoResults" e-typeahead-loading="cargandoNombres" onbeforesave="revisarSiPersonajeExiste($data)">{{personaje.nombre || "nuevo nombre"}}</span>
-                        <i ng-show="cargandoNombres" class="glyphicon glyphicon-refresh"></i>
-                        <div ng-show="personajesNoResults"><i class="glyphicon glyphicon-remove"></i> No Results Found</div></td>
-                    <td><span editable-text="personaje.ocupacion">{{personaje.ocupacion || "nueva ocupacion"}}</span></td>
-                    <td><span editable-text="personaje.nacionalidad">{{personaje.nacionalidad || "nueva nacionalidad"}}</span></td>
-                    <td><span editable-text="personaje.sexo">{{personaje.sexo || "nuevo sexo"}}</span></td>
-                    <td><span editable-text="personaje.categoria">{{personaje.categoria || "nueva categoria"}}</span></td></tr>
-
-		      </table>
+                <pimc-tabla-ref-elemento-relacional elemento-relacional='"Personajes"' valores='personajes' campos-columnas='personajesColumnas'
+                    nombres-columnas='personajesNombresColumnas' autocompletar-opciones='autocompletarPersonajesOpciones' reportar-cambio='personajesCambios(valores)'></pimc-tabla-ref-elemento-relacional>
     		</div>
-            <button ng-click='agregarPersonaje()' class="btn btn-success m-a-2">Agregar Personaje</button>
-            <button ng-click='borrarPersonajesActivado = !borrarPersonajesActivado' class="btn m-a-2">{{borrarPersonajesActivado? "Desabilitar" : "Habilitar"}} borrar personajes existentes</button>
     	</div>
     </uib-tab>
 
@@ -398,10 +369,4 @@
   </uib-tabset>
 </section>
 
-<footer class="status-bar">
-  <div class="text-right">
-    <strong>Ultima Accion: </strong><span class="status-message p-r-1" ng-bind-html="ultimaAccion">{{ultimaAccion}}</span>
-    <button ng-click='borrarCambios()' class="btn btn-danger m-r-1" ng-disabled="guardarDatos">Borrar cambios</button>
-    <button ng-click='guardarCambios()' class="btn btn-success">Guardar</button>
-  </div>
-</footer>
+<pimc-barra-estado guardar-cambios="guardarCambios()" borrar-cambios="borrarCambios()"></pimc-barra-estado>

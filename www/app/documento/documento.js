@@ -7,20 +7,20 @@
     'use strict';
 
     var documentoPerfil = angular.module('documentoPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
-    documentoPerfil.controller('documentoPerfilController', ['$scope', '$sce','$q', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', '$scope', function($scope, $sce, $q, $http, $window, $location, $filter, $timeout, i18nService, uiGridConstants) {
+    documentoPerfil.controller('documentoPerfilController', ['$scope', 'pimcService', 'pimcBarraEstadoService', 'pimcTablaRefElementoService', '$q', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', '$scope', function($scope, pimcService, pimcBarraEstadoService, pimcTablaRefElementoService,  $q, $http, $window, $location, $filter, $timeout, i18nService, uiGridConstants) {
         $scope.documentoID = -1;
         var init = function() {
             $scope.documentoID = $window.localStorage.getItem("documentoID");
             // If not set, redirect.
             if (!$scope.documentoID) {
-                console.log("No hay documentoID");
+                pimcService.debug("No hay documentoID");
                 //TODO Enviar varios seleccionados
                 $window.location.href = "#!/busqueda";
             } else {
                 if (!$scope.datosGuardados) {
-                    $scope.registrarAccion("Documento <strong>" + $scope.documentoID + "</strong> ha sido cargado");
+                    pimcBarraEstadoService.registrarAccion("Documento <strong>" + $scope.documentoID + "</strong> ha sido cargado");
                 } else {
-                    $scope.registrarAccion("Documento <strong>" + $scope.documentoID + "</strong> ha sido guardado en la base de datos");
+                    pimcBarraEstadoService.registrarAccion("Documento <strong>" + $scope.documentoID + "</strong> ha sido guardado en la base de datos");
                     $scope.datosGuardados = false;
                 }
 
@@ -65,7 +65,7 @@
                 var documentoDatos = data.data[0];
                 
                 //Log
-                console.log(documentoDatos);
+                pimcService.debug(documentoDatos);
 
                 try {
                     //Llenamos los datos del documento
@@ -83,7 +83,7 @@
                     });
                 }
                 catch(err) {
-                    console.log("Problema cargando los valores de datos principales del documento " + err.message);
+                    pimcService.debug("Problema cargando los valores de datos principales del documento " + err.message);
                 }
 
                 //Limpiamos la bandera de editado
@@ -100,30 +100,30 @@
             switch (campo) {
                 case "tipoDocumento":
                     if (valorNuevo != $scope.datosPrincipales.archivoTitulo) {
-                        $scope.registrarAccion("Tipo de documento modificado");
+                        pimcBarraEstadoService.registrarAccion("Tipo de documento modificado");
                         $scope.datosPrincipalesEditado = true;
                     }
                     break;
                 case "estadoConservacion":
                     if (valorNuevo != $scope.datosPrincipales.archivoFondo) {
-                        $scope.registrarAccion("Estado de conservacion modificado");
+                        pimcBarraEstadoService.registrarAccion("Estado de conservacion modificado");
                         $scope.datosPrincipalesEditado = true;
                     }
                     break;
                 case "formatoDisponible":
                     if (valorNuevo != $scope.datosPrincipales.institucionFondo) {
-                        $scope.registrarAccion("Formato disponible modificado");
+                        pimcBarraEstadoService.registrarAccion("Formato disponible modificado");
                         $scope.datosPrincipalesEditado = true;
                     }
                     break;
                 case "sinopsis":
                     if (valorNuevo != $scope.datosPrincipales.seccion) {
-                        $scope.registrarAccion("Sinopsis modificada");
+                        pimcBarraEstadoService.registrarAccion("Sinopsis modificada");
                         $scope.datosPrincipalesEditado = true;
                     }
                     break;
                 default:
-                    $scope.registrarAccion("[ERROR] No se pueden modificar datos principales.");
+                    pimcBarraEstadoService.registrarAccion("[ERROR] No se pueden modificar datos principales.");
                     break;
             }
 
@@ -136,14 +136,14 @@
             if (tema == "") {
                 var temaEliminado = $scope.datosPrincipales.listaTemas[indexEditada];
                 if (temaEliminado != "") {
-                    $scope.registrarAccion("Tema <strong>" + temaEliminado + "</strong> eliminado");
+                    pimcBarraEstadoService.registrarAccion("Tema <strong>" + temaEliminado + "</strong> eliminado");
                     $scope.datosPrincipalesEditado = true;
                 }
                 $scope.datosPrincipales.listaTemas.splice(indexEditada, 1);
             } else {
                 var temaModificado = $scope.datosPrincipales.listaTemas[indexEditada];
                 if (tema != temaModificado) {
-                    $scope.registrarAccion("Tema <strong>" + temaModificado + "</strong> Modificado a <strong>" + tema + "</strong>");
+                    pimcBarraEstadoService.registrarAccion("Tema <strong>" + temaModificado + "</strong> Modificado a <strong>" + tema + "</strong>");
                     $scope.datosPrincipales.listaTemas[indexEditada] = tema;
                     $scope.datosPrincipalesEditado = true;
                 }
@@ -162,7 +162,7 @@
         $scope.listaTemas.agregarTemaNuevo = function(tema) {
             if (!$scope.datosPrincipales.listaTemas.includes(tema) && tema.length != 0) {
                 $scope.datosPrincipales.listaTemas.push(tema);
-                $scope.registrarAccion("Tema <strong>" + tema + "</strong> agregado");
+                pimcBarraEstadoService.registrarAccion("Tema <strong>" + tema + "</strong> agregado");
                 $scope.datosPrincipalesEditado = true;
             }
             $scope.listaTemas.temaNuevo.mensaje = "+ Agregar";
@@ -215,26 +215,26 @@
             switch(elementoEditado) {
                 case "personaje":
                     if (valorNuevo != $scope.emisorReceptor[index].emisor.personaje) {
-                        $scope.registrarAccion("Personaje emisor  <strong>" + $scope.emisorReceptor[index].emisor.personaje + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
+                        pimcBarraEstadoService.registrarAccion("Personaje emisor  <strong>" + $scope.emisorReceptor[index].emisor.personaje + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
                     }
                     break;
                 case "cargo":
                     if (valorNuevo != $scope.emisorReceptor[index].emisor.cargo) {
-                        $scope.registrarAccion("Cargo personaje emisor <strong>" + $scope.emisorReceptor[index].emisor.cargo + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
+                        pimcBarraEstadoService.registrarAccion("Cargo personaje emisor <strong>" + $scope.emisorReceptor[index].emisor.cargo + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
                     }
                     break;
                 case "institucion":
                     if (valorNuevo != $scope.emisorReceptor[index].emisor.institucion) {
-                        $scope.registrarAccion("Institucion emisora <strong>" + $scope.emisorReceptor[index].emisor.institucion + "</strong> modificada a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
+                        pimcBarraEstadoService.registrarAccion("Institucion emisora <strong>" + $scope.emisorReceptor[index].emisor.institucion + "</strong> modificada a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
                     }
                     break;
                 case "nota":
                     if (valorNuevo != $scope.emisorReceptor[index].emisor.nota) {
-                        $scope.registrarAccion("nota emisor modificada en Emisor Receptor "+(index + 1));
+                        pimcBarraEstadoService.registrarAccion("nota emisor modificada en Emisor Receptor "+(index + 1));
                     }
                     break;
                 default:
-                $scope.registrarAccion("[ERROR] DATO EMISOR INCORRECTO!");
+                pimcBarraEstadoService.registrarAccion("[ERROR] DATO EMISOR INCORRECTO!");
                     break;
             }
         }
@@ -244,26 +244,26 @@
             switch(elementoEditado) {
                 case "personaje":
                     if (valorNuevo != $scope.emisorReceptor[index].receptor.personaje) {
-                        $scope.registrarAccion("Personaje receptor <strong>" + $scope.emisorReceptor[index].receptor.personaje + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
+                        pimcBarraEstadoService.registrarAccion("Personaje receptor <strong>" + $scope.emisorReceptor[index].receptor.personaje + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
                     }
                     break;
                 case "cargo":
                     if (valorNuevo != $scope.emisorReceptor[index].receptor.cargo) {
-                        $scope.registrarAccion("Cargo personaje receptor <strong>" + $scope.emisorReceptor[index].receptor.cargo + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
+                        pimcBarraEstadoService.registrarAccion("Cargo personaje receptor <strong>" + $scope.emisorReceptor[index].receptor.cargo + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
                     }
                     break;
                 case "institucion":
                     if (valorNuevo != $scope.emisorReceptor[index].receptor.institucion) {
-                        $scope.registrarAccion("Institucion receptora <strong>" + $scope.emisorReceptor[index].receptor.institucion + "</strong> modificada a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
+                        pimcBarraEstadoService.registrarAccion("Institucion receptora <strong>" + $scope.emisorReceptor[index].receptor.institucion + "</strong> modificada a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
                     }
                     break;
                 case "nota":
                     if (valorNuevo != $scope.emisorReceptor[index].receptor.nota) {
-                        $scope.registrarAccion("nota receptor modificada en Emisor Receptor "+index);
+                        pimcBarraEstadoService.registrarAccion("nota receptor modificada en Emisor Receptor "+index);
                     }
                     break;
                 default:
-                $scope.registrarAccion("[ERROR] DATO INCORRECTO!");
+                pimcBarraEstadoService.registrarAccion("[ERROR] DATO INCORRECTO!");
                     break;
             }
         }
@@ -274,7 +274,7 @@
                     var emisorReceptorDatos = data.data[0];
 
                     //Log
-                    console.log(emisorReceptorDatos);
+                    pimcService.debug(emisorReceptorDatos);
 
                     try {
                         //Llenamos los datos del documento
@@ -297,7 +297,7 @@
                         });
                     }
                     catch(err) {
-                        console.log("Problema cargando los emisores y receptores de la base de datos");
+                        pimcService.debug("Problema cargando los emisores y receptores de la base de datos");
                     }
                 }
 
@@ -321,13 +321,13 @@
                         nota.modificada = false;
                     });
                     // LOG
-                    console.log($scope.notas);
+                    pimcService.debug($scope.notas);
                 }
             });
 
         };
         $scope.agregarNotaVacia = function() {
-            $scope.registrarAccion("Nota vacia agregada");
+            pimcBarraEstadoService.registrarAccion("Nota vacia agregada");
             // Una nota que no tiene fecha de creacion es una nota que no existe en la base de datos aun
             if ($scope.notas === "") {
                 $scope.notas = [{
@@ -351,7 +351,7 @@
             $scope.notasCambios = true;
         }
         $scope.eliminarNota = function(indexNota) {
-            $scope.registrarAccion("Nota <strong>" + indexNota + "</strong> eliminada");
+            pimcBarraEstadoService.registrarAccion("Nota <strong>" + indexNota + "</strong> eliminada");
             if ($scope.notas[indexNota].fechaCreacion != "") {
                 $scope.notasAEliminar.push($scope.notas[indexNota]);
             }
@@ -359,7 +359,7 @@
             $scope.notasCambios = true;
         };
         $scope.modificarNota = function(indexNota, nuevaNota) {
-            $scope.registrarAccion("Nota <strong>" + indexNota + "</strong> modificada");
+            pimcBarraEstadoService.registrarAccion("Nota <strong>" + indexNota + "</strong> modificada");
             $scope.notas[indexNota].nota = nuevaNota;
             // fecha creacion esta vacia cuando la nota aun no se encuentra
             // en la base de dats
@@ -369,7 +369,7 @@
             $scope.notasCambios = true;
         };
         $scope.modificarReferencia = function(indexNota, nuevaReferencia) {
-            $scope.registrarAccion("Referencia de nota <strong>" + indexNota + "</strong> modificada");
+            pimcBarraEstadoService.registrarAccion("Referencia de nota <strong>" + indexNota + "</strong> modificada");
             $scope.notas[indexNota].referencia = nuevaReferencia;
             if ($scope.notas[indexNota].fechaCreacion != "") {
                 $scope.notas[indexNota].modificada = true;
@@ -377,7 +377,7 @@
             $scope.notasCambios = true;
         };
         $scope.modificarFechaHistorica = function(indexNota, nuevaFechaHistorica) {
-            $scope.registrarAccion("Fecha Historica de nota <strong>" + indexNota + "</strong> modificada");
+            pimcBarraEstadoService.registrarAccion("Fecha Historica de nota <strong>" + indexNota + "</strong> modificada");
             $scope.notas[indexNota].fechaHistorica = nuevaFechaHistorica;
             if ($scope.notas[indexNota].fechaCreacion != "") {
                 $scope.notas[indexNota].modificada = true;
@@ -387,177 +387,29 @@
         
         // PERSONAJES
         $scope.personajes = [];
-        $scope.personajesNuevos = [];
-        $scope.personajesAEliminar = [];
-        $scope.personajesAgregarReferencia = [];
-        $scope.personajesCambios = false;
+        $scope.personajesColumnas = ['nombre', 'ocupacion', 'nacionalidad', 'sexo', 'categoria'];
+        $scope.personajesNombresColumnas = {
+            nombre: "Nombre Personaje", 
+            ocupacion: "Ocupación",
+            nacionalidad: "Nacionalidad",
+            sexo: "Sexo",
+            categoria: "Categoria"
+        }
+        $scope.autocompletarPersonajesOpciones = {
+            camposAutocompletar: ['nombre']
+        };
         $scope.cargarPersonajes = function () {
-            $scope.personajesCambios = false;
-            $scope.personajes = [];
-            $scope.personajesNuevos = [];
-            $scope.personajesAEliminar = [];
-            $scope.personajesAgregarReferencia = [];
-            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/DocumentosRefPersonajes?documentoID=' + $scope.documentoID).then(function(data) {
-                // revisar si existe alguno
-                if (Object.keys(data.data).length != 0) {
-                    var personajesReferencias = data.data;
-                    personajesReferencias.forEach(function(referencia) {
-                            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Personajes?personajeID=' + referencia.personajeID).then(function(data) {
-                                var personaje = data.data[0];
-                                personaje.referenciaID = referencia.referenciaID;
-                                $scope.personajes.push(personaje);
-                            });
-                    });
-                    // LOG
-                    console.log($scope.personajes);
-                }
-            });
-        }
-        $scope.agregarPersonaje = function () {
-            var personajeNuevo = {
-                personajeID: -1,
-                nombre: "",
-                ocupacion: "",
-                nacionalidad: "",
-                sexo: "",
-                categoria: ""
-            };
-            $scope.personajesNuevos.push(personajeNuevo);
-            $scope.personajesCambios = true;
-            $scope.registrarAccion("Personaje vacío agregado")
-        };
-        $scope.borrarNuevoPersonaje = function (indice) {
-            $scope.personajesNuevos.splice(indice,1);
-            $scope.registrarAccion("Personaje nuevo borrado");
-        };
-        $scope.borrarPersonajeExistente = function(indice) {
-            $scope.registrarAccion("Personaje " + $scope.personajes[indice].nombre + " seleccionado para eliminar")
-            $scope.personajesAEliminar.push($scope.personajes[indice]);
-            $scope.personajes.splice(indice,1);
-            $scope.personajesCambios = true;
-        }
-        $scope.borrarReferenciaNuevaPersonaje = function (indice) {
-            $scope.personajesAgregarReferencia.splice(indice,1);
-            $scope.registrarAccion("Nueva referencia a personaje borrada");
-        };
-        $scope.autocompletarPersonaje = function (hintNombre) {
-            return $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Autocompletar/Personajes?nombre=' + hintNombre).then(function(data) {
-                var listaNombres = [];
-                var resultados = data.data;
-                var matchPerfecto = false;
-                if (resultados != "0") {
-                    resultados.forEach( function (valor) {
-                        listaNombres.push({nombre: valor.nombre, personajeID: valor.personajeID});
-                        // Revisamos si son identicos
-                        // TODO cambiar acentos 
-                        if (String(hintNombre).toLowerCase().replace(/\s/g, '') == String(valor.nombre).toLowerCase().replace(/\s/g, ''))
-                            matchPerfecto = true;
-                    })
-                }
-                if (!matchPerfecto && listaNombres.length != 0)
-                        listaNombres.unshift({nombre:hintNombre,personajeID:-1})
-                return listaNombres;
-            });
-        };
-        $scope.actualizarPersonajeNuevoExistente = function (indice,personaje) {
-            var alreadyExist = false;
-            // Revisamos si ya existe
-            $scope.personajes.forEach(function (elemento) {
-                if (personaje.personajeID == elemento.personajeID) {
-                    alreadyExist = true;
-                    personaje.nombre = "";
-                    return;
-                }
-            });
-            // Revisamos si la referencia fue eliminada anteriormente
-            $scope.personajesAEliminar.forEach(function (elemento) {
-                if (personaje.personajeID == elemento.personajeID) {
-                    alreadyExist = true;
-                    personaje.nombre = "";
-                    return;
-                }
-            });
-            $scope.personajesAgregarReferencia.forEach(function (elemento) {
-                if (personaje.personajeID == elemento.personajeID) {
-                    alreadyExist = true;
-                    personaje.nombre = "";
-                    return;
-                }
-            });
-            
-            if (!alreadyExist && personaje.personajeID !== -1) {
-                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Personajes', {
-                    params: {
-                    personajeID: personaje.personajeID
-                    }}).then(function(data) {
-                    var infoPersonaje = data.data[0];
-                    if (Object.keys(data.data).length != 0) {
-                        $scope.personajesNuevos.splice(indice,1);
-                        var nuevaReferencia = {
-                                personajeID: infoPersonaje.personajeID,
-                                nombre: infoPersonaje.nombre,
-                                ocupacion: infoPersonaje.ocupacion,
-                                nacionalidad: infoPersonaje.nacionalidad,
-                                sexo: infoPersonaje.sexo,
-                                categoria: infoPersonaje.categoria
-                        }
-                        $scope.personajesAgregarReferencia.push(nuevaReferencia);
-                    }
+            return pimcTablaRefElementoService.cargarElementos('Personajes', $scope.documentoID).then(
+                function(data) {
+                    $scope.personajes = data;
                 });
-            }
-
         };
-        $scope.abrirPersonajeSeleccionado = function(index, ubicacion) {
-            var seleccionado = -1;
-            if (ubicacion == "nuevaRef") {
-                seleccionado = $scope.personajesAgregarReferencia[index].personajeID;
-            } else if (ubicacion == "existente") {
-                seleccionado = $scope.personajes[index].personajeID;
-            }
-            if (seleccionado != -1) {
-                console.log("Abriendo documento" + seleccionado);
-                //TODO Enviar varios seleccionados
-                //TODO Preguntar si desea guardar cambios
-                $window.localStorage.setItem("documentoID", $scope.documentoID);
-                $window.localStorage.setItem("personajeID", seleccionado);
-                $window.location.href = "#!/personaje";
-            }
+        $scope.guardarPersonajes = function () {
+            return pimcTablaRefElementoService.guardarElementos('Personajes', $scope.documentoID, $scope.personajes);
         };
-        $scope.revisarSiPersonajeExiste = function ($value) {
-            var existe = false;
-            var mensaje = "";
-            $scope.personajes.forEach( function(personaje) {
-                if ($value == personaje.nombre) {
-                    existe = true;
-                    mensaje = "Este nombre ya existe";
-                    return;
-                }
-            });
-            $scope.personajesAEliminar.forEach( function(personajeEliminado){
-                if ($value == personajeEliminado.nombre) {
-                    existe = true;
-                    mensaje = "Este nombre ya existía, fue eliminado pero los cambios no han sido guardados.";
-                    return;
-                }
-            });
-            $scope.personajesAgregarReferencia.forEach( function(personajeRefNueva) {
-                if ($value == personajeRefNueva.nombre) {
-                    existe = true;
-                    mensaje = "Ref ya agregada";
-                    return;
-                }
-            });
-            $scope.personajesNuevos.forEach( function(personajeNuevo) {
-                if ($value == personajeNuevo.nombre) {
-                    existe = true;
-                    mensaje = "Personaje ya agregado";
-                    return;
-                }
-            });
-            if (existe) {
-                return mensaje;
-            }
-        }
+        $scope.personajesCambios = function (valores) {
+            $scope.personajes = valores;
+        };
         
         // EMBARCACIONES
         $scope.embarcaciones = [];
@@ -571,7 +423,7 @@
             $scope.embarcacionesNuevas = [];
             $scope.embarcacionesAEliminar = [];
             $scope.embarcacionesAgregarReferencia = [];
-            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/DocumentosRefEmbarcacion',
+            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/DocumentosRefEmbarcaciones',
                         { params: {
                             documentoID:$scope.documentoID
                         }
@@ -609,7 +461,7 @@
                             
                     });
                     // LOG
-                    console.log($scope.embarcaciones);
+                    pimcService.debug($scope.embarcaciones);
                 }
             });
         }
@@ -626,21 +478,21 @@
             };
             $scope.embarcacionesNuevas.push(embarcacionNueva);
             $scope.embarcacionesCambios = true;
-            $scope.registrarAccion("Embarcacion vacía agregada")
+            pimcBarraEstadoService.registrarAccion("Embarcacion vacía agregada")
         };
         $scope.borrarNuevaEmbarcacion = function (indice) {
             $scope.embarcacionesNuevas.splice(indice,1);
-            $scope.registrarAccion("Embarcación nueva borrada");
+            pimcBarraEstadoService.registrarAccion("Embarcación nueva borrada");
         };
         $scope.borrarEmbarcacionExistente = function(indice) {
-            $scope.registrarAccion("Embarcación " + $scope.embarcaciones[indice].nombres + " seleccionada para eliminar")
+            pimcBarraEstadoService.registrarAccion("Embarcación " + $scope.embarcaciones[indice].nombres + " seleccionada para eliminar")
             $scope.embarcacionesAEliminar.push($scope.embarcaciones[indice]);
             $scope.embarcaciones.splice(indice,1);
             $scope.embarcacionesCambios = true;
         }
         $scope.borrarReferenciaNuevaEmbarcacion = function (indice) {
             $scope.embarcacionesAgregarReferencia.splice(indice,1);
-            $scope.registrarAccion("Nueva referencia a embarcación borrada");
+            pimcBarraEstadoService.registrarAccion("Nueva referencia a embarcación borrada");
         };
         $scope.autocompletarEmbarcacion = function (hintNombre) {
             return $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Autocompletar/Embarcaciones',
@@ -737,7 +589,7 @@
                 seleccionado = $scope.embarcaciones[index].embarcacionID;
             }
             if (seleccionado != -1) {
-                console.log("Abriendo documento" + seleccionado);
+                pimcService.debug("Abriendo documento" + seleccionado);
                 //TODO Enviar varios seleccionados
                 //TODO Preguntar si desea guardar cambios
                 $window.localStorage.setItem("documentoID", $scope.documentoID);
@@ -781,27 +633,18 @@
             }
         }
         
-        
-        // Para guardar borrar y barra de estado
-        $scope.ultimaAccion = $sce.trustAsHtml("Ninguna");
-        // Log
-        $scope.registrarAccion = function(mensaje) {
-            $scope.ultimaAccion = $sce.trustAsHtml(mensaje);
-            console.log(mensaje)
-        }
+
         // Button functions
         $scope.borrarCambios = function() {
-            if (window.confirm("Esta Seguro que quiere borrar los cambios?") === true) {
-                $scope.registrarAccion("Los cambios han sido borrados");
-                init();
-            }
+            pimcBarraEstadoService.registrarAccion("Los cambios han sido borrados");
+            init();
         };
         $scope.datosGuardados = false;
         $scope.guardarCambios = function() {
             var conexiones = {};
             //Revisamos datos principales editados
             if ($scope.datosPrincipalesEditado) {
-                $scope.registrarAccion("Actualizando BD Documentos");
+                pimcBarraEstadoService.registrarAccion("Actualizando BD Documentos");
                 var request = 'http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Modificar/Documentos';
                 
                 var parameters = {
@@ -831,7 +674,7 @@
             }
             // Anotaciones
             if ($scope.notasCambios) {
-                $scope.registrarAccion("Actualizando BD notasArchivo");
+                pimcBarraEstadoService.registrarAccion("Actualizando BD notasArchivo");
                 $scope.notasCambios = false;
                 $scope.notas.forEach(function(nota) {
                     // Insertamos notas nuevas
@@ -877,7 +720,7 @@
     //                  if (entrada.emisorReceptorID == -1) {
     //                      $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/DocumentosEmisorReceptor?documentoID=' + $scope.documentoID + '&nota="' + nota.nota + '"&referencia="' + nota.referencia + '"').then(function(data) {
     //                          $scope.datosGuardados = true;
-    //                          console.log(data);
+    //                          pimcService.debug(data);
     //                      });
     //                  }
                 });
@@ -897,7 +740,7 @@
                 });
                 // Eliminamos referencias existentes
                 $scope.embarcacionesAEliminar.forEach (function (embarcacionRefABorrar) {
-                    $scope.registrarAccion("Referencia a embarcacion existente eliminada");
+                    pimcBarraEstadoService.registrarAccion("Referencia a embarcacion existente eliminada");
                     conexiones['embarcacionesEliminar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Eliminar/DocumentosRefEmbarcacion',{
                         params: {
                             idUnico: 'referenciaID',
@@ -921,7 +764,7 @@
                             
                         conexiones['embarcacionesInsertar'] = insertarPromise.then(function(data) {
                             $scope.datosGuardados = true;
-                            console.log(data);
+                            pimcService.debug(data);
                             var promises = [];
                             // Data contains the last insert id
                             if (Object.keys(data.data).length != 0) {
@@ -954,67 +797,30 @@
             }
                 
             // PERSONAJES
-            if ($scope.personajesCambios) {
-                // agregar referencias a personajes existentes
-                $scope.personajesAgregarReferencia.forEach( function (personaje) {
-                    conexiones['personajesInsertarReferencia'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/DocumentosRefPersonajes',{
-                        params: {
-                            documentoID: $scope.documentoID,
-                            personajeID: personaje.personajeID
-                        }
-                    });
-                });
-                // Eliminamos referencias existentes
-                $scope.personajesAEliminar.forEach (function (personajeRefABorrar) {
-                    $scope.registrarAccion("Referencia existente eliminada");
-                    conexiones['personajesEliminar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Eliminar/DocumentosRefPersonajes',{
-                        params: {
-                            idUnico: 'referenciaID',
-                            referenciaID: personajeRefABorrar.referenciaID
-                        }
-                    });
-                });
-                // Creamos personajes nuevos y agregamos referencia
-                $scope.personajesNuevos.forEach( function (personaje) {
-                    // revisar si el personaje nombre esta vacio
-                    if (personaje.nombre !== "") {
-                        var insertarPersonajePromise = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/Personajes',{
-                            params: {
-                                nombre: '"'+personaje.nombre+'"',
-                                ocupacion: '"'+personaje.ocupacion+'"',
-                                nacionalidad: '"'+personaje.nacionalidad+'"',
-                                sexo: '"'+personaje.sexo+'"',
-                                categoria: '"'+personaje.categoria+'"'
-                            }
-                        });
-                        conexiones['personajesInsertar'] = insertarPersonajePromise.then( function(data) {
-                            $scope.datosGuardados = true;
-                            console.log(data);
-                            var promises = [];
-                            // Data contains the last insert id
-                            if (Object.keys(data.data).length != 0) {
-                                var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
-                                promises.push($http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/DocumentosRefPersonajes',{
-                                params: {
-                                    documentoID: $scope.documentoID,
-                                    personajeID: lastInsertID
-                                    }
-                                }));
-                            }
-                            return $q.all(promises);
-                        });
-                    }
-                });
-            }
+            conexiones['personajesGuardados'] = ($scope.guardarPersonajes());
             // Incializamos todo
             if (Object.keys(conexiones).length != 0) {
                 $scope.datosPrincipalesCargando = true;
                 $scope.datosGuardados = true;
+                var guardoAlgo = false;
                 $q.all(conexiones).then(function(responses) {
                     for (var res in responses) {
-                        console.log(res + ' = ' + responses[res].data);
+                        if (res && responses[res]) {
+                            guardoAlgo = true;
+                            if (responses[res].data) {
+                                pimcService.debug(res + ' = ' + responses[res].data);
+                            }
+                            else {
+                                pimcService.debug(res + ' = ' + responses[res]);
+                            }
+                        }
                     }
-                    init();
+                    if (guardoAlgo) {
+                        init();
+                    } else {
+                        $scope.datosPrincipalesCargando = false;
+                        $scope.datosGuardados = false; 
+                    }
                 });
             }
         };

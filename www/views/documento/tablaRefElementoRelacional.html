@@ -24,11 +24,11 @@
                 <span ng-if="refTablaCtrl.validarAutocompeltar(campo)" editable-text="valor.contenido[campo]" e-typeahead-min-length="refTablaCtrl.autocompletarOpcionesInt.minLength"
                 e-uib-typeahead="elemento[campo] for elemento in refTablaCtrl.autocompletarElemento(campo, $viewValue)" e-typeahead-wait-ms="refTablaCtrl.autocompletarOpcionesInt.delay"
                 e-typeahead-on-select="refTablaCtrl.seleccionAutocompletar(valor ,$item)" e-typeahead-no-results="refTablaCtrl.noExistenValores"
-                e-typeahead-loading="refTablaCtrl.cargandoValores" onbeforesave="revisarSiExiste($data)">
+                e-typeahead-loading="refTablaCtrl.cargandoValores">
                 {{valor.contenido[campo] || "nuevo/a" + campo}}
             </span>
             <i ng-show="refTablaCtrl.cargandoValores && refTablaCtrl.validarAutocompeltar(campo)" class="glyphicon glyphicon-refresh"></i>            
-            <span ng-if="!refTablaCtrl.validarAutocompeltar(campo)" editable-text="valor.contenido[campo]">{{valor.contenido[campo] || "nuevo/a" + campo}}</span>
+            <span ng-if="!refTablaCtrl.validarAutocompeltar(campo)" editable-text="valor.contenido[campo]" onaftersave="refTablaCtrl.reportarCambio()">{{valor.contenido[campo] || "nuevo/a" + campo}}</span>
         </td>
     </tr>
 </table>
