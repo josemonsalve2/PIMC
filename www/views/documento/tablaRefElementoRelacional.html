@@ -1,36 +1,37 @@
+<div>
 <table id="tablaRefElemento">
     <tr>
-        <th ng-repeat="campo in refTablaCtrl.camposColumnasInt">{{refTablaCtrl.nombresColumnasInt[campo]}}
+        <th> </th>
+        <th ng-repeat="campo in refTablaCtrl.camposColumnasInt">{{refTablaCtrl.nombresColumnasInt[campo] || campo}}
         </th>
     </tr>
     <!-- Valores que no pueden ser editados porque ya existen en la base de datos -->
-    <tr ng-click="refTablaCtrl.abrirSeleccionado(valor)" ng-repeat="valor in refTablaCtrl.valoresInt track by $index">
+    <tr ng-click="refTablaCtrl.abrirSeleccionado(valor)" ng-repeat="valor in refTablaCtrl.valoresInt | filtrosExistentesNuevasRef track by $index ">
         <td>
-            <button ng-show="refTablaCtrl.activarBorrarExistentes || refTablaCtrl.estadoEsLimpio(valor)" ng-click='refTablaCtrl.borrar(valor); $event.stopPropagation()'
+            <button ng-show="refTablaCtrl.activarBorrarExistentes || !refTablaCtrl.estadoEsLimpio(valor)" ng-click='refTablaCtrl.borrar(valor); $event.stopPropagation()'
                 class="btn-danger">-</button>
         </td>
         <td ng-repeat="campo in refTablaCtrl.camposColumnasInt">
-            {{refTablaCtrl.valoresInt.contenido[campo]}}
+            {{valor.contenido[campo]}}
         </td>
     </tr>
     <!-- Valores que pueden ser editados porque son nuevos y seran agregados a la base de datos -->
-    <tr ng-repeat="valor in refTablaCtrl.valoresInt track by $index">
+    <tr ng-repeat="valor in refTablaCtrl.valoresInt | filtroNuevos track by $index">
         <td>
             <button ng-click='refTablaCtrl.borrar(valor)' class="btn-danger">-</button> {{"Nuevo"}}</td>
-        <td>
-            <td ng-repeat="campo in refTablaCtrl.camposColumnasInt">
-                <span ng-if="refTablaCtrl.validarAutocompeltar()" 
-                    editable-text="refTablaCtrl.valoresInt.contenido[campo]" 
-                    e-typeahead-min-length="refTablaCtrl.autocompletarOpcionesInt.minLength"
-                    e-uib-typeahead="personajes.nombre for personajes in autocompletarPersonaje($viewValue)" e-typeahead-wait-ms="refTablaCtrl.autocompletarOpcionesInt.delay"
-                    e-typeahead-on-select="actualizarPersonajeNuevoExistente($index,$item)" 
-                    e-typeahead-no-results="personajesNoResults"
-                    e-typeahead-loading="cargandoNombres" 
-                    onbeforesave="revisarSiPersonajeExiste($data)">
-                    {{refTablaCtrl.valoresInt.contenido[campo]}}
-                </span>
-                <span ng-if="!refTablaCtrl.validarAutocompeltar()" editable-text="refTablaCtrl.valoresInt.contenido[campo]">{{refTablaCtrl.valoresInt.contenido[campo] || "nuevo/a" + campo}}</span>
-            </td>
+        </td>
+        <td ng-repeat="campo in refTablaCtrl.camposColumnasInt">
+                <span ng-if="refTablaCtrl.validarAutocompeltar(campo)" editable-text="valor.contenido[campo]" e-typeahead-min-length="refTablaCtrl.autocompletarOpcionesInt.minLength"
+                e-uib-typeahead="elemento[campo] for elemento in refTablaCtrl.autocompletarElemento(campo, $viewValue)" e-typeahead-wait-ms="refTablaCtrl.autocompletarOpcionesInt.delay"
+                e-typeahead-on-select="refTablaCtrl.seleccionAutocompletar(valor ,$item)" e-typeahead-no-results="refTablaCtrl.noExistenValores"
+                e-typeahead-loading="refTablaCtrl.cargandoValores" onbeforesave="revisarSiExiste($data)">
+                {{valor.contenido[campo] || "nuevo/a" + campo}}
+            </span>
+            <i ng-show="refTablaCtrl.cargandoValores && refTablaCtrl.validarAutocompeltar(campo)" class="glyphicon glyphicon-refresh"></i>            
+            <span ng-if="!refTablaCtrl.validarAutocompeltar(campo)" editable-text="valor.contenido[campo]">{{valor.contenido[campo] || "nuevo/a" + campo}}</span>
+        </td>
     </tr>
-
 </table>
+<button ng-click='refTablaCtrl.agregarNuevo()' class="btn btn-success m-a-2">Agregar {{refTablaCtrl.elementoRelacionalInt}}</button>
+<button ng-click='refTablaCtrl.activarBorrarExistentes = !refTablaCtrl.activarBorrarExistentes' class="btn m-a-2">{{refTablaCtrl.activarBorrarExistentes? "Desabilitar" : "Habilitar"}} borrar {{refTablaCtrl.elementoRelacionalInt}} existentes</button>
+</div>
