@@ -20,7 +20,7 @@ class bd_descripcion:
                         "DocumentosEmisorReceptor",
                         "DocumentosNotas",
                         "DocumentosRefActividades",
-                        "DocumentosRefEmbarcacion",
+                        "DocumentosRefEmbarcaciones",
                         "DocumentosRefEventos",
                         "DocumentosRefInstituciones",
                         "DocumentosRefLugares",
