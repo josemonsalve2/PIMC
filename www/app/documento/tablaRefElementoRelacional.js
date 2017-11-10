@@ -316,7 +316,7 @@
             }
 
             // Reportar cambios de alguno de los datos de un elemento nuevo
-            refTablaCtrl.reportarCambio = function () {
+            refTablaCtrl.reportarCambioNuevo = function () {
                 refTablaCtrl.reportarCambio({valores: refTablaCtrl.valoresInt});                
             }
         }]);

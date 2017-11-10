@@ -410,229 +410,32 @@
         $scope.personajesCambios = function (valores) {
             $scope.personajes = valores;
         };
-        
+
         // EMBARCACIONES
         $scope.embarcaciones = [];
-        $scope.embarcacionesNuevas = [];
-        $scope.embarcacionesAEliminar = [];
-        $scope.embarcacionesAgregarReferencia = [];
-        $scope.embarcacionesCambios = false;
+        $scope.embarcacionesColumnas = ['nombres', 'alias', 'tipo', 'usos', 'categoria'];
+        $scope.embarcacionesNombresColumnas = {
+            nombres: "Nombres Embarcacion", 
+            alias: "Alias Embarcacion",
+            tipo: "Tipo de Embarcacion",
+            usos: "Usos",
+            categoria: "Categoria"
+        }
+        $scope.autocompletarEmbarcacionesOpciones = {
+            camposAutocompletar: ['nombres']
+        };
         $scope.cargarEmbarcaciones = function () {
-            $scope.embarcacionesCambios = false;
-            $scope.embarcaciones = [];
-            $scope.embarcacionesNuevas = [];
-            $scope.embarcacionesAEliminar = [];
-            $scope.embarcacionesAgregarReferencia = [];
-            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/DocumentosRefEmbarcaciones',
-                        { params: {
-                            documentoID:$scope.documentoID
-                        }
-                        }
-            ).then(function(data) {
-                // revisar si existe alguno
-                if (Object.keys(data.data).length != 0) {
-                    var embarcacionReferencias = data.data;
-                    embarcacionReferencias.forEach(function(referencia) {
-                            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Embarcaciones',
-                                    { params: {
-                                        embarcacionID:referencia.embarcacionID
-                                        }
-                                    }
-                            ).then(function(data) {
-                                var embarcacion = data.data[0];
-                                embarcacion.referenciaID = referencia.referenciaID;
-                                embarcacion.comentario = referencia.comentario;
-                                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/EmbarcacionesBanderas',
-                                    { params: {
-                                        embarcacionID:referencia.embarcacionID
-                                        }
-                                    }
-                                ).then(function(data) {
-                                    var banderas = data.data;
-                                    var listaBanderas = [];
-                                    banderas.forEach(function(bandera) {
-                                        listaBanderas.push(bandera.bandera);
-                                    });
-                                    embarcacion.banderas = listaBanderas.join(', ');
-                                    $scope.embarcaciones.push(embarcacion);
-                                
-                                });
-                            });
-                            
-                    });
-                    // LOG
-                    pimcService.debug($scope.embarcaciones);
-                }
-            });
-        }
-        $scope.agregarEmbarcacion = function () {
-            var embarcacionNueva = {
-                embarcacionID: -1,
-                nombres: "",
-                alias: "",
-                tipo: "",
-                banderas: "",
-                usos: "",
-                categoria: "",
-                comentario: ""
-            };
-            $scope.embarcacionesNuevas.push(embarcacionNueva);
-            $scope.embarcacionesCambios = true;
-            pimcBarraEstadoService.registrarAccion("Embarcacion vacía agregada")
-        };
-        $scope.borrarNuevaEmbarcacion = function (indice) {
-            $scope.embarcacionesNuevas.splice(indice,1);
-            pimcBarraEstadoService.registrarAccion("Embarcación nueva borrada");
-        };
-        $scope.borrarEmbarcacionExistente = function(indice) {
-            pimcBarraEstadoService.registrarAccion("Embarcación " + $scope.embarcaciones[indice].nombres + " seleccionada para eliminar")
-            $scope.embarcacionesAEliminar.push($scope.embarcaciones[indice]);
-            $scope.embarcaciones.splice(indice,1);
-            $scope.embarcacionesCambios = true;
-        }
-        $scope.borrarReferenciaNuevaEmbarcacion = function (indice) {
-            $scope.embarcacionesAgregarReferencia.splice(indice,1);
-            pimcBarraEstadoService.registrarAccion("Nueva referencia a embarcación borrada");
-        };
-        $scope.autocompletarEmbarcacion = function (hintNombre) {
-            return $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Autocompletar/Embarcaciones',
-                            { params: {
-                                nombres:hintNombre
-                                }
-                            }
-                    ).then(function(data) {
-                        var listaNombres = [];
-                        var resultados = data.data;
-                        var matchPerfecto = false;
-                        if (resultados != "0") {
-                            resultados.forEach( function (valor) {
-                                listaNombres.push({nombres: valor.nombres, embarcacionID: valor.embarcacionID});
-                                // Revisamos si son identicos
-                                // TODO cambiar acentos 
-                                if (String(hintNombre).toLowerCase().replace(/\s/g, '') == String(valor.nombres).toLowerCase().replace(/\s/g, ''))
-                                    matchPerfecto = true;
-                            })
-                        }
-                        if (!matchPerfecto && listaNombres.length != 0)
-                                listaNombres.unshift({nombres:hintNombre,embarcacionID:-1})
-                        return listaNombres;
-                    });
-        };
-        $scope.actualizarEmbarcacionNuevaExistente = function (indice,embarcacion) {
-            var alreadyExist = false;
-            // Revisamos si ya existe
-            $scope.embarcaciones.forEach(function (elemento) {
-                if (embarcacion.embarcacionID == elemento.embarcacionID) {
-                    alreadyExist = true;
-                    embarcacion.nombres = "";
-                    return;
-                }
-            });
-            // Revisamos si la referencia fue eliminada anteriormente
-            $scope.embarcacionesAEliminar.forEach(function (elemento) {
-                if (embarcacion.embarcacionID == elemento.embarcacionID) {
-                    alreadyExist = true;
-                    embarcacion.nombres = "";
-                    return;
-                }
-            });
-            $scope.embarcacionesAgregarReferencia.forEach(function (elemento) {
-                if (embarcacion.embarcacionID == elemento.embarcacionID) {
-                    alreadyExist = true;
-                    embarcacion.nombres = "";
-                    return;
-                }
-            });
-            
-            if (!alreadyExist && embarcacion.embarcacionID !== -1) {
-                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Embarcaciones', {
-                    params: {
-                    embarcacionID: embarcacion.embarcacionID
-                    }}
-                ).then(function(data) {
-                    var infoEmbarcacion = data.data[0];
-                    if (Object.keys(data.data).length != 0) {
-                        $scope.embarcacionesNuevas.splice(indice,1);
-                        var nuevaReferencia = {
-                                embarcacionID: infoEmbarcacion.embarcacionID,
-                                alias: infoEmbarcacion.alias,
-                                tipo: infoEmbarcacion.tipo,
-                                usos: infoEmbarcacion.usos,
-                                categoria: infoEmbarcacion.categoria,
-                                comentario: infoEmbarcacion.comentario
-                        }
-                        $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/EmbarcacionesBanderas', {
-                            params: {
-                            embarcacionID: embarcacion.embarcacionID
-                            }}
-                        ).then(function(data) {
-                            if (Object.keys(data.data).length != 0) {
-                                var banderas = data.data;
-                                var listaBanderas = [];
-                                banderas.forEach(function(bandera) {
-                                    listaBanderas.push(bandera.bandera);
-                                });
-                                nuevaReferencia.banderas = listaBanderas.join(', ');
-                                $scope.embarcacionesAgregarReferencia.push(nuevaReferencia);
-                            }
-                        });
-                    }
+            return pimcTablaRefElementoService.cargarElementos('Embarcaciones', $scope.documentoID).then(
+                function(data) {
+                    $scope.embarcaciones = data;
                 });
-            }
-
         };
-        $scope.abrirEmbarcacionSeleccionada = function(index, ubicacion) {
-            var seleccionado = -1;
-            if (ubicacion == "nuevaRef") {
-                seleccionado = $scope.embarcacionesAgregarReferencia[index].embarcacionID;
-            } else if (ubicacion == "existente") {
-                seleccionado = $scope.embarcaciones[index].embarcacionID;
-            }
-            if (seleccionado != -1) {
-                pimcService.debug("Abriendo documento" + seleccionado);
-                //TODO Enviar varios seleccionados
-                //TODO Preguntar si desea guardar cambios
-                $window.localStorage.setItem("documentoID", $scope.documentoID);
-                $window.localStorage.setItem("embarcacionID", seleccionado);
-                $window.location.href = "#!/embarcacion";
-            }
+        $scope.guardarEmbarcaciones = function () {
+            return pimcTablaRefElementoService.guardarElementos('Embarcaciones', $scope.documentoID, $scope.embarcaciones);
         };
-        $scope.revisarSiEmbarcacionExiste = function ($value) {
-            var existe = false;
-            var mensaje = "";
-            $scope.embarcaciones.forEach( function(embarcacion) {
-                if ($value == embarcacion.nombres) {
-                    existe = true;
-                    mensaje = "Este nombres ya existe";
-                    return;
-                }
-            });
-            $scope.embarcacionesAEliminar.forEach( function(embarcacionEliminada){
-                if ($value == embarcacionEliminada.nombres) {
-                    existe = true;
-                    mensaje = "Este nombres ya existía, fue eliminado pero los cambios no han sido guardados.";
-                    return;
-                }
-            });
-            $scope.embarcacionesAgregarReferencia.forEach( function(embarcacionRefNueva) {
-                if ($value == embarcacionRefNueva.nombres) {
-                    existe = true;
-                    mensaje = "Ref ya agregada";
-                    return;
-                }
-            });
-            $scope.embarcacionesNuevas.forEach( function(embarcacionNueva) {
-                if ($value == embarcacionNueva.nombres) {
-                    existe = true;
-                    mensaje = "Embarcación ya agregado";
-                    return;
-                }
-            });
-            if (existe) {
-                return mensaje;
-            }
-        }
-        
+        $scope.embarcacionesCambios = function (valores) {
+            $scope.embarcaciones = valores;
+        };
 
         // Button functions
         $scope.borrarCambios = function() {
@@ -727,74 +530,7 @@
             }
             
             // EMBARCACIONES
-            if ($scope.embarcacionesCambios) {
-                // agregar referencias a embarcaciones existentes
-                $scope.embarcacionesAgregarReferencia.forEach( function (embarcacion) {
-                    conexiones['embarcacionesInsertarReferencia'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/DocumentosRefEmbarcacion',{
-                        params: {
-                            documentoID: $scope.documentoID,
-                            embarcacionID: embarcacion.embarcacionID,
-                            comentario: '"'+embarcacion.comentario+'"'
-                        }
-                    });
-                });
-                // Eliminamos referencias existentes
-                $scope.embarcacionesAEliminar.forEach (function (embarcacionRefABorrar) {
-                    pimcBarraEstadoService.registrarAccion("Referencia a embarcacion existente eliminada");
-                    conexiones['embarcacionesEliminar'] = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Eliminar/DocumentosRefEmbarcacion',{
-                        params: {
-                            idUnico: 'referenciaID',
-                            referenciaID: embarcacionRefABorrar.referenciaID
-                        }
-                    });
-                });
-                // Creamos embarcaciones nuevas y agregamos referencia
-                $scope.embarcacionesNuevas.forEach( function (embarcacion) {
-                    // revisar si el personaje nombre esta vacio
-                    if (embarcacion.nombres !== "") {
-                        var insertarPromise = $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/Embarcaciones',{
-                            params: {
-                                    nombres: '"'+embarcacion.nombres+'"',
-                                    alias: '"'+embarcacion.alias+'"',
-                                    tipo: '"'+embarcacion.tipo+'"',
-                                    usos: '"'+embarcacion.usos+'"',
-                                    categoria: '"'+embarcacion.categoria+'"',
-                            }
-                        })
-                            
-                        conexiones['embarcacionesInsertar'] = insertarPromise.then(function(data) {
-                            $scope.datosGuardados = true;
-                            pimcService.debug(data);
-                            var promises = [];
-                            // Data contains the last insert id
-                            if (Object.keys(data.data).length != 0) {
-                                // Agregamos las banderas
-                                var lastInsertID = data.data[0]["LAST_INSERT_ID()"];
-                                promises.push($http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/DocumentosRefEmbarcacion',{
-                                params: {
-                                    documentoID: $scope.documentoID,
-                                    embarcacionID: lastInsertID,
-                                    comentario: "'" + embarcacion.comentario + "'"
-                                }
-                                }));
-                                var listaBanderas = embarcacion.banderas.split(",");
-                                listaBanderas = listaBanderas.map(function(e) {
-                                    return e.trim();
-                                });
-                                listaBanderas.forEach(function (banderaAgregar) {
-                                    promises.push($http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Insertar/EmbarcacionesBanderas',{
-                                    params: {
-                                        embarcacionID: lastInsertID,
-                                        bandera: "'" + banderaAgregar + "'"
-                                    }
-                                    }));
-                                });
-                            }
-                            return $q.all(promises);
-                        });
-                    }
-                });
-            }
+            conexiones['embarcacionesGuardads'] = $scope.guardarEmbarcaciones();
                 
             // PERSONAJES
             conexiones['personajesGuardados'] = ($scope.guardarPersonajes());
