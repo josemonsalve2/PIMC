@@ -38,17 +38,46 @@
 		<!-- /Preloader -->
 
 		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-          <div class="container">
-            <div class="collapse navbar-collapse" uid-collapse="isNavCollapsed">
+          <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menuPIMC">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">PIMC</a>
+            </div>
+            <div class="collapse navbar-collapse" uid-collapse="isNavCollapsed" id="menuPIMC">
               <ul class="nav navbar-nav">
                 <li><a ng-href="#!/" set-parent-active>Inicio</a></li>
-                <li><a ng-href="#!/personajes" set-parent-active>Perfil de persona</a></li>
-                <li><a ng-href="#!/archivos" set-parent-active>Perfil de archivo</a></li>
-                <li><a ng-href="#!/embarcaciones" set-parent-active>Perfil de embarcación</a></li>
-                <li><a ng-href="#!/lugares" set-parent-active>Perfil de lugar</a></li>
-                <li><a ng-href="#!/instituciones" set-parent-active>Perfil de institución</a></li>
-                <li><a ng-href="#!/actividades" set-parent-active>Actividad</a></li>
-                <li><a ng-href="#!/eventos" set-parent-active>Evento</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="">Perfiles
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a ng-href="#!/personajes" set-parent-active>Perfil de persona</a>
+                        </li>
+                        <li>
+                            <a ng-href="#!/archivos" set-parent-active>Perfil de archivo</a>
+                        </li>
+                        <li>
+                            <a ng-href="#!/embarcaciones" set-parent-active>Perfil de embarcación</a>
+                        </li>
+                        <li>
+                            <a ng-href="#!/lugares" set-parent-active>Perfil de lugar</a>
+                        </li>
+                        <li>
+                            <a ng-href="#!/instituciones" set-parent-active>Perfil de institución</a>
+                        </li>
+                        <li>
+                            <a ng-href="#!/actividades" set-parent-active>Actividad</a>
+                        </li>
+                        <li>
+                            <a ng-href="#!/eventos" set-parent-active>Evento</a>
+                        </li>
+                    </ul>
+                </li>
                 <li><a ng-href="#!/busqueda" set-parent-active>Búsqueda de archivos</a></li>
               </ul>
             </div>
