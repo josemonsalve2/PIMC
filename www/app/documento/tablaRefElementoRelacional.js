@@ -172,6 +172,7 @@
             refTablaCtrl.elementoRelacionalInt = "";
             refTablaCtrl.camposColumnasInt = [];
             refTablaCtrl.nombresColumnasInt = {};
+            refTablaCtrl.tipoColumnasInt = {};
             refTablaCtrl.autocompletarOpcionesInt = {
                 minLength: 3,
                 delay: 100,
@@ -194,6 +195,9 @@
                 }
                 if (changes.nombresColumnas) {
                     refTablaCtrl.nombresColumnasInt = $window.angular.copy(refTablaCtrl.nombresColumnas);
+                }
+                if (changes.tipoColumnas) {
+                    refTablaCtrl.tipoColumnasInt = $window.angular.copy(refTablaCtrl.tipoColumnas);
                 }
                 if (changes.autocompletarOpciones) {
                     refTablaCtrl.autocompletarOpcionesInt = $window.angular.copy(refTablaCtrl.autocompletarOpciones);
@@ -320,8 +324,67 @@
             refTablaCtrl.reportarCambioNuevo = function () {
                 refTablaCtrl.reportarCambio({valores: refTablaCtrl.valoresInt});                
             }
+
+            // Para tipos de colimnas 
+
+            // Los diferentes tipos definidos. Por defecto 
+            // todo es Texto.
+            refTablaCtrl.tiposColumnas = {
+                TEXTO: 0,
+                DATE: 1,
+                LUGAR: 2,
+                propiedades: {
+                    0: { nombre: 'Texto', value: 0, code: 'T' },
+                    1: { nombre: 'Date', value: 1, code: 'D' },
+                    2: { nombre: 'Lugar', value: 2, code: 'L' },
+                }
+            };  
+
+            // Clasifica el tipo de columna de acuerdo a lo que especifique el usuario
+            refTablaCtrl.obtenerTipoColumna = function(campo) {
+                if (refTablaCtrl.tipoColumnasInt) {
+                    var tipoCol = refTablaCtrl.tipoColumnasInt[campo];
+                    if (tipoCol) {
+                        if (tipoCol === refTablaCtrl.tiposColumnas.DATE ||
+                            tipoCol === refTablaCtrl.tipoCol.propiedades[1].nombre ||
+                            tipoCol === refTablaCtrl.tipoCol.propiedades[1].code)
+                            return refTablaCtrl.tiposColumnas.DATE;
+                        else if (tipoCol === refTablaCtrl.tiposColumnas.LUGAR ||
+                            tipoCol === refTablaCtrl.tipoCol.propiedades[2].nombre ||
+                            tipoCol === refTablaCtrl.tipoCol.propiedades[2].code)
+                            return refTablaCtrl.tipoColumnas.LUGAR;
+                        else
+                            return refTablaCtrl.tiposColumnas.TEXTO;
+                    }
+                } else {
+                    return refTablaCtrl.tipoColumnas.TEXTO;
+                }
+
+            }
+
+            // Revisamos si la columan es texto
+            refTablaCtrl.columnaEsTexto = function (campo) {
+                return refTablaCtrl.obtenerTipoColumna(campo) === refTablaCtrl.tipoColumnas.TEXTO;
+            }
+
+            // Revisamos si la columna es fecha
+            refTablaCtrl.columnaEsDate = function (campo) {
+                return refTablaCtrl.obtenerTipoColumna(campo) === refTablaCtrl.tipoColumnas.DATE;
+            }
+
+            // Revisamos si la columna es lugar
+            refTablaCtrl.columnaEsLugar = function (campo) {
+                return refTablaCtrl.obtenerTipoColumna(campo) === refTablaCtrl.tipoColumnas.LUGAR;
+            }
+
+            // Fechas 
+            refTablaCtrl.obtenerCampoFecha = function (campo) {
+                return campo + "Formato";
+            }
         }]);
     
+
+        // FILTROS PARA LA LISTA
         tablaRefElementoRelacionalModule.filter('filtrosExistentesNuevasRef', ['pimcService', function (pimcService) {
             return function (elemento) {
                 if (!elemento) return [];
@@ -353,6 +416,7 @@
                 valores:'<', // Input
                 camposColumnas: '<',
                 nombresColumnas: '<',
+                tipoColumnas: '<',
                 autocompletarOpciones: '<',
                 reportarCambio:'&' // Output
             },

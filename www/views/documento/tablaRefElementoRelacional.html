@@ -21,14 +21,16 @@
             <button ng-click='refTablaCtrl.borrar(valor)' class="btn-danger">-</button> {{"Nuevo"}}</td>
         </td>
         <td ng-repeat="campo in refTablaCtrl.camposColumnasInt">
-                <span ng-if="refTablaCtrl.validarAutocompeltar(campo)" editable-text="valor.contenido[campo]" e-typeahead-min-length="refTablaCtrl.autocompletarOpcionesInt.minLength"
+                <span ng-if="refTablaCtrl.columnaEsTexto(campo) && refTablaCtrl.validarAutocompeltar(campo)" editable-text="valor.contenido[campo]" e-typeahead-min-length="refTablaCtrl.autocompletarOpcionesInt.minLength"
                 e-uib-typeahead="elemento[campo] for elemento in refTablaCtrl.autocompletarElemento(campo, $viewValue)" e-typeahead-wait-ms="refTablaCtrl.autocompletarOpcionesInt.delay"
                 e-typeahead-on-select="refTablaCtrl.seleccionAutocompletar(valor ,$item)" e-typeahead-no-results="refTablaCtrl.noExistenValores"
                 e-typeahead-loading="refTablaCtrl.cargandoValores" onaftersave="refTablaCtrl.reportarCambioNuevo()">
                 {{valor.contenido[campo] || "nuevo/a" + campo}}
             </span>
             <i ng-show="refTablaCtrl.cargandoValores && refTablaCtrl.validarAutocompeltar(campo)" class="glyphicon glyphicon-refresh"></i>            
-            <span ng-if="!refTablaCtrl.validarAutocompeltar(campo)" editable-text="valor.contenido[campo]" onaftersave="refTablaCtrl.reportarCambioNuevo()">{{valor.contenido[campo] || "nuevo/a" + campo}}</span>
+            <span ng-if="refTablaCtrl.columnaEsTexto(campo) && !refTablaCtrl.validarAutocompeltar(campo)" editable-text="valor.contenido[campo]" onaftersave="refTablaCtrl.reportarCambioNuevo()">{{valor.contenido[campo] || "nuevo/a" + campo}}</span>
+            <pimc-fecha-con-formato ng-if="refTablaCtrl.columnaEsFecha(campo)"
+            fecha = 'valor.contenido[campo]' ></span>
         </td>
     </tr>
 </table>
