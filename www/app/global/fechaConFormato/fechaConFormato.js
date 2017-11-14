@@ -12,137 +12,61 @@
       {
         value: 1,
         template: "YYYY",
-        formatoFecha: "yyyy",
-        formatoHora: "",
-        texto: "1990",
-        fechaActivado: true,
-        horaActivado: false,
-        datepickerOptions: {
-          datepickerMode: 'year',
-          formatYear: 'yyyy',
-          minMode: 'year',
-          yearRows: 5,
-          yearColumns: 7
-        }
+        templateVisualizacion: "yyyy",        
+        texto: "1990"
       },
       {
         value: 2,
         template: "MMMM",
-        formatoFecha: "MMMM",
-        formatoHora: "",
-        texto: "Abril",
-        fechaActivado: true,
-        horaActivado: false,
-        datepickerOptions: {
-          datepickerMode: 'month',
-          formatMonth: 'MMMM',
-          minMode: 'month',
-          maxMode: 'month'
-        }
+        templateVisualizacion: "MMMM",        
+        texto: "Abril"
       },
       {
         value: 3,
         template: "MMMM, YYYY",
-        formatoFecha: "MMMM, yyyy",
-        formatoHora: "",
-        texto: "Abril, 1990",
-        fechaActivado: true,
-        horaActivado: false,
-        datepickerOptions: {
-          datepickerMode: 'month',
-          formatYear: 'MMMM',
-          formatYear: 'yyyy',
-          minMode: 'month',
-          maxMode: 'year'
-        }
+        templateVisualizacion: "MMMM, yyyy",        
+        texto: "Abril, 1990"
       },
       {
         value: 4,
-        template: "DD-MMMM",
-        formatoFecha: "dd/MMMM",
-        formatoHora: "",
-        texto: "02/Abril",
-        fechaActivado: true,
-        horaActivado: false,
-        datepickerOptions: {
-          datepickerMode: 'month',
-          formatDay: 'dd',
-          formatYear: 'yyyy',
-          minMode: 'day',
-          maxMode: 'month'
-        }
+        template: "DD/MMMM",
+        templateVisualizacion: "dd/MMMM",
+        texto: "02/Abril"
       },
       {
         value: 5,
-        template: "D-M-YYYY",
-        formatoFecha: "d/M/yyyy",
-        formatoHora: "",
-        texto: "2/4/1990",
-        fechaActivado: true,
-        horaActivado: false,
-        datepickerOptions: {
-          datepickerMode: 'day',
-          formatDay: 'd',
-          formatMonth: 'M',
-          formatYear: 'yyyy',
-          minMode: 'day',
-          maxMode: 'year'
-        }
+        template: "D/M/YYYY",
+        templateVisualizacion: "d/M/yyyy",
+        texto: "2/4/1990"
       },
       {
         value: 6,
-        template: "DD-MM-YYYY",
-        formatoFecha: "dd/MM/yyyy",
-        formatoHora: "",
-        texto: "02/04/1990",
-        fechaActivado: true,
-        horaActivado: false,
-        datepickerOptions: {
-          datepickerMode: 'day',
-          formatDay: 'dd',
-          formatMonth: 'MM',
-          formatYear: 'yyyy',
-          minMode: 'day',
-          maxMode: 'year'
-        }
+        template: "DD/MM/YYYY",
+        templateVisualizacion: "dd/MM/yyyy",
+        texto: "02/04/1990"
       },
       {
         value: 7,
         template: "h:mm A",
-        formatoFecha: "",
-        formatoHora: "h:mm a",
-        texto: "4:00 PM",
-        fechaActivado: false,
-        horaActivado: true,
-        datepickerOptions: {}
+        templateVisualizacion: "h:mm a",
+        texto: "4:00 PM"
       },
       {
         value: 8,
-        template: "DD-MM-YYYY HH:mm",
-        formatoFecha: "dd-MM-yyyy",
-        formatoHora: "hh:mm",
-        texto: "4:00 - 02/07/1990",
-        fechaActivado: true,
-        horaActivado: true,
-        datepickerOptions: {
-          datepickerMode: 'day',
-          formatDay: 'dd',
-          formatMonth: 'MM',
-          formatYear: 'yyyy',
-          minMode: 'day',
-          maxMode: 'year'
-        }
+        template: "DD/MM/YYYY hh:mm A",
+        templateVisualizacion: "dd/MM/yyyy hh:mm a",
+        texto: "02/07/1990 4:00 PM",
       }
     ];
 
 
     // Valores internos
-    pimcFechaConFormatoCtrl.fechaInt = "";
+    pimcFechaConFormatoCtrl.fechaInt = null;
     pimcFechaConFormatoCtrl.fechaFormatoInt = "";
-    pimcFechaConFormatoCtrl.formatoSeleccionado = pimcFechaConFormatoCtrl.listaFormatosPosibles[7];
+    pimcFechaConFormatoCtrl.formatoSeleccionado = pimcFechaConFormatoCtrl.listaFormatosPosibles[6];
 
     pimcFechaConFormatoCtrl.$onInit = function () {
-      pimcFechaConFormatoCtrl.formatoSeleccionado = pimcFechaConFormatoCtrl.listaFormatosPosibles[7];
+      pimcFechaConFormatoCtrl.formatoSeleccionado = pimcFechaConFormatoCtrl.listaFormatosPosibles[6];
       pimcFechaConFormatoCtrl.listaFormatosPosibles.forEach(function (e) {
         if (e.template === pimcFechaConFormatoCtrl.formato) {
           pimcFechaConFormatoCtrl.formatoSeleccionado = e;
@@ -151,46 +75,48 @@
     };
 
     pimcFechaConFormatoCtrl.$onChanges = function (changes) {
-      if (changes.fecha) {
-        pimcFechaConFormatoCtrl.fechaInt = $window.angular.copy(pimcFechaConFormatoCtrl.fecha);
-        if (!pimcFechaConFormatoCtrl.fechaInt || pimcFechaConFormatoCtrl.fechaInt.lenght === 0 ) {
-          pimcFechaConFormatoCtrl.fechaInt = "0";
-        }
-      }
+      // Revisamos si el formato cambio
       if (changes.formato) {
         pimcFechaConFormatoCtrl.fechaFormatoInt = $window.angular.copy(pimcFechaConFormatoCtrl.formato);
-        pimcFechaConFormatoCtrl.formatoSeleccionado = pimcFechaConFormatoCtrl.listaFormatosPosibles[7];
+        pimcFechaConFormatoCtrl.formatoSeleccionado = pimcFechaConFormatoCtrl.listaFormatosPosibles[6];
         pimcFechaConFormatoCtrl.listaFormatosPosibles.forEach(function (e) {
           if (e.template === pimcFechaConFormatoCtrl.fechaFormatoInt) {
             pimcFechaConFormatoCtrl.formatoSeleccionado = e;
           }
         });
       }
+      // Cambios en la fecha
+      if (changes.fecha) {
+        // Revisamos que haya algun valor en la fecha. de lo contrario asignamos null 
+        if (!pimcFechaConFormatoCtrl.fecha || pimcFechaConFormatoCtrl.fecha.lenght === 0 ) {
+          pimcFechaConFormatoCtrl.fechaInt = null;
+        } else {
+          // Si hay fecha hacemos el parsing
+          pimcFechaConFormatoCtrl.fechaInt = new Date($window.angular.copy(pimcFechaConFormatoCtrl.fecha));
+        }
+      }
     };
 
 
     // Cuando se cambia el formato se le reporta a la unidad externa 
     pimcFechaConFormatoCtrl.cambiarFormato = function (nuevoFormato) {
+      var formatDate = "";
+      if (pimcFechaConFormatoCtrl.fechaInt)
+        formatDate = pimcFechaConFormatoCtrl.fechaInt.toISOString().split("T")[0];
       pimcFechaConFormatoCtrl.reportarCambio({
-        fecha: pimcFechaConFormatoCtrl.fechaInt,
+        fecha: formatDate,
         formato: pimcFechaConFormatoCtrl.formatoSeleccionado.template
       });
     };
     pimcFechaConFormatoCtrl.fechaCambio = function () {
+      var formatDate = "";
+      if (pimcFechaConFormatoCtrl.fechaInt)
+        formatDate = pimcFechaConFormatoCtrl.fechaInt.toISOString().split("T")[0];
       pimcFechaConFormatoCtrl.reportarCambio({
-        fecha: pimcFechaConFormatoCtrl.fechaInt,
+        fecha: formatDate,
         formato: pimcFechaConFormatoCtrl.formatoSeleccionado.template
       });
     }
-
-    pimcFechaConFormatoCtrl.opened = {};
-    pimcFechaConFormatoCtrl.open = function ($event, elementOpened) {
-      $event.preventDefault();
-      $event.stopPropagation();
-
-      pimcFechaConFormatoCtrl.opened[elementOpened] = !pimcFechaConFormatoCtrl.opened[elementOpened];
-    };
-
   }]);
 
   // COMPONENTS
@@ -204,12 +130,4 @@
     controllerAs: 'pimcFechaConFormatoCtrl',
     templateUrl: 'views/global/fechaConFormato/fechaConFormatoTemplate.html'
   });
-
-  fechaConFormatoModule.run(function(editableOptions, editableThemes) {
-    editableThemes.bs3.inputClass = 'input-sm';
-    editableThemes.bs3.buttonsClass = 'btn-sm';
-    editableOptions.theme = 'bs3';
-    editableOptions.buttons = 'no';
-});
-
 })(window.angular);
