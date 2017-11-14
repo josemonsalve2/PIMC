@@ -39,15 +39,19 @@
                                     class="m-l-1"> {{archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numRefDentroFondo}}</span>
                     </li>
                     <li class="list-group-item fechas-grupo">
-                        <span class="label label-primary">Rango de fechas</span> 
-                        <!--<span editable-text="archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicial" 
-                                    onbeforesave="archivoDatosPrincipalesCtrl.datoEditado('fechaInicial',$data)"  
-                                    class="fechaInicial m-l-1"> {{ archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicial }}</span> 
-                        <span editable-text="archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinal" 
-                                    onbeforesave="archivoDatosPrincipalesCtrl.datoEditado('fechaFinal',$data)"
-                                    class="fechaFinal">{{ archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinal }}</span>
-                        -->
-
+                        <span class="label label-primary">Rango de fechas</span> <br/>
+                        <span class="label label-info">fecha Inicial</span>                         
+                        <pimc-fecha-con-formato
+                        fecha = 'archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicial'
+                        formato = 'archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicialFormato'
+                        reportar-cambio='archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicial = fecha; 
+                        archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicialFormato = formato;'></pimc-fecha-con-formato>
+                        <span class="label label-info">fecha Final</span>
+                        <pimc-fecha-con-formato
+                        fecha = 'archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinal'
+                        formato = 'archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinalFormato'
+                        reportar-cambio='archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinal = fecha; 
+                        archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinalFormato = formato;'></pimc-fecha-con-formato>
                     </li>
                     <li class="list-group-item">
                         <span class="label label-primary">Folio inicial</span> 
