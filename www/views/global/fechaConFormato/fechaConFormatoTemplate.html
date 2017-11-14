@@ -1,26 +1,18 @@
-<div>
-<span e-style = "widht:60%"
-      editable-bsdate="pimcFechaConFormatoCtrl.fechaInt"
-      e-is-open="pimcFechaConFormatoCtrl.opened.$data" 
-      e-ng-click="pimcFechaConFormatoCtrl.open($event,'$data')" 
-      e-datepicker-popup="{{pimcFechaConFormatoCtrl.formatoSeleccionado.formatoFecha}}"
-      e-datepicker-options="pimcFechaConFormatoCtrl.formatoSeleccionado.datepickerOptions"
-      ng-show="pimcFechaConFormatoCtrl.formatoSeleccionado.fechaActivado"
-      onaftersave="pimcFechaConFormatoCtrl.fechaCambio()"
-      blur="submit"> {{ pimcFechaConFormatoCtrl.fechaInt | date:pimcFechaConFormatoCtrl.formatoSeleccionado.formatoFecha || "No definido" }}
-</span>
-<span editable-bstime="pimcFechaConFormatoCtrl.fechaInt" 
-      e-show-meridian="false"
-      blur="submit"
-      ng-show="pimcFechaConFormatoCtrl.formatoSeleccionado.horaActivado"
-      onaftersave="pimcFechaConFormatoCtrl.fechaCambio()"
-      class="input-small">
-  {{ pimcFechaConFormatoCtrl.fechaInt | date: pimcFechaConFormatoCtrl.formatoSeleccionado.formatoHora }}
-</span>
-<strong>Formato = </strong><span editable-select="pimcFechaConFormatoCtrl.formatoSeleccionado" 
-      e-ng-options="formatoDispoible.texto for formatoDispoible in pimcFechaConFormatoCtrl.listaFormatosPosibles"
-      e-ng-change="pimcFechaConFormatoCtrl.cambiarFormato()"
-      onaftersave="pimcFechaConFormatoCtrl.reportarCambio()"
-      blur="submit"> ({{ pimcFechaConFormatoCtrl.formatoSeleccionado.template || "No definido" }})
-</span>
+<div style="">
+      <div class="pimcTimePicker">
+            <span href="#" style="width:60%" editable-bsdate="pimcFechaConFormatoCtrl.fechaInt" e-is-open="pimcFechaConFormatoCtrl.opened.$data"
+                  e-ng-click="pimcFechaConFormatoCtrl.open($event,'$data')" e-datepicker-popup="{{pimcFechaConFormatoCtrl.formatoSeleccionado.formatoFecha}}"
+                  e-datepicker-options="pimcFechaConFormatoCtrl.formatoSeleccionado.datepickerOptions" ng-if="pimcFechaConFormatoCtrl.formatoSeleccionado.fechaActivado"
+                  onaftersave="pimcFechaConFormatoCtrl.fechaCambio()" e-class="input-small input-sm" blur="submit"> {{ pimcFechaConFormatoCtrl.fechaInt | date: pimcFechaConFormatoCtrl.formatoSeleccionado.formatoFecha || "No definido"
+                  }}
+            </span>
+            <span editable-bstime="pimcFechaConFormatoCtrl.fechaInt" e-show-meridian="false" blur="submit" ng-if="pimcFechaConFormatoCtrl.formatoSeleccionado.horaActivado"
+                  onaftersave="pimcFechaConFormatoCtrl.fechaCambio()" lass="input-small input-sm">
+                  {{ pimcFechaConFormatoCtrl.fechaInt | date: pimcFechaConFormatoCtrl.formatoSeleccionado.formatoHora }}
+            </span>
+      </div>
+      <strong> Formato = </strong>
+      <span editable-select="pimcFechaConFormatoCtrl.formatoSeleccionado" e-ng-options="formatoDisponible as formatoDisponible.texto for formatoDisponible in pimcFechaConFormatoCtrl.listaFormatosPosibles"
+            onaftersave="pimcFechaConFormatoCtrl.cambiarFormato()" blur="submit"> ({{ pimcFechaConFormatoCtrl.formatoSeleccionado.template || "No definido" }})
+      </span>
 </div>
