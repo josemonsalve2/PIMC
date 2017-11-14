@@ -2,7 +2,7 @@
 
   'use strict';
 
-  var fechaConFormatoModule = angular.module('fechaConFormatoModule', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
+  var fechaConFormatoModule = angular.module('fechaConFormatoModule', ['ngAnimate', 'ngSanitize', 'xeditable', 'ui.bootstrap']);
 
   fechaConFormatoModule.controller('pimcFechaConFormatoController', ['pimcService', '$filter', '$window', function (pimcService, $filter, $window) {
     var pimcFechaConFormatoCtrl = this;
@@ -153,6 +153,9 @@
     pimcFechaConFormatoCtrl.$onChanges = function (changes) {
       if (changes.fecha) {
         pimcFechaConFormatoCtrl.fechaInt = $window.angular.copy(pimcFechaConFormatoCtrl.fecha);
+        if (!pimcFechaConFormatoCtrl.fechaInt || pimcFechaConFormatoCtrl.fechaInt.lenght === 0 ) {
+          pimcFechaConFormatoCtrl.fechaInt = "0";
+        }
       }
       if (changes.formato) {
         pimcFechaConFormatoCtrl.fechaFormatoInt = $window.angular.copy(pimcFechaConFormatoCtrl.formato);
@@ -167,16 +170,16 @@
 
 
     // Cuando se cambia el formato se le reporta a la unidad externa 
-    pimcFechaConFormatoCtrl.cambiarFormato = function () {
+    pimcFechaConFormatoCtrl.cambiarFormato = function (nuevoFormato) {
       pimcFechaConFormatoCtrl.reportarCambio({
         fecha: pimcFechaConFormatoCtrl.fechaInt,
-        formato: pimcFechaConFormatoCtrl.fechaFormatoInt.template
+        formato: pimcFechaConFormatoCtrl.formatoSeleccionado.template
       });
     };
     pimcFechaConFormatoCtrl.fechaCambio = function () {
       pimcFechaConFormatoCtrl.reportarCambio({
         fecha: pimcFechaConFormatoCtrl.fechaInt,
-        formato: pimcFechaConFormatoCtrl.fechaFormatoInt.template
+        formato: pimcFechaConFormatoCtrl.formatoSeleccionado.template
       });
     }
 
@@ -202,5 +205,11 @@
     templateUrl: 'views/global/fechaConFormato/fechaConFormatoTemplate.html'
   });
 
+  fechaConFormatoModule.run(function(editableOptions, editableThemes) {
+    editableThemes.bs3.inputClass = 'input-sm';
+    editableThemes.bs3.buttonsClass = 'btn-sm';
+    editableOptions.theme = 'bs3';
+    editableOptions.buttons = 'no';
+});
 
 })(window.angular);
