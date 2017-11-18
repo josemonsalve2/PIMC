@@ -44,14 +44,14 @@
                         <pimc-fecha-con-formato
                         fecha = 'archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicial'
                         formato = 'archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicialFormato'
-                        reportar-cambio='archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicial = fecha; 
-                        archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicialFormato = formato;'></pimc-fecha-con-formato>
+                        reportar-cambio="archivoDatosPrincipalesCtrl.fechaEditada(fecha, formato, 'fechaInicial')">
+                        </pimc-fecha-con-formato><br/>
                         <span class="label label-info">fecha Final</span>
                         <pimc-fecha-con-formato
                         fecha = 'archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinal'
                         formato = 'archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinalFormato'
-                        reportar-cambio='archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinal = fecha; 
-                        archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinalFormato = formato;'></pimc-fecha-con-formato>
+                        reportar-cambio="archivoDatosPrincipalesCtrl.fechaEditada(fecha, formato, 'fechaFinal')">
+                      </pimc-fecha-con-formato>
                     </li>
                     <li class="list-group-item">
                         <span class="label label-primary">Folio inicial</span> 

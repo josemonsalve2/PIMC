@@ -134,6 +134,14 @@
             }
         };
 
+        // Reportar Cambio fechas
+        archivoDatosPrincipalesCtrl.fechaEditada = function (fecha, formato, campoFecha) {
+            var campoFormato = campoFecha + "Formato";
+            archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido[campoFecha] = fecha;
+            archivoDatosPrincipalesCtrl.datosPrincipalesInt.contenido[campoFormato] = formato;
+            archivoDatosPrincipalesCtrl.datoEditado(campoFecha, fecha);
+        }
+
         // Listado palabras claves
         archivoDatosPrincipalesCtrl.palabrasClavesArray = [];
 
