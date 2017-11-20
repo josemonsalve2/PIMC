@@ -6,16 +6,46 @@
 
     'use strict';
 
-    var archivoPerfil = angular.module('archivoPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
-    archivoPerfil.controller('archivoPerfilController', [ 'pimcService', 'pimcArchivoDatosPrincipalesService', 'pimcBarraEstadoService', 'pimcComentarios', '$scope', '$sce', '$q', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', function( pimcService, pimcArchivoDatosPrincipalesService, pimcBarraEstadoService, pimcComentarios, $scope, $sce, $q, $http, $window, $location, $filter, i18nService, uiGridConstants) {
+    var archivoPerfil = angular.module("archivoPerfil", [
+      "ngAnimate",
+      "ngSanitize",
+      "ui.bootstrap",
+      "ui.grid",
+      "ngTouch",
+      "ui.grid.edit",
+      "ui.grid.autoResize",
+      "ui.grid.selection",
+      "ui.grid.cellNav",
+      "xeditable"
+    ]);
+    archivoPerfil.controller('archivoPerfilController', [
+      'pimcService', 
+      'pimcMenuService',
+      'pimcArchivoDatosPrincipalesService',
+      'pimcBarraEstadoService', 
+      'pimcComentarios', 
+      '$scope', 
+      '$sce', 
+      '$q', 
+      '$http', 
+      '$window', 
+      '$location', 
+      '$filter', 
+      'uiGridConstants', 
+      'i18nService', 
+      function( pimcService, pimcMenuService, pimcArchivoDatosPrincipalesService, 
+          pimcBarraEstadoService, pimcComentarios, $scope, 
+          $sce, $q, $http, $window, $location, $filter, 
+          i18nService, uiGridConstants) {
         var init = function() {
-            $scope.archivoID = $window.localStorage.getItem("archivoID");
+            var archivoSeleccionado = pimcMenuService.obtenerElementoSeleccionado("Archivos");
             // If not set, redirect.
-            if (!$scope.archivoID) {
-                pimcService.debug("No hay archivoID");
-                //TODO Enviar varios seleccionados
-                $window.location.href = "#!/busqueda";
+            if (!archivoSeleccionado) {
+              pimcService.debug("No hay un archivo seleccionado");
+              //TODO Enviar varios seleccionados
+              $window.location.href = "#!/busqueda";
             } else {
+              $scope.archivoID = archivoSeleccionado.id;
                 if (!$scope.datosGuardados) {
                     pimcBarraEstadoService.registrarAccion("Archivo <strong>" + $scope.archivoID + "</strong> ha sido cargado");
                 } else {

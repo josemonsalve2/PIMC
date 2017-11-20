@@ -10,35 +10,87 @@
                       <a ng-href="#!/archivos" ng-if="menuElementosCtrl.elementosAbiertos.Archivos.length > 0" set-parent-active>Archivos</a>
                   </li>
                   <li ng-repeat="elemento in menuElementosCtrl.elementosAbiertos.Archivos track by $index" class="{{(elemento.seleccionado)? 'active':''}}">
-                        <a ng-href="#">
+                        <a set-parent-active>
                             <span class="glyphicon glyphicon-menu-right btn-xs" ng-click="menuElementosCtrl.abrirElemento('Archivos', elemento.id)"></span>
                             <span ng-click="menuElementosCtrl.abrirElemento('Archivos', elemento.id)">{{"[" + elemento.id + "] " + elemento.texto}}</span>
                             <span class="glyphicon glyphicon-remove btn-xs" ng-click="menuElementosCtrl.cerrarElemento('Archivos', elemento.id)"></span>                            
                         </a>
                   </li>
                   <li>
-                      <a ng-href="#!/personajes" set-parent-active>Personajes</a>
+                      <a ng-href="#!/Personajes" ng-if="menuElementosCtrl.elementosAbiertos.Personajes.length > 0" set-parent-active>Personajes</a>
                   </li>
-                  <li >
-                      <a ng-href="#" ng-repeat="personaje in menuElementosCtrl.elementosAbiertos.personajes track by $index" ng-click="menuElementosCtrl.abrirElemento('personajes', personaje.id)" class="{{(personaje.seleccionado)? 'active':''}}" set-parent-active><span class="glyphicon glyphicon-menu-right btn-xs"></span>{{personaje.texto}}</a>
-                  </li>
-                  <li>
-                      <a ng-href="#!/embarcaciones" set-parent-active>Embarcaciones</a>
-                  </li>
-                  <li>
-                      <a ng-href="#!/lugares" set-parent-active>Lugares</a>
+                  <li ng-repeat="elemento in menuElementosCtrl.elementosAbiertos.Personajes track by $index" class="{{(elemento.seleccionado)? 'active':''}}">
+                        <a set-parent-active>
+                            <span class="glyphicon glyphicon-menu-right btn-xs" ng-click="menuElementosCtrl.abrirElemento('Personajes', elemento.id)"></span>
+                            <span ng-click="menuElementosCtrl.abrirElemento('Personajes', elemento.id)">{{"[" + elemento.id + "] " + elemento.texto}}</span>
+                            <span class="glyphicon glyphicon-remove btn-xs" ng-click="menuElementosCtrl.cerrarElemento('Personajes', elemento.id)"></span>                            
+                        </a>
                   </li>
                   <li>
-                      <a ng-href="#!/instituciones" set-parent-active>Instituciones</a>
+                      <a ng-href="#!/embarcaciones" ng-if="menuElementosCtrl.elementosAbiertos.Embarcaciones.length > 0" set-parent-active>Embarcaciones</a>
+                  </li>
+                  <li ng-repeat="elemento in menuElementosCtrl.elementosAbiertos.Embarcaciones track by $index" class="{{(elemento.seleccionado)? 'active':''}}">
+                        <a set-parent-active>
+                            <span class="glyphicon glyphicon-menu-right btn-xs" ng-click="menuElementosCtrl.abrirElemento('Embarcaciones', elemento.id)"></span>
+                            <span ng-click="menuElementosCtrl.abrirElemento('Embarcaciones', elemento.id)">{{"[" + elemento.id + "] " + elemento.texto}}</span>
+                            <span class="glyphicon glyphicon-remove btn-xs" ng-click="menuElementosCtrl.cerrarElemento('Embarcaciones', elemento.id)"></span>                            
+                        </a>
                   </li>
                   <li>
-                      <a ng-href="#!/actividades" set-parent-active>Actividades</a>
+                      <a ng-href="#!/lugares" ng-if="menuElementosCtrl.elementosAbiertos.Lugares.length > 0" set-parent-active>Lugares</a>
+                  </li>
+                  <li ng-repeat="elemento in menuElementosCtrl.elementosAbiertos.Lugares track by $index" class="{{(elemento.seleccionado)? 'active':''}}">
+                        <a set-parent-active>
+                            <span class="glyphicon glyphicon-menu-right btn-xs" ng-click="menuElementosCtrl.abrirElemento('Lugares', elemento.id)"></span>
+                            <span ng-click="menuElementosCtrl.abrirElemento('Lugares', elemento.id)">{{"[" + elemento.id + "] " + elemento.texto}}</span>
+                            <span class="glyphicon glyphicon-remove btn-xs" ng-click="menuElementosCtrl.cerrarElemento('Lugares', elemento.id)"></span>                            
+                        </a>
                   </li>
                   <li>
-                      <a ng-href="#!/eventos" set-parent-active>Eventos</a>
+                      <a ng-href="#!/instituciones" ng-if="menuElementosCtrl.elementosAbiertos.Instituciones.length > 0" set-parent-active>Instituciones</a>
+                  </li>
+                  <li ng-repeat="elemento in menuElementosCtrl.elementosAbiertos.Instituciones track by $index" class="{{(elemento.seleccionado)? 'active':''}}">
+                        <a set-parent-active>
+                            <span class="glyphicon glyphicon-menu-right btn-xs" ng-click="menuElementosCtrl.abrirElemento('Instituciones', elemento.id)"></span>
+                            <span ng-click="menuElementosCtrl.abrirElemento('Instituciones', elemento.id)">{{"[" + elemento.id + "] " + elemento.texto}}</span>
+                            <span class="glyphicon glyphicon-remove btn-xs" ng-click="menuElementosCtrl.cerrarElemento('Instituciones', elemento.id)"></span>                            
+                        </a>
+                  </li>
+                  <li>
+                      <a ng-href="#!/actividades" ng-if="menuElementosCtrl.elementosAbiertos.Actividades.length > 0" set-parent-active>Actividades</a>
+                  </li>
+                  <li ng-repeat="elemento in menuElementosCtrl.elementosAbiertos.Actividades track by $index" class="{{(elemento.seleccionado)? 'active':''}}">
+                        <a set-parent-active>
+                            <span class="glyphicon glyphicon-menu-right btn-xs" ng-click="menuElementosCtrl.abrirElemento('Actividades', elemento.id)"></span>
+                            <span ng-click="menuElementosCtrl.abrirElemento('Actividades', elemento.id)">{{"[" + elemento.id + "] " + elemento.texto}}</span>
+                            <span class="glyphicon glyphicon-remove btn-xs" ng-click="menuElementosCtrl.cerrarElemento('Actividades', elemento.id)"></span>                            
+                        </a>
+                  </li>
+                  <li>
+                      <a ng-href="#!/eventos" ng-if="menuElementosCtrl.elementosAbiertos.Eventos.length > 0" set-parent-active>Eventos</a>
+                  </li>
+                  <li ng-repeat="elemento in menuElementosCtrl.elementosAbiertos.Eventos track by $index" class="{{(elemento.seleccionado)? 'active':''}}">
+                        <a set-parent-active>
+                            <span class="glyphicon glyphicon-menu-right btn-xs" ng-click="menuElementosCtrl.abrirElemento('Eventos', elemento.id)"></span>
+                            <span ng-click="menuElementosCtrl.abrirElemento('Eventos', elemento.id)">{{"[" + elemento.id + "] " + elemento.texto}}</span>
+                            <span class="glyphicon glyphicon-remove btn-xs" ng-click="menuElementosCtrl.cerrarElemento('Eventos', elemento.id)"></span>                            
+                        </a>
                   </li>
               </ul>
           </li>
-          <li><a ng-href="#!/busqueda" set-parent-active>Búsqueda de archivos</a></li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="">Busquedas
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a ng-href="#!/busqueda" set-parent-active>Por Archivos</a>
+                    <a ng-href="#!/" set-parent-active>Por Personajes</a>
+                    <a ng-href="#!/" set-parent-active>Por Embarcaciones</a>
+                    <a ng-href="#!/" set-parent-active>Por Lugares</a>
+                    <a ng-href="#!/" set-parent-active>Por Instituciones</a>
+                </li>
+            </ul>
+        </li>
         </ul>
       </div>

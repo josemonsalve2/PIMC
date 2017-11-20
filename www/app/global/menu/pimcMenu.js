@@ -168,6 +168,7 @@
 
         // si no hay elemento seleccionado por alguna razon, entonces vamos a la pagina principal
         if (elementoSeleccionado) {
+          $window.location.href = "#!/"; // Forzar recargar
           $window.location.href = "#!/" + elemento;
         } else {
           $window.location.href = "#!/";
