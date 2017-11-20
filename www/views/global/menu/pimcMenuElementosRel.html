@@ -2,33 +2,40 @@
         <ul class="nav navbar-nav">
           <li><a ng-href="#!/" set-parent-active>Inicio</a></li>
           <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" href="">Perfiles
+              <a class="dropdown-toggle" data-toggle="dropdown" href="">Perfiles Abiertos
                   <span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
                   <li>
-                      <a ng-href="#!/personajes" set-parent-active>Perfil de persona</a>
+                      <a ng-href="#!/archivos" ng-if="menuElementosCtrl.elementosAbiertos.Archivos.length > 0" set-parent-active>Archivos</a>
+                  </li>
+                  <li ng-repeat="elemento in menuElementosCtrl.elementosAbiertos.Archivos track by $index" class="{{(elemento.seleccionado)? 'active':''}}">
+                        <a ng-href="#">
+                            <span class="glyphicon glyphicon-menu-right btn-xs" ng-click="menuElementosCtrl.abrirElemento('Archivos', elemento.id)"></span>
+                            <span ng-click="menuElementosCtrl.abrirElemento('Archivos', elemento.id)">{{"[" + elemento.id + "] " + elemento.texto}}</span>
+                            <span class="glyphicon glyphicon-remove btn-xs" ng-click="menuElementosCtrl.cerrarElemento('Archivos', elemento.id)"></span>                            
+                        </a>
+                  </li>
+                  <li>
+                      <a ng-href="#!/personajes" set-parent-active>Personajes</a>
                   </li>
                   <li >
                       <a ng-href="#" ng-repeat="personaje in menuElementosCtrl.elementosAbiertos.personajes track by $index" ng-click="menuElementosCtrl.abrirElemento('personajes', personaje.id)" class="{{(personaje.seleccionado)? 'active':''}}" set-parent-active><span class="glyphicon glyphicon-menu-right btn-xs"></span>{{personaje.texto}}</a>
                   </li>
                   <li>
-                      <a ng-href="#!/archivos" set-parent-active>Perfil de archivo</a>
+                      <a ng-href="#!/embarcaciones" set-parent-active>Embarcaciones</a>
                   </li>
                   <li>
-                      <a ng-href="#!/embarcaciones" set-parent-active>Perfil de embarcación</a>
+                      <a ng-href="#!/lugares" set-parent-active>Lugares</a>
                   </li>
                   <li>
-                      <a ng-href="#!/lugares" set-parent-active>Perfil de lugar</a>
+                      <a ng-href="#!/instituciones" set-parent-active>Instituciones</a>
                   </li>
                   <li>
-                      <a ng-href="#!/instituciones" set-parent-active>Perfil de institución</a>
+                      <a ng-href="#!/actividades" set-parent-active>Actividades</a>
                   </li>
                   <li>
-                      <a ng-href="#!/actividades" set-parent-active>Actividad</a>
-                  </li>
-                  <li>
-                      <a ng-href="#!/eventos" set-parent-active>Evento</a>
+                      <a ng-href="#!/eventos" set-parent-active>Eventos</a>
                   </li>
               </ul>
           </li>

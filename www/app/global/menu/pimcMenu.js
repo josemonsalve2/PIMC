@@ -10,9 +10,10 @@
   ]);
 
   pimcMenuModule.service("pimcMenuService", [
+    "pimcService",
     "$window",
     "$http",
-    function($window, $http) {
+    function(pimcService, $window, $http) {
       var pimcMenuService = this;
       // Para los elementos relacionales abiertos
       pimcMenuService.elementosAbiertos = {};
@@ -46,13 +47,13 @@
         var texto = textoMenu ? textoMenu : "";
 
         // recortamos el texto al maximo:
-        if (texto.lenght > 20) {
+        if (texto.length > 20) {
           texto = texto.substring(0, 17);
           texto = texto + "...";
         }
 
         // Cambiamos la seleccion al elemento abierto
-        pimcMenuService.deseleccionarElemento(elemento);
+        pimcMenuService.deseleccionarElementos(elemento);
         // Revisamos si ya existe
         var yaExiste = false;
         angular.forEach(pimcMenuService.elementosAbiertos[elemento], function(
@@ -78,7 +79,7 @@
         // Guardamos cambios en local storage
         $window.localStorage.setItem(
           "elementosAbiertos",
-          pimcMenuService.elementosAbiertos
+          JSON.stringify(pimcMenuService.elementosAbiertos)
         );
 
         // notificamos los cambios
@@ -109,12 +110,12 @@
 
           // Si existe lo eliminamos
           if (index != -1) {
-            pimcMenuService.elementoAbierto[elemento].splice(index, 1);
+            pimcMenuService.elementosAbiertos[elemento].splice(index, 1);
           }
         }
         $window.localStorage.setItem(
           "elementosAbiertos",
-          pimcMenuService.elementosAbiertos
+          JSON.stringify(pimcMenuService.elementosAbiertos)
         );
 
         // Notificamos los cambios
@@ -127,13 +128,15 @@
 
       // Cargar los elementos del local storage
       pimcMenuService.cargarElementos = function() {
-        pimcMenuService.elementosAbiertos = $window.localStorage.getItem(
+        pimcMenuService.elementosAbiertos = JSON.parse($window.localStorage.getItem(
           "elementosAbiertos"
-        );
+        ));
         // If not set, redirect.
         if (!pimcMenuService.elementosAbiertos) {
           pimcMenuService.elementosAbiertos = {};
         }
+
+        pimcService.debug("Elementos abiertos cargados")
 
         // Notificamos los cambios
         pimcMenuService.notificarATodosElementosAbiertos();
@@ -157,7 +160,7 @@
         // Guardamos cambios en local storage
         $window.localStorage.setItem(
           "elementosAbiertos",
-          pimcMenuService.elementosAbiertos
+          JSON.stringify(pimcMenuService.elementosAbiertos)
         );
 
         // notificamos los cambios
@@ -231,6 +234,9 @@
 
             menuElementosCtrl.abrirElemento = function (elementoRelacional, idElemento) {
                 pimcMenuService.seleccionarElemento(elementoRelacional, idElemento);
+            }
+            menuElementosCtrl.cerrarElemento = function (elementoRelacional, idElemento) {
+              pimcMenuService.cerrarElemento(elementoRelacional, idElemento);
             }
         }
     ]); // Fin controller

@@ -22,7 +22,9 @@
     'fechaConFormatoModule'
   ]);
 
-  pimc.controller('AppController', function($scope) {});
+  pimc.controller('AppController', ['pimcMenuService', '$scope', function(pimcMenuService, $scope) {
+    pimcMenuService.cargarElementos();
+  }]);
 
   pimc.config(function($routeProvider){
     $routeProvider.caseInsensitiveMatch = true;    

@@ -6,8 +6,18 @@
 
     'use strict';
     
-    var archivosBusqueda = angular.module('archivosBusqueda',  ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav']);
-    archivosBusqueda.controller('archivosBusquedaController', ['pimcService', '$scope', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', '$scope', function(pimcService, $scope, $http, $window, $location, $filter, i18nService, uiGridConstants) {
+    var archivosBusqueda = angular.module("archivosBusqueda", [
+      "ngAnimate",
+      "ngSanitize",
+      "ui.bootstrap",
+      "ui.grid",
+      "ngTouch",
+      "ui.grid.edit",
+      "ui.grid.autoResize",
+      "ui.grid.selection",
+      "ui.grid.cellNav"
+    ]);
+    archivosBusqueda.controller('archivosBusquedaController', ['pimcService', 'pimcMenuService', '$scope', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', '$scope', function(pimcService, pimcMenuService, $scope, $http, $window, $location, $filter, i18nService, uiGridConstants) {
 
         // Entreda de busquedas y botones
         $scope.valorBusqueda = "";
@@ -81,10 +91,10 @@
         // Para redirección a la página de perfil de archivo
         $scope.abrirArchivosSeleccionados = function () {
             var seleccionados = $scope.tablaResultadosGridApi.selection.getSelectedRows();
-            console.log(seleccionados);
-            //TODO Enviar varios seleccionados
-            $window.localStorage.setItem("archivoID", seleccionados[0].archivoID);
-            $window.location.href = "#!/archivos";
+            pimcService.debug("Archivos seleccionados = " + seleccionados);
+            angular.forEach(seleccionados, function (seleccionado) {
+               pimcMenuService.abrirElemento("Archivos", seleccionado.archivoID, seleccionado.titulo, true); 
+            });
         };
 
         $scope.init();
