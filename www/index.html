@@ -47,43 +47,7 @@
                 </button>
                 <a class="navbar-brand" href="#">PIMC</a>
             </div>
-            <div class="collapse navbar-collapse" uid-collapse="isNavCollapsed" id="menuPIMC">
-              <ul class="nav navbar-nav">
-                <li><a ng-href="#!/" set-parent-active>Inicio</a></li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="">Perfiles
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a ng-href="#!/personajes" set-parent-active>Perfil de persona</a>
-                        </li>
-                        <li >
-                            <a ng-click="abrirElemento('personaje', id)"  set-parent-active><span class="glyphicon glyphicon-chevron-right btn-xs">bla bla bla</span></a>
-                        </li>
-                        <li>
-                            <a ng-href="#!/archivos" set-parent-active>Perfil de archivo</a>
-                        </li>
-                        <li>
-                            <a ng-href="#!/embarcaciones" set-parent-active>Perfil de embarcación</a>
-                        </li>
-                        <li>
-                            <a ng-href="#!/lugares" set-parent-active>Perfil de lugar</a>
-                        </li>
-                        <li>
-                            <a ng-href="#!/instituciones" set-parent-active>Perfil de institución</a>
-                        </li>
-                        <li>
-                            <a ng-href="#!/actividades" set-parent-active>Actividad</a>
-                        </li>
-                        <li>
-                            <a ng-href="#!/eventos" set-parent-active>Evento</a>
-                        </li>
-                    </ul>
-                </li>
-                <li><a ng-href="#!/busqueda" set-parent-active>Búsqueda de archivos</a></li>
-              </ul>
-            </div>
+            <pimc-elementos-relacionales-menu></pimc-elementos-relacionales-menu>
           </div>
         </nav>
 
@@ -124,6 +88,7 @@
         <!-- App -->
         <script charset="utf-8" src="app/app.js"></script>
         <script charset="utf-8" src="app/global/pimcService.js"></script>
+        <script charset="utf-8" src="app/global/menu/pimcMenu.js"></script>
 
         <!-- Módulos -->
         <script charset="utf-8" src="app/index.js"></script>
