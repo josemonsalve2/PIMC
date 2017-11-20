@@ -5,6 +5,7 @@
   var pimc = angular.module('pimc', [
     'ngRoute',
     'indexModule',
+    'pimcMenuModule',
     'archivoPerfil',
     'personajePerfil',
     'embarcacionPerfil',
@@ -80,23 +81,5 @@
         return gridOptions;
     }]);
   });
-
-  pimc.directive('setParentActive', ['$location', function($location) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs, controller) {
-        var classActive = attrs.setParentActive || 'active',
-            path = attrs.ngHref.replace('#!', '');
-        scope.location = $location;
-        scope.$watch('location.path()', function(newPath) {
-          if (path == newPath) {
-            element.parent().addClass(classActive);
-          } else {
-            element.parent().removeClass(classActive);
-          }
-        })
-      }
-    }
-  }]);
 
 })(window.angular);
