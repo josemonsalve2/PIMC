@@ -22,6 +22,7 @@
       'pimcService', 
       'pimcMenuService',
       'pimcArchivoDatosPrincipalesService',
+      'pimcTablaListaRefService',
       'pimcBarraEstadoService', 
       'pimcComentarios', 
       '$scope', 
@@ -34,7 +35,7 @@
       'uiGridConstants', 
       'i18nService', 
       function( pimcService, pimcMenuService, pimcArchivoDatosPrincipalesService, 
-          pimcBarraEstadoService, pimcComentarios, $scope, 
+          pimcTablaListaRefService, pimcBarraEstadoService, pimcComentarios, $scope, 
           $sce, $q, $http, $window, $location, $filter, 
           i18nService, uiGridConstants) {
         var init = function() {
@@ -57,7 +58,11 @@
                 // ANOTACIONES
                 $scope.cargarNotas();
                 // DOCUMENTOS
-                $scope.cargarDocumentos();
+                $scope.cargarDocumentos().then(function () {
+                  // PERSONAJES
+                  $scope.cargarPersonajes(); 
+                });
+                 
             }
         };
 
@@ -114,7 +119,7 @@
             $scope.documentosNuevos = [];
             $scope.documentosAEliminar = [];
             $scope.documentosCambio = false;
-            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Documentos?archivoID=' + $scope.archivoID).then(function(data) {
+            return $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Documentos?archivoID=' + $scope.archivoID).then(function(data) {
                 if (Object.keys(data.data).length != 0) {
                     $scope.documentos = data.data;
                     
@@ -148,8 +153,7 @@
                     });
                     // LOG
                     pimcService.debug($scope.documentos);
-                    // PERSONAJES
-                    $scope.cargarPersonajes();  
+                    return "Success";
                 }
             });
         };
@@ -232,46 +236,27 @@
         }
         
         // Cargar Listado personajes
-        $scope.hayPersonajes = false;
-        $scope.personajes = [];
+        $scope.personajesArchivo = [];
+        $scope.personajesArchivoColumnas = {
+          campos: [
+            'nombre',
+            'ocupacion',
+            'nacionalidad',
+            'categoria'
+          ],
+          nombres: {
+            'nombre': "Nombre",
+            'ocupacion': "Ocupación",
+            'nacionalidad': "Nacionalidad",
+            'categoria': "Categoria"
+          }
+        };
+
         $scope.cargarPersonajes = function () {
-            $scope.personajes = [];
-            var personajesIDs = [];
-            $scope.documentos.forEach(function (doc) {
-                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/DocumentosRefPersonajes',
-                          { params:{
-                              documentoID: doc.documentoID
-                            }
-                }).then(function(data) {
-                    if (Object.keys(data.data).length != 0) {
-                        var listaReferencias = data.data;
-                        listaReferencias.forEach (function (referencia) {
-                            var personajeID = referencia.personajeID;
-                            if (!personajesIDs.includes(personajeID)) {
-                                personajesIDs.push(personajeID);
-                                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Personajes',
-                                          { params:{
-                                              personajeID: personajeID
-                                            }
-                                }).then(function(data) {
-                                    if (Object.keys(data.data).length != 0) {
-                                        var personaje = data.data[0];
-                                        personaje.documentosReferencias = [doc.documentoID];
-                                        $scope.personajes.push(personaje);
-                                        $scope.hayPersonajes = true;
-                                    }
-                                });
-                            } else {
-                                // Add the reference to this document
-                                $scope.personajes.forEach (function (personaje) {
-                                    if (!personaje.documentosReferencias.includes[doc.documentoID])
-                                        personaje.documentosReferencias = [doc.documentoID];
-                                });
-                            }
-                        });
-                    }
-                });
-            });
+          pimcTablaListaRefService.cargarElementos("Personajes", $scope.archivoID, $scope.documentos)
+          .then(function(personajes) {
+            $scope.personajesArchivo = personajes;
+          })
         };
         $scope.abrirPersonaje = function (personajeSel) {
             pimcService.debug("Abriendo documento" + personajeSel);

@@ -1,0 +1,19 @@
+<div class="row p-t-2" ng-show="!refTablaCtrl.valoresInt || refTablaCtrl.valoresInt.length === 0">
+    <span>Este Archivo no hace referencia a ningún(a) {{refTablaCtrl.elementoRelacionalInt}}</span>
+</div>
+<div class="row p-t-2" ng-show="refTablaCtrl.valoresInt && refTablaCtrl.valoresInt.length > 0">
+    <div class="col-sm-12">
+        <table>
+            <tr>
+                <th ng-repeat="campo in refTablaCtrl.camposColumnasInt">{{refTablaCtrl.nombresColumnasInt[campo] || campo}}
+                </th> <th> Documentos referencia </th>
+            </tr>
+            <tr ng-click="refTablaCtrl.abrirSeleccionado(valor)" ng-repeat="valor in refTablaCtrl.valoresInt track by $index ">
+                <td ng-repeat="campo in refTablaCtrl.camposColumnasInt">
+                    {{valor.contenido[campo]}}
+                </td>
+                <td>{{valor.documentosID.join(", ")</td>
+            </tr>
+        </table>
+    </div>
+</div>

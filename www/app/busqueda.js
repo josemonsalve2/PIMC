@@ -29,7 +29,7 @@
         $scope.tablaResultados = {
             enableRowSelection: true,
             enableSelectAll: true,
-            multiSelect: false,
+            multiSelect: true,
             data: {}
         };
         $scope.tablaResultados.columnDefs = [
