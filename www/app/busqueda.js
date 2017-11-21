@@ -51,8 +51,8 @@
             return $http.get(consultaTodosArchivos).then(function (data) {
                 data.data.forEach(function changeDates(row, index) {
                     if (row.fechaInicial !== null) {
-                        row.fechaInicial = $filter('date')(new Date(row.fechaInicial), String(row.fechaInicialFormato).toLowerCase());
-                        row.fechaFinal = $filter('date')(new Date(row.fechaFinal), String(row.fechaInicialFormato).toLowerCase());
+                        row.fechaInicial = (row.fechaInicial && row.fechaInicial.length != 0) ? $filter('date')(new Date(row.fechaInicial), String(row.fechaInicialFormato).toLowerCase(), 'UTC') : null;
+                        row.fechaFinal =  (row.fechaFinal && row.fechaFinal.length != 0) ? $filter('date')(new Date(row.fechaFinal), String(row.fechaFinalFormato).toLowerCase(), 'UTC') : null;
                     }
                 });
                 $scope.tablaResultados.data = data.data;

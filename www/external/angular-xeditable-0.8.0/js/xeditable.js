@@ -2461,7 +2461,7 @@ angular.module('xeditable').factory('editableCombodate', [function() {
         }
       }
       
-      dt = moment([values.year, values.month, values.day, values.hour, values.minute, values.second]);
+      dt = moment.utc([values.year, values.month, values.day, values.hour, values.minute, values.second]);
       
       //highlight invalid date
       this.highlight(dt);
@@ -2480,7 +2480,7 @@ angular.module('xeditable').factory('editableCombodate', [function() {
     }
 
       // parse in strict mode (third param `true`)
-      var dt = typeof value === 'string' ? moment(value, this.options.format, true) : moment(value),
+      var dt = typeof value === 'string' ? moment.utc(value, this.options.format, true) : moment.utc(value),
       that = this,
       values = {};
       

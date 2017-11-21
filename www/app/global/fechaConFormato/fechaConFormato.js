@@ -101,7 +101,7 @@
           pimcFechaConFormatoCtrl.fechaInt = null;
         } else {
           // Si hay fecha hacemos el parsing
-          pimcFechaConFormatoCtrl.fechaInt = new Date($window.angular.copy(pimcFechaConFormatoCtrl.fecha));
+          pimcFechaConFormatoCtrl.fechaInt = moment.utc($window.angular.copy(pimcFechaConFormatoCtrl.fecha)).toDate();
         }
       }
     };
@@ -113,6 +113,7 @@
 
       // Revisamos si sin fecha fue seleccionado
       if (pimcFechaConFormatoCtrl.formatoSeleccionado.value == 0) {
+        pimcFechaConFormatoCtrl.fechaInt = null;
         pimcFechaConFormatoCtrl.reportarCambio({
           fecha: null,
           formato: ""
@@ -131,7 +132,7 @@
       var formatDate = "";
       // xeditable retorna un string, hay que pasarlo a date. 
       if (!(pimcFechaConFormatoCtrl.fechaInt instanceof Date)) {
-        pimcFechaConFormatoCtrl.fechaInt = moment(pimcFechaConFormatoCtrl.fechaInt).toDate();
+        pimcFechaConFormatoCtrl.fechaInt = moment.utc(pimcFechaConFormatoCtrl.fechaInt).toDate();
       }
       if (pimcFechaConFormatoCtrl.fechaInt)
         // cambiamos fecha para soporte de database
