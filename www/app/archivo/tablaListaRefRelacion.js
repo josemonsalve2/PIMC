@@ -20,7 +20,7 @@
           return $q.when(false);
         }
         // Variable para deferrir las conexioens
-        var conexiones = [];
+        var conexionesDocumentos = [];
         // Variable para los resultados
         var elementos = [];
 
@@ -28,83 +28,104 @@
         // elemento relacional
         angular.forEach(documentos, function (documento) {
           var documentoID = documento.documentoID;
+          var idNombre = pimcService.idElementoRelaciona[elementoRelacional];
           var UrlConsultaReferencias = pimcService.crearURLOperacion("ConsultarTodos", "DocumentosRef" + elementoRelacional);
           // filtramos por documentoID
           var parametros = {};
           parametros.documentoID = documentoID;
 
-          // obtenemos todas las referencias
-          conexiones.push(
+          // obtenemos todas las referencias de cada documento
+          conexionesDocumentos.push(
             $http.get(UrlConsultaReferencias, {params: parametros})
             .then(function(data) {
+              var resultados = [];
+              var conexionesReferencias = [];
               // revisar si existe alguna relacion entre este documento y este elemento relacional
               if (Object.keys(data.data).length != 0) {
+                var eliminarRepetidos = [];
                 var referenciasTodas = data.data;
+                var arrayReferenciasID = [];
+                // Por cada referencia tenemos que buscar el elemento dentro de la base de datos
                 referenciasTodas.forEach(function(referencia) {
                   var UrlConsultaElementos = pimcService.crearURLOperacion("Consulta", elementoRelacional);
-
                   var parametros = {};
-                  var idNombre =
-                      pimcService.idElementoRelaciona[elementoRelacional];
                   parametros[idNombre] = referencia[idNombre];
-                  var yaExiste = false;
-
-                  // Revisamos si ya habiamos cargado esta referencia en otro documento
-                  angular.forEach(elementos, function(elementoPrevio) {
-                    if (elementoPrevio.contenido[idNombre] == referencia[idNombre]) {
-                      yaExiste = true;
-                      elementoPrevio.documentosID.push(documentoID);
-                      elementoPrevio.referenciasID.push(referencia.referenciaID);
-                    }
-                  });
                   // Obtenemos todos los datos de la referencia
-                  conexiones.push(
-                  $http
-                    .get(UrlConsultaElementos, { params: parametros })
-                    .then(function(data) {
-                      // Obtenemos la informacion
-                      var datosContenido = data.data[0];
-
-                      // Creamos el nuevo elemento
-                      var nuevoElemento = {};
-                      nuevoElemento.documentosID = [];
-                      nuevoElemento.documentosID.push(documentoID);
-                      nuevoElemento.referenciaID = [];
-                      nuevoElemento.referenciaID.push(referencia.referenciaID);
-                      nuevoElemento.contenido = datosContenido;
-                      elementos.push(nuevoElemento);
-                    })
-                  );
+                  conexionesReferencias.push($http.get(UrlConsultaElementos, { params: parametros }));
+                  arrayReferenciasID.push(referencia.referenciaID);
                 });
+              } // Fin Objects.keys...
+
+              // Obtenemos la informacion del elemento relacional
+              if (conexionesReferencias.length != 0) {
+                return $q.all(conexionesReferencias).then(function(respuestas) {
+                  // Por cada respuesta...
+                  for (var res in respuestas) {
+                    // Obtenemos la informacion
+                    var datosContenido = respuestas[res].data[0];
+
+                    // Creamos el nuevo elemento
+                    var nuevoElemento = {};
+                    nuevoElemento.documentosID = [];
+                    nuevoElemento.documentosID.push(documentoID);
+                    nuevoElemento.referenciasID = [];
+                    nuevoElemento.referenciasID.push(arrayReferenciasID[res]);
+                    nuevoElemento.contenido = datosContenido;
+                    resultados.push(nuevoElemento);
+                  }
+                  return $q.when(resultados);
+                }, function (respuesta) {
+                  pimcService.debug("[ERROR] CARGANDO = " + elementoRelacional + " de Archivo " + archivoID + " y documento " + documentoID + " Respuesta = " + respuesta);
+                  return $q.reject("Error cargando documento " + documentoID);
+                });
+              } else {
+                return $q.when([]);                
               }
             })
           );
-          if (conexiones.length != 0) {
-            return $q.all(conexiones).then(function(data) {
-              // LOG
-              pimcService.debug(elementos);
-              return elementos;
-            }, function (response) {
-              pimcService.debug("[ERROR][CARGANDO = " + elementoRelacional + "] de Archivo: " + response);
-              return $q.reject("Error en tabla referencia " +  elementoRelacional + " del Archivo");
-            });
-          }
-          else {
-            pimcService.debug("El archivo no tiene ningun personaje relacionado")
-            return $q.when(false);
-          }
         });
+        if (conexionesDocumentos.length != 0) {
+          return $q.all(conexionesDocumentos).then(function(resultados) {
+            // LOG
+            for (var res in resultados) {
+              // Purgamos los elementos repetidos
+              angular.forEach(elementos, function (elementoPrevio) { 
+                for (var i = resultados[res].length - 1; i >= 0; i--) {
+                  var elementoNuevo = resultados[res][i];
+                  if (elementoPrevio.contenido[idNombre] === elementoNuevo.contenido[idNombre]) {
+                    // agregamos los valores al elemento viejo y quitamos el elemento 
+                    elementoPrevio.referenciasID = elementoPrevio.referenciasID.concat(elementoNuevo.referenciasID);
+                    elementoPrevio.documentosID = elementoPrevio.documentosID.concat(elementoNuevo.documentosID);
+                    resultados[res].splice(i, 1);
+                  }                  
+                };
+              });
+              elementos = elementos.concat(resultados[res]);
+            }
+            pimcService.debug(elementos);
+            return $q.when(elementos);
+          }, function (respuesta) {
+            pimcService.debug("[ERROR]["+ elementoRelacional + "] referencias de archivo: " + archivoID + " Respuesta = " + respuesta);
+            return $q.reject("Error en tabla referencia " +  elementoRelacional + " del Archivo " + archivoID);
+          });
+        }
+        else {
+          pimcService.debug("El archivo no tiene ningun " + elementoRelacional + " relacionado")
+          return $q.when([]);
+        }
       }; // Fin de cargar documento
     } // Fin de service constructor
   ]); // Fin de service
 
   tablaListaRefModule.controller("tablaListaRefController", [
     "pimcService",
+    "pimcMenuService",
     "pimcBarraEstadoService",
     "pimcTablaListaRefService",
     "$window",
     function(
       pimcService,
+      pimcMenuService,
       pimcBarraEstadoService,
       pimcTablaRefElementoService,
       $window
@@ -161,7 +182,7 @@
           refTablaCtrl.elementoRelacionalInt +
           " " +
           seleccionado);
-          pimcService.abrirElemento(
+          pimcMenuService.abrirElemento(
             refTablaCtrl.elementoRelacionalInt, // elemento relacional
             seleccionado, // id elemento relacional,
             textoMenu, // texto en el menu
