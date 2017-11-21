@@ -79,14 +79,20 @@
               }
             })
           );
-          return $q.all(conexiones).then(function(data) {
-            // LOG
-            pimcService.debug(elementos);
-            return elementos;
-          }, function (response) {
-            pimcService.debug("[ERROR][CARGANDO = " + elementoRelacional + "] de Archivo: " + response);
-            return $q.reject("Error en tabla referencia " +  elementoRelacional + " del Archivo");
-        });
+          if (conexiones.length != 0) {
+            return $q.all(conexiones).then(function(data) {
+              // LOG
+              pimcService.debug(elementos);
+              return elementos;
+            }, function (response) {
+              pimcService.debug("[ERROR][CARGANDO = " + elementoRelacional + "] de Archivo: " + response);
+              return $q.reject("Error en tabla referencia " +  elementoRelacional + " del Archivo");
+            });
+          }
+          else {
+            pimcService.debug("El archivo no tiene ningun personaje relacionado")
+            return $q.when(false);
+          }
         });
       }; // Fin de cargar documento
     } // Fin de service constructor
