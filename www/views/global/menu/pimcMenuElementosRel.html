@@ -7,6 +7,9 @@
               </a>
               <ul class="dropdown-menu">
                   <li>
+                      <a ng-if="menuElementosCtrl.menuVacio"> No hay ningun elemento abierto</a>
+                  </li>
+                  <li>
                       <a ng-href="#!/archivos" ng-if="menuElementosCtrl.elementosAbiertos.Archivos.length > 0" set-parent-active>Archivos</a>
                   </li>
                   <li ng-repeat="elemento in menuElementosCtrl.elementosAbiertos.Archivos track by $index" class="{{(elemento.seleccionado)? 'active':''}}">

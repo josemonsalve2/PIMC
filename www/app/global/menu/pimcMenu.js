@@ -202,7 +202,7 @@
         var texto = nuevoTexto ? nuevoTexto : "";
     
         // recortamos el texto al maximo:
-        if (texto.lenght > 20) {
+        if (texto.length > 20) {
             texto = texto.substring(0, 17);
             texto = texto + "...";
         }
@@ -222,17 +222,34 @@
         "$window",
         function(pimcMenuService){
             var menuElementosCtrl = this;
+            
             // Para el menu de los elementos abiertos
             menuElementosCtrl.elementosAbiertos = pimcMenuService.elementosAbiertos;
             
             // Cualquier cambio en los elementos abiertos es notificada aca
             menuElementosCtrl.cambiosElementosAbiertos = function () {
                 menuElementosCtrl.elementosAbiertos = pimcMenuService.elementosAbiertos;
+                menuElementosCtrl.menuVacio = menuElementosCtrl.revisarSiMenuVacio();
             }
 
             // Registramos callback para siempre actualizar
             pimcMenuService.registrarNotificacionElementosAbiertos(menuElementosCtrl.cambiosElementosAbiertos);
 
+            // Helper function para revisar si el menu esta vacio o no
+            menuElementosCtrl.revisarSiMenuVacio = function () {
+              var vacio = true;
+              // Revisamos si el menu esta vacio
+              angular.forEach(menuElementosCtrl.elementosAbiertos, function(elemento) {
+                if (elemento.length != 0) {
+                  vacio = false;
+                }
+              });
+              return vacio;
+            }; 
+
+            // Si el menu esta vacio;
+            menuElementosCtrl.menuVacio = menuElementosCtrl.revisarSiMenuVacio();
+            
             menuElementosCtrl.abrirElemento = function (elementoRelacional, idElemento) {
                 pimcMenuService.seleccionarElemento(elementoRelacional, idElemento);
             }
