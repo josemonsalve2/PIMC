@@ -187,9 +187,7 @@
             var seleccionado = $scope.documentos[indexDocumento].documentoID;
             pimcService.debug("Abriendo documento" + seleccionado);
             //TODO Enviar varios seleccionados
-            $window.localStorage.setItem("archivoID", $scope.archivoID);
-            $window.localStorage.setItem("documentoID", seleccionado);
-            $window.location.href = "#!/documentos";
+            pimcMenuService.abrirElemento("Documentos", seleccionado, "documento[" + seleccionado + "] del archivo " + $scope.archivoID, true);
         };
 
 
@@ -258,14 +256,7 @@
             $scope.personajesArchivo = personajes;
           })
         };
-        $scope.abrirPersonaje = function (personajeSel) {
-            pimcService.debug("Abriendo documento" + personajeSel);
-            //TODO Enviar varios seleccionados
-            //TODO Preguntar si desea guardar cambios
-            $window.localStorage.setItem("archivoID", $scope.archivoID);
-            $window.localStorage.setItem("personajeID", personajeSel);
-            $window.location.href = "#!/personajes";
-        };
+        
         // Cargar Listado Embarcaciones
         $scope.hayEmbarcaciones = false;
         $scope.embarcaciones = [];

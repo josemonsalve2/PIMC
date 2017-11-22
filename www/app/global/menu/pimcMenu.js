@@ -87,6 +87,7 @@
 
         // Cambiamos a dicho elemento si asi se especifica
         if (vincular) {
+          $window.location.href = "#!/"; // Forzar recargar
           $window.location.href = "#!/" + elemento;
         }
       };

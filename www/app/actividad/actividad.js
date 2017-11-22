@@ -7,18 +7,19 @@
   'use strict';
 
   var actividadPerfil = angular.module('actividadPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
-  actividadPerfil.controller('actividadPerfilController', ['$scope', '$sce','$q', '$window', '$location', '$filter', '$timeout', 'i18nService', 'pimcActividadService', 'pimcBarraEstadoService', 'pimcComentarios',  function($scope, $sce, $q, $window, $location, $filter, $timeout, i18nService, pimcActividadService, pimcBarraEstadoService, pimcComentarios) {
+  actividadPerfil.controller('actividadPerfilController', ['$scope', 'pimcMenuService', '$sce','$q', '$window', '$location', '$filter', '$timeout', 'i18nService', 'pimcActividadService', 'pimcBarraEstadoService', 'pimcComentarios',  function($scope, pimcMenuService, $sce, $q, $window, $location, $filter, $timeout, i18nService, pimcActividadService, pimcBarraEstadoService, pimcComentarios) {
     $scope.actividadID = -1;
     
     // Funcion de inicializacion
     var init = function() {
-      $scope.actividadID = $window.localStorage.getItem("actividadID");
+      var actividadSeleccionada = pimcMenuService.obtenerElementoSeleccionado("Actividades");
       // If not set, redirect.
-      if (!$scope.actividadID) {
-        console.log("No hay actividadID");
+      if (!actividadSeleccionada) {
+        pimcService.debug("No hay un archivo seleccionado");
         //TODO Enviar varios seleccionados
-        $window.location.href = "#!/busqueda";
+        $window.location.href = "#!/";
       } else {
+        $scope.actividadID = actividadSeleccionada.id;
         if (!$scope.datosGuardados) {
           pimcBarraEstadoService.registrarAccion("Actividad <strong>" + $scope.embarcacionID + "</strong> ha sido cargado");
         } else {

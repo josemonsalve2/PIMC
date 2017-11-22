@@ -4,7 +4,7 @@
 
     var embarcacionPerfil = angular.module('embarcacionPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
     
-    embarcacionPerfil.controller('embarcacionPerfilController', ['$scope', '$q', '$http', '$window', '$filter', 'uiGridConstants', 'i18nService', 'crearLugarTerritorio','pimcService', 'pimcComentarios', 'pimcBarraEstadoService', function($scope, $q, $http, $window, $filter,  uiGridConstants, i18nService, crearLugarTerritorio, pimcService, pimcComentarios, pimcBarraEstadoService  ) {
+    embarcacionPerfil.controller('embarcacionPerfilController', ['$scope', 'pimcMenuService', '$q', '$http', '$window', '$filter', 'uiGridConstants', 'i18nService', 'crearLugarTerritorio','pimcService', 'pimcComentarios', 'pimcBarraEstadoService', function($scope, pimcMenuService, $q, $http, $window, $filter,  uiGridConstants, i18nService, crearLugarTerritorio, pimcService, pimcComentarios, pimcBarraEstadoService  ) {
         $scope.embarcacionID = -1;
         
         $scope.datosEstados = {
@@ -22,13 +22,14 @@
         $scope.valorDatoNuevo = "<<Nuevo>>";
         
         var init = function() {
-            $scope.embarcacionID = $window.localStorage.getItem("embarcacionID");
+            var embarcacionSeleccionada = pimcMenuService.obtenerElementoSeleccionado("Embarcaciones");
             // If not set, redirect.
-            if (!$scope.embarcacionID) {
-                console.log("No hay embarcacionID");
-                //TODO Enviar varios seleccionados
-                $window.location.href = "#!/busqueda";
+            if (!embarcacionSeleccionada) {
+              pimcService.debug("No hay una embarcacion seleccionado");
+              //TODO Enviar varios seleccionados
+              $window.location.href = "#!/";
             } else {
+              $scope.embarcacionID = embarcacionSeleccionada.id;
                 if (!$scope.datosGuardados) {
                     pimcBarraEstadoService.registrarAccion("Embarcacion <strong>" + $scope.embarcacionID + "</strong> ha sido cargado");
                 } else {

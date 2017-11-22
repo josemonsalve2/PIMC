@@ -165,7 +165,13 @@
             }
         }]);
     
-        tablaRefElementoRelacionalModule.controller('pimcRefTablaController', ['pimcService', 'pimcBarraEstadoService', 'pimcTablaRefElementoService', '$window', function (pimcService, pimcBarraEstadoService, pimcTablaRefElementoService, $window) {
+        tablaRefElementoRelacionalModule.controller('pimcRefTablaController', 
+            ['pimcService', 
+            'pimcBarraEstadoService',
+            'pimcMenuService', 
+            'pimcTablaRefElementoService', 
+            '$window', 
+            function (pimcService, pimcBarraEstadoService, pimcMenuService, pimcTablaRefElementoService, $window) {
             var refTablaCtrl = this;
             refTablaCtrl.valoresInt = [];
             refTablaCtrl.activarBorrarExistentes = false;
@@ -211,18 +217,22 @@
 
             // Permite abrir elemento seleccionado
             refTablaCtrl.abrirSeleccionado = function (valor) {
+                // Obtenemos las columnas de ID y de nombre
+                var idColumna =
+                    pimcService.idElementoRelaciona[refTablaCtrl.elementoRelacionalInt];
+                var seleccionado = valor.contenido[idColumna];
+                var nombreColumna =
+                    pimcService.nombreColElementoRelacional[refTablaCtrl.elementoRelacionalInt];
+
+                // Obtenemos el index del elemento seleccioando
                 var index = refTablaCtrl.valoresInt.indexOf(valor);
                 var seleccionado = -1;
-                if (valor.estado != pimcService.datosEstados.INSERTADO) {
-                    var idNombre = pimcService.idElementoRelaciona[refTablaCtrl.elementoRelacionalInt];
-                    seleccionado = valor.contenido[idNombre];
+                if (valor.estado != pimcService.datosEstados.INSERTADO) {                    
+                    seleccionado = valor.contenido[idColumna];
                 }
                 if (seleccionado != -1) {
                     pimcService.debug("Abriendo " + refTablaCtrl.elementoRelacionalInt + " " + seleccionado);
-                    //TODO Enviar varios seleccionados
-                    //TODO Preguntar si desea guardar cambios
-                    $window.localStorage.setItem(idNombre, seleccionado);
-                    $window.location.href = "#!/"+refTablaCtrl.elementoRelacionalInt;
+                    pimcMenuService.abrirElemento(refTablaCtrl.elementoRelacionalInt, valor.contenido[idColumna], valor.contenido[nombreColumna], true);
                 }
             }
 
@@ -352,29 +362,29 @@
                         else if (tipoCol === refTablaCtrl.tiposColumnas.LUGAR ||
                             tipoCol === refTablaCtrl.tipoCol.propiedades[2].nombre ||
                             tipoCol === refTablaCtrl.tipoCol.propiedades[2].code)
-                            return refTablaCtrl.tipoColumnas.LUGAR;
+                            return refTablaCtrl.tiposColumnas.LUGAR;
                         else
                             return refTablaCtrl.tiposColumnas.TEXTO;
                     }
                 } else {
-                    return refTablaCtrl.tipoColumnas.TEXTO;
+                    return refTablaCtrl.tiposColumnas.TEXTO;
                 }
 
             }
 
             // Revisamos si la columan es texto
             refTablaCtrl.columnaEsTexto = function (campo) {
-                return refTablaCtrl.obtenerTipoColumna(campo) === refTablaCtrl.tipoColumnas.TEXTO;
+                return refTablaCtrl.obtenerTipoColumna(campo) === refTablaCtrl.tiposColumnas.TEXTO;
             }
 
             // Revisamos si la columna es fecha
             refTablaCtrl.columnaEsDate = function (campo) {
-                return refTablaCtrl.obtenerTipoColumna(campo) === refTablaCtrl.tipoColumnas.DATE;
+                return refTablaCtrl.obtenerTipoColumna(campo) === refTablaCtrl.tiposColumnas.DATE;
             }
 
             // Revisamos si la columna es lugar
             refTablaCtrl.columnaEsLugar = function (campo) {
-                return refTablaCtrl.obtenerTipoColumna(campo) === refTablaCtrl.tipoColumnas.LUGAR;
+                return refTablaCtrl.obtenerTipoColumna(campo) === refTablaCtrl.tiposColumnas.LUGAR;
             }
 
             // Fechas 

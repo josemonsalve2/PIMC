@@ -6,18 +6,52 @@
 
     'use strict';
     
-    var personajePerfil = angular.module('personajePerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
-    personajePerfil.controller('personajePerfilController', ['$scope', '$sce','$q', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', function($scope, $sce, $q, $http, $window, $location, $filter, $timeout, i18nService, uiGridConstants) {
+    var personajePerfil = angular.module('personajePerfil', 
+        ['ngAnimate', 
+         'ngSanitize', 
+         'ui.bootstrap', 
+         'ui.grid', 
+         'ngTouch', 
+         'ui.grid.edit', 
+         'ui.grid.autoResize', 
+         'ui.grid.selection', 
+         'ui.grid.cellNav', 
+         'xeditable']);
+
+    personajePerfil.controller('personajePerfilController', 
+        ['$scope', 
+         'pimcMenuService',
+         '$sce',
+         '$q', 
+         '$http', 
+         '$window', 
+         '$location', 
+         '$filter', 
+         '$timeout', 
+         'i18nService', 
+         'uiGridConstants', 
+        function($scope, 
+            pimcMenuService,
+            $sce, 
+            $q, 
+            $http, 
+            $window, 
+            $location, 
+            $filter, 
+            $timeout, 
+            i18nService, 
+            uiGridConstants) {
         $scope.personajeID = -1;
         
         var init = function() {
-            $scope.personajeID = $window.localStorage.getItem("personajeID");
+            var personajeSeleccionado = pimcMenuService.obtenerElementoSeleccionado("Personajes");
             // If not set, redirect.
-            if (!$scope.personajeID) {
-                console.log("No hay personajeID");
-                //TODO Enviar varios seleccionados
-                $window.location.href = "#!/busqueda";
+            if (!personajeSeleccionado) {
+              pimcService.debug("No hay un personaje seleccionado");
+              //TODO Enviar varios seleccionados
+              $window.location.href = "#!/";
             } else {
+              $scope.personajeID = personajeSeleccionado.id;
                 if (!$scope.datosGuardados) {
                     $scope.registrarAccion("Personaje <strong>" + $scope.personajeID + "</strong> ha sido cargado");
                 } else {
@@ -260,10 +294,9 @@
                 seleccionado = $scope.parentescos[index].parienteID;
             }
             if (seleccionado != -1) {
-                console.log("Abriendo documento" + seleccionado);
-                //TODO Enviar varios seleccionados
-                $window.localStorage.setItem("personajeID", seleccionado);
-                $window.location.reload();
+                console.log("Abriendo personaje " + seleccionado);
+
+                pimcMenuService.abrirElemento("Personajes", seleccionado, $scope.parentescos[index].nombrePersonaje, true);
             }
         };
         $scope.revisarSiParentescoExiste = function ($value) {
