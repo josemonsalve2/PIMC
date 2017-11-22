@@ -1,3 +1,4 @@
+import traceback
 from flask import Flask
 from flask import jsonify
 from flask_mysqldb import MySQL
@@ -316,7 +317,7 @@ def insertarElementoRelacionalPIMC0_2(elemento_relacional):
       except ValueError as e:
         raise InvalidUsage("ERROR: " + str(e), status_code = 400)
       except Exception as e:
-        raise InvalidUsage("ERROR: " + str(e), status_code = 400)
+        raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
     else:
       raise InvalidUsage('No se enviaron argumentos', status_code = 400)
   else:
