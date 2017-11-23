@@ -136,7 +136,7 @@ def consultarElementoRelacional(elemento_relacional):
                         result = [{columns[index][0]:column for index, column in enumerate(value)} for value in rv]
                         return jsonify(result)
                     else:
-                        return jsonify({});
+                        return jsonify({})
                 else:
                     raise InvalidUsage('No se enviaron parametros para consultar', status_code=400)
                     return
@@ -201,7 +201,7 @@ def eliminarElementoRelacional(elemento_relacional):
             try:
                 cur = mysql.connection.cursor()
                 querry = '''DELETE FROM ''' + str(elemento_relacional) + ''' WHERE '''
-                primaryKey = [];
+                primaryKey = []
                 inserted = False
                 # we find the keys first
                 for col,value in request.args.to_dict().items():
@@ -210,7 +210,7 @@ def eliminarElementoRelacional(elemento_relacional):
                         try:
                             querry = querry + value + " = " + request.args.get(value) + " AND "
                         except Exception as e:
-                            inserted = False;
+                            inserted = False
                             raise InvalidUsage('idUnico es invalido', status_code=400)
                             return
                 #Revisamos que si haya una llave primaria para identificar el elemento
@@ -239,7 +239,7 @@ def modificarElementoRelacional(elemento_relacional):
             try:
                 cur = mysql.connection.cursor()
                 querry = '''UPDATE ''' + str(elemento_relacional) + ''' SET ''' 
-                primaryKey = [];
+                primaryKey = []
                 inserted = False
                 # we find the keys first
                 for col,value in request.args.to_dict().items():
@@ -259,7 +259,7 @@ def modificarElementoRelacional(elemento_relacional):
                         try:
                             querry = querry + keyName + " = " + request.args.get(keyName) + " AND "
                         except Exception as e:
-                            inserted = False;
+                            inserted = False
                             return "No se encontro un valor para el idUnico=" + keyName 
                     #removemos el ultimo AND
                     querry = querry[:-5]
@@ -300,7 +300,7 @@ def autocompletarElementoRelacionar(elemento_relacional):
                     result = [{columns[index][0]:column for index, column in enumerate(value)} for value in rv]
                     return jsonify(result)
                 else:
-                    return "0";
+                    return "0"
             except Exception as e:
                 return(str(e))
 
@@ -327,7 +327,7 @@ def insertarElementoRelacionalPIMC0_2(elemento_relacional):
 @app.route("/PIMC0.2/Consulta/<elemento_relacional>", methods=['GET'])
 def consultarElementoRelacionalPIMC0_2(elemento_relacional):
   if request.method == 'GET':
-    data = request.args.to_dict();
+    data = request.args.to_dict()
     if data:
       try: 
         return pimcAPI.consultarElemento(elemento_relacional, data)
@@ -343,7 +343,7 @@ def consultarElementoRelacionalPIMC0_2(elemento_relacional):
 @app.route("/PIMC0.2/Eliminar/<elemento_relacional>", methods=['DELETE'])
 def eliminarElementoRelacionalPIMC0_2(elemento_relacional):
   if request.method == 'DELETE':
-    data = request.args.to_dict();
+    data = request.args.to_dict()
     if data:
       try: 
         return pimcAPI.eliminarElemento(elemento_relacional, data)
@@ -359,7 +359,7 @@ def eliminarElementoRelacionalPIMC0_2(elemento_relacional):
 @app.route("/PIMC0.2/Modificar/<elemento_relacional>", methods=['POST'])
 def modificarElementoRelacionalPIMC0_2(elemento_relacional):
   if request.method == 'POST':
-    data = request.get_json();
+    data = request.get_json()
     if data:
       try: 
         return pimcAPI.modificarElemento(elemento_relacional, data)
