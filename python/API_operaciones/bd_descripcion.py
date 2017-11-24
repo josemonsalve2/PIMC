@@ -29,8 +29,8 @@ class bd_descripcion:
                 JOIN information_schema.key_column_usage k \
                 USING(constraint_name,table_schema,table_name) \
                 WHERE t.constraint_type='PRIMARY KEY' \
-                AND t.table_schema='%s' \
-                AND t.table_name='%s'"
+                AND t.table_schema=%s \
+                AND t.table_name=%s"
       db_cursor.execute(querry, (app.config['MYSQL_DB'], tabla[0],))
       llave = db_cursor.fetchone()
       self.insertarIdPrincipalTabla(tabla[0], llave[0])
