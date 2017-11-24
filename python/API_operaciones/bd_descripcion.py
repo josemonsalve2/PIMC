@@ -31,18 +31,18 @@ class bd_descripcion:
                 WHERE t.constraint_type='PRIMARY KEY' \
                 AND t.table_schema='%s' \
                 AND t.table_name='%s'"
-      db_cursor.execute(querry, (app.config['MYSQL_DB'], tabla,))
+      db_cursor.execute(querry, (app.config['MYSQL_DB'], tabla[0],))
       llave = db_cursor.fetchone()
-      self.insertarIdPrincipalTabla(tabla, llave[0])
+      self.insertarIdPrincipalTabla(tabla[0], llave[0])
       # Obtenemos los nombres de las columnas 
       querry = "SELECT `COLUMN_NAME`\
                 FROM `INFORMATION_SCHEMA`.`COLUMNS`\
                 WHERE `TABLE_SCHEMA`='%s'\
                 AND `TABLE_NAME`='%s'"
-      db_cursor.execute(querry, (app.config['MYSQL_DB'], tabla))
+      db_cursor.execute(querry, (app.config['MYSQL_DB'], tabla[0]))
       columnas = db_cursor.fetchall()
       for columna in columnas:
-        self.insertarDescripcion(tabla, columna[0])
+        self.insertarDescripcion(tabla[0], columna[0])
   
   """ Permite insertar el nombre de una tabla"""
   def insertarTabla(self, nuevasTablas):
