@@ -333,8 +333,8 @@ def consultarElementoRelacionalPIMC0_2(elemento_relacional):
         return pimcAPI.consultarElemento(elemento_relacional, data)
       except ValueError as e:
         raise InvalidUsage("ERROR: " + str(e), status_code = 400)
-      #except Exception as e:
-      #  raise InvalidUsage("ERROR: " + str(e), status_code = 400)
+      except Exception as e:
+        raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
     else:
       raise InvalidUsage('No se enviaron argumentos', status_code = 400)
   else:
@@ -349,8 +349,8 @@ def eliminarElementoRelacionalPIMC0_2(elemento_relacional):
         return pimcAPI.eliminarElemento(elemento_relacional, data)
       except ValueError as e:
         raise InvalidUsage("ERROR: " + str(e), status_code = 400)
-      #except Exception as e:
-      #  raise InvalidUsage("ERROR: " + str(e), status_code = 400)
+      except Exception as e:
+        raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
     else:
       raise InvalidUsage('No se enviaron argumentos', status_code = 400)
   else:
@@ -365,8 +365,8 @@ def modificarElementoRelacionalPIMC0_2(elemento_relacional):
         return pimcAPI.modificarElemento(elemento_relacional, data)
       except ValueError as e:
         raise InvalidUsage("ERROR: " + str(e), status_code = 400)
-      #except Exception as e:
-      #  raise InvalidUsage("ERROR: " + str(e), status_code = 400)
+      except Exception as e:
+        raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
     else:
       raise InvalidUsage('No se enviaron argumentos', status_code = 400)
   else:
@@ -382,8 +382,8 @@ def consultarTodosFiltroPIMC0_2(elemento_relacional):
       return pimcAPI.consultarTodosFiltro(elemento_relacional, data)
     except ValueError as e:
       raise InvalidUsage("ERROR: " + str(e), status_code = 400)
-    #except Exception as e:
-    #  raise InvalidUsage("ERROR: " + str(e), status_code = 400)
+    except Exception as e:
+        raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
   else:
     return ""
   
