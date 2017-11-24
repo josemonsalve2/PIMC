@@ -4,7 +4,7 @@ from API_operaciones.mysql_connection import app
 import MySQLdb
 
 def print_err(*args, **kwargs):
-    print(*args, file=stderr, **kwargs)
+  print(*args, file=stderr, **kwargs)
 
 class bd_descripcion:
   """ Esta clase tiene metodos para revisar 
@@ -15,8 +15,18 @@ class bd_descripcion:
   
   """ Constructor"""
   def __init__(self):
-    db_cursor = mysql.cursor()
+    self.llenarInformacion()
+
+  def imprimirInformacion(self):
+    for tabla in self.tablas:
+      print('self.insertarTabla("' + tabla + ')')
+      for descripcion in self.descripcionTablas[tabla]:
+        print('self.insertarDescripcion("' + tabla + ', "' + descripcion + '")')
+      print('self.insertarIdPrincipalTabla("' + tabla + ', "' + self.idPorTabla[tabla] + '")')
+
+  def llenarInformacion(self):
     # Obtenemos todos los nombres de las tablas
+    db_cursor = mysql.cursor()
     querry = "SHOW TABLES"
     db_cursor.execute(querry)
     tablasDB = db_cursor.fetchall()
@@ -24,22 +34,13 @@ class bd_descripcion:
     for tabla in tablasDB:
       self.insertarTabla(tabla[0])
       # Obtenemos la llave primaria
-      querry = "SELECT k.column_name \
-                FROM information_schema.table_constraints t \
-                JOIN information_schema.key_column_usage k \
-                USING(constraint_name,table_schema,table_name) \
-                WHERE t.constraint_type='PRIMARY KEY' \
-                AND t.table_schema=%s \
-                AND t.table_name=%s"
-      db_cursor.execute(querry, (app.config['MYSQL_DB'], tabla[0],))
+      querry = "SHOW KEYS FROM " + tabla[0] + " WHERE Key_name = 'PRIMARY'"
+      db_cursor.execute(querry)
       llave = db_cursor.fetchone()
-      self.insertarIdPrincipalTabla(tabla[0], llave[0])
+      self.insertarIdPrincipalTabla(tabla[0], llave[4])
       # Obtenemos los nombres de las columnas 
-      querry = "SELECT `COLUMN_NAME`\
-                FROM `INFORMATION_SCHEMA`.`COLUMNS`\
-                WHERE `TABLE_SCHEMA`=%s\
-                AND `TABLE_NAME`=%s"
-      db_cursor.execute(querry, (app.config['MYSQL_DB'], tabla[0]))
+      querry = "SHOW COLUMNS FROM " + tabla[0]
+      db_cursor.execute(querry)
       columnas = db_cursor.fetchall()
       for columna in columnas:
         self.insertarDescripcion(tabla[0], columna[0])
