@@ -37,8 +37,8 @@ class bd_descripcion:
       # Obtenemos los nombres de las columnas 
       querry = "SELECT `COLUMN_NAME`\
                 FROM `INFORMATION_SCHEMA`.`COLUMNS`\
-                WHERE `TABLE_SCHEMA`='%s'\
-                AND `TABLE_NAME`='%s'"
+                WHERE `TABLE_SCHEMA`=%s\
+                AND `TABLE_NAME`=%s"
       db_cursor.execute(querry, (app.config['MYSQL_DB'], tabla[0]))
       columnas = db_cursor.fetchall()
       for columna in columnas:
