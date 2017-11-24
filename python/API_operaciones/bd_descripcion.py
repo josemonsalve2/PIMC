@@ -21,7 +21,7 @@ class bd_descripcion:
     db_cursor.execute(querry)
     tablasDB = db_cursor.fetchall()
     # Por cada tabla
-    for (tabla in tablasDB):
+    for tabla in tablasDB:
       self.insertarTabla(tabla[0])
       # Obtenemos la llave primaria
       querry = "SELECT k.column_name \
@@ -41,7 +41,7 @@ class bd_descripcion:
                 AND `TABLE_NAME`='%s'"
       db_cursor.execute(querry, (app.config['MYSQL_DB'], tabla))
       columnas = db_cursor.fetchall()
-      for (columna in columnas):
+      for columna in columnas:
         self.insertarDescripcion(tabla, columna[0])
   
   """ Permite insertar el nombre de una tabla"""
