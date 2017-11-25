@@ -140,7 +140,8 @@
                 elementoAInsertar.nombreMostrar = '(L) ' + elementoAInsertar.nombre;
               } else if (valor.territorioID) {
                 elementoAInsertar.lugarTerritorioID = valor.territorioID;
-                elementoAInsertar.lugarOTerritorio = 'territorio';                               elementoAInsertar.nombreMostrar = '(T) ' + elementoAInsertar.nombre;
+                elementoAInsertar.lugarOTerritorio = 'territorio';
+                elementoAInsertar.nombreMostrar = '(T) ' + elementoAInsertar.nombre;
               }
               listaLugaresTerritorios.push(elementoAInsertar);
             });
@@ -153,7 +154,13 @@
 
   }]);
 
-  lugarTerritorioModule.controller('pimcLugarTerritorioCampoController', ['$http', '$q', 'pimcService', 'crearLugarTerritorio','pimcLugarTerritorioService', function($http, $q, pimcService, crearLugarTerritorio, pimcLugarTerritorioService) {
+  lugarTerritorioModule.controller('pimcLugarTerritorioCampoController', 
+      ['$http', 
+       '$q', 
+       'pimcService', 
+       'crearLugarTerritorio',
+       'pimcLugarTerritorioService', 
+       function($http, $q, pimcService, crearLugarTerritorio, pimcLugarTerritorioService) {
     var pimcLugarTerritorioCampoCtrl = this;
     // Funcion para lugares y territorios
     pimcLugarTerritorioCampoCtrl.$onInit = function () {
