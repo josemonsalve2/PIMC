@@ -508,6 +508,35 @@
             $scope.actividades = valores;
         };
 
+        // EVENTOS : FECHAS Y SUCESOS
+        $scope.eventos = [];
+        $scope.eventosColumnas = [
+            'fecha', 
+            'descripcion', 
+            'categoriaEvento'
+        ];
+        $scope.eventosTiposColumnas = {
+            'fecha': 'Date'
+        }
+        $scope.eventosNombresColumnas = {
+            fecha: "Fecha", 
+            descripcion: "Descripción del evento",
+            categoriaEvento: "Categoria"
+        }
+        $scope.cargarEventos = function () {
+            return pimcTablaRefElementoService.cargarElementos('Eventos', $scope.documentoID).then(
+                function(data) {
+                    $scope.eventos = data;
+                });
+        };
+        $scope.guardarEventos = function () {
+            return pimcTablaRefElementoService.guardarElementos('Eventos', $scope.documentoID, $scope.eventos);
+        };
+        $scope.eventosCambios = function (valores) {
+            $scope.eventos = valores;
+        };
+
+
         // INSTITUCIONES
         $scope.instituciones = [];
         $scope.institucionesColumnas = ['nombre', 'tipoInstitucion', 'categoria'];

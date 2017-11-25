@@ -356,15 +356,17 @@
                     var tipoCol = refTablaCtrl.tipoColumnasInt[campo];
                     if (tipoCol) {
                         if (tipoCol === refTablaCtrl.tiposColumnas.DATE ||
-                            tipoCol === refTablaCtrl.tipoCol.propiedades[1].nombre ||
-                            tipoCol === refTablaCtrl.tipoCol.propiedades[1].code)
+                            tipoCol === refTablaCtrl.tiposColumnas.propiedades[1].nombre ||
+                            tipoCol === refTablaCtrl.tiposColumnas.propiedades[1].code)
                             return refTablaCtrl.tiposColumnas.DATE;
                         else if (tipoCol === refTablaCtrl.tiposColumnas.LUGAR ||
-                            tipoCol === refTablaCtrl.tipoCol.propiedades[2].nombre ||
-                            tipoCol === refTablaCtrl.tipoCol.propiedades[2].code)
+                            tipoCol === refTablaCtrl.tiposColumnas.propiedades[2].nombre ||
+                            tipoCol === refTablaCtrl.tiposColumnas.propiedades[2].code)
                             return refTablaCtrl.tiposColumnas.LUGAR;
                         else
                             return refTablaCtrl.tiposColumnas.TEXTO;
+                    } else {
+                        return refTablaCtrl.tiposColumnas.TEXTO;                        
                     }
                 } else {
                     return refTablaCtrl.tiposColumnas.TEXTO;
@@ -387,10 +389,11 @@
                 return refTablaCtrl.obtenerTipoColumna(campo) === refTablaCtrl.tiposColumnas.LUGAR;
             }
 
-            // Fechas 
-            refTablaCtrl.obtenerCampoFecha = function (campo) {
-                return campo + "Formato";
+            refTablaCtrl.fechaEditada = function (fecha, formato, valor, campo) {
+                valor.contenido[campo] = fecha;
+                valor.contenido[campo + "Formato"] = formato;
             }
+
         }]);
     
 

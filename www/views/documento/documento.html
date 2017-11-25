@@ -239,7 +239,8 @@
     	<div class="row p-t-2">
     		<div class="col-sm-12">
                 <pimc-tabla-ref-elemento-relacional elemento-relacional='"Personajes"' valores='personajes' campos-columnas='personajesColumnas'
-                    nombres-columnas='personajesNombresColumnas' autocompletar-opciones='autocompletarPersonajesOpciones' reportar-cambio='personajesCambios(valores)'></pimc-tabla-ref-elemento-relacional>
+                    nombres-columnas='personajesNombresColumnas' autocompletar-opciones='autocompletarPersonajesOpciones' reportar-cambio='personajesCambios(valores)'>
+                </pimc-tabla-ref-elemento-relacional>
     		</div>
     	</div>
     </uib-tab>
@@ -249,7 +250,8 @@
         <div class="row p-t-2">
             <div class="col-sm-12">
                 <pimc-tabla-ref-elemento-relacional elemento-relacional='"Embarcaciones"' valores='embarcaciones' campos-columnas='embarcacionesColumnas'
-                    nombres-columnas='embarcacionesNombresColumnas' autocompletar-opciones='autocompletarEmbarcacionesOpciones' reportar-cambio='embarcacionesCambios(valores)'></pimc-tabla-ref-elemento-relacional>
+                    nombres-columnas='embarcacionesNombresColumnas' autocompletar-opciones='autocompletarEmbarcacionesOpciones' reportar-cambio='embarcacionesCambios(valores)'>
+                </pimc-tabla-ref-elemento-relacional>
             </div>
         </div>
     </uib-tab>
@@ -294,23 +296,21 @@
         <div class="row p-t-2">
             <div class="col-sm-12">
                 <pimc-tabla-ref-elemento-relacional elemento-relacional='"Actividades"' valores='actividades' campos-columnas='actividadesColumnas'
-                    nombres-columnas='actividadesNombresColumnas' autocompletar-opciones='autocompletarActividadesOpciones' reportar-cambio='actividadesCambios(valores)'></pimc-tabla-ref-elemento-relacional>
+                    nombres-columnas='actividadesNombresColumnas' autocompletar-opciones='autocompletarActividadesOpciones' reportar-cambio='actividadesCambios(valores)'>
+                </pimc-tabla-ref-elemento-relacional>
             </div>
         </div>
     </uib-tab>
 
     <!-- FECHAS Y SUCESOS -->
     <uib-tab index="6" heading="Fechas y sucesos">
-    	<div class="row p-t-2">
-    		<div class="col-sm-12">
-		      <table id="fechasSucesosTabla">
-		        <tr><th>Fecha</th><th>Lugar</th><th>Descripción del evento</th><th>Categoría</th><th>Cita/Anotación</th></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-		        <tr><td>Example</td><td>19</td><td>Esto es un ejemplo</td><td>ASADFA</td><td>ASADFA</td></tr>
-		      </table>
-		    </div>
-		  </div>
+        <div class="row p-t-2">
+            <div class="col-sm-12">
+                <pimc-tabla-ref-elemento-relacional elemento-relacional='"Eventos"' valores='eventos' campos-columnas='eventosColumnas' tipo-columnas='eventosTiposColumnas'
+                    nombres-columnas='eventosNombresColumnas' autocompletar-opciones='autocompletarEventosOpciones' reportar-cambio='eventosCambios(valores)'>
+                </pimc-tabla-ref-elemento-relacional>
+            </div>
+        </div>
     </uib-tab>
 
     <!-- INSTITUCIONES -->
