@@ -228,6 +228,8 @@
             )
               return refTablaCtrl.tiposColumnas.LUGAR;
             else return refTablaCtrl.tiposColumnas.TEXTO;
+          } else {
+            return refTablaCtrl.tiposColumnas.TEXTO;
           }
         } else {
           return refTablaCtrl.tiposColumnas.TEXTO;
