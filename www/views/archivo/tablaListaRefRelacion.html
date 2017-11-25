@@ -10,7 +10,12 @@
             </tr>
             <tr ng-click="refTablaCtrl.abrirSeleccionado(valor)" ng-repeat="valor in refTablaCtrl.valoresInt track by $index ">
                 <td ng-repeat="campo in refTablaCtrl.camposColumnasInt">
-                    {{valor.contenido[campo]}}
+                    <span ng-if="refTablaCtrl.columnaEsTexto(campo) || refTablaCtrl.columnaEsLugar(campo)">
+                        {{(campo === "elementoRelacional") ? valor.elementoRelacional : valor.contenido[campo]}}
+                    </span>
+                    <span ng-if="refTablaCtrl.columnaEsDate(campo)">
+                        {{(valor.contenido[campo] | date: refTablaCtrl.fechasFormatos[ valor.contenido[campo + "Formato"] ]}
+                    </span>
                 </td>
                 <td>{{valor.documentosID.join(", ")}}</td>
             </tr>

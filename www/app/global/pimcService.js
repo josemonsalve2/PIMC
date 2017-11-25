@@ -62,6 +62,16 @@
             Territorios: "nombre"
         }
 
+        pimcService.fechasFormatosVisualizacion = {
+            "YYYY": "yyyy",        
+            "MMMM, YYYY" : "MMMM, yyyy",        
+            "DD/MMMM": "dd/MMMM",
+            "D-M-YYYY": "d-M-yyyy",
+            "DD-MM-YYYY": "dd-MM-yyyy",
+            "h:mm A": "h:mm a",
+            "DD/MM/YYYY hh:mm A" : "dd/MM/yyyy hh:mm a"
+        };
+
     }]);
 
     pimc.filter('estadoNoEliminado', ['pimcService', function (pimcService) {

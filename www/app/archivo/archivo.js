@@ -59,8 +59,18 @@
                 $scope.cargarNotas();
                 // DOCUMENTOS
                 $scope.cargarDocumentos().then(function () {
-                  // PERSONAJES
-                  $scope.cargarPersonajes(); 
+                    // PERSONAJES
+                    $scope.cargarPersonajes();
+                    // EMBARCACIONES
+                    $scope.cargarEmbarcaciones();
+                    // LUGARES Y TERRITORIOS
+                    $scope.cargarLugaresTerritorios();
+                    // ACTIVIDADES
+                    $scope.cargarActividades();
+                    // EVENTOS
+                    $scope.cargarEventos();
+                    // INSTITUCIONES
+                    $scope.cargarInstituciones();
                 });
                  
             }
@@ -190,48 +200,6 @@
             pimcMenuService.abrirElemento("Documentos", seleccionado, "documento[" + seleccionado + "] del archivo " + $scope.archivoID, true);
         };
 
-
-        
-
-
-        // Palabras claves
-        $scope.palabrasClaves = {}
-        // Para borrar palabras claves
-        $scope.palabrasClaves.modificarBorrarPalabra = function(indexEditada, palabra) {
-            if (palabra == "") {
-                var palabraEliminada = $scope.datosPrincipales.palabrasClaves[indexEditada];
-                if (palabraEliminada != "") {
-                    pimcBarraEstadoService.registrarAccion("palabra clave <strong>" + palabraEliminada + "</strong> eliminada");
-                    $scope.datosPrincipales.editado = true;
-                }
-                $scope.datosPrincipales.palabrasClaves.splice(indexEditada, 1);
-            } else {
-                var palabraModificada = $scope.datosPrincipales.palabrasClaves[indexEditada];
-                if (palabra != palabraModificada) {
-                    pimcBarraEstadoService.registrarAccion("palabra clave <strong>" + palabraModificada + "</strong> Modificada a <strong>" + palabra + "</strong>");
-                    $scope.datosPrincipales.palabrasClaves[indexEditada] = palabra;
-                    $scope.datosPrincipales.editado = true;
-                }
-            }
-        }
-        //Para agregar palabras claves
-        $scope.palabrasClaves.palabraNueva = {
-            mensaje: '+ Agregar'
-        };
-        $scope.palabrasClaves.borrarCampo = function() {
-            $scope.palabrasClaves.palabraNueva.mensaje = "";
-        }
-        $scope.palabrasClaves.mostrarCampo = function() {
-            $scope.palabrasClaves.palabraNueva.mensaje = "+ Agregar";
-        }
-        $scope.palabrasClaves.agregarPalabraNueva = function(palabra) {
-            if (!$scope.datosPrincipales.palabrasClaves.includes(palabra) && palabra.length != 0) {
-                $scope.datosPrincipales.palabrasClaves.push(palabra);
-                pimcBarraEstadoService.registrarAccion("palabra clave <strong>" + palabra + "</strong> agregada");
-                $scope.datosPrincipales.editado = true;
-            }
-            $scope.palabrasClaves.palabraNueva.mensaje = "+ Agregar";
-        }
         
         // Cargar Listado personajes
         $scope.personajesArchivo = [];
@@ -254,178 +222,138 @@
           pimcTablaListaRefService.cargarElementos("Personajes", $scope.archivoID, $scope.documentos)
           .then(function(personajes) {
             $scope.personajesArchivo = personajes;
-          })
+          });
         };
         
         // Cargar Listado Embarcaciones
-        $scope.hayEmbarcaciones = false;
-        $scope.embarcaciones = [];
+        $scope.embarcacionesArchivo = [];
+        $scope.embarcacionesArchivoColumnas = {
+          campos: [
+            'nombre',
+            'alias',
+            'tipo',
+            'categoria'
+          ],
+          nombres: {
+            'nombre': "Nombre",
+            'alias': "Alias",
+            'tipo': "Tipo de Embarcacion",
+            'categoria': "Categoria"
+          }
+        };
         $scope.cargarEmbarcaciones = function () {
-            $scope.embarcaciones = [];
-            var embarcacionesIDs = [];
-            $scope.documentos.forEach(function (doc) {
-                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/DocumentosRefEmbarcacion?documentoID=' + doc.documentoID).then(function(data) {
-                    if (Object.keys(data.data).length != 0) {
-                        var listaReferencias = data.data;
-                        lstaReferencias.forEach (function (referencia) {
-                            var embarcacionID = referencia.embarcacionID;
-                            if (!embarcacionesIDs.includes(embarcacionID)) {
-                                embarcacionesIDs.push(embarcacionID);
-                                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Embarcaciones?embarcacionID=' + embarcacionID).then(function(data) {
-                                    if (Object.keys(data.data).length != 0) {
-                                        var embarcacion = data.data[0];
-                                        embarcacion.documentosReferencias = [doc.documentoID];
-                                        $scope.embarcaciones.push(embarcacion);
-                                        $scope.hayEmbarcaciones = true;
-                                    }
-                                });
-                            } else {
-                                // Add the reference to this document
-                                $scope.embarcaciones.forEach (function (embarcacion) {
-                                    if (!embarcacion.documentosReferencias.includes[doc.documentoID])
-                                        embarcacion.documentosReferencias = [doc.documentoID];
-                                });
-                            }
-                        });
-                    }
-                });
+            pimcTablaListaRefService.cargarElementos("Embarcaciones", $scope.archivoID, $scope.documentos)
+            .then(function(embarcaciones) {
+              $scope.embarcacionesArchivo = embarcaciones;
             });
-        };      
-        // Cargar listado de Lugares
-        $scope.hayLugares = false;
-        $scope.lugares = [];
-        $scope.cargarLugares = function () {
-            $scope.lugares = [];
-            var lugaresIDs = [];
-            $scope.documentos.forEach(function (doc) {
-                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/DocumentosRefLugares?documentoID=' + doc.documentoID).then(function(data) {
-                    if (Object.keys(data.data).length != 0) {
-                        var listaReferencias = data.data;
-                        lstaReferencias.forEach (function (referencia) {
-                            var lugarID = referencia.lugarID;
-                            if (!lugaresIDs.includes(lugarID)) {
-                                lugaresIDs.push(lugarID);
-                                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Lugares?lugarID=' + lugarID).then(function(data) {
-                                if (Object.keys(data.data).length != 0) {
-                                    var lugar = data.data[0];
-                                    lugar.documentosReferencias = [doc.documentoID];
-                                    $scope.lugares.push(lugar);
-                                    $scope.hayLugares = true;
-                                }
-                            });
-                            } else {
-                                // Add the reference to this document
-                                $scope.lugares.forEach (function (lugar) {
-                                    if (!lugar.documentosReferencias.includes[doc.documentoID])
-                                        lugar.documentosReferencias = [doc.documentoID];
-                                });
-                            }
-                        });
-                    }
-                });
-            });
-        };      
-        // Cargar Listado de Actividades
-        $scope.hayActividades = false;
-        $scope.actividades = [];
+          };
+
+        // Cargar Listado Lugares y Territorios
+        $scope.lugaresTerritoriosArchivo = [];
+        $scope.lugaresTerritoriosArchivoColumnas = {
+          campos: [
+            'elementoRelacional',
+            'nombre',
+            'tipo',
+            'categoria',
+          ],
+          nombres: {
+            'nombre': "Nombre",
+            'tipo': "Tipo",
+            'categoria': "Categoria"
+          }
+        };
+
+        $scope.cargarLugaresTerritorios = function () {
+          pimcTablaListaRefService.cargarElementos("Lugares", $scope.archivoID, $scope.documentos)
+          .then(function(lugares) {
+            $scope.lugaresTerritoriosArchivo.concat(lugares);
+          })
+          pimcTablaListaRefService.cargarElementos("Territorios", $scope.archivoID, $scope.documentos)
+          .then(function(territorios) {
+            $scope.lugaresTerritoriosArchivo.concat(territorios);
+          });
+        };
+
+        // Cargar Listado Actividades
+        $scope.actividadesArchivo = [];
+        $scope.actividadesArchivoColumnas = {
+          campos: [
+            'nombre',
+            'tipo',
+            'descripcion',
+            'herramientas',
+            'materiales',
+            'personalInvolucrado'
+          ],
+          nombres: {
+            'nombre': "Nombre",
+            'tipo': "Tipo de actividad",
+            'descripcion': "Descripción",
+            'herramientas': "Herramientas",
+            'materiales': "Materiales",
+            'personalInvolucrado': "Personal Invulucrado"
+          }
+        };
+
         $scope.cargarActividades = function () {
-            $scope.actividades = [];
-            var actividadesIDs = [];
-            $scope.documentos.forEach(function (doc) {
-                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/DocumentosRefActividades?documentoID=' + doc.documentoID).then(function(data) {
-                    if (Object.keys(data.data).length != 0) {
-                        var listaReferencias = data.data;
-                        lstaReferencias.forEach (function (referencia) {
-                            var actividadID = referencia.actividadID;
-                            if (!actividadesIDs.includes(actividadID)) {
-                                actividadesIDs.push(actividadID);
-                                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Actividades?actividadID=' + actividadID).then(function(data) {
-                                    if (Object.keys(data.data).length != 0) {
-                                        var actividad = data.data[0];
-                                        actividad.documentosReferencias = [doc.documentoID];
-                                        $scope.actividades.push(actividad);
-                                        $scope.hayActividades = true;
-                                    }
-                                });
-                            } else {
-                                // Add the reference to this document
-                                $scope.actividades.forEach (function (actividad) {
-                                    if (!actividad.documentosReferencias.includes[doc.documentoID])
-                                        actividad.documentosReferencias = [doc.documentoID];
-                                });
-                            }
-                        });
-                    }
-                });
-            });
-        };      
-        // Cargar Listado de fechas y sucesos
-        $scope.hayFechasSucesos = false;
-        $scope.fechasSucesos = [];
-        $scope.cargarFechasSucesos = function () {
-            $scope.fechasSucesos = [];
-            var fechasSucesosIDs = [];
-            $scope.documentos.forEach(function (doc) {
-                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/DocumentosRefEventos?documentoID=' + doc.documentoID).then(function(data) {
-                    if (Object.keys(data.data).length != 0) {
-                        var listaReferencias = data.data;
-                        lstaReferencias.forEach (function (referencia) {
-                            var eventoID = referencia.eventoID;                          
-                            if (!fechasSucesosIDs.includes(eventoID)) {
-                                fechasSucesosIDs.push(eventoID);
-                                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Eventos?eventoID=' + eventoID).then(function(data) {
-                                    if (Object.keys(data.data).length != 0) {
-                                        var fechaSuceso = data.data[0];
-                                        fechaSuceso.documentosReferencias = [doc.documentoID];
-                                        $scope.fechasSucesos.push(fechaSuceso);
-                                        $scope.hayFechasSucesos = true;
-                                    }
-                                });
-                            } else {
-                                // Add the reference to this document
-                                $scope.fechasSucesos.forEach (function (fechaSuceso) {
-                                    if (!fechaSuceso.documentosReferencias.includes[doc.documentoID])
-                                        fechaSuceso.documentosReferencias = [doc.documentoID];
-                                });
-                            }
-                        });
-                    }
-                });
-            });
-        };      
+          pimcTablaListaRefService.cargarElementos("Actividades", $scope.archivoID, $scope.documentos)
+          .then(function(actividades) {
+            $scope.actividadesArchivo = actividades;
+          });
+        };
+            
+        // Cargar Listado de Eventos
+        $scope.eventosArchivo = [];
+        $scope.eventosColumnas = {
+          campos: [
+            'fecha',
+            'descripcion',
+            'categoriaEvento'
+          ],
+          camposTipos: {
+              'fecha': 'Date'
+          },
+          nombres: {
+            'fecha': 'Fecha del evento',
+            'descripcion': 'Descripción',
+            'categoriaEvento': 'Categoria del evento' 
+          }
+        };
+
+        $scope.cargarEventos = function () {
+          pimcTablaListaRefService.cargarElementos("Eventos", $scope.archivoID, $scope.documentos)
+          .then(function(eventos) {
+            $scope.eventosArchivo = eventos;
+          });
+        };
+
         // Cargar Listado de instituciones
-        $scope.hayInstituciones = false;
-        $scope.instituciones = [];
+        $scope.institucionesArchivo = [];
+        $scope.institucionesArchivoColumnas = {
+          campos: [
+            'nombre',
+            'tipo',
+            'descripcion',
+            'herramientas',
+            'materiales',
+            'personalInvolucrado'
+          ],
+          nombres: {
+            'nombre': "Nombre",
+            'tipo': "Tipo de actividad",
+            'descripcion': "Descripción",
+            'herramientas': "Herramientas",
+            'materiales': "Materiales",
+            'personalInvolucrado': "Personal Invulucrado"
+          }
+        };
+
         $scope.cargarInstituciones = function () {
-            $scope.instituciones = [];
-            var institucionesIDs = [];
-            $scope.documentos.forEach(function (doc) {
-                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/DocumentosRefInstituciones?documentoID=' + doc.documentoID).then(function(data) {
-                    if (Object.keys(data.data).length != 0) {
-                        var listaReferencias = data.data;
-                        lstaReferencias.forEach (function (referencia) {
-                            var institucionID = referencia.institucionID;
-                            if (!institucionesIDs.includes(institucionID)) {
-                                institucionesIDs.push(institucionID);
-                                $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Instituciones?institucionID=' + institucionID).then(function(data) {
-                                    if (Object.keys(data.data).length != 0) {
-                                        var institucion = data.data[0];
-                                        institucion.documentosReferencias = [doc.documentoID];
-                                        $scope.instituciones.push(institucion);
-                                        $scope.hayInstituciones = true;
-                                    }
-                                });
-                            } else {
-                                // Add the reference to this document
-                                $scope.instituciones.forEach (function (institucion) {
-                                    if (!institucion.documentosReferencias.includes[doc.documentoID])
-                                        institucion.documentosReferencias = [doc.documentoID];
-                                });
-                            }
-                        });
-                    }
-                });
-            });
+          pimcTablaListaRefService.cargarElementos("Instituciones", $scope.archivoID, $scope.documentos)
+          .then(function(instituciones) {
+            $scope.institucionesArchivo = instituciones;
+          })
         };
         
         

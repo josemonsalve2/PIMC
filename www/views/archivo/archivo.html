@@ -57,85 +57,64 @@
         valores="personajesArchivo"
         campos-columnas="personajesArchivoColumnas.campos"
         nombres-columnas="personajesArchivosColumnas.nombres"
-        tipo-columnas="personajesArchivosColumnas.tipos"></pimc-tabla-lista-ref>
+        tipo-columnas="personajesArchivosColumnas.tipos">
+      </pimc-tabla-lista-ref>
     </uib-tab>
 
     <!-- EMBARCACIONES -->
     <uib-tab index="4" heading="Embarcaciones">
-      <div class="row p-t-2" ng-show="!hayEmbarcaciones">
-          <span>Este Archivo no hace referencia a ninguna embarcacion</span>
-      </div>
-    	<div class="row p-t-2" ng-show="hayEmbarcaciones">
-    		<div class="col-sm-12">
-		      <table>
-		        <tr><th>Nombre</th><th>Alias</th><th>Tipo de buque</th><th>Categoria</th><th>documentos Referencia</th></tr>
-		        <tr ng-repeat="embarcacion in embarcaciones track by $index"><td>{{embarcacion.nombres}}</td><td>{{embarcacion.alias}}</td><td>{{embarcacion.tipo}}</td><td>{{embarcacion.categoria}}</td><td>{{embarcacion.documentosReferencias.join(", ")}}</td></tr>
-		      </table>
-      	</div>
-      </div>
+      <pimc-tabla-lista-ref
+        elemento-relacional="'Embarcaciones'"
+        valores="embarcacionesArchivo"
+        campos-columnas="embarcacionesArchivoColumnas.campos"
+        nombres-columnas="embarcacionesArchivosColumnas.nombres"
+        tipo-columnas="embarcacionesArchivosColumnas.tipos">
+      </pimc-tabla-lista-ref>
     </uib-tab>
 
-    <!-- LUGARES -->
+    <!-- LUGARES Y TERRITORIOS -->
     <uib-tab index="5" heading="Lugares">
-      <div class="row p-t-2" ng-show="!hayLugares">
-          <span>Este Archivo no hace referencia a ningún lugar</span>
-      </div>
-    	<div class="row p-t-2" ng-show="hayLugares">
-    		<div class="col-sm-12" ng-show="hayInstituciones">
-		      <table >
-		        <tr><th>Nombre</th><th>Tipo de Lugar</th><th>Categoria</th><th>documentos Referencia</th></tr>
-		        <tr ng-repeat="lugar in lugares track by $index"><td>{{lugar.nombre}}</td><td>{{lugar.tipoLugar}}</td><td>{{lugar.categoria}}</td><td>{{lugar.documentosReferencias.join(", ")}}</td></tr>
-
-		      </table>
-      	</div>
-      </div>
+      <pimc-tabla-lista-ref
+      elemento-relacional="'Lugares'"
+      valores="lugaresTerritoriosArchivo"
+      campos-columnas="lugaresTerritoriosArchivoColumnas.campos"
+      nombres-columnas="lugaresTerritoriosArchivoColumnas.nombres"
+      tipo-columnas="lugaresTerritoriosArchivoColumnas.tipos">
+    </pimc-tabla-lista-ref>
     </uib-tab>
 
     <!-- ACTIVIDADES -->
     <uib-tab index="7" heading="Actividades">
-        <div class="row p-t-2" ng-show="!hayActividades">
-          <span>Este Archivo no hace referencia a ningún lugar</span>
-      </div>
-    	<div class="row p-t-2" ng-show="hayActividades">
-    		<div class="col-sm-12">
-		      <table >
-                  <tr><th>Nombre</th><th>Tipo</th><th>Descripcion</th><th>Herramientas</th><th>Materiales</th><th>personajes Involucrados</th><th>documentos Referencia</th></tr>
-		        <tr ng-repeat="actividad in actividades track by $index"><td>{{actividad.nombre}}</td><td>{{actividad.tipo}}</td><td>{{actividad.descripcion}}</td><td>{{actividad.herramientas}}</td><td>{{actividad.materiales}}</td><td>{{actividad.personajesInvolucrados}}</td><td>{{actividad.documentosReferencias.join(", ")}}</td></tr>
-
-		      </table>
-	      </div>
-      </div>
+      <pimc-tabla-lista-ref
+        elemento-relacional="'Actividades'"
+        valores="actividadesArchivo"
+        campos-columnas="actividadesArchivoColumnas.campos"
+        nombres-columnas="actividadesArchivoColumnas.nombres"
+        tipo-columnas="actividadesArchivoColumnas.tipos">
+      </pimc-tabla-lista-ref>
     </uib-tab>
 
     <!-- FECHAS Y SUCESOS -->
     <uib-tab index="8" heading="Fechas y sucesos">
-        <div class="row p-t-2" ng-show="!hayFechasSucesos">
-          <span>Este Archivo no hace referencia a ninguna fecha ni suceso</span>
-      </div>
-    	<div class="row p-t-2" ng-show="hayFechasSucesos">
-    		<div class="col-sm-12">
-		      <table >
-		        <tr><th>Fecha</th><th>Lugar</th><th>Descripción del evento</th><th>Categoría</th><th>documentos Referencia</th></tr>
-		        <tr ng-repeat="evento in fechasSucesos track by $index"><td>{{evento.fecha}}</td><td>{{evento.lugar}}</td><td>{{evento.descripcion}}</td><td>{{evento.categoriaEvento}}</td><td>{{evento.documentosReferencias.join(", ")}}</td></tr>
-		      </table>
-		    </div>
-		  </div>
+      <pimc-tabla-lista-ref
+        elemento-relacional="'eventos'"
+        valores="eventosArchivo"
+        tipo-columnas="eventosArchivoColumnas.camposTipos"
+        campos-columnas="eventosArchivoColumnas.campos"
+        nombres-columnas="eventosArchivoColumnas.nombres"
+        tipo-columnas="eventosArchivoColumnas.tipos">
+      </pimc-tabla-lista-ref>
     </uib-tab>
 
     <!-- INSTITUCIONES -->
     <uib-tab index="9" heading="Instituciones">
-        <div class="row p-t-2" ng-show="!hayInstituciones">
-          <span>Este Archivo no hace referencia a ninguna institución</span>
-      </div>
-    	<div class="row p-t-2" ng-show="hayInstituciones">
-    		<div class="col-sm-12">
-		      <table>
-		        <tr><th>Nombre</th><th>documentos Referencia</th></tr>
-		        <tr ng-repeat="institucion in instutuciones track by $index"><td>{{institucion.nombre}}</td><td>{{institucion.documentosReferencias.join(", ")}}</td></tr>
-
-		      </table>
-		    </div>
-		  </div>
+      <pimc-tabla-lista-ref
+        elemento-relacional="'Instituciones'"
+        valores="institucionesArchivo"
+        campos-columnas="institucionesArchivoColumnas.campos"
+        nombres-columnas="institucionesArchivoColumnas.nombres"
+        tipo-columnas="institucionesArchivoColumnas.tipos">
+      </pimc-tabla-lista-ref>
     </uib-tab>
   </uib-tabset>
 </section>

@@ -66,6 +66,7 @@
 
                     // Creamos el nuevo elemento
                     var nuevoElemento = {};
+                    nuevoElemento.elementoRelacional = elementoRelacional;
                     nuevoElemento.documentosID = [];
                     nuevoElemento.documentosID.push(documentoID);
                     nuevoElemento.referenciasID = [];
@@ -136,6 +137,9 @@
       refTablaCtrl.camposColumnasInt = [];
       refTablaCtrl.nombresColumnasInt = {};
       refTablaCtrl.tipoColumnasInt = {};
+
+      // Formatos de fechas
+      refTablaCtrl.fechasFormatos = pimcService.fechasFormatosVisualizacion;
       
       // Actualizar los datos cuando los valores cambien
       refTablaCtrl.$onChanges = function(changes) {
@@ -172,22 +176,23 @@
 
         // Obtenemos el id y el nombre en el menu
         var idColumna =
-          pimcService.idElementoRelaciona[refTablaCtrl.elementoRelacionalInt];
+          pimcService.idElementoRelaciona[valor.elementoRelacional];
         var seleccionado = valor.contenido[idColumna];
         var nombreColumna =
-          pimcService.nombreColElementoRelacional[refTablaCtrl.elementoRelacionalInt];
+          pimcService.nombreColElementoRelacional[valor.elementoRelacional];
         var textoMenu = valor.contenido[nombreColumna];
         pimcService.debug(
           "Abriendo " +
-          refTablaCtrl.elementoRelacionalInt +
+          valor.elementoRelacional +
           " " +
-          seleccionado);
-          pimcMenuService.abrirElemento(
-            refTablaCtrl.elementoRelacionalInt, // elemento relacional
-            seleccionado, // id elemento relacional,
-            textoMenu, // texto en el menu
-            true // vincular a la pagina
-          );
+          seleccionado
+        );
+        pimcMenuService.abrirElemento(
+          valor.elementoRelacional, // elemento relacional
+          seleccionado, // id elemento relacional,
+          textoMenu, // texto en el menu
+          true // vincular a la pagina
+        );
       };
 
       // Para tipos de colimnas
@@ -221,11 +226,11 @@
               tipoCol === refTablaCtrl.tipoCol.propiedades[2].nombre ||
               tipoCol === refTablaCtrl.tipoCol.propiedades[2].code
             )
-              return refTablaCtrl.tipoColumnas.LUGAR;
+              return refTablaCtrl.tiposColumnas.LUGAR;
             else return refTablaCtrl.tiposColumnas.TEXTO;
           }
         } else {
-          return refTablaCtrl.tipoColumnas.TEXTO;
+          return refTablaCtrl.tiposColumnas.TEXTO;
         }
       };
 
@@ -233,7 +238,7 @@
       refTablaCtrl.columnaEsTexto = function(campo) {
         return (
           refTablaCtrl.obtenerTipoColumna(campo) ===
-          refTablaCtrl.tipoColumnas.TEXTO
+          refTablaCtrl.tiposColumnas.TEXTO
         );
       };
 
@@ -241,7 +246,7 @@
       refTablaCtrl.columnaEsDate = function(campo) {
         return (
           refTablaCtrl.obtenerTipoColumna(campo) ===
-          refTablaCtrl.tipoColumnas.DATE
+          refTablaCtrl.tiposColumnas.DATE
         );
       };
 
@@ -249,7 +254,7 @@
       refTablaCtrl.columnaEsLugar = function(campo) {
         return (
           refTablaCtrl.obtenerTipoColumna(campo) ===
-          refTablaCtrl.tipoColumnas.LUGAR
+          refTablaCtrl.tiposColumnas.LUGAR
         );
       };
 
