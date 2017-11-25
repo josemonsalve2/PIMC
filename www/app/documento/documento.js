@@ -6,8 +6,45 @@
 
     'use strict';
 
-    var documentoPerfil = angular.module('documentoPerfil', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.grid', 'ngTouch', 'ui.grid.edit', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.cellNav', 'xeditable']);
-    documentoPerfil.controller('documentoPerfilController', ['$scope', 'pimcMenuService', 'pimcService', 'pimcBarraEstadoService', 'pimcTablaRefElementoService', '$q', '$http', '$window', '$location', '$filter', '$timeout', 'uiGridConstants', 'i18nService', '$scope', function($scope, pimcMenuService, pimcService, pimcBarraEstadoService, pimcTablaRefElementoService,  $q, $http, $window, $location, $filter, $timeout, i18nService, uiGridConstants) {
+    var documentoPerfil = angular.module('documentoPerfil', 
+        ['ngAnimate', 
+         'ngSanitize', 
+         'ui.bootstrap', 
+         'ui.grid', 
+         'ngTouch', 
+         'ui.grid.edit', 
+         'ui.grid.autoResize', 
+         'ui.grid.selection', 
+         'ui.grid.cellNav', 
+         'xeditable']);
+    documentoPerfil.controller('documentoPerfilController', 
+        ['$scope', 
+         'pimcMenuService', 
+         'pimcService', 
+         'pimcBarraEstadoService', 
+         'pimcTablaRefElementoService',
+         '$q', 
+         '$http', 
+         '$window', 
+         '$location', 
+         '$filter', 
+         '$timeout', 
+         'uiGridConstants', 
+         'i18nService', 
+         '$scope', 
+         function($scope, 
+                  pimcMenuService, 
+                  pimcService, 
+                  pimcBarraEstadoService, 
+                  pimcTablaRefElementoService, 
+                  $q, 
+                  $http,
+                  $window, 
+                  $location, 
+                  $filter, 
+                  $timeout, 
+                  i18nService, 
+                  uiGridConstants) {
         $scope.documentoID = -1;
         var init = function() {
             var documentoSeleccionado = pimcMenuService.obtenerElementoSeleccionado("Documentos");
