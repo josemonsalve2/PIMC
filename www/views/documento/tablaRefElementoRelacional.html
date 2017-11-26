@@ -8,8 +8,9 @@
     <!-- Valores que no pueden ser editados porque ya existen en la base de datos -->
     <tr ng-click="refTablaCtrl.abrirSeleccionado(valor)" ng-repeat="valor in refTablaCtrl.valoresInt | filtrosExistentesNuevasRef track by $index ">
         <td>
-            <button ng-show="refTablaCtrl.activarBorrarExistentes || !refTablaCtrl.estadoEsLimpio(valor)" ng-click='refTablaCtrl.borrar(valor); $event.stopPropagation()'
-                class="btn-danger">-</button>
+            <button ng-show="refTablaCtrl.activarBorrarExistentes || !refTablaCtrl.estadoEsLimpio(valor)" 
+                    ng-click='refTablaCtrl.borrar(valor); $event.stopPropagation()'
+                    class="btn-danger">-</button>
         </td>
         <td ng-repeat="campo in refTablaCtrl.camposColumnasInt">
             <span ng-if="!refTablaCtrl.columnaEsDate(campo)">
@@ -26,14 +27,25 @@
             <button ng-click='refTablaCtrl.borrar(valor)' class="btn-danger">-</button> {{"Nuevo"}}</td>
         </td>
         <td ng-repeat="campo in refTablaCtrl.camposColumnasInt">
-            <span ng-if="refTablaCtrl.columnaEsTexto(campo) && refTablaCtrl.validarAutocompeltar(campo)" editable-text="valor.contenido[campo]" e-typeahead-min-length="refTablaCtrl.autocompletarOpcionesInt.minLength"
-                e-uib-typeahead="elemento[campo] for elemento in refTablaCtrl.autocompletarElemento(campo, $viewValue)" e-typeahead-wait-ms="refTablaCtrl.autocompletarOpcionesInt.delay"
-                e-typeahead-on-select="refTablaCtrl.seleccionAutocompletar(valor ,$item)" e-typeahead-no-results="refTablaCtrl.noExistenValores"
-                e-typeahead-loading="refTablaCtrl.cargandoValores" onaftersave="refTablaCtrl.reportarCambioNuevo()">
-                {{valor.contenido[campo] || "nuevo/a" + campo}}
+            <span ng-if="refTablaCtrl.columnaEsTexto(campo) && refTablaCtrl.validarAutocompeltar(campo)" 
+                  editable-text="valor.contenido[campo]" 
+                  e-typeahead-min-length="refTablaCtrl.autocompletarOpcionesInt.minLength"
+                  e-uib-typeahead="elemento[campo] for elemento in refTablaCtrl.autocompletarElemento(campo, $viewValue)" 
+                  e-typeahead-wait-ms="refTablaCtrl.autocompletarOpcionesInt.delay"
+                  e-typeahead-on-select="refTablaCtrl.seleccionAutocompletar(valor ,$item)"
+                  e-typeahead-no-results="refTablaCtrl.noExistenValores"
+                  e-typeahead-loading="refTablaCtrl.cargandoValores" 
+                  onaftersave="refTablaCtrl.reportarCambioNuevo()">
+                    {{valor.contenido[campo] || "nuevo/a" + campo}}
             </span>
-            <i ng-show="refTablaCtrl.cargandoValores && refTablaCtrl.validarAutocompeltar(campo)" class="glyphicon glyphicon-refresh"></i>            
-            <span ng-if="refTablaCtrl.columnaEsTexto(campo) && !refTablaCtrl.validarAutocompeltar(campo)" editable-text="valor.contenido[campo]" onaftersave="refTablaCtrl.reportarCambioNuevo()">{{valor.contenido[campo] || "nuevo/a" + campo}}</span>
+            <i ng-show="refTablaCtrl.cargandoValores && refTablaCtrl.validarAutocompeltar(campo)" 
+               class="glyphicon glyphicon-refresh">
+            </i>            
+            <span ng-if="refTablaCtrl.columnaEsTexto(campo) && !refTablaCtrl.validarAutocompeltar(campo)" 
+                  editable-text="valor.contenido[campo]" 
+                  onaftersave="refTablaCtrl.reportarCambioNuevo()">
+                    {{valor.contenido[campo] || "nuevo/a" + campo}}
+            </span>
             <span ng-if="refTablaCtrl.columnaEsDate(campo)">
                 <pimc-fecha-con-formato 
                     fecha = 'valor.contenido[campo]' 
@@ -44,6 +56,11 @@
         </td>
     </tr>
 </table>
-<button ng-click='refTablaCtrl.agregarNuevo()' class="btn btn-success m-a-2">Agregar {{refTablaCtrl.elementoRelacionalInt}}</button>
-<button ng-click='refTablaCtrl.activarBorrarExistentes = !refTablaCtrl.activarBorrarExistentes' class="btn m-a-2">{{refTablaCtrl.activarBorrarExistentes? "Desabilitar" : "Habilitar"}} borrar {{refTablaCtrl.elementoRelacionalInt}} existentes</button>
+<button ng-click='refTablaCtrl.agregarNuevo()' class="btn btn-success m-a-2">
+    Agregar {{refTablaCtrl.elementoRelacionalInt}}
+</button>
+<button ng-click='refTablaCtrl.activarBorrarExistentes = !refTablaCtrl.activarBorrarExistentes' 
+        class="btn m-a-2">
+        {{refTablaCtrl.activarBorrarExistentes? "Desabilitar" : "Habilitar"}} borrar {{refTablaCtrl.elementoRelacionalInt}} existentes
+</button>
 </div>
