@@ -170,8 +170,9 @@
             'pimcBarraEstadoService',
             'pimcMenuService', 
             'pimcTablaRefElementoService', 
-            '$window', 
-            function (pimcService, pimcBarraEstadoService, pimcMenuService, pimcTablaRefElementoService, $window) {
+            '$window',
+            '$filter',
+            function (pimcService, pimcBarraEstadoService, pimcMenuService, pimcTablaRefElementoService, $window, $filter) {
             var refTablaCtrl = this;
             refTablaCtrl.valoresInt = [];
             refTablaCtrl.activarBorrarExistentes = false;
@@ -184,6 +185,15 @@
                 delay: 100,
                 camposAutocompletar: []
             };
+
+            // Formatos fechas
+            refTablaCtrl.formatearFecha = function(valor, campo) {
+                var formato = valor.contenido[campo + "Formato"];
+                formato = pimcService.fechasFormatosVisualizacion[formato];
+                var fecha = moment.utc(valor.contenido[campo]).toDate();
+                return $filter('date')(fecha, formato);
+            };
+
             // Para efectos en autocompletar
             refTablaCtrl.cargandoValores = false;
             refTablaCtrl.noExistenValores = false;

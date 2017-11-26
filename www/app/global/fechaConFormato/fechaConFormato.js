@@ -24,12 +24,12 @@
         templateVisualizacion: "yyyy",        
         texto: "1990"
       },
-      // {
-      //   value: 2,
-      //   template: "MMMM",
-      //   templateVisualizacion: "MMMM",        
-      //   texto: "Abril"
-      // },
+      {
+        value: 2,
+        template: "MMMM",
+        templateVisualizacion: "MMMM",        
+        texto: "Abril"
+      },
       {
         value: 3,
         template: "MMMM, YYYY",

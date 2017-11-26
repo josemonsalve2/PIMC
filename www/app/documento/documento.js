@@ -80,6 +80,9 @@
                 // Actividades 
                 $scope.cargarActividades();
 
+                // Actividades 
+                $scope.cargarEventos();
+
                 // Instituciones 
                 $scope.cargarInstituciones();
             }
@@ -659,6 +662,8 @@
             conexiones['embarcacionesGuardads'] = $scope.guardarEmbarcaciones();
             // ACTIVIDADES
             conexiones['actividadesGuardadas'] = $scope.guardarActividades();
+            // EVENTOS
+            conexiones['eventosGuardadas'] = $scope.guardarEventos();
             // INSTITUCIONES
             conexiones['institucionesGuardadas'] = $scope.guardarInstituciones();
 
