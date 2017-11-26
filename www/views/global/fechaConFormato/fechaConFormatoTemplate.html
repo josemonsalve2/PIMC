@@ -1,11 +1,22 @@
 <span>
-      <span href="#" style="width:60%" ng-if="pimcFechaConFormatoCtrl.formatoSleccionado.value != 0" editable-combodate="pimcFechaConFormatoCtrl.fechaInt" e-format="{{pimcFechaConFormatoCtrl.formatoSeleccionado.template}}"
-            e-template="{{pimcFechaConFormatoCtrl.formatoSeleccionado.template}}" e-min-year="1" e-smart-date="true" onbeforesave = "pimcFechaConFormatoCtrl.callMeTest()"onaftersave="pimcFechaConFormatoCtrl.fechaCambio()"
-            e-class="input-small input-sm" blur="submit"> {{ (pimcFechaConFormatoCtrl.fechaInt | date: pimcFechaConFormatoCtrl.formatoSeleccionado.templateVisualizacion : 'UTC') || "Sin definir"
-            }}
+      <span href = "#" 
+            style = "width:60%" 
+            ng-show = "pimcFechaConFormatoCtrl.formatoSeleccionado && pimcFechaConFormatoCtrl.formatoSeleccionado.value != 0" 
+            editable-combodate = "pimcFechaConFormatoCtrl.fechaInt" 
+            e-format = "{{pimcFechaConFormatoCtrl.formatoSeleccionado.template}}"
+            e-template = "{{pimcFechaConFormatoCtrl.formatoSeleccionado.template}}" 
+            e-min-year = "1"
+            e-smart-date="true" 
+            onbeforesave = "pimcFechaConFormatoCtrl.callMeTest()"
+            onaftersave = "pimcFechaConFormatoCtrl.fechaCambio()"
+            e-class = "input-small input-sm" 
+            blur = "submit"> 
+            {{(pimcFechaConFormatoCtrl.fechaInt | date: pimcFechaConFormatoCtrl.formatoSeleccionado.templateVisualizacion : 'UTC') || "Sin definir"}}
       </span>
       <strong> Formato = </strong>
-      <span editable-select="pimcFechaConFormatoCtrl.formatoSeleccionado" e-ng-options="formatoDisponible as formatoDisponible.texto for formatoDisponible in pimcFechaConFormatoCtrl.listaFormatosPosibles"
-            onaftersave="pimcFechaConFormatoCtrl.cambiarFormato()" blur="submit"> ({{ pimcFechaConFormatoCtrl.formatoSeleccionado.template || "No definido" }})
+      <span editable-select="pimcFechaConFormatoCtrl.formatoSeleccionado" 
+            e-ng-options="formatoDisponible as formatoDisponible.texto for formatoDisponible in pimcFechaConFormatoCtrl.listaFormatosPosibles"
+            onaftersave="pimcFechaConFormatoCtrl.cambiarFormato()" 
+            blur="submit"> ({{ pimcFechaConFormatoCtrl.formatoSeleccionado.template || "No definido" }})
       </span>
 </span>
