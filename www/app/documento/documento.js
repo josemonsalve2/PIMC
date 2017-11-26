@@ -62,29 +62,39 @@
                     $scope.datosGuardados = false;
                 }
 
+                // Inicializamos todos los contenedors
+                $scope.inicializarArrayReferencias();
+
+                var conexiones = [];
+                $scope.datosPrincipalesCargando = true;                
+
                 // Cargamoss los datos principales
-                $scope.cargarDatosPrincipales();
+                conexiones.push($scope.cargarDatosPrincipales());
 
                 // Cargamos Emisor Receptor
-                $scope.cargarEmisorReceptor();
+                conexiones.push($scope.cargarEmisorReceptor());
 
                 // Anotaciones
-                $scope.cargarNotas();
+                conexiones.push($scope.cargarNotas());
 
                 // Personajes
-                $scope.cargarPersonajes();
+                conexiones.push($scope.cargarPersonajes());
 
                 // Embarcaciones
-                $scope.cargarEmbarcaciones();
+                conexiones.push($scope.cargarEmbarcaciones());
 
                 // Actividades 
-                $scope.cargarActividades();
+                conexiones.push($scope.cargarActividades());
 
-                // Actividades 
-                $scope.cargarEventos();
+                // Actividades
+                conexiones.push($scope.cargarEventos());
 
                 // Instituciones 
-                $scope.cargarInstituciones();
+                conexiones.push($scope.cargarInstituciones());
+
+                $q.all(conexiones).then(function(){
+                    $scope.datosPrincipalesCargando = false;                
+                });
             }
         };
         
@@ -106,8 +116,7 @@
         $scope.datosPrincipalesCargando = true;
 
         $scope.cargarDatosPrincipales = function() {
-            $scope.datosPrincipalesCargando = true;
-            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Documentos?documentoID=' + $scope.documentoID).then(function(data) {
+            return $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/Documentos?documentoID=' + $scope.documentoID).then(function(data) {
                 //Obtener los datos JSON
                 var documentoDatos = data.data[0];
                 
@@ -140,7 +149,6 @@
                 $scope.listaTemas.temaNuevo = {
                     mensaje: "+ Agregar"
                 };
-                $scope.datosPrincipalesCargando = false;
             });
         };
         $scope.datosPrincipales.datoEditado = function(campo, valorNuevo) {
@@ -432,6 +440,16 @@
             $scope.notasCambios = true;
         };
         
+        // REFERENCIAS
+        $scope.inicializarArrayReferencias = function() {
+            $scope.personaje = [];
+            $scope.embarcaciones = [];
+            $scope.lugares = [];
+            $scope.actividades = [];
+            $scope.eventos = [];
+            $scope.institucion = [];
+        };
+
         // PERSONAJES
         $scope.personajes = [];
         $scope.personajesColumnas = ['nombre', 'ocupacion', 'nacionalidad', 'sexo', 'categoria'];

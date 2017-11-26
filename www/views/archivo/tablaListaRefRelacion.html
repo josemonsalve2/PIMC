@@ -14,7 +14,7 @@
                         {{(campo === "elementoRelacional") ? valor.elementoRelacional : valor.contenido[campo]}}
                     </span>
                     <span ng-if="refTablaCtrl.columnaEsDate(campo)">
-                        {{(valor.contenido[campo] | date: refTablaCtrl.fechasFormatos[ valor.contenido[campo + "Formato"] ]}
+                        {{ refTablaCtrl.formatearFecha(valor, campo) }}
                     </span>
                 </td>
                 <td>{{valor.documentosID.join(", ")}}</td>

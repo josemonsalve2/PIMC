@@ -53,24 +53,32 @@
                     pimcBarraEstadoService.registrarAccion("Archivo <strong>" + $scope.archivoID + "</strong> ha sido guardado en la base de datos");
                     $scope.datosGuardados = false;
                 }
+                $scope.datosPrincipalesCargando = true;
                 // DATOS PRINCIPALES
                 $scope.cargarDatosPrincipales();
                 // ANOTACIONES
                 $scope.cargarNotas();
+                $scope.inicializarArraysReferencias();
                 // DOCUMENTOS
                 $scope.cargarDocumentos().then(function () {
+                    var conexiones = [];
                     // PERSONAJES
-                    $scope.cargarPersonajes();
+                    conexiones.push($scope.cargarPersonajes());
                     // EMBARCACIONES
-                    $scope.cargarEmbarcaciones();
+                    conexiones.push($scope.cargarEmbarcaciones());
                     // LUGARES Y TERRITORIOS
-                    $scope.cargarLugaresTerritorios();
+                    conexiones.push($scope.cargarLugaresTerritorios());
                     // ACTIVIDADES
-                    $scope.cargarActividades();
+                    conexiones.push($scope.cargarActividades());
                     // EVENTOS
-                    $scope.cargarEventos();
+                    conexiones.push($scope.cargarEventos());
                     // INSTITUCIONES
-                    $scope.cargarInstituciones();
+                    conexiones.push($scope.cargarInstituciones());
+
+                    // Finalizamos cargando los datos
+                    $q.all(conexiones).then( function() {
+                        $scope.datosPrincipalesCargando = false;
+                    });
                 });
                  
             }
@@ -85,10 +93,8 @@
         $scope.datosPrincipalesCargando = true;
 
         $scope.cargarDatosPrincipales = function() {
-            $scope.datosPrincipalesCargando = true;
             pimcArchivoDatosPrincipalesService.cargarDatosPrincipales($scope.archivoID).then(function(datosPrincipales) {
                 $scope.datosPrincipales = datosPrincipales;
-                $scope.datosPrincipalesCargando = false;
             });
         };
         
@@ -200,7 +206,14 @@
             pimcMenuService.abrirElemento("Documentos", seleccionado, "documento[" + seleccionado + "] del archivo " + $scope.archivoID, true);
         };
 
-        
+        // REFERENCIAS 
+        $scope.inicializarArraysReferencias = function() {
+            $scope.personajesArchivo = [];
+            $scope.embarcacionesArchivo = [];
+            $scope.lugaresTerritoriosArchivo = [];
+            $scope.actividadesArchivo = [];
+            $scope.eventosArchivo = [];
+        };
         // Cargar Listado personajes
         $scope.personajesArchivo = [];
         $scope.personajesArchivoColumnas = {
@@ -219,7 +232,7 @@
         };
 
         $scope.cargarPersonajes = function () {
-          pimcTablaListaRefService.cargarElementos("Personajes", $scope.archivoID, $scope.documentos)
+          return pimcTablaListaRefService.cargarElementos("Personajes", $scope.archivoID, $scope.documentos)
           .then(function(personajes) {
             $scope.personajesArchivo = personajes;
           });
@@ -242,7 +255,7 @@
           }
         };
         $scope.cargarEmbarcaciones = function () {
-            pimcTablaListaRefService.cargarElementos("Embarcaciones", $scope.archivoID, $scope.documentos)
+            return pimcTablaListaRefService.cargarElementos("Embarcaciones", $scope.archivoID, $scope.documentos)
             .then(function(embarcaciones) {
               $scope.embarcacionesArchivo = embarcaciones;
             });
@@ -265,14 +278,16 @@
         };
 
         $scope.cargarLugaresTerritorios = function () {
-          pimcTablaListaRefService.cargarElementos("Lugares", $scope.archivoID, $scope.documentos)
+          var conexiones = [];
+          conexiones.push(pimcTablaListaRefService.cargarElementos("Lugares", $scope.archivoID, $scope.documentos)
           .then(function(lugares) {
             $scope.lugaresTerritoriosArchivo.concat(lugares);
-          })
-          pimcTablaListaRefService.cargarElementos("Territorios", $scope.archivoID, $scope.documentos)
+          }));
+          conexiones.push(pimcTablaListaRefService.cargarElementos("Territorios", $scope.archivoID, $scope.documentos)
           .then(function(territorios) {
             $scope.lugaresTerritoriosArchivo.concat(territorios);
-          });
+          }));
+          return $q.all(conexiones);
         };
 
         // Cargar Listado Actividades
@@ -297,7 +312,7 @@
         };
 
         $scope.cargarActividades = function () {
-          pimcTablaListaRefService.cargarElementos("Actividades", $scope.archivoID, $scope.documentos)
+          return pimcTablaListaRefService.cargarElementos("Actividades", $scope.archivoID, $scope.documentos)
           .then(function(actividades) {
             $scope.actividadesArchivo = actividades;
           });
@@ -305,7 +320,7 @@
             
         // Cargar Listado de Eventos
         $scope.eventosArchivo = [];
-        $scope.eventosColumnas = {
+        $scope.eventosArchivoColumnas = {
           campos: [
             'fecha',
             'descripcion',
@@ -322,7 +337,7 @@
         };
 
         $scope.cargarEventos = function () {
-          pimcTablaListaRefService.cargarElementos("Eventos", $scope.archivoID, $scope.documentos)
+          return pimcTablaListaRefService.cargarElementos("Eventos", $scope.archivoID, $scope.documentos)
           .then(function(eventos) {
             $scope.eventosArchivo = eventos;
           });
@@ -350,7 +365,7 @@
         };
 
         $scope.cargarInstituciones = function () {
-          pimcTablaListaRefService.cargarElementos("Instituciones", $scope.archivoID, $scope.documentos)
+          return pimcTablaListaRefService.cargarElementos("Instituciones", $scope.archivoID, $scope.documentos)
           .then(function(instituciones) {
             $scope.institucionesArchivo = instituciones;
           })

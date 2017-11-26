@@ -124,12 +124,14 @@
     "pimcBarraEstadoService",
     "pimcTablaListaRefService",
     "$window",
+    "$filter",
     function(
       pimcService,
       pimcMenuService,
       pimcBarraEstadoService,
       pimcTablaRefElementoService,
-      $window
+      $window,
+      $filter
     ) {
       var refTablaCtrl = this;
       refTablaCtrl.elementoRelacionalInt = "";
@@ -138,9 +140,13 @@
       refTablaCtrl.nombresColumnasInt = {};
       refTablaCtrl.tipoColumnasInt = {};
 
-      // Formatos de fechas
-      refTablaCtrl.fechasFormatos = pimcService.fechasFormatosVisualizacion;
-      
+      // Formatos fechas
+      refTablaCtrl.formatearFecha = function(valor, campo) {
+        var formato = valor.contenido[campo + "Formato"];
+        formato = pimcService.fechasFormatosVisualizacion[formato];
+        var fecha = moment.utc(valor.contenido[campo]).toDate();
+        return $filter('date')(fecha, formato);
+      };      
       // Actualizar los datos cuando los valores cambien
       refTablaCtrl.$onChanges = function(changes) {
         if (changes.elementoRelacional) {
