@@ -1,12 +1,12 @@
 /////////////////////////////////////////////////////////////////
-// ARCHIVOS BUSQUEDA MODULE
+// DOCUMENTOS BUSQUEDA MODULE
 /////////////////////////////////////////////////////////////////
 
 (function (angular) {
 
     'use strict';
     
-    var archivosBusqueda = angular.module("archivosBusqueda", [
+    var documentosBusqueda = angular.module("documentosBusqueda", [
       "ngAnimate",
       "ngSanitize",
       "ui.bootstrap",
@@ -17,7 +17,7 @@
       "ui.grid.selection",
       "ui.grid.cellNav"
     ]);
-    archivosBusqueda.controller('archivosBusquedaController', ['pimcService', 'pimcMenuService', '$scope', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', '$scope', function(pimcService, pimcMenuService, $scope, $http, $window, $location, $filter, i18nService, uiGridConstants) {
+    documentosBusqueda.controller('documentosBusquedaController', ['pimcService', 'pimcMenuService', '$scope', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', '$scope', function(pimcService, pimcMenuService, $scope, $http, $window, $location, $filter, i18nService, uiGridConstants) {
 
         // Entreda de busquedas y botones
         $scope.valorBusqueda = "";
@@ -46,9 +46,9 @@
         };
         
         $scope.init = function() {
-            var consultaTodosArchivos = pimcService.crearURLOperacion('ConsultarTodos', 'Archivos');
-            // Cargamos los archivos
-            return $http.get(consultaTodosArchivos).then(function (data) {
+            var consultaTodosDocumentos = pimcService.crearURLOperacion('ConsultarTodos', 'Documentos');
+            // Cargamos los Documentos
+            return $http.get(consultaTodosDocumentos).then(function (data) {
                 data.data.forEach(function changeDates(row, index) {
                     if (row.fechaInicial !== null) {
                         row.fechaInicial = (row.fechaInicial && row.fechaInicial.length != 0) ? $filter('date')(new Date(row.fechaInicial), String(row.fechaInicialFormato).toLowerCase(), 'UTC') : null;
@@ -56,7 +56,7 @@
                     }
                 });
                 $scope.tablaResultados.data = data.data;
-                pimcService.debug("Archivos Cargados", data);
+                pimcService.debug("Documentos Cargados", data);
             });
         };
 
@@ -88,12 +88,12 @@
             return renderableRows;
         };
         
-        // Para redirección a la página de perfil de archivo
-        $scope.abrirArchivosSeleccionados = function () {
+        // Para redirección a la página de perfil del documento
+        $scope.abrirDocumentosSeleccionados = function () {
             var seleccionados = $scope.tablaResultadosGridApi.selection.getSelectedRows();
-            pimcService.debug("Archivos seleccionados = " + seleccionados);
+            pimcService.debug("Documentos seleccionados = " + seleccionados);
             angular.forEach(seleccionados, function (seleccionado) {
-               pimcMenuService.abrirElemento("Archivos", seleccionado.archivoID, seleccionado.titulo, true); 
+               pimcMenuService.abrirElemento("Documento", seleccionado.documentoID, seleccionado.titulo, true); 
             });
         };
 
