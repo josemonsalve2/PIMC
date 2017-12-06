@@ -93,7 +93,7 @@
             var seleccionados = $scope.tablaResultadosGridApi.selection.getSelectedRows();
             pimcService.debug("Documentos seleccionados = " + seleccionados);
             angular.forEach(seleccionados, function (seleccionado) {
-               pimcMenuService.abrirElemento("Documento", seleccionado.documentoID, seleccionado.titulo, true); 
+               pimcMenuService.abrirElemento("Documentos", seleccionado.documentoID, seleccionado.titulo, true); 
             });
         };
 

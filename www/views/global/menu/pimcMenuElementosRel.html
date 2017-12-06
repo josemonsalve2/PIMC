@@ -1,6 +1,7 @@
 <div class="collapse navbar-collapse" uid-collapse="isNavCollapsed" id="menuPIMC">
         <ul class="nav navbar-nav">
           <li><a ng-href="#!/" set-parent-active>Inicio</a></li>
+          <li><a ng-href="#!/busqueda" set-parent-active> Documentos disponibles </a></li>
           <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" href="">Perfiles Abiertos
                   <span class="caret"></span>
@@ -10,13 +11,13 @@
                       <a ng-if="menuElementosCtrl.menuVacio"> No hay ningun elemento abierto</a>
                   </li>
                   <li>
-                      <a ng-href="#!/archivos" ng-if="menuElementosCtrl.elementosAbiertos.Archivos.length > 0" set-parent-active>Archivos</a>
+                      <a ng-href="#!/documentos" ng-if="menuElementosCtrl.elementosAbiertos.Documentos.length > 0" set-parent-active>Documentos</a>
                   </li>
-                  <li ng-repeat="elemento in menuElementosCtrl.elementosAbiertos.Archivos track by $index" class="{{(elemento.seleccionado)? 'active':''}}">
+                  <li ng-repeat="elemento in menuElementosCtrl.elementosAbiertos.Documentos track by $index" class="{{(elemento.seleccionado)? 'active':''}}">
                         <a set-parent-active>
-                            <span class="glyphicon glyphicon-menu-right btn-xs" ng-click="menuElementosCtrl.abrirElemento('Archivos', elemento.id)"></span>
-                            <span ng-click="menuElementosCtrl.abrirElemento('Archivos', elemento.id)">{{"[" + elemento.id + "] " + elemento.texto}}</span>
-                            <span class="glyphicon glyphicon-remove btn-xs" ng-click="menuElementosCtrl.cerrarElemento('Archivos', elemento.id)"></span>                            
+                            <span class="glyphicon glyphicon-menu-right btn-xs" ng-click="menuElementosCtrl.abrirElemento('Documentos', elemento.id)"></span>
+                            <span ng-click="menuElementosCtrl.abrirElemento('Documentos', elemento.id)">{{"[" + elemento.id + "] " + elemento.texto}}</span>
+                            <span class="glyphicon glyphicon-remove btn-xs" ng-click="menuElementosCtrl.cerrarElemento('Documentos', elemento.id)"></span>                            
                         </a>
                   </li>
                   <li>
@@ -82,12 +83,11 @@
               </ul>
           </li>
         <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="">Busquedas
+            <a class="dropdown-toggle" data-toggle="dropdown" href="">Busquedas Avanzadas
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
                 <li>
-                    <a ng-href="#!/busqueda" set-parent-active>Por Archivos</a>
                     <a ng-href="#!/" set-parent-active>Por Personajes</a>
                     <a ng-href="#!/" set-parent-active>Por Embarcaciones</a>
                     <a ng-href="#!/" set-parent-active>Por Lugares</a>
