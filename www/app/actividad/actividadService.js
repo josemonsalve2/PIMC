@@ -35,6 +35,8 @@
             console.log("Problema cargando los valores de datos principales de la actividad " + err.message);
           }
         }
+        console.log(datosPrincipales);
+        return datosPrincipales;
 
       });
     }; //Fin de cargar datos principales

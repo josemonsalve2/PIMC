@@ -12,7 +12,7 @@
                 <h2 class="t1">Tipo de actividad: 
                 <span editable-text="datosPrincipales.contenido.tipoActividad" 
                             onbeforesave="editarDatoPrincipal('tipoActividad',$data)"> 
-                            {{ datosPrincipales.contenido.tipoActividad || "Indeterminada" }}</span>
+                            {{ datosPrincipales.contenido.tipo || "Indeterminada" }}</span>
                 </h2>
             </div>
         </div>
@@ -28,21 +28,30 @@
                     </li> 
                     <li class="list-group-item">
                         <span class="label label-primary">Personajes involucrados</span>
-                        <span editable-text="datosPrincipales.contenido.personajesInvolucrados" 
-                            onbeforesave="editarDatoPrincipal('personajesInvolucrados',$data)"  
-                            class="m-l-1"> {{ datosPrincipales.contenido.personajesInvolucrados || "No definida" }}</span>
+                        <pimc-listado 
+                            tipo="barra"
+                            nombre="personalInvolucrados" 
+                            csv-string="datosPrincipales.contenido.personalInvolucrados" 
+                            reportar-cambio="editarDatoPrincipal('personalInvolucrados', csvString)">
+                        </pimc-listado>
                     </li> 
                     <li class="list-group-item">
                         <span class="label label-primary">Herramientas</span>
-                        <span editable-text="datosPrincipales.contenido.herramientas" 
-                            onbeforesave="editarDatoPrincipal('herramientas',$data)"  
-                            class="m-l-1"> {{ datosPrincipales.contenido.herramientas || "No definido" }}</span>
+                        <pimc-listado 
+                            tipo="barra"
+                            nombre="herramientas" 
+                            csv-string="datosPrincipales.contenido.herramientas" 
+                            reportar-cambio="editarDatoPrincipal('herramientas', csvString)">
+                        </pimc-listado>
                     </li> 
                     <li class="list-group-item">
                         <span class="label label-primary">Materiales</span>
-                        <span editable-text="datosPrincipales.contenido.materiales" 
-                            onbeforesave="editarDatoPrincipal('materiales',$data)"  
-                            class="m-l-1"> {{ datosPrincipales.contenido.materiales || "No definido" }}</span>
+                        <pimc-listado 
+                            tipo="barra"
+                            nombre="materiales" 
+                            csv-string="datosPrincipales.contenido.materiales" 
+                            reportar-cambio="editarDatoPrincipal('materiales', csvString)">
+                        </pimc-listado>
                     </li> 
                 </ul>
             </div>

@@ -21,9 +21,9 @@
       } else {
         $scope.actividadID = actividadSeleccionada.id;
         if (!$scope.datosGuardados) {
-          pimcBarraEstadoService.registrarAccion("Actividad <strong>" + $scope.embarcacionID + "</strong> ha sido cargado");
+          pimcBarraEstadoService.registrarAccion("Actividad <strong>" + $scope.actividadID + "</strong> ha sido cargado");
         } else {
-          pimcBarraEstadoService.registrarAccion("Actividad <strong>" + $scope.embarcacionID  + "</strong> ha sido guardado en la base de datos");
+          pimcBarraEstadoService.registrarAccion("Actividad <strong>" + $scope.actividadID  + "</strong> ha sido guardado en la base de datos");
           $scope.datosGuardados = false;
         }
       }
