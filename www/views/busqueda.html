@@ -1,19 +1,11 @@
 <section class="row p-t-1">
-
-  <div class="col-sm-12 p-b-1">
-    <form class="form-inline">
-      <div class="form-group">
-        <input type="text" class="form-control" ng-model="valorBusqueda" ng-keydown="$event.keyCode === 13 && realizarBusqueda()">
-      </div>
-      <button ng-click='realizarBusqueda()' class="btn btn-primary">buscar...</button>
-    </form>
-  </div>
-
+  <div  class="col-sm-12 p-b-1" style="text-align:center"> Filtre los resultados usando los campos de texto que se encuentran debajo del titulo de cada columna</div>
   <div class="col-sm-12">
-    <div ui-grid="tablaResultados"ui-grid-selection ui-grid-auto-resize ui-grid-edit ui-grid-cellnav class="grid"></div>
+    <div class="text-center col-sm p-b-1 justify-content-md-center" ng-show="cargandoDatos"><img class="img-responsive center-block"src="images/loader.gif"></div>
+    <div ng-show="!cargandoDatos" ui-grid="tablaResultados"ui-grid-selection ui-grid-auto-resize ui-grid-edit ui-grid-cellnav class="grid"></div>
   </div>
   
-  <div class="col-sm-12 text-right p-t-1">
+  <div ng-show="!cargandoDatos" class="col-sm-12 text-right p-t-1">
     <button ng-click='abrirDocumentosSeleccionados()' class="btn btn-success">Abrir Seleccionados</button>
 	</div>
 </section>
