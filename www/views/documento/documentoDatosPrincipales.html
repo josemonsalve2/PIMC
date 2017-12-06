@@ -86,59 +86,6 @@
 
           </ul>
         </div>
-
-        <footer class="footer"></footer>
-
-      </div>
-
-      <div id="sinopsisComentarios">
-
-            
-
-        <div class="panel panel-primary">
-            
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <div class="panel panel-primary">
-          <header class="panel-heading">
-            <h4 class="m-a-1">Sinopsis general</h4>
-          </header>
-            <div class="p-a-1">
-                <div class="panel panel-default m-b-0 m-t-0">
-                    <div class="panel-body">
-                        <p class="notaContenido" 
-                            editable-textarea="documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.sinopsis" 
-                            e-rows="2" 
-                            buttons="right" 
-                            onaftersave="documentoDatosPrincipalesCtrl.datoEditado('sinopsis',$data)">
-                            {{documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.sinopsis || "Click aqui para agregar sinopsis"}}</p>
-                    </div>
-                </div>
-            </div>
-          <header class="panel-heading">
-            <h4 class="m-a-0">Comentarios</h4>
-          </header>
-          <pimc-comentarios-anotaciones 
-            notas="documentoDatosPrincipalesCtrl.notasInt"
-            reportar-cambio="documentoDatosPrincipalesCtrl.notificarNotasCambios(notas)">
-          </pimc-comentarios-anotaciones>
-
-        </div>
-
       </div>
     </div>
 
@@ -172,15 +119,16 @@
         <div class="panel-body">
         </div>
       </div>
-      
-      <div class="panel panel-primary">
-        <header class="panel-heading">
-          <h4>disponibilidad de consulta</h4>
-        </header>
-        <div class="panel-body">
-          <p editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.disponibilidad" onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('disponibilidadConsulta',$data)">{{documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.disponibilidad}}</p>
-        </div>
-      </div>
+    </div>
+    <div id="otrosDatosDocumentoColDerecha" class="col-sm-12 col-md-8">
+        <div class="panel panel-primary">
+            <header class="panel-heading">
+              <h4>disponibilidad de consulta</h4>
+            </header>
+            <div class="panel-body">
+              <p editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.disponibilidad" onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('disponibilidadConsulta',$data)">{{documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.disponibilidad}}</p>
+            </div>
+          </div>
     </div>
 
   </div><!-- .row -->

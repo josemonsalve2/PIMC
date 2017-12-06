@@ -114,10 +114,15 @@
             });
         };
         
-        $scope.datosPrincipalesEditados = function (datosPrincipales, notas) {
+        $scope.datosPrincipalesEditados = function (datosPrincipales) {
+            $scope.datosPrincipales = datosPrincipales;
+        };
+
+        $scope.sinopsisComentariosEditados = function (datosPrincipales, notas) {
             $scope.datosPrincipales = datosPrincipales;
             $scope.notas = notas;
         };
+        
 
         // Anotaciones
         $scope.notas = [];

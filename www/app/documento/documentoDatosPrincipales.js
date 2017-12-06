@@ -89,6 +89,7 @@
     
         }]);
     
+        // Controller para los datos principales
         documentoPerfil.controller('documentoDatosPrincipalesController', ['pimcService', 'pimcBarraEstadoService', 'pimcDocumentoDatosPrincipalesService', '$window', function(pimcService, pimcBarraEstadoService, pimcDocumentoDatosPrincipalesService, $window) {
             var documentoDatosPrincipalesCtrl = this;
     
@@ -96,8 +97,6 @@
             documentoDatosPrincipalesCtrl.activo = false;
             // Inicializacion de datos principales
             documentoDatosPrincipalesCtrl.datosPrincipalesInt = pimcDocumentoDatosPrincipalesService.crearVacio;
-            // Inicializacion de notas
-            documentoDatosPrincipalesCtrl.notasInt = [];
     
             // Para actualizar los elementos internos en caso de que sea necesario
             documentoDatosPrincipalesCtrl.$onChanges = function (changes) { 
@@ -107,24 +106,13 @@
                 if (changes.datosPrincipales) {
                     documentoDatosPrincipalesCtrl.datosPrincipalesInt = $window.angular.copy(documentoDatosPrincipalesCtrl.datosPrincipales); // Datos principales
                 }
-                if (changes.notas) {
-                    documentoDatosPrincipalesCtrl.notasInt = $window.angular.copy(documentoDatosPrincipalesCtrl.notas); // Notas
-                } 
               } 
             // Funcion para datos editados
             documentoDatosPrincipalesCtrl.datoEditado = function (campo, valorNuevo) {
                 pimcBarraEstadoService.registrarAccion("Dato Principal" + campo + " modificado " + valorNuevo);
                 documentoDatosPrincipalesCtrl.datosPrincipalesInt.estado = pimcService.datosEstados.MODIFICADO;
                 documentoDatosPrincipalesCtrl.reportarCambio({
-                    datosPrincipales: documentoDatosPrincipalesCtrl.datosPrincipalesInt, 
-                    notas: documentoDatosPrincipalesCtrl.notasInt });
-            };
-    
-            documentoDatosPrincipalesCtrl.notificarNotasCambios = function (notas) {
-                documentoDatosPrincipalesCtrl.notasInt = notas;
-                documentoDatosPrincipalesCtrl.reportarCambio({
-                    datosPrincipales: documentoDatosPrincipalesCtrl.datosPrincipalesInt,
-                    notas: documentoDatosPrincipalesCtrl.notasInt });
+                    datosPrincipales: documentoDatosPrincipalesCtrl.datosPrincipalesInt});
             };
     
             documentoDatosPrincipalesCtrl.listadoEditado = function (listado, csvString) {
@@ -147,16 +135,69 @@
     
         }]);
     
+
+        // Controller para sinopsis y comentarios
+        documentoPerfil.controller('documentoSinopsisComentariosCtrl', ['pimcService', 'pimcBarraEstadoService', 'pimcDocumentoDatosPrincipalesService', '$window', function(pimcService, pimcBarraEstadoService, pimcDocumentoDatosPrincipalesService, $window) {
+            var docSinopsisComentCtrl = this;
+    
+            // Desactivar 
+            docSinopsisComentCtrl.activo = false;
+            // Inicializacion de datos principales
+            docSinopsisComentCtrl.datosPrincipalesInt = pimcDocumentoDatosPrincipalesService.crearVacio;
+            // Inicializacion de notas
+            docSinopsisComentCtrl.notasInt = [];
+    
+            // Para actualizar los elementos internos en caso de que sea necesario
+            docSinopsisComentCtrl.$onChanges = function (changes) { 
+                if (changes.activo) {
+                    docSinopsisComentCtrl.activoInt = $window.angular.copy(docSinopsisComentCtrl.activo);
+                }
+                if (changes.datosPrincipales) {
+                    docSinopsisComentCtrl.datosPrincipalesInt = $window.angular.copy(docSinopsisComentCtrl.datosPrincipales); // Datos principales
+                }
+                if (changes.notas) {
+                    docSinopsisComentCtrl.notasInt = $window.angular.copy(docSinopsisComentCtrl.notas); // Notas
+                } 
+              } 
+            // Funcion para datos editados
+            docSinopsisComentCtrl.datoEditado = function (campo, valorNuevo) {
+                pimcBarraEstadoService.registrarAccion("Dato Principal" + campo + " modificado " + valorNuevo);
+                docSinopsisComentCtrl.datosPrincipalesInt.estado = pimcService.datosEstados.MODIFICADO;
+                docSinopsisComentCtrl.reportarCambio({
+                    datosPrincipales: docSinopsisComentCtrl.datosPrincipalesInt, 
+                    notas: docSinopsisComentCtrl.notasInt });
+            };
+    
+            docSinopsisComentCtrl.notificarNotasCambios = function (notas) {
+                docSinopsisComentCtrl.notasInt = notas;
+                docSinopsisComentCtrl.reportarCambio({
+                    datosPrincipales: docSinopsisComentCtrl.datosPrincipalesInt,
+                    notas: docSinopsisComentCtrl.notasInt });
+            };
+
+        }]);
+    
         documentoPerfil.component('pimcDocumentoDatosPrincipales', {
+            bindings: {
+                datosPrincipales: '<',
+                activo: '<',
+                reportarCambio:'&'
+            },
+            controller: 'documentoDatosPrincipalesController',
+            controllerAs: 'documentoDatosPrincipalesCtrl',
+            templateUrl: 'views/documento/documentoDatosPrincipales.html'
+        });
+
+        documentoPerfil.component('pimcDocumentoSinopsisComentarios', {
             bindings: {
                 datosPrincipales: '<',
                 activo: '<',
                 notas: '<',
                 reportarCambio:'&'
             },
-            controller: 'documentoDatosPrincipalesController',
-            controllerAs: 'documentoDatosPrincipalesCtrl',
-            templateUrl: 'views/documento/documentoDatosPrincipales.html'
+            controller: 'documentoSinopsisComentariosCtrl',
+            controllerAs: 'docSinopsisComentCtrl',
+            templateUrl: 'views/documento/documentoSinopsisComentarios.html'
         });
     
     })(window.angular);
