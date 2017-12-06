@@ -13,7 +13,7 @@
     'institucionPerfil',
     'actividadPerfil',
     'eventoPerfil',
-    'archivosBusqueda',
+    'documentosBusqueda',
     'documentoPerfil',
     'lugarTerritorioModule',
     'comentariosModule',
