@@ -240,8 +240,8 @@
             menuElementosCtrl.revisarSiMenuVacio = function () {
               var vacio = true;
               // Revisamos si el menu esta vacio
-              angular.forEach(menuElementosCtrl.elementosAbiertos, function(elemento) {
-                if (elemento.length != 0) {
+              angular.forEach(menuElementosCtrl.elementosAbiertos, function(elemento, nombreElemento) {
+                if (nombreElemento != "Documentos" && elemento.length != 0) {
                   vacio = false;
                 }
               });

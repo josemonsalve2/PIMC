@@ -1,24 +1,31 @@
 <div class="collapse navbar-collapse" uid-collapse="isNavCollapsed" id="menuPIMC">
         <ul class="nav navbar-nav">
           <li><a ng-href="#!/" set-parent-active>Inicio</a></li>
-          <li><a ng-href="#!/busqueda" set-parent-active> Documentos disponibles </a></li>
+          <li><a ng-href="#!/busqueda" set-parent-active> Documentos cargados </a></li>
           <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" href="">Perfiles Abiertos
+              <a class="dropdown-toggle" data-toggle="dropdown" href="">Documentos Abiertos
                   <span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
-                  <li>
-                      <a ng-if="menuElementosCtrl.menuVacio"> No hay ningun elemento abierto</a>
-                  </li>
-                  <li>
-                      <a ng-href="#!/documentos" ng-if="menuElementosCtrl.elementosAbiertos.Documentos.length > 0" set-parent-active>Documentos</a>
-                  </li>
-                  <li ng-repeat="elemento in menuElementosCtrl.elementosAbiertos.Documentos track by $index" class="{{(elemento.seleccionado)? 'active':''}}">
+                <li ng-if="!menuElementosCtr.elementosAbiertos.Documentos || menuElementosCtrl.elementosAbiertos.Documentos.length == 0">
+                    <a> No hay ningun documento seleccionado</a>
+                </li>
+                <li ng-repeat="elemento in menuElementosCtrl.elementosAbiertos.Documentos track by $index" class="{{(elemento.seleccionado)? 'active':''}}">
                         <a set-parent-active>
                             <span class="glyphicon glyphicon-menu-right btn-xs" ng-click="menuElementosCtrl.abrirElemento('Documentos', elemento.id)"></span>
                             <span ng-click="menuElementosCtrl.abrirElemento('Documentos', elemento.id)">{{"[" + elemento.id + "] " + elemento.texto}}</span>
                             <span class="glyphicon glyphicon-remove btn-xs" ng-click="menuElementosCtrl.cerrarElemento('Documentos', elemento.id)"></span>                            
                         </a>
+                    </li>
+              </ul>
+          </li>
+          <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="">Elementos relacionales recientes
+                  <span class="caret"></span>
+              </a>
+                <ul class="dropdown-menu">
+                  <li ng-if="menuElementosCtrl.menuVacio">
+                      <a> No hay ningun elemento abierto</a>
                   </li>
                   <li>
                       <a ng-href="#!/Personajes" ng-if="menuElementosCtrl.elementosAbiertos.Personajes.length > 0" set-parent-active>Personajes</a>
