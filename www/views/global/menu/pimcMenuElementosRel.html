@@ -7,7 +7,7 @@
                   <span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
-                <li ng-if="!menuElementosCtr.elementosAbiertos.Documentos || menuElementosCtrl.elementosAbiertos.Documentos.length == 0">
+                <li ng-if="!menuElementosCtrl.elementosAbiertos.Documentos || menuElementosCtrl.elementosAbiertos.Documentos.length === 0">
                     <a> No hay ningun documento seleccionado</a>
                 </li>
                 <li ng-repeat="elemento in menuElementosCtrl.elementosAbiertos.Documentos track by $index" class="{{(elemento.seleccionado)? 'active':''}}">
