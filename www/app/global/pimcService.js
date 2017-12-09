@@ -52,8 +52,8 @@
         // ColumnasNombres. Nombre que lo identifica en la base de datos
         pimcService.nombreColElementoRelacional = {
             Embarcaciones: "nombres",
-            Archivos: "titulo",
-            Documentos: "",
+            Archivos: "",
+            Documentos: "titulo",
             Personajes: "nombre",
             Actividades: "nombre",
             Instituciones: "nombre",

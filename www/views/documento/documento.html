@@ -1,142 +1,15 @@
 <section>
-  <div id="preloading" class="preloader" ng-show="datosPrincipalesCargando"><img src="images/loader.gif"></div>
-  <uib-tabset active="active" ng-show="!datosPrincipalesCargando">
+  <div id="preloading" class="preloader" ng-show="documentoCargando"><img src="images/loader.gif"></div>
+  <uib-tabset active="0" ng-show="!documentoCargando">
 
     <!-- DATOS PRINCIPALES-->
     <uib-tab index="0" heading="Datos Principales"> 
-        
-    	<div class="row p-t-2">
-
-        <div class="col-sm-12 col-md-4">
-
-          <div class="panel panel-primary m-b-2">
-
-            <header class="panel-heading">
-              <h3 class="m-a-1">Datos Documento {{documentoID}}</h3>
-            </header>
-
-            <div class="panel-body">
-
-              <ul class="list-group m-b-0">
-                
-                <li class="list-group-item">
-                	<span class="label label-primary">Tipo de Documento</span>
-                	<span editable-text="datosPrincipales.tipoDocumento" 
-                				onbeforesave="datosPrincipales.datoEditado('tipoDocumento',$data)"  
-                				class="m-l-1"> {{ datosPrincipales.tipoDocumento || "No definido" }}</span>
-                </li>
-                <li class="list-group-item">
-                	<span class="label label-primary">Estado de conservación</span>
-                	<span editable-text="datosPrincipales.estadoConservacion" 
-                				onbeforesave="datosPrincipales.datoEditado('estadoConservacion',$data)"  
-                				class="m-l-1"> {{ datosPrincipales.estadoConservacion || "No definido" }}</span>
-                </li>
-                <li class="list-group-item">
-                	<span class="label label-primary">Formato Disponible</span> 
-                	<span editable-text="datosPrincipales.formatoDisponible" 
-                				onbeforesave="datosPrincipales.datoEditado('formatoDisponible',$data)"  
-                				class="m-l-1"> {{ datosPrincipales.formatoDisponible || "No definido" }}</span>
-                </li>
-                <li class="list-group-item fechas-grupo">
-                	<span class="label label-primary">Rango de fechas</span> 
-                	<span editable-text="datosPrincipales.fechaMinima" 
-                				onbeforesave="datosPrincipales.datoEditado('fechaMinima',$data)"  
-                				class="fechaMinima m-l-1"> {{ datosPrincipales.fechaMinima || "No definido" }}</span> 
-                	<span editable-text="datosPrincipales.fechaMaxima" 
-                				onbeforesave="datosPrincipales.datoEditado('fechaMaxima',$data)"
-                				class="fechaMaxima">{{ datosPrincipales.fechaMaxima || "No definido"}}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-            <div class="panel panel-primary">
-            <header class="panel-heading">
-              <h4>Palabras Claves</h4>
-            </header>
-            <div class="panel-body">
-            	<ul class="nav nav-pills rounded">
-            		<li role="presentation" class="active" 
-            				onaftersave="listaTemas.modificarBorrarTema($index,tema)" 
-            				editable-text="tema" 
-            				ng-repeat="tema in datosPrincipales.listaTemas track by $index">
-            				<a href="#" class="bg-mountain_meadow">{{tema}}</a>
-            		</li>
-            		<li role="presentation" 
-            				editable-text="listaTemas.temaNuevo.mensaje" 
-            				onaftersave="listaTemas.agregarTemaNuevo(listaTemas.temaNuevo.mensaje)" 
-            				e-ng-focus="listaTemas.borrarCampo()" 
-            				oncancel="listaTemas.mostrarCampo()">
-            				<a href="#">{{listaTemas.temaNuevo.mensaje}}</a>
-            		</li>
-            	</ul>
-            </div>
-          </div>
-           
-        </div>
-
-        <div id="sinopsisComentarios" class="col-sm-12 col-md-8">
- 
-          <div>
-            <div class="panel panel-primary">
-              <header class="panel-heading">
-                <h4 class="m-a-1">Sinopsis general</h4>
-              </header>
-                  <div class="p-a-1">
-                      <div class="panel panel-default m-b-0 m-t-0">
-                          <div class="panel-body">
-                              <p class="notaContenido" 
-                                    editable-textarea="datosPrincipales.sinopsis" 
-                                    e-rows="2" 
-                                    buttons="right" 
-                                    onaftersave="datosPrincipales.datoEditado('sinopsis',datosPrincipales.sinopsis)">{{datosPrincipales.sinopsis || "Click aqui para agregar sinopsis"}}</p>
-                          </div>
-                      </div>
-                  </div>
-            </div>
-            <div class="panel panel-primary">
-
-              <header class="panel-heading">
-                <h4 class="m-a-1">Comentarios</h4>
-              </header>
-            
-              <div class="p-a-1">
-
-                <button class="btn btn-primary" ng-click="agregarNotaVacia()">Agregar Comentario</button>
-
-                <div class="panel panel-default m-b-0 m-t-1" ng-repeat="nota in notas track by $index">
-                	<div class="panel-body">
-                		<button type="button" 
-                    				class="close" 
-                    				aria-label="Cerrar" 
-                    				ng-click="eliminarNota($index)">
-                    				<span aria-hidden="true">&times;</span></button>
-                		<p class="notaContenido" 
-                				editable-textarea="nota.nota" 
-                				e-rows="2" 
-                				buttons="right" 
-                				onaftersave="modificarNota($index,nota.nota)">{{nota.nota || "Click para editar"}}</p>
-                    <div class="clearfix m-t-1">
-                        <div class="notaReferencia pull-left">Fecha Historica: <span editable-text="nota.fechaHistorica" 
-                                 onaftersave="modificarFechaHistorica($index,fechaHistorica)">{{nota.fechaHistorica || "ND"}}</span></div>
-                    </div>
-                    <div class="clearfix m-t-1">
-                    	<div class="notaReferencia pull-left">Referencia: <span editable-text="nota.referencia" 
-                    			 onaftersave="modificarReferencia($index,nota.referencia)">{{nota.referencia || "ND"}}</span></div>
-                    	<div class="notaFecha pull-right">{{nota.fechaCreacion || "Nota Nueva"}}</div>
-                    </div>
-                	</div>
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-          
-        </div>
-      </div><!-- .row -->
-        
+        <pimc-documento-datos-principales
+        ng-if="!documentoCargando"
+        datos-principales = "datosPrincipales"
+        activo = "!documentoCargando"
+        reportar-cambio="datosPrincipalesEditados(datosPrincipales)">
+      </pimc-documento-datos-principales>
     </uib-tab>
       
 
@@ -234,94 +107,132 @@
                 </uib-tabset>
         </div> <!-- Row -->
     </uib-tab>
-    <!-- PERSONAJES -->
-    <uib-tab index="2" heading="Personajes">
-    	<div class="row p-t-2">
-    		<div class="col-sm-12">
-                <pimc-tabla-ref-elemento-relacional elemento-relacional='"Personajes"' valores='personajes' campos-columnas='personajesColumnas'
-                    nombres-columnas='personajesNombresColumnas' autocompletar-opciones='autocompletarPersonajesOpciones' reportar-cambio='personajesCambios(valores)'>
-                </pimc-tabla-ref-elemento-relacional>
-    		</div>
-    	</div>
+    <uib-tab index="2" heading="Elementos relacionales">             
+        <uib-tabset active="0" ng-show="!documentoCargando">
+            <!-- PERSONAJES -->
+            <uib-tab index="0" heading="Personajes">
+                <div class="row p-t-2">
+                    <div class="col-sm-12">
+                        <pimc-tabla-ref-elemento-relacional elemento-relacional='"Personajes"' valores='personajes' campos-columnas='personajesColumnas'
+                            nombres-columnas='personajesNombresColumnas' autocompletar-opciones='autocompletarPersonajesOpciones' reportar-cambio='personajesCambios(valores)'>
+                        </pimc-tabla-ref-elemento-relacional>
+                    </div>
+                </div>
+            </uib-tab>
+        
+        
+            <!-- EMBARCACIONES -->
+            <uib-tab index="1" heading="Embarcaciones">
+                <div class="row p-t-2">
+                    <div class="col-sm-12">
+                        <pimc-tabla-ref-elemento-relacional elemento-relacional='"Embarcaciones"' valores='embarcaciones' campos-columnas='embarcacionesColumnas'
+                            nombres-columnas='embarcacionesNombresColumnas' autocompletar-opciones='autocompletarEmbarcacionesOpciones'
+                            reportar-cambio='embarcacionesCambios(valores)'>
+                        </pimc-tabla-ref-elemento-relacional>
+                    </div>
+                </div>
+            </uib-tab>
+        
+            <!-- LUGARES -->
+            <uib-tab index="2" heading="Lugares">
+                <div class="row p-t-2">
+                    <div class="col-sm-12">
+                        <table id="lugaresTabla">
+                            <tr>
+                                <th>Lugar ID</th>
+                                <th>Nombre</th>
+                                <th>Tipo de Lugar</th>
+                                <th>Categoria</th>
+                                <th>Cita/Anotación</th>
+                            </tr>
+                            <tr ng-click="abrirLugarSeleccionado($index,'existente')" ng-repeat="lugar in lugares track by $index">
+                                <td>
+                                    <button ng-show="borrarLugaresActivado" ng-click='borrarLugarExistente($index);$event.stopPropagation()'
+                                        class="btn-danger">-</button>{{lugar.lugaresID}}</td>
+                                <td>{{lugar.nombre}}</td>
+                                <td>{{lugar.tipo}}</td>
+                                <td>{{lugar.categoria}}</td>
+                                <td>{{lugar.comentario}}</td>
+                            </tr>
+                            <tr ng-click="abrirLugarSeleccionado($index,'nuevaRef')" ng-repeat="lugar in lugaresAgregarReferencia track by $index">
+                                <td>
+                                    <button ng-click='borrarReferenciaNuevoLugar($index)' class="btn-danger">-</button> (Nueva Ref) {{lugar.lugaresID}}</td>
+                                <td>{{lugar.nombre}}</td>
+                                <td>{{lugar.tipo}}</td>
+                                <td>{{lugar.categoria}}</td>
+                                <td>{{lugar.comentario}}</td>
+                            </tr>
+                            <tr ng-repeat="lugar in lugaresNuevas track by $index">
+                                <td>
+                                    <button ng-click='borrarNuevoLugar($index)' class="btn-danger">-</button> {{"Lugar Nuevo"}}</td>
+                                <td>
+                                    <span editable-text="lugar.nombre" e-typeahead-min-length="3" e-uib-typeahead="lugares.nombre for lugares in autocompletarLugar($viewValue)"
+                                        e-typeahead-wait-ms="100" e-typeahead-on-select="actualizarLugarNuevaExistente($index,$item)"
+                                        e-typeahead-no-results="LugarNoResults" e-typeahead-loading="cargandoNombresLugar" onbeforesave="revisarSiLugarExiste($data)">{{lugar.nombre || "nuevo nombre"}}</span>
+                                    <i ng-show="cargandoNombresLugar" class="glyphicon glyphicon-refresh"></i>
+                                    <div ng-show="LugarNoResults">
+                                        <i class="glyphicon glyphicon-remove"></i> No Results Found</div>
+                                </td>
+                                <td>
+                                    <span editable-text="lugar.tipo">{{lugar.tipo || "nuevo tipo"}}</span>
+                                </td>
+                                <td>
+                                    <span editable-text="lugar.categoria">{{lugar.categoria || "nueva categoria"}}</span>
+                                </td>
+                                <td>
+                                    <span editable-text="lugar.comentario">{{lugar.comentario || "comentario de referencia"}}</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </uib-tab>
+        
+            <!-- ACTIVIDADES -->
+            <uib-tab index="3" heading="Actividades">
+                <div class="row p-t-2">
+                    <div class="col-sm-12">
+                        <pimc-tabla-ref-elemento-relacional elemento-relacional='"Actividades"' valores='actividades' campos-columnas='actividadesColumnas'
+                            nombres-columnas='actividadesNombresColumnas' autocompletar-opciones='autocompletarActividadesOpciones' reportar-cambio='actividadesCambios(valores)'>
+                        </pimc-tabla-ref-elemento-relacional>
+                    </div>
+                </div>
+            </uib-tab>
+        
+            <!-- FECHAS Y SUCESOS -->
+            <uib-tab index="4" heading="Fechas y sucesos">
+                <div class="row p-t-2">
+                    <div class="col-sm-12">
+                        <pimc-tabla-ref-elemento-relacional elemento-relacional='"Eventos"' valores='eventos' campos-columnas='eventosColumnas' tipo-columnas='eventosTiposColumnas'
+                            nombres-columnas='eventosNombresColumnas' autocompletar-opciones='autocompletarEventosOpciones' reportar-cambio='eventosCambios(valores)'>
+                        </pimc-tabla-ref-elemento-relacional>
+                    </div>
+                </div>
+            </uib-tab>
+        
+            <!-- INSTITUCIONES -->
+            <uib-tab index="5" heading="Instituciones">
+                <div class="row p-t-2">
+                    <div class="col-sm-12">
+                        <pimc-tabla-ref-elemento-relacional elemento-relacional='"Instituciones"' valores='instituciones' campos-columnas='institucionesColumnas'
+                            nombres-columnas='institucionesNombresColumnas' autocompletar-opciones='autocompletarInstitucionesOpciones'
+                            reportar-cambio='institucionesCambios(valores)'></pimc-tabla-ref-elemento-relacional>
+                    </div>
+                </div>
+            </uib-tab>
+        </uib-tabset>
     </uib-tab>
 
-    <!-- EMBARCACIONES -->
-    <uib-tab index="3" heading="Embarcaciones">
-        <div class="row p-t-2">
-            <div class="col-sm-12">
-                <pimc-tabla-ref-elemento-relacional elemento-relacional='"Embarcaciones"' valores='embarcaciones' campos-columnas='embarcacionesColumnas'
-                    nombres-columnas='embarcacionesNombresColumnas' autocompletar-opciones='autocompletarEmbarcacionesOpciones' reportar-cambio='embarcacionesCambios(valores)'>
-                </pimc-tabla-ref-elemento-relacional>
-            </div>
-        </div>
-    </uib-tab>
-    
-    <!-- LUGARES -->
-    <uib-tab index="4" heading="Lugares">
-    	<div class="row p-t-2">
-    		<div class="col-sm-12">
-		      <table id="lugaresTabla">
-		        <tr><th>Lugar ID</th><th>Nombre</th><th>Tipo de Lugar</th><th>Categoria</th><th>Cita/Anotación</th></tr>
-		        <tr ng-click="abrirLugarSeleccionado($index,'existente')" ng-repeat="lugar in lugares track by $index">
-                    <td><button ng-show="borrarLugaresActivado" ng-click='borrarLugarExistente($index);$event.stopPropagation()' class="btn-danger">-</button>{{lugar.lugaresID}}</td>
-                    <td>{{lugar.nombre}}</td>
-                    <td>{{lugar.tipo}}</td>
-                    <td>{{lugar.categoria}}</td>
-                    <td>{{lugar.comentario}}</td>
-                </tr>
-                <tr ng-click="abrirLugarSeleccionado($index,'nuevaRef')" ng-repeat="lugar in lugaresAgregarReferencia track by $index">
-                    <td><button ng-click='borrarReferenciaNuevoLugar($index)' class="btn-danger">-</button> (Nueva Ref) {{lugar.lugaresID}}</td>
-                    <td>{{lugar.nombre}}</td>
-                    <td>{{lugar.tipo}}</td>
-                    <td>{{lugar.categoria}}</td>
-                    <td>{{lugar.comentario}}</td>
-                </tr>
-                <tr ng-repeat="lugar in lugaresNuevas track by $index">
-                    <td><button ng-click='borrarNuevoLugar($index)' class="btn-danger">-</button> {{"Lugar Nuevo"}}</td>
-                    <td>
-                        <span editable-text="lugar.nombre" e-typeahead-min-length="3" e-uib-typeahead="lugares.nombre for lugares in autocompletarLugar($viewValue)" e-typeahead-wait-ms="100" e-typeahead-on-select="actualizarLugarNuevaExistente($index,$item)" e-typeahead-no-results="LugarNoResults" e-typeahead-loading="cargandoNombresLugar" onbeforesave="revisarSiLugarExiste($data)">{{lugar.nombre || "nuevo nombre"}}</span>
-                        <i ng-show="cargandoNombresLugar" class="glyphicon glyphicon-refresh"></i>
-                        <div ng-show="LugarNoResults"><i class="glyphicon glyphicon-remove"></i> No Results Found</div></td>
-                    <td><span editable-text="lugar.tipo">{{lugar.tipo || "nuevo tipo"}}</span></td>
-                    <td><span editable-text="lugar.categoria">{{lugar.categoria || "nueva categoria"}}</span></td>
-                    <td><span editable-text="lugar.comentario">{{lugar.comentario || "comentario de referencia"}}</span></td>
-               </tr>
-		      </table>
-      	</div>
-      </div>
-    </uib-tab>
-
-    <!-- ACTIVIDADES -->
-    <uib-tab index="5" heading="Actividades">
-        <div class="row p-t-2">
-            <div class="col-sm-12">
-                <pimc-tabla-ref-elemento-relacional elemento-relacional='"Actividades"' valores='actividades' campos-columnas='actividadesColumnas'
-                    nombres-columnas='actividadesNombresColumnas' autocompletar-opciones='autocompletarActividadesOpciones' reportar-cambio='actividadesCambios(valores)'>
-                </pimc-tabla-ref-elemento-relacional>
-            </div>
-        </div>
-    </uib-tab>
-
-    <!-- FECHAS Y SUCESOS -->
-    <uib-tab index="6" heading="Fechas y sucesos">
-        <div class="row p-t-2">
-            <div class="col-sm-12">
-                <pimc-tabla-ref-elemento-relacional elemento-relacional='"Eventos"' valores='eventos' campos-columnas='eventosColumnas' tipo-columnas='eventosTiposColumnas'
-                    nombres-columnas='eventosNombresColumnas' autocompletar-opciones='autocompletarEventosOpciones' reportar-cambio='eventosCambios(valores)'>
-                </pimc-tabla-ref-elemento-relacional>
-            </div>
-        </div>
-    </uib-tab>
-
-    <!-- INSTITUCIONES -->
-    <uib-tab index="7" heading="Instituciones">
-    	<div class="row p-t-2">
-    		<div class="col-sm-12">
-                <pimc-tabla-ref-elemento-relacional elemento-relacional='"Instituciones"' valores='instituciones' campos-columnas='institucionesColumnas'
-                    nombres-columnas='institucionesNombresColumnas' autocompletar-opciones='autocompletarInstitucionesOpciones' reportar-cambio='institucionesCambios(valores)'></pimc-tabla-ref-elemento-relacional>
-		    </div>
-		  </div>
-    </uib-tab>
+    <!-- SINOPSIS Y COMENTARIOS -->
+    <uib-tab index="3" heading="Sinopsis y comentarios"> 
+          <pimc-documento-sinopsis-comentarios
+            ng-if="!documentoCargando"
+            datos-principales = "datosPrincipales"
+            activo = "!documentoCargando"
+            notas = "notas"
+            reportar-cambio="sinopsisComentariosEditados(datosPrincipales, notas)">
+          </pimc-documento-sinopsis-comentarios>
+        </uib-tab>
   </uib-tabset>
 </section>
 

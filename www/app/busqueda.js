@@ -1,12 +1,12 @@
 /////////////////////////////////////////////////////////////////
-// ARCHIVOS BUSQUEDA MODULE
+// DOCUMENTOS BUSQUEDA MODULE
 /////////////////////////////////////////////////////////////////
 
 (function (angular) {
 
     'use strict';
     
-    var archivosBusqueda = angular.module("archivosBusqueda", [
+    var documentosBusqueda = angular.module("documentosBusqueda", [
       "ngAnimate",
       "ngSanitize",
       "ui.bootstrap",
@@ -14,10 +14,20 @@
       "ngTouch",
       "ui.grid.edit",
       "ui.grid.autoResize",
+      "ui.grid.resizeColumns",
       "ui.grid.selection",
       "ui.grid.cellNav"
     ]);
-    archivosBusqueda.controller('archivosBusquedaController', ['pimcService', 'pimcMenuService', '$scope', '$http', '$window', '$location', '$filter', 'uiGridConstants', 'i18nService', '$scope', function(pimcService, pimcMenuService, $scope, $http, $window, $location, $filter, i18nService, uiGridConstants) {
+    documentosBusqueda.controller('documentosBusquedaController', 
+        ['pimcService', 
+        'pimcMenuService', 
+        '$scope', 
+        '$http', 
+        '$filter', 
+        'uiGridConstants',
+        'i18nService', 
+        function(pimcService, pimcMenuService, $scope, $http,
+             $filter, uiGridConstants, i18nService) {
 
         // Entreda de busquedas y botones
         $scope.valorBusqueda = "";
@@ -25,30 +35,46 @@
             $scope.tablaResultadosGridApi.grid.refresh();
         };
 
+        // Cargando los datos
+        $scope.cargandoDatos = true;
+
+        // Numero de filas 
+        $scope.numeroFilasVisibles = 0;
+        $scope.numeroFilasTotales = 0;
+
         //Tabla de resultados
         $scope.tablaResultados = {
             enableRowSelection: true,
             enableSelectAll: true,
             multiSelect: true,
+            enableFiltering: true,
+            enableColumnResizing: true,  
             data: {}
         };
         $scope.tablaResultados.columnDefs = [
             {field: 'institucionFondo', name: 'institucionFondo', displayName: 'Institución Fondo' },
+            {field: 'numRefDentroFondo', name: 'numRefDentroFondo', displayName: 'Referencia Fondo' },
             {field: 'fondo', name: 'fondo', displayName: 'Fondo' },
-            {field: 'titulo', name: 'titulo', displayName: 'Titulo'},
+            {field: 'seccion', name: 'seccion', displayName: 'Sección' },
+            {field: 'titulo', name: 'titulo', displayName: 'Titulo', minWidth: 350},
+            {field: 'legajo', name: 'legajo', displayName: 'Legajo', maxWidth: 75 },
+            {field: 'folioInicial', name: 'folioInicial', displayName: 'Folio inicial' , maxWidth: 75 },
+            {field: 'folioFinal', name: 'folioFinal', displayName: 'Folio final' , maxWidth: 75  },
             {field: 'fechaInicial', name: 'fechaInicial', displayName: 'Fecha Inicial'},
             {field: 'fechaFinal', name: 'fechaFinal', displayName: 'Fecha Final' }
         ];
         $scope.tablaResultados.onRegisterApi = function (gridApi) {
             $scope.tablaResultadosGridApi = gridApi;
-            // Para filtrar los resultados
-            $scope.tablaResultadosGridApi.grid.registerRowsProcessor($scope.filtrarBusquedas, 200);
+            $scope.tablaResultadosGridApi.core.on.rowsRendered( $scope, function (){
+                $scope.numeroFilasVisibles = $scope.tablaResultadosGridApi.core.getVisibleRows().length;
+            });
         };
         
         $scope.init = function() {
-            var consultaTodosArchivos = pimcService.crearURLOperacion('ConsultarTodos', 'Archivos');
-            // Cargamos los archivos
-            return $http.get(consultaTodosArchivos).then(function (data) {
+            var consultaTodosDocumentos = pimcService.crearURLOperacion('ConsultarTodos', 'Documentos');
+            // Cargamos los Documentos
+            return $http.get(consultaTodosDocumentos).then(function (data) {
+                $scope.numeroFilasTotales = data.data.length;
                 data.data.forEach(function changeDates(row, index) {
                     if (row.fechaInicial !== null) {
                         row.fechaInicial = (row.fechaInicial && row.fechaInicial.length != 0) ? $filter('date')(new Date(row.fechaInicial), String(row.fechaInicialFormato).toLowerCase(), 'UTC') : null;
@@ -56,44 +82,17 @@
                     }
                 });
                 $scope.tablaResultados.data = data.data;
-                pimcService.debug("Archivos Cargados", data);
+                pimcService.debug("Documentos Cargados", data);
+                $scope.cargandoDatos = false;
             });
         };
 
-        //Funcion que se registra en el API
-        $scope.filtrarBusquedas = function (renderableRows) {
-            if ($scope.valorBusqueda === "") {
-            renderableRows.forEach(function (row) {
-                row.visible = true;
-            });
-            return renderableRows;
-            }
-            var matcher = new RegExp($scope.valorBusqueda.toLowerCase());
-            renderableRows.forEach(function (row) {
-            try {
-                row.visible = false;
-                if (row.entity['titulo'].toLowerCase().match(matcher)) {
-                row.visible = true;
-                }
-                if (String(row.entity['fechaInicial']).toLowerCase().match(matcher)) {
-                row.visible = true;
-                }
-                if (String(row.entity['fechaFinal']).toLowerCase().match(matcher)) {
-                row.visible = true;
-                }
-            } catch (error) {
-                console.log(error);
-            }
-            });
-            return renderableRows;
-        };
-        
-        // Para redirección a la página de perfil de archivo
-        $scope.abrirArchivosSeleccionados = function () {
+        // Para redirección a la página de perfil del documento
+        $scope.abrirDocumentosSeleccionados = function () {
             var seleccionados = $scope.tablaResultadosGridApi.selection.getSelectedRows();
-            pimcService.debug("Archivos seleccionados = " + seleccionados);
+            pimcService.debug("Documentos seleccionados = " + seleccionados);
             angular.forEach(seleccionados, function (seleccionado) {
-               pimcMenuService.abrirElemento("Archivos", seleccionado.archivoID, seleccionado.titulo, true); 
+               pimcMenuService.abrirElemento("Documentos", seleccionado.documentoID, seleccionado.titulo, true); 
             });
         };
 

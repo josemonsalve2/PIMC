@@ -13,7 +13,7 @@
     'institucionPerfil',
     'actividadPerfil',
     'eventoPerfil',
-    'archivosBusqueda',
+    'documentosBusqueda',
     'documentoPerfil',
     'lugarTerritorioModule',
     'comentariosModule',
@@ -47,7 +47,7 @@
       })
       .when('/busqueda', {
         templateUrl: 'views/busqueda.html',
-        controller:  'archivosBusquedaController'
+        controller:  'documentosBusquedaController'
       })
       .when('/documentos', {
         templateUrl: 'views/documento/documento.html',
