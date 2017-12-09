@@ -52,7 +52,7 @@
             data: {}
         };
         $scope.tablaResultados.columnDefs = [
-            {field: 'institucionFondo', name: 'institucionFondo', displayName: 'Institución Fondo' },
+            {field: 'institucionFondo', name: 'institucionFondo', displayName: 'Institución' },
             {field: 'numRefDentroFondo', name: 'numRefDentroFondo', displayName: 'Referencia Fondo' },
             {field: 'fondo', name: 'fondo', displayName: 'Fondo' },
             {field: 'seccion', name: 'seccion', displayName: 'Sección' },

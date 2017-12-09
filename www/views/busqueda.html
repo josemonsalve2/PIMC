@@ -1,8 +1,8 @@
 <section class="row p-t-1">
   <div  class="col-sm-12 p-b-1" style="text-align:center"> Filtre los resultados usando los campos de texto que se encuentran debajo del titulo de cada columna</div>
   <div class="col-sm-12">
-    <div class="text-center col-sm p-b-1 justify-content-md-center" ng-show="cargandoDatos"><img class="img-responsive center-block"src="images/loader.gif"></div>
-    <div ng-show="!cargandoDatos" ui-grid="tablaResultados"ui-grid-selection ui-grid-auto-resize ui-grid-edit ui-grid-cellnav class="grid"></div>
+    <div class="text-center col-sm p-b-1 justify-content-md-center" ng-show="cargandoDatos"><img class="img-responsive center-block" src="images/loader.gif"></div>
+    <div ng-show="!cargandoDatos" ui-grid="tablaResultados" ui-grid-selection ui-grid-auto-resize ui-grid-edit ui-grid-cellnav class="grid"></div>
   </div>
   <div ng-show="!cargandoDatos" class="col-sm-12 col-md-6 text-left p-t-1">
       <span>Actualmente se muestran <b>{{numeroFilasVisibles}}</b> de <b>{{numeroFilasTotales}} Documentos</b></span>
