@@ -53,15 +53,14 @@
         };
         $scope.tablaResultados.columnDefs = [
             {field: 'institucionFondo', name: 'institucionFondo', displayName: 'Institución' },
-            {field: 'numRefDentroFondo', name: 'numRefDentroFondo', displayName: 'Referencia Fondo' },
+            {field: 'numRefDentroFondo', name: 'numRefDentroFondo', displayName: 'Referencia' },
             {field: 'fondo', name: 'fondo', displayName: 'Fondo' },
             {field: 'seccion', name: 'seccion', displayName: 'Sección' },
             {field: 'titulo', name: 'titulo', displayName: 'Titulo', minWidth: 350},
             {field: 'legajo', name: 'legajo', displayName: 'Legajo', maxWidth: 75 },
             {field: 'folioInicial', name: 'folioInicial', displayName: 'Folio inicial' , maxWidth: 75 },
             {field: 'folioFinal', name: 'folioFinal', displayName: 'Folio final' , maxWidth: 75  },
-            {field: 'fechaInicial', name: 'fechaInicial', displayName: 'Fecha Inicial'},
-            {field: 'fechaFinal', name: 'fechaFinal', displayName: 'Fecha Final' }
+            {field: 'fechaInicial', name: 'fechaInicial', displayName: 'Fecha Inicial'}
         ];
         $scope.tablaResultados.onRegisterApi = function (gridApi) {
             $scope.tablaResultadosGridApi = gridApi;
