@@ -60,7 +60,7 @@
             {field: 'legajo', name: 'legajo', displayName: 'Legajo', maxWidth: 75 },
             {field: 'folioInicial', name: 'folioInicial', displayName: 'Folio inicial' , maxWidth: 75 },
             {field: 'folioFinal', name: 'folioFinal', displayName: 'Folio final' , maxWidth: 75  },
-            {field: 'fechaInicial', name: 'fechaInicial', displayName: 'Fecha Inicial'}
+            {field: 'fechaInicial', name: 'fechaInicial', displayName: 'Fecha'}
         ];
         $scope.tablaResultados.onRegisterApi = function (gridApi) {
             $scope.tablaResultadosGridApi = gridApi;
