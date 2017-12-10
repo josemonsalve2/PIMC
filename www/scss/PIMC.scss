@@ -254,13 +254,13 @@ tr {
   font-size: 6vh;
   margin-top: -10px;
   margin-bottom: -10px;
-  font-weight: bolder;
+  font-weight: normal;
   letter-spacing: 4px;
-  font-family: 'LinotypeZapfino One', arial;   
+  //font-family: 'LinotypeZapfino One', arial;   
 }
 //@import url(http://allfont.net/allfont.css?fonts=linotypezapfino-one);
 .primeraLetraColor::first-letter {
-  font-size: 150%;
+  font-size: 130%;
   color: #9e4a00;
 }
 
