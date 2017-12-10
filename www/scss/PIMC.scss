@@ -243,3 +243,27 @@ tr {
 .grid {
   height: 70vh;
 }
+
+@font-face{
+  font-family:'LinotypeZapfino One';
+  font-style:normal;
+  src:local('LinotypeZapfino One'),local('LTZapfinoOne-Regular'),url(../css/fonts/zapfinoOne.ttf) format('truetype');}
+
+.primeraLetraColor {
+  display: inline-block;
+  font-size: 6vh;
+  margin-top: -10px;
+  margin-bottom: -10px;
+  font-weight: bolder;
+  letter-spacing: 4px;
+  font-family: 'LinotypeZapfino One', arial;   
+}
+//@import url(http://allfont.net/allfont.css?fonts=linotypezapfino-one);
+.primeraLetraColor::first-letter {
+  font-size: 150%;
+  color: #9e4a00;
+}
+
+.active {
+  font-weight: bolder;
+}

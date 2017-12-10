@@ -5,6 +5,7 @@
   var pimc = angular.module('pimc', [
     'ngRoute',
     'indexModule',
+    'inicioModule',
     'pimcMenuModule',
     'archivoPerfil',
     'personajePerfil',
@@ -32,6 +33,10 @@
       .when('/', {
         templateUrl: 'views/home.html',
         controller:  'indexController'
+      })
+      .when('/inicio', {
+        templateUrl: 'views/inicio.html',
+        controller:  'inicioController'
       })
       .when('/personajes', {
         templateUrl: 'views/personaje.html',
