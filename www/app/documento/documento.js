@@ -111,6 +111,7 @@
         $scope.cargarDatosPrincipales = function() {
             return pimcDocumentoDatosPrincipalesService.cargarDatosPrincipales($scope.documentoID).then(function(datosPrincipales) {
                 $scope.datosPrincipales = datosPrincipales;
+                pimcBarraEstadoService.registrarAccion("Documento con referencia <strong>" + $scope.datosPrincipales.contenido.numRefDentroFondo + "</strong> ha sido cargado");                
             });
         };
         

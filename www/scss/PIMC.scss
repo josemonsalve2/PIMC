@@ -80,7 +80,7 @@ tr {
   padding: 30px;
 }
 
-.panel-heading form {
+.panel-heading form, .pimc-full-width-form form{
   width: 100%;
   input[type="text"], textarea {
     width: 100%;
@@ -266,4 +266,34 @@ tr {
 
 .active {
   font-weight: bolder;
+}
+
+@media (min-width: 768px) and (max-width: 1000px) {
+  .collapse {
+      display: none !important;
+  }
+}
+
+.tituloDocumento {
+  max-height:1em;
+  -moz-transition: 1s;
+  -ms-transition: 1s;
+  -o-transition: 1s;
+  -webkit-transition: 1s;
+  transition: max-height 1s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tituloDocumento:hover {
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: unset;
+  max-height:8em;
+  -moz-transition: 1s;
+  -ms-transition: 1s;
+  -o-transition: 1s;
+  -webkit-transition: 1s;
+  transition: 1s;
 }

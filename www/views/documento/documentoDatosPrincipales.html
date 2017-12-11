@@ -4,14 +4,20 @@
       <div class="panel panel-primary m-b-2">
 
         <header class="panel-heading">
-          <h3 class="m-a-0" editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.titulo" 
-                buttons="right" 
-                onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('titulo',$data)" 
-                e-rows="2">{{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.titulo }}</h3>
+            <h4>Datos generales</h4>
         </header>
 
         <div class="panel-body">
-            
+            <ul class="list-group">
+                <li class="list-group-item pimc-full-width-form">  
+                    <span class="label label-primary">Titulo completo</span> <br/>
+                    <span editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.titulo" 
+                          buttons="right" 
+                          onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('titulo',$data)" 
+                          e-rows="2"
+                          class="m-l-1">{{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.titulo }}</span>
+                </li>
+            </ul>
           <ul class="list-group m-b-0 dos-columnas">
             
             <li class="list-group-item">  
@@ -38,21 +44,7 @@
                             onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('numReferencia',$data)"  
                             class="m-l-1"> {{documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numRefDentroFondo}}</span>
             </li>
-            <li class="list-group-item fechas-grupo">
-                <span class="label label-primary">Rango de fechas</span> <br/>
-                <span class="label label-info">fecha Inicial</span>                         
-                <pimc-fecha-con-formato
-                fecha = 'documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicial'
-                formato = 'documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicialFormato'
-                reportar-cambio="documentoDatosPrincipalesCtrl.fechaEditada(fecha, formato, 'fechaInicial')">
-                </pimc-fecha-con-formato><br/>
-                <span class="label label-info">fecha Final</span>
-                <pimc-fecha-con-formato
-                fecha = 'documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinal'
-                formato = 'documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinalFormato'
-                reportar-cambio="documentoDatosPrincipalesCtrl.fechaEditada(fecha, formato, 'fechaFinal')">
-              </pimc-fecha-con-formato>
-            </li>
+            
             <li class="list-group-item">
                 <span class="label label-primary">Folio inicial</span> 
                 <span editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.folioInicial" 
@@ -87,6 +79,15 @@
           </ul>
         </div>
       </div>
+
+      <div class="panel panel-primary">
+          <header class="panel-heading">
+            <h4>disponibilidad de consulta</h4>
+          </header>
+          <div class="panel-body">
+            <p editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.disponibilidad" onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('disponibilidadConsulta',$data)">{{documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.disponibilidad}}</p>
+          </div>
+        </div>
     </div>
 
     <div id="otrosDatosDocumentoColDerecha" class="col-sm-12 col-md-4">
@@ -103,7 +104,27 @@
                 </pimc-listado>
         </div>
       </div>
-      
+
+      <div class="panel panel-primary">
+          <header class="panel-heading">
+            <h4>Rango de fechas</h4>
+          </header>
+          <div class="panel-body">
+              <span class="label label-info">fecha Inicial</span>                         
+              <pimc-fecha-con-formato
+              fecha = 'documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicial'
+              formato = 'documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaInicialFormato'
+              reportar-cambio="documentoDatosPrincipalesCtrl.fechaEditada(fecha, formato, 'fechaInicial')">
+              </pimc-fecha-con-formato><br/>
+              <span class="label label-info">fecha Final</span>
+              <pimc-fecha-con-formato
+              fecha = 'documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinal'
+              formato = 'documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fechaFinalFormato'
+              reportar-cambio="documentoDatosPrincipalesCtrl.fechaEditada(fecha, formato, 'fechaFinal')">
+            </pimc-fecha-con-formato>
+          </div>
+        </div>
+
       <div class="panel panel-primary">
         <header class="panel-heading">
           <h4>Anotaciones Catalogación</h4>
@@ -119,16 +140,6 @@
         <div class="panel-body">
         </div>
       </div>
-    </div>
-    <div id="otrosDatosDocumentoColDerecha" class="col-sm-12 col-md-8">
-        <div class="panel panel-primary">
-            <header class="panel-heading">
-              <h4>disponibilidad de consulta</h4>
-            </header>
-            <div class="panel-body">
-              <p editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.disponibilidad" onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('disponibilidadConsulta',$data)">{{documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.disponibilidad}}</p>
-            </div>
-          </div>
     </div>
 
   </div><!-- .row -->
