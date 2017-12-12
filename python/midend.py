@@ -7,9 +7,10 @@ from flask import make_response, request, current_app
 from functools import update_wrapper
 from API_operaciones import mysql_connection
 from API_operaciones import pimcAPI
+from auth import authentication
 
 pimc = pimcAPI.pimcAPI
-
+jwt = authentication.jwt
 app = mysql_connection.app
 mysql = mysql_connection.mysql
 
@@ -387,6 +388,10 @@ def consultarTodosFiltroPIMC0_2(elemento_relacional):
   else:
     return ""
   
+@app.route('/protected')
+@jwt_required()
+def protected():
+    return '%s' % current_identity
   
 if __name__ == "__main__":
 #   app.run(host= '0.0.0.0')
