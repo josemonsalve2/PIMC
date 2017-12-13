@@ -389,11 +389,6 @@ def consultarTodosFiltroPIMC0_2(elemento_relacional):
   else:
     return ""
   
-@app.route('/protected')
-@jwt_required()
-def protected():
-    return '%s' % current_identity
-  
 if __name__ == "__main__":
 #   app.run(host= '0.0.0.0')
     app.run(threaded=True)
