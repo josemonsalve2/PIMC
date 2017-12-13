@@ -2,16 +2,22 @@
 
     'use strict';
 
-    var pimc = angular.module('pimc');
-    pimc.service('pimcService', ['$window', '$http', function ($window, $http) {
+    var pimcServiceModule = angular.module('pimcServiceModule', []);
+    pimcServiceModule.constant("pimcApiDomain", "pimcapi.fundacionproyectonavio.org");
+    pimcServiceModule.constant("pimcBackEndURL", "http://pimcapi.fundacionproyectonavio.org");
+    pimcServiceModule.constant("pimcApiURL", "http://pimcapi.fundacionproyectonavio.org/PIMC0.2");
+    pimcServiceModule.service('pimcService', ['$window', '$http', 'pimcApiDomain', 'pimcApiURL', 'pimcBackEndURL', function ($window, $http, pimcApiDomain, pimcApiURL, pimcBackEndURL) {
         var pimcService = this;
 
         // PARA BACKEND
-        pimcService.backEndURL = "http://pimcapi.fundacionproyectonavio.org/PIMC0.2"; // sin / al final
+        pimcService.apiDomain = pimcApiDomain;
+        pimcService.apiURL = pimcApiURL;
+        pimcService.backEndURL = pimcBackEndURL; // sin / al final
         // crea la URL 
         pimcService.crearURLOperacion = function (operacion, elementoRelacional) {
-            return pimcService.backEndURL + "/" + String(operacion) + "/" + String(elementoRelacional);
-        } 
+            return pimcService.apiURL + "/" + String(operacion) + "/" + String(elementoRelacional);
+        }
+        pimcService.authURL = pimcService.backEndURL + "/pimcAuth";
 
         // OPCION DEBUGGING
         pimcService.debugMode = true;
@@ -74,7 +80,7 @@
 
     }]);
 
-    pimc.filter('estadoNoEliminado', ['pimcService', function (pimcService) {
+    pimcServiceModule.filter('estadoNoEliminado', ['pimcService', function (pimcService) {
         return function (items) {
             var filtered = [];
             angular.forEach(items, function (el) {

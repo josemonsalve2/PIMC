@@ -3,6 +3,7 @@
   'use strict';
   
   var pimc = angular.module('pimc', [
+    'angular-jwt',
     'ngRoute',
     'indexModule',
     'inicioModule',
@@ -20,11 +21,17 @@
     'comentariosModule',
     'barraEstadoModule',
     'pimcListadoModule',
-    'fechaConFormatoModule'
+    'fechaConFormatoModule', 
+    'loginModule',
+    'pimcServiceModule'
   ]);
 
-  pimc.controller('AppController', ['pimcMenuService', '$scope', function(pimcMenuService, $scope) {
+  pimc.controller('AppController', ['pimcMenuService', '$scope', '$window', '$rootScope',  function(pimcMenuService, $scope, $window, $rootScope) {
     pimcMenuService.cargarElementos();
+    $rootScope.$on('tokenHasExpired', function() {
+      alert('Your session has expired!');
+      $window.location.href = "#!/";
+    });
   }]);
 
   pimc.config(function($routeProvider){
@@ -40,39 +47,52 @@
       })
       .when('/personajes', {
         templateUrl: 'views/personaje.html',
-        controller:  'personajePerfilController'
+        controller:  'personajePerfilController',
+        requiresLogin: true 
       })
       .when('/archivos', {
         templateUrl: 'views/archivo/archivo.html',
-        controller:  'archivoPerfilController'
+        controller:  'archivoPerfilController',
+        requiresLogin: true 
       })
       .when('/embarcaciones', {
         templateUrl: 'views/embarcacion/embarcacion.html',
-        controller:  'embarcacionPerfilController'
+        controller:  'embarcacionPerfilController',
+        requiresLogin: true 
       })
       .when('/busqueda', {
         templateUrl: 'views/busqueda.html',
-        controller:  'documentosBusquedaController'
+        controller:  'documentosBusquedaController',
+        requiresLogin: true 
       })
       .when('/documentos', {
         templateUrl: 'views/documento/documento.html',
-        controller:  'documentoPerfilController'
+        controller:  'documentoPerfilController',
+        requiresLogin: true 
       })
       .when('/lugares', {
         templateUrl: 'views/lugar/lugar.html',
-        controller:  'lugarPerfilController'
+        controller:  'lugarPerfilController',
+        requiresLogin: true 
       })
       .when('/instituciones', {
         templateUrl: 'views/institucion.html',
-        controller:  'institucionPerfilController'
+        controller:  'institucionPerfilController',
+        requiresLogin: true 
       })
       .when('/actividades', {
         templateUrl: 'views/actividad/actividad.html',
-        controller:  'actividadPerfilController'
+        controller:  'actividadPerfilController',
+        requiresLogin: true 
       })
       .when('/eventos', {
         templateUrl: 'views/evento.html',
-        controller:  'eventoPerfilController'
+        controller:  'eventoPerfilController',
+        requiresLogin: true 
+      })
+      .when('/login', {
+        templateUrl: 'views/global/auth/login.html',
+        controller: 'loginController'
       })
       .otherwise({
         redirectTo:  '/'
