@@ -29,6 +29,7 @@
     "ui-grid": "0.0.0"
   },
   "dependencies": {
+    "angular-jwt": "^0.1.9",
     "connect": "^2.30.2",
     "csv": "^2.0.0",
     "gulp-connect": "^2.3.1",
