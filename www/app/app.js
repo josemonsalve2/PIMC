@@ -29,7 +29,7 @@
   pimc.controller('AppController', ['pimcMenuService', '$scope', '$window', '$rootScope',  function(pimcMenuService, $scope, $window, $rootScope) {
     pimcMenuService.cargarElementos();
     $rootScope.$on('tokenHasExpired', function() {
-      alert('Your session has expired!');
+      localStorage.removeItem('currentUser');
       $window.location.href = "#!/";
     });
   }]);
