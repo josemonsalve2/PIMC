@@ -79,7 +79,7 @@
                 conexiones.push($scope.cargarNotas());
 
                 // Cargamos Emisor Receptor
-                conexiones.push($scope.cargarEmisorReceptor());
+                //conexiones.push($scope.cargarEmisorReceptor());
 
                 // Personajes
                 conexiones.push($scope.cargarPersonajes());
@@ -135,143 +135,7 @@
             });
         };
 
-        // Emisor y receptor
-        $scope.emisorReceptorEditado = false;
-        $scope.emisorReceptor = [];
-        $scope.emisorReceptorEliminar = [];
-        $scope.emisorReceptorActivo = 0;
-        // Para eliminar una entrada emisorReceptor
-        $scope.eliminarEmisorReceptor = function (index) {
-            $scope.emisorReceptorEditado = true;
-            if ($scope.emisorReceptor[index].emisorReceptorID != -1) {
-                $scope.emisorReceptorEliminar.push($scope.emisorReceptor[index].emisorReceptorID);
-            }
-            $scope.emisorReceptor.splice(index,1);
-            $timeout(function() {
-                $scope.emisorReceptorActivo = index-1; // El nuevo elemento es el activo
-            });
-        }
-        // Para agregar una entrada emisorReceptor
-        $scope.agregarEmisorReceptor = function () {
-            $scope.emisorReceptorEditado = true;
-            var nuevoEmisorReceptor = {}
-            nuevoEmisorReceptor.emisorReceptorID = -1;
-            nuevoEmisorReceptor.nuevo = true;
-            nuevoEmisorReceptor.emisor= {
-                personaje: "",
-                cargo: "",
-                institucion: "",
-                nota: ""
-            }
-            nuevoEmisorReceptor.receptor= {
-                personaje: "",
-                cargo: "",
-                institucion: "",
-                nota: ""
-            }
-            // Agregarlo a la lista de emisor y receptor
-            $scope.emisorReceptor.push(nuevoEmisorReceptor);
-            
-            $timeout(function() {
-                $scope.emisorReceptorActivo = $scope.emisorReceptor.length - 1; // El nuevo elemento es el activo
-            });
-        }
-        // Para modificar el emisor de una entrada emisorReceptor
-        $scope.modificarEmisor = function (index, elementoEditado, valorNuevo) {
-            $scope.emisorReceptorEditado = true;
-            switch(elementoEditado) {
-                case "personaje":
-                    if (valorNuevo != $scope.emisorReceptor[index].emisor.personaje) {
-                        pimcBarraEstadoService.registrarAccion("Personaje emisor  <strong>" + $scope.emisorReceptor[index].emisor.personaje + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
-                    }
-                    break;
-                case "cargo":
-                    if (valorNuevo != $scope.emisorReceptor[index].emisor.cargo) {
-                        pimcBarraEstadoService.registrarAccion("Cargo personaje emisor <strong>" + $scope.emisorReceptor[index].emisor.cargo + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
-                    }
-                    break;
-                case "institucion":
-                    if (valorNuevo != $scope.emisorReceptor[index].emisor.institucion) {
-                        pimcBarraEstadoService.registrarAccion("Institucion emisora <strong>" + $scope.emisorReceptor[index].emisor.institucion + "</strong> modificada a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
-                    }
-                    break;
-                case "nota":
-                    if (valorNuevo != $scope.emisorReceptor[index].emisor.nota) {
-                        pimcBarraEstadoService.registrarAccion("nota emisor modificada en Emisor Receptor "+(index + 1));
-                    }
-                    break;
-                default:
-                pimcBarraEstadoService.registrarAccion("[ERROR] DATO EMISOR INCORRECTO!");
-                    break;
-            }
-        }
-        // Para modificar el receptor de una entrada emisorReceptor
-        $scope.modificarReceptor = function (index, elementoEditado, valorNuevo) {
-            $scope.emisorReceptorEditado = true;
-            switch(elementoEditado) {
-                case "personaje":
-                    if (valorNuevo != $scope.emisorReceptor[index].receptor.personaje) {
-                        pimcBarraEstadoService.registrarAccion("Personaje receptor <strong>" + $scope.emisorReceptor[index].receptor.personaje + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
-                    }
-                    break;
-                case "cargo":
-                    if (valorNuevo != $scope.emisorReceptor[index].receptor.cargo) {
-                        pimcBarraEstadoService.registrarAccion("Cargo personaje receptor <strong>" + $scope.emisorReceptor[index].receptor.cargo + "</strong> modificado a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
-                    }
-                    break;
-                case "institucion":
-                    if (valorNuevo != $scope.emisorReceptor[index].receptor.institucion) {
-                        pimcBarraEstadoService.registrarAccion("Institucion receptora <strong>" + $scope.emisorReceptor[index].receptor.institucion + "</strong> modificada a <strong>" + valorNuevo + "</strong> en Emisor Receptor "+(index + 1));
-                    }
-                    break;
-                case "nota":
-                    if (valorNuevo != $scope.emisorReceptor[index].receptor.nota) {
-                        pimcBarraEstadoService.registrarAccion("nota receptor modificada en Emisor Receptor "+index);
-                    }
-                    break;
-                default:
-                pimcBarraEstadoService.registrarAccion("[ERROR] DATO INCORRECTO!");
-                    break;
-            }
-        }
-        $scope.cargarEmisorReceptor = function () {
-            $http.get('http://pimcapi.fundacionproyectonavio.org/PIMC0.1/Consulta/DocumentosEmisorReceptor?documentoID=' + $scope.documentoID).then(function(data) {
-                if (Object.keys(data.data).length != 0) {
-                    //Obtener los datos JSON
-                    var emisorReceptorDatos = data.data[0];
-
-                    //Log
-                    pimcService.debug(emisorReceptorDatos);
-
-                    try {
-                        //Llenamos los datos del documento
-                        emisorReceptorDatos.forEach(function (emisorReceptorEntrada) {
-                            var nuevoEmisorReceptor = {}
-                            nuevoEmisorReceptor.emisorReceptorID = emisorReceptorDatos.origenDestinoID;
-                            nuevoEmisorReceptor.emisor= {
-                                personaje: emisorReceptorEntrada.emitidoPorID,
-                                cargo: emisorReceptorEntrada.cargoEmisor,
-                                institucion: emisorReceptorEntrada.institucionEmisorID,
-                                nota: emisorReceptorEntrada.notasEmisor
-                            }
-                            nuevoEmisorReceptor.receptor= {
-                                personaje: emisorReceptorEntrada.dirigidoAID,
-                                cargo: emisorReceptorEntrada.cargoReceptor,
-                                institucion: emisorReceptorEntrada.institucionReceptorID,
-                                nota: emisorReceptorEntrada.notasReceptor
-                            }
-                            $scope.emisorReceptor.push(nuevoEmisorReceptor);
-                        });
-                    }
-                    catch(err) {
-                        pimcService.debug("Problema cargando los emisores y receptores de la base de datos");
-                    }
-                }
-
-                //Limpiamos la bandera de editado
-                $scope.emisorReceptorEditado = false;
-                });
-        }
+        
         
         // REFERENCIAS
         $scope.inicializarArrayReferencias = function() {

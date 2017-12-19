@@ -23,6 +23,7 @@
     'pimcListadoModule',
     'fechaConFormatoModule', 
     'loginModule',
+    'pimcRegisterModule',
     'pimcServiceModule'
   ]);
 
@@ -93,6 +94,10 @@
       .when('/login', {
         templateUrl: 'views/global/auth/login.html',
         controller: 'loginController'
+      })
+      .when('/registrarse', {
+        templateUrl: 'views/global/auth/register.html',
+        controller: 'pimcRegisterController'
       })
       .otherwise({
         redirectTo:  '/'

@@ -221,6 +221,7 @@
     pimcMenuModule.controller("pimcElementosRelacionalesMenuCtrl", [
         "pimcMenuService",
         "$window",
+        "authManager",
         function(pimcMenuService){
             var menuElementosCtrl = this;
             

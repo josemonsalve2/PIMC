@@ -32,6 +32,8 @@
                         // execute callback with false to indicate failed login
                         callback(false);
                     }
+                }, function() {
+                    callback(false);
                 });
         };
         service.Logout = function() {
@@ -61,7 +63,7 @@
                 if (result === true) {
                     $location.path('/');
                 } else {
-                    vm.error = 'Username or password is incorrect';
+                    vm.error = 'Nombre de usuario o contraseña incorrectos';
                     vm.loading = false;
                 }
             });

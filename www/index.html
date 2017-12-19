@@ -50,7 +50,8 @@
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <!-- <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li> -->
-                <li><a href="#!/login"><span class="glyphicon glyphicon-log-in"></span> Ingresar </a></li>
+                <li ng-if="!isAuthenticated" ng-cloak><a href="#!/login"><span class="glyphicon glyphicon-log-in"></span> Ingresar </a></li>
+                <li ng-if="isAuthenticated" ng-cloak><a ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> Cerrar Session </a></li>
               </ul>
             <pimc-elementos-relacionales-menu></pimc-elementos-relacionales-menu>
           </div>
@@ -116,6 +117,7 @@
         <!-- Login -->
         <script charset="utf-8" src="app/global/auth/pimcAuth.js"></script>
         <script charset="utf-8" src="app/global/auth/login.js"></script>
+        <script charset="utf-8" src="app/global/auth/register.js"></script>
         <script type="text/javascript" src="https://cdn.rawgit.com/auth0/angular-jwt/master/dist/angular-jwt.js"></script>
 
         <!-- Servicios y componentes -->
