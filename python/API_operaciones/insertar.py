@@ -61,7 +61,7 @@ def insertarNuevoElemento(elementoRelacional, parametrosJSON):
         rv = cur.fetchall()
         if (len(rv) != 0):
           for row in rv:
-            nuevoID = row[0];
+            nuevoID = row[0]
           querry = "SELECT * FROM " + str(elementoRelacional) + " WHERE " + str(idElementoRelacional) + " = " + str(nuevoID)
           cur.execute(querry)
           rv = cur.fetchall()
