@@ -8,6 +8,8 @@ import MySQLdb
 mysql = mysql_connection.mysql2
 app = mysql_connection.app
 
+users_db_table = "_Metadata_usuariosApplicativo"
+
 class User(object):
     def __init__(self, id, username, password):
         self.id = id
@@ -19,12 +21,16 @@ class User(object):
 
 def authenticate(username, password):
     cur = mysql.cursor(MySQLdb.cursors.DictCursor)
-    query =  "SELECT * FROM _Metadata_usuariosApplicativo WHERE nombreUsuario = %s"
-    cur.execute(query, [username])
+    query =  "SELECT * FROM %s WHERE nombreUsuario = %s"
+    cur.execute(query, [users_db_table, username])
     rv = cur.fetchone()
     if (rv is not None):
-        if (rv['contrasenna'].encode('utf-8') == password.encode('utf-8')):
+        if (if rv['verificado'] != 0 && (rv['contrasenna'].encode('utf-8') == password.encode('utf-8'))):
             usuario = User(rv['usuarioID'], username, rv['contrasenna'])
+            # Actualizamos ultima conexion
+            query = "UPDATE %s SET ultimaConexion = CURRENT_TIMESTAMP"
+            cur.execute(query, [users_db_table])
+            mysql.commit()
             return usuario
         else: 
             return None
