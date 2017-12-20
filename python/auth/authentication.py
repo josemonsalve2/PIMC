@@ -4,6 +4,7 @@ sys.path.append('../')
 from flask_jwt import JWT, jwt_required, current_identity
 from flask import make_response, request, current_app
 from flask import jsonify
+from flask_mail import Message
 
 # pimc related
 from tools.invalidUsage import InvalidUsage
@@ -15,6 +16,8 @@ import MySQLdb
 
 mysql = mysql_connection.mysql2
 app = mysql_connection.app
+mail = mysql_connection.mail
+
 
 users_db_table = "_Metadata_usuariosApplicativo"
 
@@ -74,11 +77,14 @@ def create_user(userInfo):
     # MySQL cursor
     cur = mysql.cursor(MySQLdb.cursors.DictCursor)
     
-    # revisamos que el usuario no exista
+    # revisamos que el usuario no exista o no ha sido verificado
     query = "SELECT * FROM " + users_db_table + " WHERE nombreUsuario LIKE %s"
     cur.execute(query, [userInfo["nombreUsuario"]])
     rv = cur.fetchall()
     if (len(rv) != 0):
+        if (rv[0]["verificado"] == 0):
+            raise ValueError("Usuario ya fue creado pero esta pendiente de verificacion")
+            return None
         raise ValueError("Nombre de usuario ya existe")
         return None
     
@@ -94,6 +100,8 @@ def create_user(userInfo):
         return None
     else:
         mysql.commit()
+        # Enviamos correo de confirmacion
+        enviarCorreoConfirmacion(userInfo["email"], userInfo["nombreReal"], userInfo["nombreUsuario"])
         return True
     
     # This shouldn't be reached. 
@@ -101,6 +109,25 @@ def create_user(userInfo):
 
 def hashPWD(password, salt):
     return hashlib.sha512((password + salt).encode('utf-8')).hexdigest()
+
+def enviarCorreoConfirmacion(correoElectronico, nombreReal, nombreUsuario):
+    msg = Message("[PIMCD] Usuario creado")
+    msg.sender = "Fundacion Proyecto Navio <registro@fundacionproyectonavio.org>"
+    msg.recipients = [correoElectronico]
+    msg.html= '''
+                <h1>''' + nombreReal + '''</h1>
+                <p> Su cuenta ha sido creada </p>
+                <p> Este mensaje es para confirmar la creaci&iacute;n de su cuenta en PIMDC.
+                    Por favor no responda a este mensaje.
+                </p>
+                <p>
+                        <span style="font-weight:bold"> Usuario = ''' + nombreUsuario + ''' 
+                        </span>
+                </p>
+                <p> En los proximos dias estaremos verificando su cuenta. Gracias por su paciencia </p>
+        '''
+    mail.send(msg);
+
 
 jwt = JWT(app, authenticate, identity)
 
