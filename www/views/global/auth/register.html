@@ -1,6 +1,6 @@
 <div class="col-md-6 col-md-offset-3 m-t-3">
     <h2>Registrarse</h2>
-    <form name="form" ng-submit="form.$valid && vm.register()" novalidate>
+    <form ng-show="!vm.ocultarFormulario" name="form" ng-submit="form.$valid && vm.register()" novalidate>
         <div class="form-group" ng-class="{ 'has-error': form.$submitted && form.nombreReal.$invalid }">
             <label for="nombreReal">Nombre del Investigador</label>
             <input type="text" name="nombreReal" class="form-control" ng-model="vm.nombreReal" required />
@@ -9,8 +9,8 @@
             </div>
         </div>
         <div class="form-group" ng-class="{ 'has-error': form.$submitted && !form.email.$valid }">
-            <label for="correoElectronico">Correo Electrónico</label>
-            <input type="email" name="correoElectronico" class="form-control" ng-model="vm.email" required />
+            <label for="email">Correo Electrónico</label>
+            <input type="email" name="email" class="form-control" ng-model="vm.email" required />
             <div ng-if="form.$submitted && !form.email.$valid" class="help-block">
                 <div ng-message="required">Se requiere un correo electronico</div>
             </div>
@@ -36,4 +36,5 @@
         </div>
         <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
     </form>
+    <div ng-if="vm.info" class="p-a-1 info alert-info">{{vm.info}}</div>
 </div>

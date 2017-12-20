@@ -18,6 +18,7 @@
             return pimcService.apiURL + "/" + String(operacion) + "/" + String(elementoRelacional);
         }
         pimcService.authURL = pimcService.backEndURL + "/pimcAuth";
+        pimcService.registerURL = pimcService.backEndURL + "/register";
 
         // OPCION DEBUGGING
         pimcService.debugMode = true;
