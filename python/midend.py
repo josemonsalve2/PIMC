@@ -9,6 +9,7 @@ from functools import update_wrapper
 from API_operaciones import mysql_connection
 from API_operaciones import pimcAPI
 from auth import authentication
+from tools.invalidUsage import InvalidUsage
 
 pimc = pimcAPI.pimcAPI
 jwt = authentication.jwt
@@ -56,21 +57,6 @@ def crossdomain(origin=None, methods=None, headers=None,
         return update_wrapper(wrapped_function, f)
     return decorator
 
-# For error handling
-class InvalidUsage(Exception):
-    status_code = 400
-
-    def __init__(self, message, status_code=None, payload=None):
-        Exception.__init__(self)
-        self.message = message
-        if status_code is not None:
-            self.status_code = status_code
-        self.payload = payload
-
-    def to_dict(self):
-        rv = dict(self.payload or ())
-        rv['message'] = self.message
-        return rv
 @app.errorhandler(InvalidUsage)
 @crossdomain(origin='*')
 def handle_invalid_usage(error):
