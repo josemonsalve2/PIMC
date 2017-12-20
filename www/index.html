@@ -51,6 +51,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <!-- <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li> -->
                 <li ng-if="!isAuthenticated" ng-cloak><a href="#!/login"><span class="glyphicon glyphicon-log-in"></span> Ingresar </a></li>
+                <li ng-if="!isAuthenticated" ng-cloak><a href="#!/registrarse"><span class="glyphicon glyphicon glyphicon-heart"></span> Registrarse </a></li>
                 <li ng-if="isAuthenticated" ng-cloak><a ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> Cerrar Session </a></li>
               </ul>
             <pimc-elementos-relacionales-menu></pimc-elementos-relacionales-menu>
