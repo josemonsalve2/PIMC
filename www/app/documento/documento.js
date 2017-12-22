@@ -23,30 +23,23 @@
          'pimcService',
          'pimcBarraEstadoService',
          'pimcDocumentoDatosPrincipalesService',         
+         'pimcDocumentoEmisorReceptorService',         
          'pimcTablaRefElementoService',
          'pimcComentarios',          
-         '$q', 
-         '$http', 
+         '$q',
          '$window', 
-         '$location', 
-         '$filter', 
-         '$timeout', 
          'uiGridConstants', 
          'i18nService', 
-         '$scope', 
          function($scope, 
                   pimcMenuService, 
                   pimcService, 
                   pimcBarraEstadoService, 
                   pimcDocumentoDatosPrincipalesService,
+                  pimcDocumentoEmisorReceptorService,
                   pimcTablaRefElementoService,
                   pimcComentarios,
                   $q, 
-                  $http,
                   $window, 
-                  $location, 
-                  $filter, 
-                  $timeout, 
                   i18nService, 
                   uiGridConstants) {
         $scope.documentoID = -1;
@@ -79,7 +72,7 @@
                 conexiones.push($scope.cargarNotas());
 
                 // Cargamos Emisor Receptor
-                //conexiones.push($scope.cargarEmisorReceptor());
+                conexiones.push($scope.cargarEmisorReceptor());
 
                 // Personajes
                 conexiones.push($scope.cargarPersonajes());
@@ -125,7 +118,7 @@
         };
         
 
-        // Anotaciones
+        // ANOTACIONES
         $scope.notas = [];
         $scope.notasCambio = false;
         $scope.cargarNotas = function() {
@@ -135,7 +128,22 @@
             });
         };
 
-        
+        // EMISOR RECEPTOR
+        $scope.documentoEmisorReceptor = [];
+        $scope.cargarEmisorReceptor = function() {
+            return pimcDocumentoEmisorReceptorService.cargarEmisoresReceptores($scope.documentoID).then( 
+                function (datosEmisorReceptor) {
+                    $scope.documentoEmisorReceptor = datosEmisorReceptor;
+                }, 
+                function (error) {
+                    $scope.documentoEmisorReceptor = [];
+                    pimcBarraEstadoService.registrarAccion ("Ocurrio un error cargando emisores y receptores");
+                }
+            );
+        }
+        $scope.emisorReceptorCambio = function (valores) {
+            $scope.documentoEmisorReceptor = valores;
+        };
         
         // REFERENCIAS
         $scope.inicializarArrayReferencias = function() {
@@ -350,7 +358,7 @@
             }
         };
         
-        $timeout(function () {init();});
+        init();
         
     }]);
     

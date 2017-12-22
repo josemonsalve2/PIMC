@@ -1,0 +1,87 @@
+<uib-tabset active="documentoEmisorReceptorCtrl.emisorReceptorActivo">
+        <uib-tab ng-repeat="emisorReceptor in documentoEmisorReceptorCtrl.emisoresReceptoresInt track by $index" 
+            select="documentoEmisorReceptorCtrl.emisorReceptorActivo = $index"  
+            heading="Emisor Receptor {{$index + 1}}">
+            <div class="row p-a-1"> 
+                <button ng-click='documentoEmisorReceptorCtrl.eliminarEmisorReceptor(emisorReceptor)' 
+                        class="btn btn-danger"> Borrar </button>
+            </div>
+            <div class="row">
+                <div class="clearfix m-a-1">
+                    <input type="checkbox" ng-model="documentoEmisorReceptorCtrl.ocultarCambosVacios"/>  Habilitar campos ocultos 
+                </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-12 col-md-6 p-t-2">
+                <div class="panel panel-primary">
+                    <header class="panel-heading">
+                        <h4 class="m-a-1">Emisor</h4>
+                    </header>
+                    <div class="panel-body">
+                        <ul class="list-group m-b-0">
+                            <li ng-if="(emisorReceptor.contenido.emitidoPorID != '') || documentoEmisorReceptorCtrl.ocultarCambosVacios" class="list-group-item">
+                                <span class="label label-primary">Personaje Emisor</span>
+                                <span editable-text="" 
+                                            class="m-l-1"> {{ emisorReceptor.personajeEmisor.nombre || "click para agregar"}}</span>
+                            </li>
+                            <li ng-if="(emisorReceptor.contenido.cargoEmisor != '') || documentoEmisorReceptorCtrl.ocultarCambosVacios" class="list-group-item">
+                                <span class="label label-primary">Cargo Emisor</span>
+                                <span editable-text="emisorReceptor.contenido.cargoEmisor" 
+                                            onbeforesave="modificarCampo('cargo Emisor',$data, $value, $index)"  
+                                            class="m-l-1"> {{ emisorReceptor.contenido.cargoEmisor || "click para editar"}}</span>
+                            </li>
+                            <li ng-if="(emisorReceptor.contenido.institucionEmisorID != '') || documentoEmisorReceptorCtrl.ocultarCambosVacios" class="list-group-item">
+                                <span class="label label-primary">Institucion Emisora</span>
+                                <span editable-text="tab.emisor.institucion" 
+                                            class="m-l-1"> {{ emisorReceptor.institucionEmisora.nombre || "click para editar"}}</span>
+                            </li>
+                            <li ng-if="(emisorReceptor.contenido.notasEmisor != '') || documentoEmisorReceptorCtrl.ocultarCambosVacios" class="list-group-item notaContenido">
+                                <span class="label label-primary">Anotacion Emisor</span>
+                                <p  editable-textarea="emisorReceptor.contenido.notasEmisor" 
+                                    e-rows="2" 
+                                    buttons="right" 
+                                    onaftersave="modificarCampo('Anotaciones emisor',$data, $value, $index)">{{emisorReceptor.contenido.notasEmisor || "click para editar"}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 p-t-2">
+            <div class="panel panel-primary">
+                <header class="panel-heading">
+                    <h4 class="m-a-1">Receptor</h4>
+                </header>
+                <div class="panel-body">
+                    <ul class="list-group m-b-0">
+                            <li ng-if="(emisorReceptor.contenido.dirigidoAID != '') || documentoEmisorReceptorCtrl.ocultarCambosVacios" class="list-group-item">
+                                <span class="label label-primary">Personaje receptor</span>
+                                <span editable-text="" 
+                                            class="m-l-1"> {{ emisorReceptor.personajeReceptor.nombre || "click para editar"}}</span>
+                            </li>
+                            <li ng-if="(emisorReceptor.contenido.cargoReceptor != '') || receptorEditarCamposOcultosChecked" class="list-group-item">
+                                <span class="label label-primary">Cargo receptor</span>
+                                <span editable-text="emisorReceptor.contenido.cargoReceptor" 
+                                            onbeforesave="modificarCampo('cargo Receptor',$data, $value, $index)"  
+                                            class="m-l-1"> {{ emisorReceptor.contenido.cargoReceptor || "click para editar"}}</span>
+                            </li>
+                            <li ng-if="(emisorReceptor.contenido.institucionReceptorID != '') || receptorEditarCamposOcultosChecked" class="list-group-item">
+                                <span class="label label-primary">Institucion Emisora</span>
+                                <span editable-text="" 
+                                            class="m-l-1"> {{ emisorReceptor.institucionEmisora.nombre || "click para editar"}}</span>
+                            </li>
+                            <li ng-if="(emisorReceptor.notasReceptor != '') || receptorEditarCamposOcultosChecked" class="list-group-item notaContenido">
+                                <span class="label label-primary">Anotacion Emisor</span>
+                                <p  editable-textarea="emisorReceptor.notasReceptor" 
+                                    e-rows="2" 
+                                    buttons="right" 
+                                    onaftersave="modificarCampo('Notas Receptor',$data, $value, $index)">{{emisorReceptor.notasReceptor || "click para editar"}}</p>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        </div>
+        </uib-tab>
+        <uib-tab-agregar text="Agregar" handler="documentoEmisorReceptorCtrl.agregarNuevoEmisorReceptor()">
+        </uib-tab-agregar>
+    </uib-tabset>
