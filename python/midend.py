@@ -301,7 +301,7 @@ def insertarElementoRelacionalPIMC0_2(elemento_relacional):
     data = request.get_json()
     if data:
       try: 
-        return pimcAPI.insertarNuevoElemento(elemento_relacional, data)
+        return jsonify(pimcAPI.insertarNuevoElemento(elemento_relacional, data))
       except ValueError as e:
         raise InvalidUsage("ERROR: " + str(e), status_code = 400)
       except Exception as e:
@@ -318,7 +318,7 @@ def consultarElementoRelacionalPIMC0_2(elemento_relacional):
     data = request.args.to_dict()
     if data:
       try: 
-        return pimcAPI.consultarElemento(elemento_relacional, data)
+        return jsonify(pimcAPI.consultarElemento(elemento_relacional, data))
       except ValueError as e:
         raise InvalidUsage("ERROR: " + str(e), status_code = 400)
       except Exception as e:
@@ -334,7 +334,7 @@ def eliminarElementoRelacionalPIMC0_2(elemento_relacional):
     data = request.args.to_dict()
     if data:
       try: 
-        return pimcAPI.eliminarElemento(elemento_relacional, data)
+        return jsonify(pimcAPI.eliminarElemento(elemento_relacional, data))
       except ValueError as e:
         raise InvalidUsage("ERROR: " + str(e), status_code = 400)
       except Exception as e:
@@ -350,7 +350,7 @@ def modificarElementoRelacionalPIMC0_2(elemento_relacional):
     data = request.get_json()
     if data:
       try: 
-        return pimcAPI.modificarElemento(elemento_relacional, data)
+        return jsonify(pimcAPI.modificarElemento(elemento_relacional, data))
       except ValueError as e:
         raise InvalidUsage("ERROR: " + str(e), status_code = 400)
       except Exception as e:
@@ -367,7 +367,7 @@ def consultarTodosFiltroPIMC0_2(elemento_relacional):
     if not data:
       data = {}
     try:
-      return pimcAPI.consultarTodosFiltro(elemento_relacional, data)
+      return jsonify(pimcAPI.consultarTodosFiltro(elemento_relacional, data))
     except ValueError as e:
       raise InvalidUsage("ERROR: " + str(e), status_code = 400)
     except Exception as e:

@@ -2,7 +2,6 @@ from API_operaciones.mysql_connection import app
 from API_operaciones.mysql_connection import mysql2 as mysql
 from API_operaciones.bd_descripcion import pimcBD
 import MySQLdb
-from flask import jsonify
 
 
 def eliminarElemento(elementoRelacional, parametrosJSON):
@@ -26,7 +25,7 @@ def eliminarElemento(elementoRelacional, parametrosJSON):
       try:
         numEntradasBorradas = cur.execute(querry % (elementoRelacional, idElementoRelacional, int(idValor)))
         mysql.commit()
-        return jsonify(numEntradasBorradas)
+        return numEntradasBorradas
       except (MySQLdb.Error, MySQLdb.Warning) as e:
         raise ValueError("MYSQL ERROR = ", str(e))
         return None

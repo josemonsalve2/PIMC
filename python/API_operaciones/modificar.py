@@ -2,7 +2,6 @@ from API_operaciones.mysql_connection import app
 from API_operaciones.mysql_connection import mysql2 as mysql
 from API_operaciones.bd_descripcion import pimcBD
 import MySQLdb
-from flask import jsonify
 
 
 def modificarElemento(elementoRelacional, parametrosJSON):
@@ -48,7 +47,7 @@ def modificarElemento(elementoRelacional, parametrosJSON):
     #Enviamos consulta
     numAffectedRows = cur.execute(querry, tuple(argumentosBD))
     mysql.commit()
-    return jsonify(numAffectedRows)
+    return numAffectedRows
   
   except (MySQLdb.Error, MySQLdb.Warning) as e:
     raise ValueError("MYSQL ERROR ("+querry+") = ", str(e))

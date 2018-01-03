@@ -2,7 +2,6 @@ from API_operaciones.mysql_connection import app
 from API_operaciones.mysql_connection import mysql2 as mysql
 from API_operaciones.bd_descripcion import pimcBD
 import MySQLdb
-from flask import jsonify
 
 
 def consultarTodosFiltro(elementoRelacional, parametrosJSON):
@@ -35,9 +34,9 @@ def consultarTodosFiltro(elementoRelacional, parametrosJSON):
     if (len(rv) != 0):
       columns = cur.description
       result = [{columns[index][0]:column for index, column in enumerate(value)} for value in rv]
-      return jsonify(result)
+      return result
     else:
-      return jsonify({})
+      return {}
   except (MySQLdb.Error, MySQLdb.Warning) as e:
     raise ValueError("MYSQL ERROR = ", str(e))
     return None
@@ -66,9 +65,9 @@ def consultarElemento(elementoRelacional, parametrosJSON):
         if (len(rv) != 0):
           columns = cur.description
           result = [{columns[index][0]:column for index, column in enumerate(value)} for value in rv]
-          return jsonify(result)
+          return result
         else:
-          return jsonify({})
+          return {}
       except (MySQLdb.Error, MySQLdb.Warning) as e:
         raise ValueError("MYSQL ERROR = ", str(e))
         return None

@@ -2,7 +2,6 @@ from API_operaciones.mysql_connection import app
 from API_operaciones.mysql_connection import mysql2 as mysql
 from API_operaciones.bd_descripcion import pimcBD
 import MySQLdb
-from flask import jsonify
 
 
 def insertarNuevoElemento(elementoRelacional, parametrosJSON):
@@ -67,7 +66,7 @@ def insertarNuevoElemento(elementoRelacional, parametrosJSON):
           rv = cur.fetchall()
           columns = cur.description
           result = [{columns[index][0]:column for index, column in enumerate(value)} for value in rv]
-          return jsonify(result)
+          return result
         else:
           raise ValueError("Error obteniendo LAST_INSERTED_ID")
           return None
