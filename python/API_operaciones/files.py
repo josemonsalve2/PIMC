@@ -55,10 +55,10 @@ def archivosElementoRelacional(elementoRelacional, parametrosJSON):
     # Obtenemos el nombre del archivo
     idElemento = elementoBD[0][idElementoRelacional]
     pathCompleto = os.path.join(app.config['UPLOAD_FOLDER'], elementoRelacional, str(idElemento))
-    if not os.path.exists(pathCompleto):
+    if os.path.exists(pathCompleto):
         listaArchivos = [f for f in os.listdir(pathCompleto) if os.path.isfile(os.path.join(pathCompleto, f))]
         return listaArchivos
-    raise ValueError('El archivo no existe')
+    raise ValueError('El archivo no existe' + pathCompleto)
     return
 
 ''' Esta funcion permite descargar los archivos
@@ -70,14 +70,17 @@ def descargarAchivoElementoRelacional(elementoRelacional, parametrosJSON):
     # Revisamos que el elemento exista en la base de datos
     idElementoRelacional = pimcBD.obtenerTablaId(elementoRelacional)
     elementoBD = consultarElemento(elementoRelacional, parametrosJSON)
+    if 'fileName' not in parametrosJSON:
+        raise ValueError('Parametros Incorrectos' + str(parametrosJSON))
+        return
     if not elementoBD:
         raise ValueError('Elemento no existente')
         return
     # Obtenemos el nombre del archivo
-    fileName = secure_filename(parametrosJSON.fileName)
+    fileName = secure_filename(parametrosJSON['fileName'])
     idElemento = elementoBD[0][idElementoRelacional]
     pathCompleto = os.path.join(app.config['UPLOAD_FOLDER'], elementoRelacional, str(idElemento), fileName)
-    if not os.path.exists(pathCompleto):
-        return open(pathCompleto)
+    if os.path.exists(pathCompleto):
+        return {'directorio': os.path.dirname(pathCompleto), 'nombreArchivo': os.path.basename(pathCompleto)}
     raise ValueError('El archivo no existe')
     return
