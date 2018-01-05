@@ -3,7 +3,7 @@ from API_operaciones.consulta import consultarElemento
 from API_operaciones.consulta import consultarTodosFiltro
 from API_operaciones.eliminar import eliminarElemento
 from API_operaciones.modificar import modificarElemento
-from API_operaciones.files import cargarArchivo, archivosElementoRelacional, descargarAchivoElementoRelacional
+from API_operaciones.files import cargarArchivos, archivosElementoRelacional, descargarAchivoElementoRelacional
 
 class pimc:
     def insertarNuevoElemento(self, elementoRelacional, parametrosJSON):
@@ -22,8 +22,8 @@ class pimc:
         modificarElemento(elementoRelacional, parametrosJSON)
 
     # Definiciones para archivos 
-    def cargarArchivo(self, elementoRelacional, parametrosPOST):
-        cargarArchivo(elementoRelacional, parametrosPOST)
+    def cargarArchivos(self, elementoRelacional, parametrosPOST):
+        cargarArchivos(elementoRelacional, parametrosPOST)
 
     def archivosElementoRelacional(self, elementoRelacional, parametrosJSON):
         archivosElementoRelacional(elementoRelacional, parametrosJSON)

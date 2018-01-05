@@ -9,9 +9,9 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-def cargarArchivo(elementoRelacional, parametrosPOST):
+def cargarArchivos(elementoRelacional, parametrosPOST):
     # check if the post request has the file part
-    if 'file' not in parametrosPOST.files:
+    if not parametrosPOST.files or 'file' not in parametrosPOST.files:
         raise ValueError('No se envió archivo adjunto')
         return
     file = parametrosPOST.files['file']
@@ -23,7 +23,7 @@ def cargarArchivo(elementoRelacional, parametrosPOST):
     if file and allowed_file(file.filename):
         # Revisamos que el elemento exista en la base de datos
         idElementoRelacional = pimcBD.obtenerTablaId(elementoRelacional)
-        elementoBD = consultarElemento(elementoRelacional, parametrosPOST)
+        elementoBD = consultarElemento(elementoRelacional, parametrosPOST.get_json())
         if not elementoBD:
             raise ValueError('Elemento no existente')
             return

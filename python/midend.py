@@ -374,6 +374,51 @@ def consultarTodosFiltroPIMC0_2(elemento_relacional):
         raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
   else:
     return ""
+
+@app.route("/PIMC0.2/cargarArchivos/<elemento_relacional>", methods=['POST'])
+def cargarArchivosPIMC0_2(elemento_relacional):
+  if request.method == 'POST':
+    data = request; 
+    try:
+      if not data:
+        raise ValueError("No se envio ningun archivo")
+      return jsonify(pimcAPI.cargarArchivo(elemento_relacional, data))
+    except ValueError as e:
+      raise InvalidUsage("ERROR: " + str(e), status_code = 400)
+    except Exception as e:
+        raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
+  else:
+    return ""
+
+@app.route("/PIMC0.2/listaArchivos/<elemento_relacional>", methods=['GET'])
+def listaArchivosPIMC0_2(elemento_relacional):
+  if request.method == 'GET':
+    data = request.args.to_dict(); 
+    if not data:
+      data = {}
+    try:
+      return jsonify(pimcAPI.archivosElementoRelacional(elemento_relacional, data))
+    except ValueError as e:
+      raise InvalidUsage("ERROR: " + str(e), status_code = 400)
+    except Exception as e:
+        raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
+  else:
+    return ""
+
+@app.route("/PIMC0.2/descargarArchivo/<elemento_relacional>", methods=['GET'])
+def listaPIMC0_2(elemento_relacional):
+  if request.method == 'GET':
+    data = request.args.to_dict(); 
+    if not data:
+      data = {}
+    try:
+      return jsonify(pimcAPI.descargarAchivoElementoRelacional(elemento_relacional, data))
+    except ValueError as e:
+      raise InvalidUsage("ERROR: " + str(e), status_code = 400)
+    except Exception as e:
+        raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
+  else:
+    return ""
   
 if __name__ == "__main__":
 #   app.run(host= '0.0.0.0')
