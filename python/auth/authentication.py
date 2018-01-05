@@ -126,7 +126,7 @@ def enviarCorreoConfirmacion(correoElectronico, nombreReal, nombreUsuario):
                 </p>
                 <p> En los proximos dias estaremos verificando su cuenta. Gracias por su paciencia </p>
         '''
-    mail.send(msg);
+    mail.send(msg)
 
 
 jwt = JWT(app, authenticate, identity)
