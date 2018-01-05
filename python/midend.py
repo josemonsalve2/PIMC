@@ -382,7 +382,7 @@ def cargarArchivosPIMC0_2(elemento_relacional):
     try:
       if not data:
         raise ValueError("No se envio ningun archivo")
-      return jsonify(pimcAPI.cargarArchivo(elemento_relacional, data))
+      return jsonify(pimcAPI.cargarArchivos(elemento_relacional, data))
     except ValueError as e:
       raise InvalidUsage("ERROR: " + str(e), status_code = 400)
     except Exception as e:

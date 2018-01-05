@@ -23,12 +23,12 @@ def cargarArchivos(elementoRelacional, parametrosPOST):
     if file and allowed_file(file.filename):
         # Revisamos que el elemento exista en la base de datos
         idElementoRelacional = pimcBD.obtenerTablaId(elementoRelacional)
-        elementoBD = consultarElemento(elementoRelacional, parametrosPOST.get_json())
+        elementoBD = consultarElemento(elementoRelacional, parametrosPOST.form.to_dict())
         if not elementoBD:
             raise ValueError('Elemento no existente')
             return
         filename = secure_filename(file.filename)
-        pathCompleto = os.path.join(app.config['UPLOAD_FOLDER'], elementoRelacional, elementoBD[idElementoRelacional], filename)
+        pathCompleto = os.path.join(app.config['UPLOAD_FOLDER'], elementoRelacional, str(elementoBD[0][idElementoRelacional]), filename)
         # Creamos los folderes si es necesario
         directory = os.path.dirname(pathCompleto)
         if not os.path.exists(directory):
@@ -53,8 +53,8 @@ def archivosElementoRelacional(elementoRelacional, parametrosJSON):
         raise ValueError('Elemento no existente')
         return
     # Obtenemos el nombre del archivo
-    idElemento = elementoBD[idElementoRelacional]
-    pathCompleto = os.path.join(app.config['UPLOAD_FOLDER'], elementoRelacional, idElemento)
+    idElemento = elementoBD[0][idElementoRelacional]
+    pathCompleto = os.path.join(app.config['UPLOAD_FOLDER'], elementoRelacional, str(idElemento))
     if not os.path.exists(pathCompleto):
         listaArchivos = [f for f in os.listdir(pathCompleto) if os.path.isfile(os.path.join(pathCompleto, f))]
         return listaArchivos
@@ -75,8 +75,8 @@ def descargarAchivoElementoRelacional(elementoRelacional, parametrosJSON):
         return
     # Obtenemos el nombre del archivo
     fileName = secure_filename(parametrosJSON.fileName)
-    idElemento = elementoBD[idElementoRelacional]
-    pathCompleto = os.path.join(app.config['UPLOAD_FOLDER'], elementoRelacional, idElemento, fileName)
+    idElemento = elementoBD[0][idElementoRelacional]
+    pathCompleto = os.path.join(app.config['UPLOAD_FOLDER'], elementoRelacional, str(idElemento), fileName)
     if not os.path.exists(pathCompleto):
         return open(pathCompleto)
     raise ValueError('El archivo no existe')
