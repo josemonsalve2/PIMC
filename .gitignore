@@ -5,3 +5,4 @@ python/midend.bkp.pyc
 python/API_operaciones/__pycache__/
 www/app/TODO
 python/API_operaciones/mysql_connection.py
+.vscode/
