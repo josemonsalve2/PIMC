@@ -80,7 +80,7 @@ def descargarAchivoElementoRelacional(elementoRelacional, parametrosJSON):
     fileName = secure_filename(parametrosJSON['fileName'])
     idElemento = elementoBD[0][idElementoRelacional]
     pathCompleto = os.path.join(app.config['UPLOAD_FOLDER'], elementoRelacional, str(idElemento), fileName)
-    if os.path.exists(pathCompleto):
+    if os.path.exists(pathCompleto) and os.path.isfile(pathCompleto):
         return {'directorio': os.path.dirname(pathCompleto), 'nombreArchivo': os.path.basename(pathCompleto)}
     raise ValueError('El archivo no existe')
     return
