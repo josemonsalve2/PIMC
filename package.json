@@ -34,6 +34,7 @@
     "csv": "^2.0.0",
     "gulp-connect": "^2.3.1",
     "moment": "^2.19.1",
+    "ng-file-upload": "^12.2.13",
     "pdfmake": "^0.1.33"
   }
 }
