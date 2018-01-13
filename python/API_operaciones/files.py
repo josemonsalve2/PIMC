@@ -119,7 +119,9 @@ def renombrarArchivoElementoRelacional(elementoRelacional, parametrosJSON):
     idElemento = elementoBD[0][idElementoRelacional]
     pathCompleto = os.path.join(app.config['UPLOAD_FOLDER'],
                                 elementoRelacional, str(idElemento), fileName)
-    if os.path.exists(pathCompleto) and os.path.isfile(pathCompleto):
+    if (os.path.exists(pathCompleto) and
+        os.path.isfile(pathCompleto) and
+        allowed_file(new_file_name)):
         try:
             os.rename(pathCompleto, new_file_name)
         except OSError:
