@@ -3,7 +3,12 @@ from API_operaciones.consulta import consultarElemento
 from API_operaciones.consulta import consultarTodosFiltro
 from API_operaciones.eliminar import eliminarElemento
 from API_operaciones.modificar import modificarElemento
-from API_operaciones.files import cargarArchivos, archivosElementoRelacional, descargarAchivoElementoRelacional
+from API_operaciones.files import\
+    cargarArchivos,\
+    archivosElementoRelacional,\
+    descargarAchivoElementoRelacional,\
+    eliminarArchivoElementoRelacional,\
+    renombrarArchivoElementoRelacional
 
 class pimc:
     def insertarNuevoElemento(self, elementoRelacional, parametrosJSON):
@@ -30,6 +35,12 @@ class pimc:
     
     def descargarAchivoElementoRelacional(self, elementoRelacional, parametrosJSON):
         descargarAchivoElementoRelacional(elementoRelacional, parametrosJSON)
+    
+    def eliminarArchivoElementoRelacional(self, elementoRelacional, parametrosJSON):
+        eliminarArchivoElementoRelacional(elementoRelacional, parametrosJSON)
+    
+    def renombrarArchivoElementoRelacional(self, elementoRelacional, parametrosJSON):
+        renombrarArchivoElementoRelacional(elementoRelacional, parametrosJSON)
 
     def autocompletarConsulta(self):
         return

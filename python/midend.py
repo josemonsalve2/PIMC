@@ -421,6 +421,36 @@ def descargarArchivosPIMC0_2(elemento_relacional):
         raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
   else:
     return ""
+
+@app.route("/PIMC0.2/eliminarArchivo/<elemento_relacional>", methods=['GET'])
+def eliminarArchivosPIMC0_2(elemento_relacional):
+  if request.method == 'GET':
+    data = request.args.to_dict(); 
+    if not data:
+      data = {}
+    try:
+      return jsonify(pimcAPI.eliminarArchivoElementoRelacional(elemento_relacional, data))
+    except ValueError as e:
+      raise InvalidUsage("ERROR: " + str(e), status_code = 400)
+    except Exception as e:
+        raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
+  else:
+    return ""
+
+@app.route("/PIMC0.2/renombrarArchivo/<elemento_relacional>", methods=['GET'])
+def renombrarArchivosPIMC0_2(elemento_relacional):
+  if request.method == 'GET':
+    data = request.args.to_dict(); 
+    if not data:
+      data = {}
+    try:
+      return jsonify(pimcAPI.renombrarAchivoElementoRelacional(elemento_relacional, data))
+    except ValueError as e:
+      raise InvalidUsage("ERROR: " + str(e), status_code = 400)
+    except Exception as e:
+        raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
+  else:
+    return ""
   
 if __name__ == "__main__":
 #   app.run(host= '0.0.0.0')
