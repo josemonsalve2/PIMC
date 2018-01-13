@@ -53,6 +53,9 @@
                     reportar-cambio = "refTablaCtrl.fechaEditada(fecha, formato, valor, campo)">
                 </pimc-fecha-con-formato>
             </span>
+            <span ng-if="refTablaCtrl.columnaEsLugar(campo)">
+                    <pimc-lugar-territorio-campo></pimc-lugar-territorio-campo>
+            </span>
         </td>
     </tr>
 </table>

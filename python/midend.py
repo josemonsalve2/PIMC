@@ -444,7 +444,7 @@ def renombrarArchivosPIMC0_2(elemento_relacional):
     if not data:
       data = {}
     try:
-      return jsonify(pimcAPI.renombrarAchivoElementoRelacional(elemento_relacional, data))
+      return jsonify(pimcAPI.renombrarArchivoElementoRelacional(elemento_relacional, data))
     except ValueError as e:
       raise InvalidUsage("ERROR: " + str(e), status_code = 400)
     except Exception as e:
