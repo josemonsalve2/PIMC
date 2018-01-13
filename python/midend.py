@@ -1,6 +1,7 @@
 import traceback
 from flask import Flask
 from flask import jsonify
+from flask import send_from_directory
 from flask_jwt import JWT, jwt_required, current_identity
 from flask_mysqldb import MySQL
 from datetime import timedelta
@@ -382,7 +383,7 @@ def cargarArchivosPIMC0_2(elemento_relacional):
     try:
       if not data:
         raise ValueError("No se envio ningun archivo")
-      return jsonify(pimcAPI.cargarArchivo(elemento_relacional, data))
+      return jsonify(pimcAPI.cargarArchivos(elemento_relacional, data))
     except ValueError as e:
       raise InvalidUsage("ERROR: " + str(e), status_code = 400)
     except Exception as e:
@@ -412,7 +413,8 @@ def descargarArchivosPIMC0_2(elemento_relacional):
     if not data:
       data = {}
     try:
-      return jsonify(pimcAPI.descargarAchivoElementoRelacional(elemento_relacional, data))
+      archivoAEnviar = pimcAPI.descargarAchivoElementoRelacional(elemento_relacional, data)
+      return send_from_directory(archivoAEnviar['directorio'], archivoAEnviar['nombreArchivo'], as_attachment=True)
     except ValueError as e:
       raise InvalidUsage("ERROR: " + str(e), status_code = 400)
     except Exception as e:
