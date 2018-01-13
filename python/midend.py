@@ -406,7 +406,7 @@ def listaArchivosPIMC0_2(elemento_relacional):
     return ""
 
 @app.route("/PIMC0.2/descargarArchivo/<elemento_relacional>", methods=['GET'])
-def listaPIMC0_2(elemento_relacional):
+def descargarArchivosPIMC0_2(elemento_relacional):
   if request.method == 'GET':
     data = request.args.to_dict(); 
     if not data:
