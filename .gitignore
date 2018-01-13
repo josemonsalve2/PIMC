@@ -4,5 +4,6 @@ python/midend.pyc
 python/midend.bkp.pyc 
 python/API_operaciones/__pycache__/
 www/app/TODO
+www/bower_components
 python/API_operaciones/mysql_connection.py
 .vscode/
