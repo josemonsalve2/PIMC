@@ -6,10 +6,26 @@ from API_operaciones.bd_descripcion import pimcBD
 from API_operaciones.consulta import consultarElemento
 
 def allowed_file(filename):
+    ''' Esta funcion permite revisar que el archivo tenga
+        una extension valida. Solo debemos permitir archivos
+        con cierto tipo de extensiones
+    '''
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
+def file_extension_changed(filename, new_filename):
+    ''' Esta funcion permite revisar que al cambiar el
+        nombre de un archivo no se le cambie la extension
+        por seguridad y para que no se pierda la info de
+        los archivos
+    '''
+    return filename.rsplit('.', 1)[1].lower() != \
+           new_filename.rsplit('.', 1)[1].lower()
+
 def cargarArchivos(elementoRelacional, parametrosPOST):
+    ''' Esta funcion permite cargar archivos de un
+        elemento relacional en especifico
+    '''
     # check if the post request has the file part
     if not parametrosPOST.files or 'file' not in parametrosPOST.files:
         raise ValueError('No se envió archivo adjunto')
@@ -37,11 +53,11 @@ def cargarArchivos(elementoRelacional, parametrosPOST):
     else:
         raise ValueError('Nombre archivo incorrecto')
 
-''' Esta funcion permite revisar los archivos 
-que un elemento relacional tiene. Devuelve una 
-lista con cada uno de los archivos
-'''
 def archivosElementoRelacional(elementoRelacional, parametrosJSON):
+    ''' Esta funcion permite revisar los archivos 
+    que un elemento relacional tiene. Devuelve una 
+    lista con cada uno de los archivos
+    '''
     # Revisamos que el elemento exista en la base de datos
     idElementoRelacional = pimcBD.obtenerTablaId(elementoRelacional)
     elementoBD = consultarElemento(elementoRelacional, parametrosJSON)
@@ -55,11 +71,11 @@ def archivosElementoRelacional(elementoRelacional, parametrosJSON):
         return listaArchivos
     raise ValueError('El archivo no existe' + pathCompleto)
 
-''' Esta funcion permite descargar los archivos
-de un elemento relacional en especifico. parametrosJSON
-deberia tener un nombre de archivo valido
-'''
 def descargarAchivoElementoRelacional(elementoRelacional, parametrosJSON):
+    ''' Esta funcion permite descargar los archivos
+    de un elemento relacional en especifico. parametrosJSON
+    deberia tener un nombre de archivo valido
+    '''
     # Revisamos que el elemento exista en la base de datos
     idElementoRelacional = pimcBD.obtenerTablaId(elementoRelacional)
     elementoBD = consultarElemento(elementoRelacional, parametrosJSON)
@@ -75,11 +91,11 @@ def descargarAchivoElementoRelacional(elementoRelacional, parametrosJSON):
         return {'directorio': os.path.dirname(pathCompleto), 'nombreArchivo': os.path.basename(pathCompleto)}
     raise ValueError('El archivo no existe')
 
-''' Esta funcion permite eliminar un archivo de un
-elemento relacional en especifico. parametrosJSON
-deberia tener un nombre de un archivo valido
-'''
 def eliminarArchivoElementoRelacional(elementoRelacional, parametrosJSON):
+    ''' Esta funcion permite eliminar un archivo de un
+    elemento relacional en especifico. parametrosJSON
+    deberia tener un nombre de un archivo valido
+    '''
     # Revisamos que el elemento exista en la base de datos
     idElementoRelacional = pimcBD.obtenerTablaId(elementoRelacional)
     elementoBD = consultarElemento(elementoRelacional, parametrosJSON)
@@ -101,11 +117,11 @@ def eliminarArchivoElementoRelacional(elementoRelacional, parametrosJSON):
                 "message": "Archivo eliminado satisfactoriamente"}
     raise ValueError('El archivo no existe')
 
-''' Esta funcion permite renombrar un archivo de un
-elemento relacional en especifico. parametrosJSON
-deberia tener un nombre de un archivo valido
-'''
 def renombrarArchivoElementoRelacional(elementoRelacional, parametrosJSON):
+    ''' Esta funcion permite renombrar un archivo de un
+    elemento relacional en especifico. parametrosJSON
+    deberia tener un nombre de un archivo valido
+    '''
     # Revisamos que el elemento exista en la base de datos
     idElementoRelacional = pimcBD.obtenerTablaId(elementoRelacional)
     elementoBD = consultarElemento(elementoRelacional, parametrosJSON)
@@ -119,6 +135,12 @@ def renombrarArchivoElementoRelacional(elementoRelacional, parametrosJSON):
     idElemento = elementoBD[0][idElementoRelacional]
     pathCompleto = os.path.join(app.config['UPLOAD_FOLDER'],
                                 elementoRelacional, str(idElemento), fileName)
+
+    # Revisamos que no se cambie la extension del archivo
+    if file_extension_changed(fileName, new_file_name):
+        raise ValueError('No se puede cambiar la extension de un archivo')
+    
+    # renombramos el archivo
     if (os.path.exists(pathCompleto) and
         os.path.isfile(pathCompleto) and
         allowed_file(new_file_name)):
