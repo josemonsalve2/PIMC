@@ -117,35 +117,37 @@ def eliminarArchivoElementoRelacional(elementoRelacional, parametrosJSON):
                 "message": "Archivo eliminado satisfactoriamente"}
     raise ValueError('El archivo no existe')
 
-def renombrarArchivoElementoRelacional(elementoRelacional, parametrosJSON):
+def renombrarArchivoElementoRelacional(elemento_relacional, parametros_JSON):
     ''' Esta funcion permite renombrar un archivo de un
-    elemento relacional en especifico. parametrosJSON
+    elemento relacional en especifico. parametros_JSON
     deberia tener un nombre de un archivo valido
     '''
     # Revisamos que el elemento exista en la base de datos
-    idElementoRelacional = pimcBD.obtenerTablaId(elementoRelacional)
-    elementoBD = consultarElemento(elementoRelacional, parametrosJSON)
-    if 'fileName' not in parametrosJSON:
-        raise ValueError('Parametros Incorrectos' + str(parametrosJSON))
-    if not elementoBD:
+    id_elemento_relacional = pimcBD.obtenerTablaId(elemento_relacional)
+    elemento_BD = consultarElemento(elemento_relacional, parametros_JSON)
+    if 'fileName' not in parametros_JSON:
+        raise ValueError('Parametros Incorrectos' + str(parametros_JSON))
+    if not elemento_BD:
         raise ValueError('Elemento no existente')
     # Obtenemos el nombre del archivo
-    fileName = secure_filename(parametrosJSON['fileName'])
-    new_file_name = secure_filename(parametrosJSON['newFileName'])
-    idElemento = elementoBD[0][idElementoRelacional]
-    pathCompleto = os.path.join(app.config['UPLOAD_FOLDER'],
-                                elementoRelacional, str(idElemento), fileName)
+    file_name = secure_filename(parametros_JSON['fileName'])
+    new_file_name = secure_filename(parametros_JSON['newFileName'])
+    id_elemento = elemento_BD[0][id_elemento_relacional]
+    path_completo = os.path.join(app.config['UPLOAD_FOLDER'],
+                                 elemento_relacional, str(id_elemento), file_name)
+    new_path_completo = os.path.join(app.config['UPLOAD_FOLDER'],
+                                     elemento_relacional, str(id_elemento), new_file_name)
 
     # Revisamos que no se cambie la extension del archivo
-    if file_extension_changed(fileName, new_file_name):
+    if file_extension_changed(file_name, new_file_name):
         raise ValueError('No se puede cambiar la extension de un archivo')
-    
+
     # renombramos el archivo
-    if (os.path.exists(pathCompleto) and
-        os.path.isfile(pathCompleto) and
-        allowed_file(new_file_name)):
+    if (os.path.exists(path_completo) and
+            os.path.isfile(path_completo) and
+            allowed_file(new_file_name)):
         try:
-            os.rename(pathCompleto, new_file_name)
+            os.rename(path_completo, new_path_completo)
         except OSError:
             raise ValueError('Elemento incorrecto')
         return {"status": "Success",
