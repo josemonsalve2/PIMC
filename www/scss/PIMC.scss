@@ -306,3 +306,12 @@ tr {
  [ng\:cloak], [ng-cloak], .ng-cloak {
   display: none !important;
 }
+
+.dropbox {
+  border: 5px solid transparent;
+}
+
+.dragover {
+  border: 5px dashed blue;
+  background: rgba(200,200,200,.5)
+}

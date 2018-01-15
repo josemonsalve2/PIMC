@@ -24,7 +24,8 @@
     'fechaConFormatoModule', 
     'loginModule',
     'pimcRegisterModule',
-    'pimcServiceModule'
+    'pimcServiceModule',
+    'pimcFilesSoporte'
   ]);
 
   pimc.controller('AppController', ['pimcMenuService', '$scope', '$window', '$rootScope',  function(pimcMenuService, $scope, $window, $rootScope) {

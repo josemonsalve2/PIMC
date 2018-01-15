@@ -1,0 +1,40 @@
+<div class="p-a-1">
+    <form name="formularioArchivos">
+        <div class='row'>
+            <div class='col-12 dropbox' ngf-drop ngf-select ng-model="filesSoporteCtrl.archivosNuevos" 
+            ngf-drag-over-class="'dragover'" style="padding:10px" ngf-multiple='true' ngf-keep='true'>
+                <label class="btn btn-xs btn-default btn-file">
+                    Agregar archivo adjunto
+                </label>
+            </div>
+            <div class="col-12">
+                <ul class="list-group"> 
+                    <li class="list-group-item list-group-item-action list-group-item-info" 
+                    ng-repeat="newFile in filesSoporteCtrl.archivosNuevos">
+                        <label>archivo a adjuntar:</label>
+                        <span> {{newFile.name}}</span>
+                    </li>
+                </ul>
+            </div>
+            </div>
+        </form>
+    <div>
+        <ul class="list-inline">
+            <li ng-repeat="file in filesSoporteCtrl.listaFiles | filtrarEliminados track by $index" class="list-inline-item">
+                <div class="thumbnail text-center" style="position:relative">
+                    <div style="position: absolute;top: -10px; right: -3px; font-size:20px" ng-dblclick="filesSoporteCtrl.eliminarFile(file)"><i class="fa fa-times" aria-hidden="true"></i>
+                        </div>
+                    <i class="fa" ng-class="filesSoporteCtrl.obtenerClaseIcono(file.extension)" ng-click="filesSoporteCtrl.descargarFile(file)" style="font-size:48px;color:rgb(0, 133, 0)"></i>
+                        <p style="margin:5px 10px 0px 10px">
+                            <span editable-text='file.nombre'
+                            e-style="width: 100px; text-align: center"
+                            blur='submit'
+                            onaftersave='filesSoporteCtrl.renombrarFile(file)'>
+                                {{filesSoporteCtrl.nombreCompleto(file)}}
+                            </span>
+                        </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
