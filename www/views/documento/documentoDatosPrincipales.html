@@ -85,7 +85,12 @@
             <h4>disponibilidad de consulta</h4>
           </header>
           <div class="panel-body">
-            <p editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.disponibilidad" onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('disponibilidadConsulta',$data)">{{documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.disponibilidad}}</p>
+            <!-- <p editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.disponibilidad" onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('disponibilidadConsulta',$data)">{{documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.disponibilidad}}</p> -->
+            <pimc-files-soporte 
+              elemento-relacional="Documentos" 
+              elemento-relacional-id='documentosDatosPrincipalesCtrl.datosPrincipalesInt.contenido.documentoID'
+              lista-files="documentosDatosPrincipalesCtrl.filesListaInt"
+            ></pimc-files-soporte>
           </div>
         </div>
     </div>

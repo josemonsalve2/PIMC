@@ -97,6 +97,7 @@
             documentoDatosPrincipalesCtrl.activo = false;
             // Inicializacion de datos principales
             documentoDatosPrincipalesCtrl.datosPrincipalesInt = pimcDocumentoDatosPrincipalesService.crearVacio;
+            documentoDatosPrincipalesCtrl.filesListaInt = [];
     
             // Para actualizar los elementos internos en caso de que sea necesario
             documentoDatosPrincipalesCtrl.$onChanges = function (changes) { 
@@ -106,13 +107,17 @@
                 if (changes.datosPrincipales) {
                     documentoDatosPrincipalesCtrl.datosPrincipalesInt = $window.angular.copy(documentoDatosPrincipalesCtrl.datosPrincipales); // Datos principales
                 }
+                if (changes.filesLista) {
+                    documentoDatosPrincipalesCtrl.filesListaInt = $window.angular.copy(documentoDatosPrincipalesCtrl.filesLista); // FILES
+                }
               } 
             // Funcion para datos editados
             documentoDatosPrincipalesCtrl.datoEditado = function (campo, valorNuevo) {
                 pimcBarraEstadoService.registrarAccion("Dato Principal" + campo + " modificado " + valorNuevo);
                 documentoDatosPrincipalesCtrl.datosPrincipalesInt.estado = pimcService.datosEstados.MODIFICADO;
                 documentoDatosPrincipalesCtrl.reportarCambio({
-                    datosPrincipales: documentoDatosPrincipalesCtrl.datosPrincipalesInt});
+                    datosPrincipales: documentoDatosPrincipalesCtrl.datosPrincipalesInt, 
+                    listadoFiles: documentoDatosPrincipalesCtrl.filesListaInt});
             };
     
             documentoDatosPrincipalesCtrl.listadoEditado = function (listado, csvString) {
@@ -128,6 +133,16 @@
                 documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido[campoFecha] = fecha;
                 documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido[campoFormato] = formato;
                 documentoDatosPrincipalesCtrl.datoEditado(campoFecha, fecha);
+            }
+
+            // Reportar Cambio files
+            documentoDatosPrincipalesCtrl.filesEditados = function (files) {
+                documentoDatosPrincipalesCtrl.datoEditado = function (campo, valorNuevo) {
+                    pimcBarraEstadoService.registrarAccion("Files han sido editados");
+                    documentoDatosPrincipalesCtrl.reportarCambio({
+                        datosPrincipales: documentoDatosPrincipalesCtrl.datosPrincipalesInt, 
+                        listadoFiles: documentoDatosPrincipalesCtrl.filesListaInt});
+                }
             }
     
             // Listado palabras claves
@@ -180,6 +195,7 @@
         documentoPerfil.component('pimcDocumentoDatosPrincipales', {
             bindings: {
                 datosPrincipales: '<',
+                filesLista: '<',
                 activo: '<',
                 reportarCambio:'&'
             },

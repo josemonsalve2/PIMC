@@ -25,7 +25,8 @@
          'pimcDocumentoDatosPrincipalesService',         
          'pimcDocumentoEmisorReceptorService',         
          'pimcTablaRefElementoService',
-         'pimcComentarios',          
+         'pimcComentarios',
+         'pimcFilesService',         
          '$q',
          '$window', 
          'uiGridConstants', 
@@ -38,6 +39,7 @@
                   pimcDocumentoEmisorReceptorService,
                   pimcTablaRefElementoService,
                   pimcComentarios,
+                  pimcFilesService,
                   $q, 
                   $window, 
                   i18nService, 
@@ -67,6 +69,9 @@
 
                 // DATOS PRINCIPALES
                 conexiones.push($scope.cargarDatosPrincipales());
+
+                // FILES
+                conexiones.push($scope.cargarFiles())
 
                 // ANOTACIONES
                 conexiones.push($scope.cargarNotas());
@@ -108,15 +113,28 @@
             });
         };
         
-        $scope.datosPrincipalesEditados = function (datosPrincipales) {
+        $scope.datosPrincipalesEditados = function (datosPrincipales, listadoFiles) {
             $scope.datosPrincipales = datosPrincipales;
+            $scope.listaFiles = listadoFiles;
         };
 
         $scope.sinopsisComentariosEditados = function (datosPrincipales, notas) {
             $scope.datosPrincipales = datosPrincipales;
             $scope.notas = notas;
         };
-        
+
+        // FILES
+        $scope.listaFiles;
+        // funcion para cargar
+        $scope.cargarFiles = function() {    
+            pimcFilesService.obtenerListadoFiles(
+            'Documentos', 
+            $scope.documentoID).then(
+                function(listadoNuevo){
+                    $scope.listaFiles = listadoNuevo;
+                }
+            );
+        }
 
         // ANOTACIONES
         $scope.notas = [];
@@ -311,6 +329,8 @@
             
             // Guardar datos principales
             conexiones['datosPrincipales'] = pimcDocumentoDatosPrincipalesService.guardarDatosPrincipales($scope.datosPrincipales);
+            // Guardar Files
+            conexiones['datosPrincipales'] = pimcFilesService.guardarCambiosFiles('Documentos', $scope.documentoID, $scope.listaFiles);
             // Guardar notas
             conexiones['commentarios'] = pimcComentarios.guardarNotas('Documentos', $scope.documentoID, $scope.notas);
 
