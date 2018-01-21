@@ -69,7 +69,9 @@ def archivosElementoRelacional(elementoRelacional, parametrosJSON):
     if os.path.exists(pathCompleto):
         listaArchivos = [f for f in os.listdir(pathCompleto) if os.path.isfile(os.path.join(pathCompleto, f))]
         return listaArchivos
-    raise ValueError('El archivo no existe' + pathCompleto)
+    else:
+        return [];
+    return
 
 def descargarAchivoElementoRelacional(elementoRelacional, parametrosJSON):
     ''' Esta funcion permite descargar los archivos
