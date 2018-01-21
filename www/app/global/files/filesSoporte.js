@@ -191,7 +191,7 @@
 
           filesSoporteCtrl.elementoRelacionalInt = "";
           filesSoporteCtrl.elementoRelacionalIdInt = "";
-          filesSoporteCtrl.listaFiles = [];
+          filesSoporteCtrl.listaFilesInt = [];
           filesSoporteCtrl.archivosNuevos = [];
 
           // Lista de iconos para los archivos
@@ -234,7 +234,9 @@
 
           // Funcion para reportar cambios
           filesSoporteCtrl.$onChanges = function (changes) {
-            if (changes.elementoRelacional || changes.elementoRelacionalID) {
+            if (changes.listaFiles) {
+              filesSoporteCtrl.listaFilesInt = angular.copy(filesSoporteCtrl.listaFiles); 
+            } else if (changes.elementoRelacional || changes.elementoRelacionalID) {
               filesSoporteCtrl.elementoRelacionalInt = angular.copy(filesSoporteCtrl.elementoRelacional); 
               filesSoporteCtrl.elementoRelacionalIdInt = angular.copy(filesSoporteCtrl.elementoRelacionalId); 
               filesSoporteCtrl.cargarFiles();
@@ -244,24 +246,8 @@
               filesSoporteCtrl.registrarFuncionGuardado(filesSoporteCtrl.cargarFiles);
             }
           } 
-          
-          // Funcion para guardar
-          filesSoporteCtrl.guardarCambiosFiles = function() {
-            // Enviamos nuevos archivos
-            angular.forEach(filesSoporteCtrl.archivosNuevos, function(file) {
-              pimcFilesService.enviarFile(
-                filesSoporteCtrl.elementoRelacionalInt,
-                filesSoporteCtrl.elementoRelacionalIdInt,
-                file);
-            });
-            // Guardamos cambios en los archivos actuales
-            return  pimcFilesService.guardarCambiosFiles(
-              filesSoporteCtrl.elementoRelacionalInt,
-              filesSoporteCtrl.elementoRelacionalIdInt,
-              listaFiles);
-          }
 
-          // funcion para cargar
+          // funcion para descargar
           filesSoporteCtrl.descargarFile = function(file) {            
             if (file.nombre) {
               pimcFilesService.descargarFile(
@@ -272,29 +258,16 @@
             }
           }
 
-          // funcion para cargar
-          filesSoporteCtrl.cargarFiles = function() {            
-            if (filesSoporteCtrl.elementoRelacionalInt && filesSoporteCtrl.elementoRelacionalIdInt) {
-              pimcFilesService.obtenerListadoFiles(
-                filesSoporteCtrl.elementoRelacionalInt, 
-                filesSoporteCtrl.elementoRelacionalIdInt).then(
-                  function(listadoNuevo){
-                    filesSoporteCtrl.listaFiles = listadoNuevo;
-                  }
-                );
-            }
+          // Borrar archivo
+          filesSoporteCtrl.eliminarFile = function(file) {
+            file.estado = pimcService.datosEstados.ELIMINADO;
+          }
 
-            // Borrar archivo
-            filesSoporteCtrl.eliminarFile = function(file) {
-              file.estado = pimcService.datosEstados.ELIMINADO;
-            }
-
-            filesSoporteCtrl.renombrarFile = function(file) {
-              if (file.nombre != file.nombreOriginal) {
-                file.estado = pimcService.datosEstados.MODIFICADO;
-              } else {
-                file.estado = pimcService.datosEstados.LIMPIO;
-              }
+          filesSoporteCtrl.renombrarFile = function(file) {
+            if (file.nombre != file.nombreOriginal) {
+              file.estado = pimcService.datosEstados.MODIFICADO;
+            } else {
+              file.estado = pimcService.datosEstados.LIMPIO;
             }
           }
       }]);
@@ -316,10 +289,10 @@
       // COMPONENTS
       pimcFilesSoporte.component('pimcFilesSoporte', {
         bindings: {
+          listaFiles: '<',
           elementoRelacional: '@',
           elementoRelacionalId: '@',
-          registrarFuncionGuardado: '&',
-          registrarFuncionCargar: '&'
+          reportarCambios: '&'
         },
         controller: 'pimcFileSoportesController',
         controllerAs: 'filesSoporteCtrl',

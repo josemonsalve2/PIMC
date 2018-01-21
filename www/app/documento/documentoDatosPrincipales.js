@@ -180,6 +180,7 @@
         documentoPerfil.component('pimcDocumentoDatosPrincipales', {
             bindings: {
                 datosPrincipales: '<',
+                filesLista: '<',
                 activo: '<',
                 reportarCambio:'&'
             },

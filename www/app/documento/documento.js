@@ -116,6 +116,41 @@
             $scope.datosPrincipales = datosPrincipales;
             $scope.notas = notas;
         };
+
+        // FILES
+        $scope.listaFiles;
+        // Funcion para guardar
+        $scope.guardarCambiosFiles = function() {
+            // Enviamos nuevos archivos
+            angular.forEach(filesSoporteCtrl.archivosNuevos, function(file) {
+              pimcFilesService.enviarFile(
+                filesSoporteCtrl.elementoRelacionalInt,
+                filesSoporteCtrl.elementoRelacionalIdInt,
+                file);
+            });
+            // Guardamos cambios en los archivos actuales
+            return  pimcFilesService.guardarCambiosFiles(
+              filesSoporteCtrl.elementoRelacionalInt,
+              filesSoporteCtrl.elementoRelacionalIdInt,
+              listaFiles);
+          }
+          
+          // funcion para cargar
+          $scope.cargarFiles = function() {    
+            if (filesSoporteCtrl.elementoRelacionalInt && filesSoporteCtrl.elementoRelacionalIdInt) {
+              pimcFilesService.obtenerListadoFiles(
+                filesSoporteCtrl.elementoRelacionalInt, 
+                filesSoporteCtrl.elementoRelacionalIdInt).then(
+                  function(listadoNuevo){
+                    filesSoporteCtrl.listaFiles = listadoNuevo;
+                  }
+                );
+            }
+          }
+
+          $scope.filesEditado = function(editedFiles) {
+            $scope.listaFiles = editedFiles
+          }
         
 
         // ANOTACIONES
