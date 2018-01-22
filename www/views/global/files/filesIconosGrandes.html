@@ -2,12 +2,12 @@
     <form name="formularioArchivos">
         <div class='row'>
             <div class='col-12 dropbox' 
-                ngf-drop="filesSoporteCtrl.agregarFile($files)" 
-                ngf-select="filesSoporteCtrl.agregarFile($files)" 
+                ngf-select="filesSoporteCtrl.agregarFile($files)"
+                ngf-drop="filesSoporteCtrl.agregarFile($files)"
                 ngf-drag-over-class="'dragover'" 
                 style="padding:10px" 
                 ngf-multiple='true' 
-                ngf-keep='true'>
+                ngf-keep='distinct'>
                     <label class="btn btn-xs btn-default btn-file">
                         Agregar archivo adjunto
                     </label>

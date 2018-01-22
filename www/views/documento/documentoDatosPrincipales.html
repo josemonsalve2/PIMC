@@ -88,8 +88,9 @@
             <!-- <p editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.disponibilidad" onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('disponibilidadConsulta',$data)">{{documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.disponibilidad}}</p> -->
             <pimc-files-soporte 
               elemento-relacional="Documentos" 
-              elemento-relacional-id='documentosDatosPrincipalesCtrl.datosPrincipalesInt.contenido.documentoID'
-              lista-files="documentosDatosPrincipalesCtrl.filesListaInt"
+              elemento-relacional-id='documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.documentoID'
+              lista-files="documentoDatosPrincipalesCtrl.filesListaInt"
+              reportar-cambios="documentoDatosPrincipalesCtrl.filesEditados(listaFiles)"
             ></pimc-files-soporte>
           </div>
         </div>

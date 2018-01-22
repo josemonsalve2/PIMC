@@ -124,7 +124,7 @@
         };
 
         // FILES
-        $scope.listaFiles;
+        $scope.listaFiles = [];
         // funcion para cargar
         $scope.cargarFiles = function() {    
             pimcFilesService.obtenerListadoFiles(
@@ -330,7 +330,7 @@
             // Guardar datos principales
             conexiones['datosPrincipales'] = pimcDocumentoDatosPrincipalesService.guardarDatosPrincipales($scope.datosPrincipales);
             // Guardar Files
-            conexiones['datosPrincipales'] = pimcFilesService.guardarCambiosFiles('Documentos', $scope.documentoID, $scope.listaFiles);
+            conexiones['files'] = pimcFilesService.guardarCambiosFiles('Documentos', $scope.documentoID, $scope.listaFiles);
             // Guardar notas
             conexiones['commentarios'] = pimcComentarios.guardarNotas('Documentos', $scope.documentoID, $scope.notas);
 

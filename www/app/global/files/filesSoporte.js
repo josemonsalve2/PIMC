@@ -62,7 +62,7 @@
                 // Organizamos el ID del elementoRelacional
                 var parametros = {};
                 parametros[pimcService.idElementoRelaciona[elementoRelacional]] = elementoID;
-                parametros.fileName = file.nombre;
+                parametros.fileName = file.nombre + '.' + file.extension;
 
                 conexiones.push(
                   $http.get(consultaListaFiles, {params:parametros}).then(function(data) {
@@ -104,27 +104,34 @@
                 );
               } else if (file.estado === pimcService.datosEstados.INSERTADO) {
                 // enviamos los insertados nuevos
-                conexiones.push(pimcFilesCtrl.enviarFile(elementoRelacional, elementoRelacionalID, file.file));
-              }
-              if (conexiones.length != 0) {
-                return $q.all(conexiones).then(function (responses) {
-                  for (var res in responses) {
-                    pimcService.debug(res + ' = ' + responses[res].data);
-                  }
-                }, function (responses) {
-                  for (var res in responses) {
-                    pimcService.debug("[ERROR]" + res + ' = ' + responses[res]);
-                  }
-                });
-              } else {
-                return;
+                conexiones.push(pimcFilesCtrl.enviarFile(elementoRelacional, elementoID, file.file));
               }
             });
+            if (conexiones.length != 0) {
+              return $q.all(conexiones).then(function (responses) {
+                for (var res in responses) {
+                  pimcService.debug(res + ' = ' + responses[res].data);
+                }
+                return true;
+              }, function (responses) {
+                for (var res in responses) {
+                  pimcService.debug("[ERROR] " + res + ' = ' + responses[res]);
+                  if (responses[res].data.message)
+                  {
+                    pimcService.debug("[ERROR] " + responses[res].data.message)
+                  }
+                  return false;
+                }
+              });
+            } else {
+              return false;
+            }
+            
           }; // Fin guardar cambios Files
 
           // Funcion para agregar un File nuevo
           pimcFilesCtrl.enviarFile = function(elementoRelacional, elementoRelacionalID, file) {
-            var cargarFileURL = pimcService.crearURLOperacion('cargarArchivo', elementoRelacional);
+            var cargarFileURL = pimcService.crearURLOperacion('cargarArchivos', elementoRelacional);
 
             var parametros = {};
                 parametros[pimcService.idElementoRelaciona[elementoRelacional]] = elementoRelacionalID;
@@ -142,8 +149,8 @@
 
             var parametros = {};
                 parametros[pimcService.idElementoRelaciona[elementoRelacional]] = elementoRelacionalID;
-                parametros['fileName'] = fileName;
-            $http.get(descargarFileURL, {params: parametros}).then(
+                parametros['fileName'] = '"' + fileName + '"';
+            $http.get(descargarFileURL, {params: parametros, responseType: "arraybuffer"}).then(
               // See http://jaliyaudagedara.blogspot.com/2016/05/angularjs-download-files-by-sending.html
 
               function (data) {
@@ -166,19 +173,23 @@
                         "cancelable": false
                     });
                     linkElement.dispatchEvent(clickEvent);
+
                 } catch (ex) {
                     pimcService.debug(ex);
                 }
+              }, 
+              function (rejectionData){
+                pimcService.debug("error descargando el archivo: " + rejectionData.data.message);
               });
           }
 
           // Funciones de ayuda
           pimcFilesCtrl.obtenerFormato = function(nombreArchivo) {
-            return nombreArchivo.split('.').slice(-1).join();
+            return nombreArchivo.split('.').slice(-1).join('.');
           };
 
           pimcFilesCtrl.obtenerNombre = function(nombreArchivo) {
-            return nombreArchivo.split('.').slice(0,-1).join();
+            return nombreArchivo.split('.').slice(0,-1).join('.');
           };
         }
       ]);
@@ -186,10 +197,11 @@
 
       pimcFilesSoporte.controller('pimcFileSoportesController', 
         ['$scope',
+         '$filter',
         'pimcService',
         'pimcBarraEstadoService', 
         'pimcFilesService', 
-        function($scope, pimcService, pimcBarraEstadoService, pimcFilesService) {
+        function($scope, $filter, pimcService, pimcBarraEstadoService, pimcFilesService) {
           var filesSoporteCtrl = this;
 
           filesSoporteCtrl.elementoRelacionalInt = "";
@@ -236,9 +248,10 @@
 
           // Funcion para reportar cambios
           filesSoporteCtrl.$onChanges = function (changes) {
-            if (changes.listaFiles) {
+            if (filesSoporteCtrl.listaFilesInt.length == 0 && changes.listaFiles) {
               filesSoporteCtrl.listaFilesInt = angular.copy(filesSoporteCtrl.listaFiles); 
-            } else if (changes.elementoRelacional || changes.elementoRelacionalID) {
+            } 
+            if (changes.elementoRelacional || changes.elementoRelacionalID) {
               filesSoporteCtrl.elementoRelacionalInt = angular.copy(filesSoporteCtrl.elementoRelacional); 
               filesSoporteCtrl.elementoRelacionalIdInt = angular.copy(filesSoporteCtrl.elementoRelacionalId); 
             }
@@ -251,7 +264,7 @@
               pimcFilesService.descargarFile(
                 filesSoporteCtrl.elementoRelacionalInt,
                 filesSoporteCtrl.elementoRelacionalIdInt,
-                file.nombre
+                file.nombreOriginal + '.' + file.extension
               )
             }
           }
@@ -268,7 +281,7 @@
             }
             
             // Notificamos
-            filesSoporteCtrl.reportarCambios({listaFilesInt: filesSoporteCtrl.listaFilesInt});
+            filesSoporteCtrl.reportarCambios({listaFiles: filesSoporteCtrl.listaFilesInt});
           }
 
           filesSoporteCtrl.renombrarFile = function(file) {
@@ -276,23 +289,39 @@
               // files insertados no pueden ser renombrados  
               if (file.nombre != file.nombreOriginal) {
                 file.estado = pimcService.datosEstados.MODIFICADO;
-                filesSoporteCtrl.reportarCambios({listaFilesInt: filesSoporteCtrl.listaFilesInt});
+                filesSoporteCtrl.reportarCambios({listaFiles: filesSoporteCtrl.listaFilesInt});
               } else {
                 file.estado = pimcService.datosEstados.LIMPIO;
-                filesSoporteCtrl.reportarCambios({listaFilesInt: filesSoporteCtrl.listaFilesInt});
+                filesSoporteCtrl.reportarCambios({listaFiles: filesSoporteCtrl.listaFilesInt});
               }
             }
           }
 
-          filesSoporteCtrl.agregarFile = function(file) {
-            var nuevoFile = {}
-            nuevoFile.estado = pimcService.datosEstados.INSERTADO;
-            nuevoFile.nombre = pimcFilesCtrl.obtenerNombre(file.name);
-            nuevoFile.nombreOriginal = pimcFilesCtrl.obtenerNombre(file.name);
-            nuevoFile.extension = pimcFilesCtrl.obtenerFormato(file.name);
-            nuevoFile.file = file;
-            files.filesSoporteCtrl.listaFilesInt.push(nuevoFile);
-            filesSoporteCtrl.reportarCambios({listaFilesInt: filesSoporteCtrl.listaFilesInt});
+          filesSoporteCtrl.agregarFile = function(files) {
+            var cambios = false;
+            angular.forEach(files, function (file) {
+              var fileExiste = false;
+              // Revisamos si ya existe 
+              angular.forEach($filter('filtrarNuevos')(filesSoporteCtrl.listaFilesInt), function (existingFile) {
+                if (file.name == existingFile.file.name) {
+                  fileExiste = true;
+                  pimcBarraEstadoService.registrarAccion("File repetido")
+                }
+              });
+              if (!fileExiste) {
+                var nuevoFile = {}
+                nuevoFile.estado = pimcService.datosEstados.INSERTADO;
+                nuevoFile.nombre = pimcFilesService.obtenerNombre(file.name);
+                nuevoFile.nombreOriginal = pimcFilesService.obtenerNombre(file.name);
+                nuevoFile.extension = pimcFilesService.obtenerFormato(file.name);
+                nuevoFile.file = file;
+                filesSoporteCtrl.listaFilesInt.push(nuevoFile);
+                cambios = true;
+              }
+            })
+            if (cambios) {
+               filesSoporteCtrl.reportarCambios({ listaFiles: filesSoporteCtrl.listaFilesInt });
+            }
           }
 
       }]);
@@ -317,7 +346,7 @@
           if (!files) return [];
           var filtrados = [];
           angular.forEach(files, function(val, key) {
-              if (val.estado != pimcService.datosEstados.INSERTADO) {
+              if (val.estado == pimcService.datosEstados.INSERTADO) {
                   filtrados.push(val);
               }
           });
@@ -330,7 +359,7 @@
         bindings: {
           listaFiles: '<',
           elementoRelacional: '@',
-          elementoRelacionalId: '@',
+          elementoRelacionalId: '<',
           reportarCambios: '&'
         },
         controller: 'pimcFileSoportesController',

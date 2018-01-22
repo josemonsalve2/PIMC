@@ -85,6 +85,7 @@
                         }
                     );
                 }
+                return false;
             }; // Fin de guardar datos principales
     
         }]);
@@ -137,12 +138,10 @@
 
             // Reportar Cambio files
             documentoDatosPrincipalesCtrl.filesEditados = function (files) {
-                documentoDatosPrincipalesCtrl.datoEditado = function (campo, valorNuevo) {
-                    pimcBarraEstadoService.registrarAccion("Files han sido editados");
-                    documentoDatosPrincipalesCtrl.reportarCambio({
-                        datosPrincipales: documentoDatosPrincipalesCtrl.datosPrincipalesInt, 
-                        listadoFiles: documentoDatosPrincipalesCtrl.filesListaInt});
-                }
+                pimcBarraEstadoService.registrarAccion("Files han sido editados");
+                documentoDatosPrincipalesCtrl.reportarCambio({
+                    datosPrincipales: documentoDatosPrincipalesCtrl.datosPrincipalesInt, 
+                    listadoFiles: files });
             }
     
             // Listado palabras claves
