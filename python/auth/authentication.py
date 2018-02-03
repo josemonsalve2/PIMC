@@ -215,7 +215,7 @@ def creatUsuarioRoute():
     else:
         return ""
 
-@app.route('/register', methods=['POST'])
+@app.route('/activate', methods=['POST'])
 @jwt_required()
 def activarUsuario():
     if request.method == 'POST':
