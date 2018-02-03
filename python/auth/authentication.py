@@ -107,6 +107,41 @@ def create_user(userInfo):
     # This shouldn't be reached. 
     return None
 
+def activate_user(userInfo):
+    # Revsisamos que este la informacion requerida
+    if (not isinstance(userInfo, dict)):
+        raise ValueError("Informacion de usuario incorrecta")
+    if ("nombreUsuario" not in userInfo or len(userInfo["nombreUsuario"]) == 0):
+        raise ValueError("No se envio el nombre de usuario")
+
+    # MySQL cursor
+    cur = mysql.cursor(MySQLdb.cursors.DictCursor)
+    
+    # revisamos que el usuario exista en la base de datos y no haya sido verificado
+    query = "SELECT * FROM " + users_db_table + " WHERE nombreUsuario LIKE %s AND verificado = 0"
+    cur.execute(query, [userInfo["nombreUsuario"]])
+    rv = cur.fetchall()
+    if (len(rv) == 0):
+        raise ValueError("Usuario no existe o no esta pendiente de verificacion")
+    
+    informacion_usuario_bd = rv[0]
+
+    # ejecutamos la consulta para insertar el usuario
+    query = "UPDATE + users_db_table + SET verificado = 1 WHERE nombreUsuario LIKE %s"
+    numAffectedRows = cur.execute(query, [userInfo["nombreReal"]])
+
+    #Revisamos que si haya insercion
+    if (numAffectedRows == 0):
+        raise ValueError("Ocurrio un error al activar el usuario")
+    else:
+        mysql.commit()
+        # Enviamos correo de confirmacion
+        enviarCorreoActivacion(informacion_usuario_bd["email"], informacion_usuario_bd["nombreReal"], informacion_usuario_bd["nombreUsuario"])
+        return True
+    
+    # This shouldn't be reached. 
+    return None
+
 def hashPWD(password, salt):
     return hashlib.sha512((password + salt).encode('utf-8')).hexdigest()
 
@@ -114,6 +149,7 @@ def enviarCorreoConfirmacion(correoElectronico, nombreReal, nombreUsuario):
     msg = Message("[PIMCD] Usuario creado")
     msg.sender = "Fundacion Proyecto Navio <registro@fundacionproyectonavio.org>"
     msg.recipients = [correoElectronico]
+    msg.bcc = ["Fundacion Proyecto Navio <registro@fundacionproyectonavio.org>"]
     msg.html= '''
                 <h1>''' + nombreReal + '''</h1>
                 <p> Su cuenta ha sido creada </p>
@@ -128,6 +164,28 @@ def enviarCorreoConfirmacion(correoElectronico, nombreReal, nombreUsuario):
         '''
     mail.send(msg)
 
+def enviarCorreoActivacion(correoElectronico, nombreReal, nombreUsuario):
+    msg = Message("[PIMCD] Usuario activado")
+    msg.sender = "Fundacion Proyecto Navio <registro@fundacionproyectonavio.org>"
+    msg.recipients = [correoElectronico]
+    msg.bcc = ["Fundacion Proyecto Navio <registro@fundacionproyectonavio.org>"]
+    msg.html= '''
+                <h1>''' + nombreReal + '''</h1>
+                <p> Su cuenta ha sido activada. </p> <br/>
+                <p> Este mensaje es para confirmar la activaci&oacute;n de su cuenta en PIMDC.
+                    Por favor no responda a este mensaje.
+                </p>
+                <p> Ahora puedes ingresar haciendo click en el enlace de ingresar en la parte
+                superior derecha de nuestro <a href="pimc.fundacionproyectonavio.org"> sitio web </a>. 
+                </p>
+
+                <p>
+                        <span style="font-weight:bold"> Usuario = ''' + nombreUsuario + ''' 
+                        </span>
+                </p>
+                <p> En caso de necesitar ayuda, favor contactarnos a soporte@fundacionproyectonavio.org </p>
+        '''
+    mail.send(msg)
 
 jwt = JWT(app, authenticate, identity)
 
@@ -148,6 +206,28 @@ def creatUsuarioRoute():
                 else:
                     return jsonify({"status": "Failed",
                             "message": "Ocurrio un error creando el usuario"})
+            except ValueError as e:
+                raise InvalidUsage("ERROR: " + str(e), status_code = 400)
+            except Exception as e:
+                raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
+        else:
+            raise InvalidUsage("ERROR: Parametros invalidos", status_code = 400)
+    else:
+        return ""
+
+@app.route('/register', methods=['POST'])
+@jwt_required()
+def activarUsuario():
+    if request.method == 'POST':
+        data = request.get_json()
+        if data:
+            try:
+                if activate_user(data):
+                    return jsonify({"status": "Success",
+                            "message": "Usuario activado satisfactoriamente"})
+                else:
+                    return jsonify({"status": "Failed",
+                            "message": "Ocurrio un error activando el usuario"})
             except ValueError as e:
                 raise InvalidUsage("ERROR: " + str(e), status_code = 400)
             except Exception as e:
