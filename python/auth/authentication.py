@@ -128,7 +128,7 @@ def activate_user(userInfo):
 
     # ejecutamos la consulta para insertar el usuario
     query = "UPDATE + users_db_table + SET verificado = 1 WHERE nombreUsuario LIKE %s"
-    numAffectedRows = cur.execute(query, [userInfo["nombreReal"]])
+    numAffectedRows = cur.execute(query, [userInfo["nombreUsuario"]])
 
     #Revisamos que si haya insercion
     if (numAffectedRows == 0):
