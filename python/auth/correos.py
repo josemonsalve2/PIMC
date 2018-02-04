@@ -17,22 +17,7 @@ def enviarCorreoActivacion(correoElectronico, nombreReal, nombreUsuario):
     msg.sender = "Fundacion Proyecto Navio <registro@fundacionproyectonavio.org>"
     msg.recipients = [correoElectronico]
     msg.bcc = ["Fundacion Proyecto Navio <registro@fundacionproyectonavio.org>"]
-    msg.html= '''
-                <h1>''' + nombreReal + '''</h1>
-                <p> Su cuenta ha sido activada. </p> <br/>
-                <p> Este mensaje es para confirmar la activaci&oacute;n de su cuenta en PIMDC.
-                    Por favor no responda a este mensaje.
-                </p>
-                <p> Ahora puedes ingresar haciendo click en el enlace de ingresar en la parte
-                superior derecha de nuestro <a href="pimc.fundacionproyectonavio.org"> sitio web </a>. 
-                </p>
-
-                <p>
-                        <span style="font-weight:bold"> Usuario = ''' + nombreUsuario + ''' 
-                        </span>
-                </p>
-                <p> En caso de necesitar ayuda, favor contactarnos a soporte@fundacionproyectonavio.org </p>
-        '''
+    msg.html= render_template("confirmacionActivacion.html", nombreUsuario=nombreUsuario, nombreReal=nombreReal)
     mail.send(msg)
 
 def enviarCorreoActualizacion(correoElectronico, nombreReal, nombreUsuario, viejoNivel, nuevoNivel):
@@ -40,15 +25,5 @@ def enviarCorreoActualizacion(correoElectronico, nombreReal, nombreUsuario, viej
     msg.sender = "Fundacion Proyecto Navio <registro@fundacionproyectonavio.org>"
     msg.recipients = [correoElectronico]
     msg.bcc = ["Fundacion Proyecto Navio <registro@fundacionproyectonavio.org>"]
-    msg.html= '''
-                <h1>''' + nombreReal + '''</h1>
-                <p> Su cuenta ha sido actualizada. </p> <br/>
-                <p> Este mensaje es para confirmar la actualizaci&oacute;n de su cuenta en PIMDC.
-                    Por favor no responda a este mensaje.
-                </p>
-                <p> Su cuenta fue cambiada de nivel ''' + viejoNivel + ''' a nivel ''' + nuevoNivel + ''' </a>. 
-                </p>
-
-                <p> En caso de necesitar ayuda, favor contactarnos a soporte@fundacionproyectonavio.org </p>
-        '''
+    msg.html = render_template("confirmacionActualizacion.html", nombreUsuario=nombreUsuario, nombreReal=nombreReal, nivelAnterior=viejoNivel, nivelActual=nuevoNivel)
     mail.send(msg)
