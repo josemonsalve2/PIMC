@@ -252,7 +252,7 @@ def cambiartipoUsuario():
             data = request.get_json()
             if data:
                 try:
-                    if activate_user(data):
+                    if change_user_rights(data):
                         return jsonify({"status": "Success",
                                 "message": "Usuario activado satisfactoriamente"})
                     else:
