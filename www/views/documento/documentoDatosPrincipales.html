@@ -144,6 +144,11 @@
           <h4>Estado de Conservación</h4>
         </header>
         <div class="panel-body">
+            <span editable-select="documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.estadoConservacion" 
+            e-ng-options="estadosDisponibles for estadosDisponibles in documentoDatosPrincipalesCtrl.estadosConservacionDisponibles"
+            onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('estadoConservacion',$data)" 
+            blur="submit"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.estadoConservacion || "(No definido)" }}
+      </span>
         </div>
       </div>
     </div>
