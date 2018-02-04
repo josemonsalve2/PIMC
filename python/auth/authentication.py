@@ -166,12 +166,12 @@ def change_user_rights(userInfo):
     informacion_usuario_bd = rv[0]
 
     # ejecutamos la consulta para insertar el usuario
-    query = "UPDATE " + users_db_table + " SET tipoUsuario = &s WHERE nombreUsuario LIKE %s"
+    query = "UPDATE " + users_db_table + " SET tipoUsuario = %s WHERE nombreUsuario LIKE %s"
     numAffectedRows = cur.execute(query, [userInfo['tipoUsuario'],userInfo["nombreUsuario"]])
 
     #Revisamos que si haya insercion
     if (numAffectedRows == 0):
-        raise ValueError("Ocurrio un error al activar el usuario")
+        raise ValueError("Ocurrio un error al cambiarle los permisos al usuario")
     else:
         mysql.commit()
         # Enviamos correo de confirmacion
@@ -254,10 +254,10 @@ def cambiartipoUsuario():
                 try:
                     if change_user_rights(data):
                         return jsonify({"status": "Success",
-                                "message": "Usuario activado satisfactoriamente"})
+                                "message": "Permisos de usuario cambiados satisfactoriamente"})
                     else:
                         return jsonify({"status": "Failed",
-                                "message": "Ocurrio un error activando el usuario"})
+                                "message": "Ocurrio un error cambiando los permisos del usuario"})
                 except ValueError as e:
                     raise InvalidUsage("ERROR: " + str(e), status_code = 400)
                 except Exception as e:
