@@ -22,10 +22,11 @@ mail = mysql_connection.mail
 users_db_table = "_Metadata_usuariosApplicativo"
 
 class User(object):
-    def __init__(self, id, username, password):
+    def __init__(self, id, username, password, tipoUsuario):
         self.id = id
         self.username = username
         self.password = password
+        self.tipoUsuario = tipoUsuario
 
     def __str__(self):
         return "User(id='%s')" % self.id
@@ -39,7 +40,7 @@ def authenticate(username, password):
         salt = rv['salt']
         hashedPWD = hashPWD(password, salt)
         if (rv['verificado'] != 0 and (rv['contrasenna'].encode('utf-8') == hashedPWD.encode('utf-8'))):
-            usuario = User(rv['usuarioID'], username, rv['contrasenna'])
+            usuario = User(rv['usuarioID'], username, rv['contrasenna'], rv['tipoUsuario'])
             # Actualizamos ultima conexion
             query = "UPDATE " + users_db_table + " SET ultimaConexion = CURRENT_TIMESTAMP"
             cur.execute(query)
@@ -57,7 +58,7 @@ def identity(payload):
     cur.execute(query, [user_id])
     rv = cur.fetchone()
     if (rv is not None):
-        usuario = User(user_id, rv['nombreUsuario'], rv['contrasenna'])
+        usuario = User(user_id, rv['nombreUsuario'], rv['contrasenna'], rv['tipoUsuario'])
         return usuario
     else:
         return None
@@ -218,24 +219,28 @@ def creatUsuarioRoute():
 @app.route('/activate', methods=['POST'])
 @jwt_required()
 def activarUsuario():
-    if request.method == 'POST':
-        data = request.get_json()
-        if data:
-            try:
-                if activate_user(data):
-                    return jsonify({"status": "Success",
-                            "message": "Usuario activado satisfactoriamente"})
-                else:
-                    return jsonify({"status": "Failed",
-                            "message": "Ocurrio un error activando el usuario"})
-            except ValueError as e:
-                raise InvalidUsage("ERROR: " + str(e), status_code = 400)
-            except Exception as e:
-                raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
+    # Revisamos los permisos del usuario
+    if current_identity and current_identity.tipoUsuario >= 2:   
+        if request.method == 'POST':
+            data = request.get_json()
+            if data:
+                try:
+                    if activate_user(data):
+                        return jsonify({"status": "Success",
+                                "message": "Usuario activado satisfactoriamente"})
+                    else:
+                        return jsonify({"status": "Failed",
+                                "message": "Ocurrio un error activando el usuario"})
+                except ValueError as e:
+                    raise InvalidUsage("ERROR: " + str(e), status_code = 400)
+                except Exception as e:
+                    raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
+            else:
+                raise InvalidUsage("ERROR: Parametros invalidos", status_code = 400)
         else:
-            raise InvalidUsage("ERROR: Parametros invalidos", status_code = 400)
-    else:
-        return ""
+            return ""
+    else: 
+        raise InvalidUsage("ERROR: No cuenta con permisos suficientes", status_code = 401)
 
 if __name__ == '__main__':
     app.run()
