@@ -6,7 +6,7 @@ from flask import make_response, request, current_app
 from flask import jsonify
 
 # Correos
-from correos import enviarCorreoConfirmacion, enviarCorreoActivacion, enviarCorreoActualizacion
+from auth.correos import enviarCorreoConfirmacion, enviarCorreoActivacion, enviarCorreoActualizacion
 
 
 # pimc related
