@@ -99,7 +99,7 @@
             // Inicializacion de datos principales
             documentoDatosPrincipalesCtrl.datosPrincipalesInt = pimcDocumentoDatosPrincipalesService.crearVacio;
             documentoDatosPrincipalesCtrl.filesListaInt = [];
-    
+
             // Para actualizar los elementos internos en caso de que sea necesario
             documentoDatosPrincipalesCtrl.$onChanges = function (changes) { 
                 if (changes.activo) {
@@ -146,6 +146,9 @@
     
             // Listado palabras claves
             documentoDatosPrincipalesCtrl.palabrasClavesArray = [];
+            
+            // Estado de conservacion
+            documentoDatosPrincipalesCtrl.estadosConservacionDisponibles = ["Bueno", "Regular", "Malo"];
     
         }]);
     
