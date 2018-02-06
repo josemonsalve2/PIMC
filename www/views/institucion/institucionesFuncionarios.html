@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-sm-12 col-md-3 p-t-1">
+            <ul class="list-group">
+                <li class="list-group-item active">Funcionarios</a>
+                <li class="list-group-item" 
+                    ng-repeat="funcionario in instFuncionariosCtrl.funcionariosInt | filtrarEliminados track by $index"
+                    ng-click="instFuncionariosCtrl.abrirFuncionario(funcionario)">
+                    {{funcionario.contenido.nombre || "Nombre no definido"}}
+                    <span class="label label-pill label-danger pull-right" ng-click="$event.stopPropagation();" ng-dblclick="instFuncionariosCtrl.eliminarFuncionario(funcionario)">-</span>
+                </li>
+                <a class="list-group-item list-group-item-warning" ng-click="instFuncionariosCtrl.agregarFuncionario()"> Agregar +</a>
+            </ul>
+    </div>
+    <div class="col-sm-12 col-md-9 p-t-1">
+        <div class="alert alert-success" ng-if="!instFuncionariosCtrl.funcionarioSeleccionado">
+            <strong>Seleccione un funcionario para editarlo!</strong>
+        </div>
+        <div class="panel panel-primary m-b-2" ng-if="instFuncionariosCtrl.funcionarioSeleccionado">
+
+            <header class="panel-heading">
+                <h4>
+                <span editable-text = "instFuncionariosCtrl.funcionarioSeleccionado.contenido.nombre" 
+                    onaftersave = "datoEditado('nombre', $data)"> 
+                    {{ instFuncionariosCtrl.funcionarioSeleccionado.contenido.nombre || "Nombre no definido" }}</span>
+                </h4>
+            </header>
+            <ul class="list-group m-b-0">
+                <li class="list-group-item">
+                    <span class="label label-primary">dependencia</span>
+                    <span editable-text="instFuncionariosCtrl.funcionarioSeleccionado.contenido.dependencia" 
+                        onbeforesave="datoEditado('dependencia', $data)"> 
+                        {{ instFuncionariosCtrl.funcionarioSeleccionado.contenido.dependencia || "Indeterminado" }}</span>
+                </li>
+                <li class="list-group-item">
+                    <span class="label label-primary">cantidad</span>
+                    <span editable-number="instFuncionariosCtrl.funcionarioSeleccionado.contenido.cantidad" 
+                        onbeforesave="datoEditado('cantidad', $data)"> 
+                        {{ instFuncionariosCtrl.funcionarioSeleccionado.contenido.cantidad || "Indeterminado" }}</span>
+                </li>
+                <li class="list-group-item">
+                        <span class="label label-primary">funciones</span>
+                        <pimc-listado
+                              nombre = "funciones"
+                              csv-string = "instFuncionariosCtrl.csvHelper"
+                              reportar-cambio = "instFuncionariosCtrl.listadoEditado(listado, csvString)"
+                              tipo = "listado">
+                        </pimc-listado>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>

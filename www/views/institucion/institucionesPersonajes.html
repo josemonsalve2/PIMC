@@ -1,0 +1,24 @@
+<div id="hojaServicioTabs" class="p-t-1">
+        <uib-tabset active="active">
+            <uib-tab index="0" heading="Listado">
+                <div class="p-t-1"> 
+                    <table class="table-left">
+                        <tr ng-click="abrirElemento(0)"><th>Nombre</th><th>Descripción</th><th>Notas</th></tr>
+                        <tr ng-click="abrirElemento(1)"><td>Juan Peregrino</td><td>Chévere ese man</td><td>No hay notas</td></tr>
+                        <tr ng-click="abrirElemento(2)"><td>Juan Peregrino</td><td>Chévere ese man</td><td>No hay notas</td></tr>
+                        <tr ng-click="abrirElemento(3)"><td>Juan Peregrino</td><td>Chévere ese man</td><td>No hay notas</td></tr>
+                        <tr ng-click="abrirElemento(4)"><td>Juan Peregrino</td><td>Chévere ese man</td><td>No hay notas</td></tr>
+                    </table>
+                </div>
+            </uib-tab>
+            <uib-tab index="$index + 1" ng-repeat="tab in tabsArray" heading="{{tab[1].title}}">
+                <div class="row p-t-2">
+                    <div class="col-sm-12">
+                        <p>{{tab[1].content}}</p>
+                        <hr>
+                        <p class="text-right"><button class="btn btn-danger" ng-click="cerrarElemento(tab[0])">Cerrar Elemento</button></p>
+                    </div>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </div>
