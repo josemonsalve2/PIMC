@@ -36,11 +36,13 @@
             MODIFICADO: 1,
             INSERTADO: 2,
             ELIMINADO: 3,
+            CREADO: 4,
             propiedades: {
                 0: { nombre: 'Limpia', value: 0, code: 'L' },
                 1: { nombre: 'Modificada', value: 1, code: 'M' },
                 2: { nombre: 'Insertada', value: 2, code: 'I' },
-                3: { nombre: 'Eliminada', value: 3, code: 'E' }
+                3: { nombre: 'Eliminada', value: 3, code: 'E' },
+                4: { nombre: 'Creada', value: 3, code: 'C' }
             }
         };
 
