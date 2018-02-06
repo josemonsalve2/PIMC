@@ -39,6 +39,8 @@
             listadoCtrl.listadoInt = listadoCtrl.listadoInt.map(function (e) {
               return e.trim();
             });
+          } else {
+            listadoCtrl.listadoInt = [];
           }
           listadoCtrl.reportarCambio({ listado: listadoCtrl.listadoInt, csvString: listadoCtrl.csvStringInt });
         }
@@ -91,7 +93,7 @@
 
     // Funcion de ayuda para mantener el csvString actualizado
     listadoCtrl.actualizarCsvString = function() {
-      listadoCtrl.csvString = listadoCtrl.listadoInt.join(", ");
+      listadoCtrl.csvStringInt = listadoCtrl.listadoInt.join(", ");
     }
   }]);
 
@@ -112,6 +114,8 @@
         urlTemplate = urlTemplate + "listadoBarraTemplate.html";
       } else if ($attrs.tipo == "pipe") {
         urlTemplate = urlTemplate + "listadoPipeTemplate.html";
+      } else if ($attrs.tipo == "listado") {
+        urlTemplate = urlTemplate + "listadoListaNormalTemplate.html";
       } else {
         // Capsula es por defecto
         urlTemplate = urlTemplate + "listadoCapsulaTemplate.html";

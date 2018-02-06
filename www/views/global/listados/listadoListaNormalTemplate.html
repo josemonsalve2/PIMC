@@ -1,0 +1,21 @@
+<ul class="list-group">
+      <li class="list-group-item"
+            onaftersave="listadoCtrl.modificarBorrar($index,elementoLista)" 
+            editable-text="elementoLista" 
+            ng-repeat="elementoLista in listadoCtrl.listadoInt track by $index" ng-if="!listadoCtrl.ignorarPrimeroActivado || $index > 0">
+            {{elementoLista}}
+            <span class="badge badge-default badge-pill" 
+                  ng-click="listadoCtrl.volverPrincipal($index); $event.stopPropagation()"
+                  ng-show='listadoCtrl.volverPrincipalActivado'> 
+            ↑
+            </span>
+      </li>
+      <li class="list-group-item"
+            editable-text="listadoCtrl.agregarNuevo.mensaje"
+            onshow="listadoCtrl.borrarOnShow()"
+            onbeforesave="listadoCtrl.agregarALista($data)" 
+            onaftersave="listadoCtrl.agregarNuevo.mensaje='+ Agregar';return"
+            oncancel="listadoCtrl.agregarNuevo.mensaje='+ Agregar'">
+      {{listadoCtrl.agregarNuevo.mensaje}}
+      </li>
+</ul>
