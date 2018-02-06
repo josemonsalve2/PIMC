@@ -124,6 +124,7 @@
             documentoDatosPrincipalesCtrl.listadoEditado = function (listado, csvString) {
                 documentoDatosPrincipalesCtrl.palabrasClavesArray = listado;
                 if (csvString != documentoDatosPrincipalesCtrl.datosPrincipales.contenido.palabrasClaves) {
+                    documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.palabrasClaves = csvString;
                     documentoDatosPrincipalesCtrl.datoEditado('palabrasClaves', csvString);
                 }
             };

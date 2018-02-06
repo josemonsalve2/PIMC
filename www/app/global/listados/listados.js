@@ -61,9 +61,9 @@
           pimcBarraEstadoService.registrarAccion(listadoCtrl.nombre + " <strong> " + valorModificado + " </strong>  Modificado a <strong>" + valor + "</strong>");
           listadoCtrl.listadoInt[indexEditado] = valor;
         }
-        listadoCtrl.actualizarCsvString();
-        listadoCtrl.reportarCambio({ listado: listadoCtrl.listadoInt, csvString: listadoCtrl.csvStringInt });
       }      
+      listadoCtrl.actualizarCsvString();
+      listadoCtrl.reportarCambio({ listado: listadoCtrl.listadoInt, csvString: listadoCtrl.csvStringInt });
     }
 
     // funcion para agregar valores a la list
