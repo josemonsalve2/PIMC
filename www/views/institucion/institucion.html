@@ -1,0 +1,33 @@
+<section>
+  <div id="preloading" class="preloader" ng-show="cargandoInstituciones"><img src="images/loader.gif"></div>
+  <h1 class="t0">
+     {{ datosPrincipales.contenido.nombre || "Nombre Indeterminado" }}
+  </h1>
+  <h2 class="t1 p-l-1">    Tipo de institución: 
+     {{ datosPrincipales.contenido.tipoInstitucion || "Indeterminado" }}</span>
+  </h2>
+  <uib-tabset active="active">
+    <uib-tab index="0" heading="Datos Principales"> 
+      <pimc-instituciones-datos-principales
+         datos-principales="datosPrincipales"
+         activo="true"
+         notas="notas"
+         reportar-cambio="datosPrincipalesEditados(datosPrincipales, notas)">
+      </pimc-instituciones-datos-principales>
+        
+    </uib-tab>
+      
+    <uib-tab index="1" heading="Funcionarios">
+        <pimc-instituciones-funcionarios
+          funcionarios="funcionarios",
+          activo: "true",
+          reportarCambio: "funcionariosEditados(funcionarios)">
+        </pimc-instituciones-funcionarios>
+    </uib-tab>
+    <!-- LA IDEA ES QUE ESTAS PESTAÑAS CARGUEN LOS PERSONAJES Y LAS NOTAS, DE MANERA SIMILAR A LAS COMISIONES EN PERFIL DE PERSONA, ME IMAGINO -->
+    <uib-tab index="2" heading="Personajes">
+    </uib-tab>
+          
+</section>
+
+<pimc-barra-estado guardar-cambios="guardarCambios()" borrar-cambios="borrarCambios()"></pimc-barra-estado>
