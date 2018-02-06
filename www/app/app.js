@@ -78,7 +78,7 @@
         requiresLogin: true 
       })
       .when('/instituciones', {
-        templateUrl: 'views/institucion.html',
+        templateUrl: 'views/institucion/institucion.html',
         controller:  'institucionPerfilController',
         requiresLogin: true 
       })
