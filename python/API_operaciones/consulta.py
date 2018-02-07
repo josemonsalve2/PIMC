@@ -18,16 +18,16 @@ def consultarTodosFiltro(elementoRelacional, parametrosJSON):
   for campo in camposBD:
     if campo in parametrosJSON:
         if isinstance(parametrosJSON[campo],str) :
-          querry = querry + str(campo) + ' LIKE %s AND '
+          querry = querry + str(campo) + ' LIKE %s OR '
           argumentosBD.append("%"+parametrosJSON[campo]+"%")
         else:
-          querry = querry + str(campo) + ' = %s AND '
+          querry = querry + str(campo) + ' = %s OR '
           argumentosBD.append(parametrosJSON[campo])
 
   if len(argumentosBD) == 0:
     querry = '''SELECT * FROM ''' + elementoRelacional
   else: 
-    querry = querry[:-4] #remove the last AND
+    querry = querry[:-3] #remove the last OR
   try:
     cur.execute(querry, argumentosBD)
     rv = cur.fetchall()
