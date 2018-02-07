@@ -1,0 +1,16 @@
+<div style="display:inline-block">
+<span editable-text="" 
+        e-typeahead-min-length="autocompletarCtrl.opcionesInt.minLength"
+        e-uib-typeahead="elemento[autocompletarCtrl.mostrarCampoInt] for elemento in autocompletarCtrl.autocompletarElemento($viewValue)" 
+        e-typeahead-wait-ms="autocompletarCtrl.opcionesInt.delay"
+        e-typeahead-on-select="autocompletarCtrl.seleccionAutocompletar($item)"
+        e-typeahead-no-results="autocompletarCtrl.noExistenValores"
+        e-typeahead-loading="autocompletarCtrl.cargandoValores" 
+        onbeforesave="autocompletarCtrl.revisarEstadoCargando()"
+        onaftersave="autocompletarCtrl.reportarCambioNuevo()">
+{{valor.contenido[campo] || "nuevo/a" + campo}}
+</span>
+<i ng-show="autocompletarCtrl.cargandoValores" 
+    class="glyphicon glyphicon-refresh">
+</i>
+</div>
