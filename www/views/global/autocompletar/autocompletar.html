@@ -1,16 +1,21 @@
 <div style="display:inline-block">
-<span editable-text="" 
+<span   ng-if="autocompletarCtrl.elementoRelacionalInt != ''"
+        editable-text="autocompletarCtrl.elementoSeleccionado" 
+        e-uib-typeahead="elemento as elemento[autocompletarCtrl.mostrarCampoInt] for elemento in autocompletarCtrl.autocompletarElemento($viewValue)" 
+        e-typeahead-on-select="autocompletarCtrl.seleccionAutocompletar($item, $form)"
         e-typeahead-min-length="autocompletarCtrl.opcionesInt.minLength"
-        e-uib-typeahead="elemento[autocompletarCtrl.mostrarCampoInt] for elemento in autocompletarCtrl.autocompletarElemento($viewValue)" 
         e-typeahead-wait-ms="autocompletarCtrl.opcionesInt.delay"
-        e-typeahead-on-select="autocompletarCtrl.seleccionAutocompletar($item)"
         e-typeahead-no-results="autocompletarCtrl.noExistenValores"
-        e-typeahead-loading="autocompletarCtrl.cargandoValores" 
-        onbeforesave="autocompletarCtrl.revisarEstadoCargando()"
+        e-typeahead-loading="autocompletarCtrl.cargandoValores"
+        e-typeahead-editable="false"
         onaftersave="autocompletarCtrl.reportarCambioNuevo()">
-{{valor.contenido[campo] || "nuevo/a" + campo}}
+        
+{{autocompletarCtrl.elementoSeleccionado[autocompletarCtrl.mostrarCampoInt] || "seleccionar..."}}
 </span>
 <i ng-show="autocompletarCtrl.cargandoValores" 
     class="glyphicon glyphicon-refresh">
 </i>
+<span  ng-if="!autocompletarCtrl.elementoRelacionalInt || autocompletarCtrl.elementoRelacionalInt == ''">
+    <span class="label label-danger"> Especifique elemento relacional </span>
+</span>
 </div>

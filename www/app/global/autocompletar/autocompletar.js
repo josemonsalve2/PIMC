@@ -5,14 +5,28 @@
     var autocompletarModule = angular.module('autocompletarModule',['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'xeditable']);
 
     autocompletarModule.service('pimcAutocompletarService', ['$http', '$q', 'pimcService', function($http, $q, pimcService){
-    
+        var pimcAutocompletarServiceCtrl = this;
+        
+        pimcAutocompletarServiceCtrl.buscarElementosSimilares = function (elementoRelacional, camposAutocompletar, hint) {
+            var urlAutocompletar = pimcService.crearURLOperacion('ConsultarTodos', elementoRelacional);
+            var parametros = {};
+            angular.forEach(camposAutocompletar, function(campoAutocompletar) {
+                parametros[campoAutocompletar] = hint;
+            });
+            return $http.get(urlAutocompletar, { params: parametros }).then(function (data) {
+                return data.data;
+            });
+        } // fin autocompletarElemento
 
     }]);
 
     autocompletarModule.controller('autocompletarController',
         ['pimcService',
-         'pimcBarraEstadoService', 
-         function(pimcService, pimcBarraEstadoService) {
+         'pimcBarraEstadoService',
+         'pimcAutocompletarService',
+         '$q',
+         '$window',
+         function(pimcService, pimcBarraEstadoService, pimcAutocompletarService, $q, $window) {
             var autocompletarCtrl = this;
             autocompletarCtrl.elementoSeleccionado = {};
 
@@ -27,36 +41,21 @@
             autocompletarCtrl.mostrarCampoInt = "";
             autocompletarCtrl.estado = pimcService.datosEstados.LIMPIO;
             
-            // Funcion para inicializar los campos de el elemento seleccionado
-            autocompletarCtrl.inicializarSeleccionado = function() {
-                autocompletarCtrl.elementoSeleccionado = {};
-                // Definimos los valores de los campos de busqueda
-                angular.forEach(autocompletarCtrl.campoElementoRelacionalInt, function (campo) {
-                    autocompletarCtrl.elementoSeleccionado[campo] = "";
-                })
-                // Campo a mostrar puede ser diferente al campo de busqueda
-                if (autocompletarCtrl.mostrarCampoInt)
-                    autocompletarCtrl.elementoSeleccionado[autocompletarCtrl.mostrarCampoInt] = "";
-            }
-
 
             // Para actualizar los elementos internos en caso de que sea necesario
             autocompletarCtrl.$onChanges = function (changes) {
                 if (changes.elementoRelacional) {
                     autocompletarCtrl.elementoRelacionalInt = $window.angular.copy(autocompletarCtrl.elementoRelacional);
                     // Si el elemento relacional cambia, reiniciamos el seleccionado
-                    autocompletarCtrl.inicializarSeleccionado();
                     autocompletarCtrl.estado = pimcService.datosEstados.LIMPIO;
                 }
                 if (changes.camposElementoRelacional) {
-                    autocompletarCtrl.campoElementoRelacionalInt = $window.angular.copy(autocompletarCtrl.campoElementoRelacional); 
+                    autocompletarCtrl.camposElementoRelacionalInt = $window.angular.copy(autocompletarCtrl.camposElementoRelacional); 
                     // Si no es array lo convertimos en uno
-                    if (!Array.isArray(autocompletarCtrl.campoElementoRelacionalInt)) {
-                        autocompletarCtrl.campoElementoRelacionalInt = [autocompletarCtrl.campoElementoRelacionalInt];
+                    if (!Array.isArray(autocompletarCtrl.camposElementoRelacionalInt)) {
+                        autocompletarCtrl.camposElementoRelacionalInt = [autocompletarCtrl.camposElementoRelacionalInt];
                     }
 
-                    // Si los campos del elemento relacional cambian, reiniciamos el seleccionado                    
-                    autocompletarCtrl.inicializarSeleccionado();
                     autocompletarCtrl.estado = pimcService.datosEstados.LIMPIO;                    
                 }
                 if (changes.mostrarCampo) {
@@ -68,8 +67,15 @@
                 // Opciones del campo de autocompletar
                 if (changes.opciones) {
                     autocompletarCtrl.opcionesInt = $window.angular.copy(autocompletarCtrl.opciones);
-                    if (!autocompletarCtrl.opcionesInt.minLength) autocompletarCtrl.opcionesInt.minLength = 3;
-                    if (!autocompletarCtrl.opcionesInt.delay) autocompletarCtrl.opcionesInt.delay = 100;
+                    if (!autocompletarCtrl.opcionesInt ) {
+                        autocompletarCtrl.opcionesInt = {
+                            minLength: 3,
+                            delay: 100
+                        }
+                    } else {
+                        if (!autocompletarCtrl.opcionesInt.minLength) autocompletarCtrl.opcionesInt.minLength = 3;
+                        if (!autocompletarCtrl.opcionesInt.delay) autocompletarCtrl.opcionesInt.delay = 100;
+                    }
                 }
                 // Permitir agregar el campo si no existe.
                 if (changes.permitirAgregar) {
@@ -79,24 +85,75 @@
 
             // Funcion de autocompletar
             autocompletarCtrl.autocompletarElemento = function(valorActual) {
-
-            };
+                // Hacemos la consulta en la base de datos
+                return pimcAutocompletarService.buscarElementosSimilares(
+                    autocompletarCtrl.elementoRelacionalInt, 
+                    autocompletarCtrl.camposElementoRelacionalInt,
+                    valorActual
+                ).then(
+                    function(resultados) {
+                        var todasLasOpciones = [];
+                        // Consulta exitosa
+                        if (Object.keys(resultados).length != 0)
+                            todasLasOpciones = resultados;
+                        
+                        // Si esta la opcion de agregar
+                        // Por cada una revisamos si hay match perfecto o no para ver 
+                        // si le damos la opcion de agregar uno nuevo
+                        if (autocompletarCtrl.permitirAgregarInt) { 
+                            var matchPerfecto = false;
+                            angular.forEach(todasLasOpciones, function(opcion) {
+                                angular.forEach(autocompletarCtrl.camposElementoRelacionalInt, function (campo) {
+                                    // TODO cambiar acentos 
+                                    if (String(valorActual).toLowerCase().replace(/\s/g, '') == String(opcion[campo]).toLowerCase().replace(/\s/g, ''))
+                                        matchPerfecto = true
+                                });
+                            });
+                            // Queremos que lo que este escribiendo la persona siempre salga de primero, a no ser
+                            // que ya exista en la base de datos perfectamente, para no crear duplicados
+                            if (!matchPerfecto) {
+                                var nuevoElemento = {};
+                                nuevoElemento[autocompletarCtrl.mostrarCampoInt] = "(+Agregar) " + valorActual;
+                                nuevoElemento.estado = pimcService.datosEstados.INSERTADO; 
+                                nuevoElemento.valorNuevo = valorActual;
+                                todasLasOpciones.unshift(nuevoElemento)
+                            }
+                        }
+                        return todasLasOpciones;
+                    },
+                    function(error) {
+                        // Consulta erronea
+                        pimcBarraEstadoService.registrarAccion("Error buscando autocompletar");
+                        pimcService.debug("[ERROR] en autocompletar " + error);
+                    }
+                );
+            };// fin autocompletar elemento
 
             // Funcion de seleccionar
-            autocompletarCtrl.seleccionAutocompletar = function($item) {
-
-            }
-
-            // Funcion que no permite seleccionar hasta que no haya autocompletado
-            autocompletarCtrl.revisarEstadoCargando = function() {
-
+            autocompletarCtrl.seleccionAutocompletar = function(elementoSeleccionado, formAutocompletar) {
+                // Si permitimos agregar, revisamos si se agrego nuevo
+                if(autocompletarCtrl.permitirAgregarInt &&
+                    elementoSeleccionado.estado && 
+                    elementoSeleccionado.estado == pimcService.datosEstados.INSERTADO ) {
+                        autocompletarCtrl.estado = pimcService.datosEstados.INSERTADO;
+                        elementoSeleccionado[autocompletarCtrl.mostrarCampoInt] = elementoSeleccionado.valorNuevo;
+                    }
+                else {
+                    autocompletarCtrl.estado = pimcService.datosEstados.LIMPIO;
+                }
+                // Seleccionamos y enviamos
+                formAutocompletar.$submit();
             }
 
             // Funcion que reporta cuando se termino de editar
             autocompletarCtrl.reportarCambioNuevo = function() {
-
+                if (autocompletarCtrl.cargandoValores) {
+                    return "Se debe seleccionar un valor de la lista..."
+                } else {
+                    autocompletarCtrl.reportarCambio({elementoSeleccionado: autocompletarCtrl.elementoSeleccionado,
+                                                      estado: autocompletarCtrl.estado});
+                }
             }
-
     }]);
 
     autocompletarModule.component('pimcAutocompletar', {

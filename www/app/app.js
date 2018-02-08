@@ -25,7 +25,8 @@
     'loginModule',
     'pimcRegisterModule',
     'pimcServiceModule',
-    'pimcFilesSoporte'
+    'pimcFilesSoporte',
+    'autocompletarModule'
   ]);
 
   pimc.controller('AppController', ['pimcMenuService', '$scope', '$window', '$rootScope',  function(pimcMenuService, $scope, $window, $rootScope) {
