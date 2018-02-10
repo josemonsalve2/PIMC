@@ -15,10 +15,10 @@ def consultarTodosFiltro(elementoRelacional, parametrosJSON):
   # Inicializamos la consulta
   query = '''SELECT * FROM ''' + elementoRelacional + ''' WHERE ( '''
   
-  hayParametros = false
+  hayParametros = False
   for campo in camposBD:
     if campo in parametrosJSON:
-      hayParametros = true
+      hayParametros = True
       if isinstance(parametrosJSON[campo],str) :
         query = query + str(campo) + ' LIKE %s OR '
         argumentosBD.append("%"+parametrosJSON[campo]+"%")
@@ -30,14 +30,14 @@ def consultarTodosFiltro(elementoRelacional, parametrosJSON):
     query = query[:-3] + ' )' # quitamos el ultimo or y cerramos los parentesis
  
   #revisamos si hay restricciones
-  hayRestricciones = false
+  hayRestricciones = False
   if parametrosJSON['restricciones'] and isinstance(parametrosJSON['restricciones'], dict):
     if hayParametros:
       query = query + ' AND (' # Agregamos un and y un parentesis para agregar las restricciones
     restricciones = parametrosJSON['restricciones']
     for campo in camposBD: 
       if campo in restricciones:
-        hayRestricciones = true
+        hayRestricciones = True
         if isinstance(restricciones[campo],str) :
           query = query + str(campo) + ' LIKE %s AND '
           argumentosBD.append("%" + restricciones[campo] + "%")
