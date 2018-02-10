@@ -3,17 +3,33 @@
             <uib-tab index="0" heading="Listado">
                 <div class="p-t-1"> 
                     <table class="table-left">
-                        <tr><th>Nombre</th><th>Tipo Empleo</th><th>Funcionario</th></tr>
-                        <tr ng-repeat="personaje in instPersonajesCtrl.personajesInt"><td>{{}}</td><td>{{}}</td><td>{{}}</td></tr>
+                        <tr><th></th><th>Nombre</th><th>Tipo Empleo</th><th>Funcionario</th><th ng-if="instPersonajesCtrl.habilitarEliminar">Eliminar</th></tr>
+                        <tr ng-repeat="instPersonaje in instPersonajesCtrl.instPersonajesInt | filtrarEliminados track by $index"
+                            ng-click="instPersonajesCtrl.abrirInstPersonaje(instPersonaje)">
+                            <td>{{$index + 1}}</td>
+                            <td>{{instPersonaje.personaje.nombre || "No definido" }}</td>
+                            <td>{{instPersonaje.contenido.tipoEmpleo || "No definido" }}</td>
+                            <td>{{instPersonaje.funcionario.nombre || "No definido" }}</td>
+                            <td ng-if="instPersonajesCtrl.habilitarEliminar" 
+                                ng-click="instPersonajesCtrl.eliminarInstPersonaje(instPersonaje);$event.stopPropagation()">
+                                <span class="label label-danger"><i class="glyphicon glyphicon-remove-sign"></i></span>
+                            </td>
+                        </tr>
                     </table>
+                    <button ng-click='instPersonajesCtrl.agregarInstPersonaje()' class="btn btn-success m-a-2">
+                        Agregar nuevo personaje a la institución
+                    </button>
+                    <button ng-click='instPersonajesCtrl.habilitarEliminar = !instPersonajesCtrl.habilitarEliminar' 
+                            class="btn btn-danger m-a-2">
+                            {{instPersonajesCtrl.habilitarEliminar? "Desabilitar" : "Habilitar"}} borrar entradas existentes
+                    </button>
                 </div>
             </uib-tab>
-            <uib-tab index="$index + 1" ng-repeat="tab in tabsArray" heading="{{tab[1].title}}">
+            <uib-tab index="$index + 1" ng-repeat="instPersonaje in instPersonajesCtrl.instPersonajesInt | filtrarAbiertos track by $index" heading="{{instPersonaje.personaje.nombre? instPersonaje.personaje.nombre : 'Personaje Nuevo ' + ($index + 1)}}">
                 <div class="row p-t-2">
                     <div class="col-sm-12">
-                        <p>{{tab[1].content}}</p>
-                        <hr>
-                        <p class="text-right"><button class="btn btn-danger" ng-click="cerrarElemento(tab[0])">Cerrar Elemento</button></p>
+                        <p class="text-right"><button class="btn btn-danger" ng-click="instPersonajesCtrl.cerrarInstPersonaje(instPersonaje)">Cerrar Elemento</button></p>
+
                     </div>
                 </div>
             </uib-tab>

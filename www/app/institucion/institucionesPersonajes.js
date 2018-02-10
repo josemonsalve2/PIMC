@@ -6,56 +6,94 @@
 
 
     // Service para comentarios. Cargar y guardar personajes de la institucion
-    institucionPerfil.service('pimcInstPersonajesServicio', ['$http', '$q', 'pimcService', 'pimcBarraEstadoService', function ($http, $q, pimcService, pimcBarraEstadoService) {
+    institucionPerfil.service('pimcInstPersonajesServicio', 
+        ['$http', 
+         '$q',
+         'pimcService',
+         'pimcBarraEstadoService',
+         'pimcBaseDatosService',
+         function ($http, $q, pimcService, pimcBarraEstadoService, pimcBaseDatosService) {
         var pimcInstPersonajesServicioCtrl = this;
 
         pimcInstPersonajesServicioCtrl.crearVacio = function () {
-            var personajeNuevo = {};
-            personajeNuevo.contenido = {
-                nombre: "",
-                dependencia: "",
-                cantidad: 0,
-                funciones: "",
+            var instPersonajeNuevo = {};
+            instPersonajeNuevo.contenido = {
+                tipoEmpleo: "",
+                fechaInicial: "",
+                fechaInicialFormato: "",
+                fechaFinal: "",
+                fechaFinalFormato: "",
+                salario: 0,
+                salarioUnidades: ""
             };
-            personajeNuevo.estado = pimcService.datosEstados.INSERTADO;
-            return personajeNuevo;
+            instPersonajeNuevo.personaje = {};
+            instPersonajeNuevo.institucion = {};
+            instPersonajeNuevo.funcionario = {};
+
+            instPersonajeNuevo.estado = pimcService.datosEstados.INSERTADO;
+            return instPersonajeNuevo;
         }
 
         // Funcion para cargar personajess de la institucion
-        pimcInstPersonajesServicioCtrl.cargarPersonajes = function (institucionID) {
-            var consultaInstitucionesPersonajesURL = pimcService.crearURLOperacion('ConsultarTodos', 'InstitucionesPersonajes');
-            var config = {
-                params: {
-                    institucionID: institucionID
-                }
-            }
+        pimcInstPersonajesServicioCtrl.cargarInstPersonajes = function (institucionID) {
+            var params = { institucionID: institucionID };
             // Cargamos los personajes
-            return $http.get(consultaInstitucionesPersonajesURL, config).then(function (data) {
-                //Obtener los datos JSON
-                var institucionesPersonajes = data.data;
-                var personajes = [];
-                // Revisamos si se recibio algo 
-                if (Object.keys(institucionesPersonajes).length != 0) {
-                    angular.forEach(institucionesPersonajes, function(personaje) {
-                        var nuevoFuncionario = {}
-                        try {
+            return pimcBaseDatosService.consultarBaseDatosParametros("InstitucionesPersonajes", params).then(
+                function (valores) {
+                    //Obtener los datos JSON
+                    var institucionesPersonajes = [];
+                    var conexiones = [];
+                    // Revisamos si se recibio algo 
+                    if (Object.keys(valores).length != 0) {
+                        angular.forEach(valores, function(instPersonaje) {
+                            var nuevoInstPersonaje = {}
                             // Contenido, datos de embarcacion en la base de datos
-                            nuevoFuncionario.contenido = personaje;
-                            nuevoFuncionario.estado = pimcService.datosEstados.LIMPIO;
+                            nuevoInstPersonaje.contenido = instPersonaje;
+                            conexiones.push(pimcBaseDatosService.consultarPorID("Personajes", instPersonaje.personajeID).then(
+                                function(personaje) {
+                                    nuevoInstPersonaje.personaje = personaje;
+                                }, 
+                                function(error) {
+                                    pimcService.debug(error);                                    
+                                }
+                            ));
+                            conexiones.push(pimcBaseDatosService.consultarPorID("Institucion", instPersonaje.institucionID).then(
+                                function(institucion) {
+                                    nuevoInstPersonaje.institucion = institucion;
+                                }, 
+                                function(error) {
+                                    pimcService.debug(error);                                    
+                                }
+                            ));
+                            conexiones.push(pimcBaseDatosService.consultarPorID("InstitucionesFuncionarios", instPersonaje.funcionID).then(
+                                function(funcionario) {
+                                    nuevoInstPersonaje.funcionario = funcionario;
+                                }, 
+                                function(error) {
+                                    pimcService.debug(error);                                    
+                                }
+                            ));
+                            nuevoInstPersonaje.estado = pimcService.datosEstados.LIMPIO;
+                            // Encontramos el resto de la informacion
+                        })
+                    }
+                    return $q.all(conexiones).then(
+                        function() {
+                            return institucionesPersonajes;
+                        },
+                        function(error){
+                            pimcService.debug(error);                            
                         }
-                        catch (err) {
-                            pimcService.error("Problema cargando los personajes" + err.message);
-                        }
-                        personajes.push(nuevoFuncionario)
-                    })
-                    
+                    )
+                }, 
+                function (error) {
+                    pimcService.debug(error);
+                    return [];
                 }
-                return personajes;
-
-            });
+            );
         }; //Fin de cargar datos principales
 
-        pimcInstPersonajesServicioCtrl.guardarPersonajes = function (personajes) {
+        pimcInstPersonajesServicioCtrl.guardarInstPersonajes = function (personajes) {
             angular.forEach(personajes, function(personaje){
                 // Si los datos fueron cambiados, entonces actualizamos todas las bases de datos
                 if (personaje.estado != pimcService.datosEstados.LIMPIO) {
@@ -98,10 +136,7 @@
         instPersonajesCtrl.activo = false;
 
         // Inicializacion de personajes
-        instPersonajesCtrl.personajesInt = [];
-        instPersonajesCtrl.personajeSeleccionado = undefined;
-        instPersonajesCtrl.csvHelper = "";
-
+        instPersonajesCtrl.instPersonajesInt = [];
 
         // Para actualizar los elementos internos en caso de que sea necesario
         instPersonajesCtrl.$onChanges = function (changes) { 
@@ -109,64 +144,73 @@
                 instPersonajesCtrl.activoInt = $window.angular.copy(instPersonajesCtrl.activo);
             }
             if (changes.personajes) {
-                instPersonajesCtrl.personajesInt = $window.angular.copy(instPersonajesCtrl.personajes); // Datos principales
+                instPersonajesCtrl.instPersonajesInt = $window.angular.copy(instPersonajesCtrl.personajes); // Datos principales
             }          
           } 
         // Funcion para datos editados
-        instPersonajesCtrl.datoEditado = function (campo, valorNuevo) {
+        instPersonajesCtrl.datoEditado = function (personaje, campo, valorNuevo) {
             pimcBarraEstadoService.registrarAccion("Cambio personaje" + instPersonajesCtrl.personajeSeleccionado.contenido.nombre + " campo " + campo + " cambio a " + valorNuevo);
-            instPersonajesCtrl.personajeSeleccionado.estado = pimcService.datosEstados.MODIFICADO;
-            instPersonajesCtrl.reportarCambio({personajes: instPersonajesCtrl.personajesInt});
+            instPersonajesCtrl.reportarCambio({instPersonajes: instPersonajesCtrl.instPersonajesInt});
         };
 
         // Abrir personaje
-        instPersonajesCtrl.abrirFuncionario = function(personaje) {
-            pimcBarraEstadoService.registrarAccion("Funcionario " + personaje.contenido.nombre + " abrierto ");
-            instPersonajesCtrl.personajeSeleccionado = personaje;
-            // Para poder actualizar la lista de funciones sin que haya problema
-            instPersonajesCtrl.csvHelper = personaje.contenido.funciones;
+        instPersonajesCtrl.abrirInstPersonaje = function(personaje) {
+            if (personaje.estado == pimcService.datosEstados.INSERTADO)
+                pimcBarraEstadoService.registrarAccion("Personaje nuevo abrierto ");
+            else 
+                pimcBarraEstadoService.registrarAccion("Personaje " + personaje.personaje.nombre + " abrierto ");
+            personaje.abierto = true;
+        }
+        // Cerrar personaje
+        instPersonajesCtrl.cerrarInstPersonaje = function(personaje) {
+            if (personaje.estado == pimcService.datosEstados.INSERTADO)
+                pimcBarraEstadoService.registrarAccion("Personaje nuevo cerrado ");
+            else 
+                pimcBarraEstadoService.registrarAccion("Personaje " + personaje.personaje.nombre + " cerrado ");
+            personaje.abierto = false;
         }
         
         // agregar personaje
-        instPersonajesCtrl.agregarFuncionario = function() {
-            pimcBarraEstadoService.registrarAccion("Funcionario agregado");
-            var nuevoFuncionario = pimcInstPersonajesServicio.crearVacio();
-            instPersonajesCtrl.personajesInt.push(nuevoFuncionario);
+        instPersonajesCtrl.agregarInstPersonaje = function() {
+            pimcBarraEstadoService.registrarAccion("Personaje agregado");
+            var nuevoInstPersonaje = pimcInstPersonajesServicio.crearVacio();
+            nuevoInstPersonaje.abierto = true;
+            instPersonajesCtrl.instPersonajesInt.push(nuevoInstPersonaje);
         }
 
         // Eliminar personaje
-        instPersonajesCtrl.eliminarFuncionario = function(personaje) {
-            pimcBarraEstadoService.registrarAccion("Funcionario " + personaje.contenido.nombre + " eliminado");
-            if (instPersonajesCtrl.personajesInt.estado == pimcService.datosEstados.INSERTADO) {
-                var indexof = instPersonajesCtrl.personajesInt.indexof(personaje);
-                instPersonajesCtrl.personajesInt.splice(indexof, 1);
+        instPersonajesCtrl.eliminarInstPersonaje = function(personaje) {
+            if (instPersonajesCtrl.instPersonajesInt.estado == pimcService.datosEstados.INSERTADO) {
+                var indexof = instPersonajesCtrl.instPersonajesInt.indexof(personaje);
+                instPersonajesCtrl.instPersonajesInt.splice(indexof, 1);
                 return;
             }
+            pimcBarraEstadoService.registrarAccion("Personaje " + personaje.contenido.nombre + " eliminado");
             personaje.estado = pimcService.datosEstados.ELIMINADO;
+            personaje.abierto = false;
         }
-
-        // Listado de funciones del personaje
-        instPersonajesCtrl.listadoEditado = function (listado, csvString) {
-            instPersonajesCtrl.personajesArray = listado;
-            if (csvString != instPersonajesCtrl.personajeSeleccionado.contenido.funciones) {
-                instPersonajesCtrl.personajeSeleccionado.contenido.funciones = csvString;
-                instPersonajesCtrl.datoEditado('funciones', csvString);
-                instPersonajesCtrl.csvHelper = csvString;
-            }
-        };
-
-        // Listado palabras claves
-        instPersonajesCtrl.personajesArray = [];
-
 
     }]);
 
     institucionPerfil.filter('filtrarEliminados',['pimcService' ,function(pimcService) {
-        return function (notas) {
-            if (!notas) return [];
+        return function (personajes) {
+            if (!personajes) return [];
             var filtrados = [];
-            angular.forEach(notas, function(val, key) {
+            angular.forEach(personajes, function(val, key) {
                 if (val.estado != pimcService.datosEstados.ELIMINADO) {
+                    filtrados.push(val);
+                }
+            });
+            return filtrados;
+        }
+    }]);
+
+    institucionPerfil.filter('filtrarAbiertos',['pimcService' ,function(pimcService) {
+        return function (personajes) {
+            if (!personajes) return [];
+            var filtrados = [];
+            angular.forEach(personajes, function(val, key) {
+                if (val.abierto) {
                     filtrados.push(val);
                 }
             });

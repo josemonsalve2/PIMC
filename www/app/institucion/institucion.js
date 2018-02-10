@@ -20,9 +20,10 @@
          'pimcBarraEstadoService',
          'pimcInstDatosPrincipalesService',
          'pimcInstFuncionariosServicio',
+         'pimcInstPersonajesServicio',
          '$window',
          '$q',
-        function($scope, pimcMenuService, pimcBarraEstadoService, pimcInstDatosPrincipalesService, pimcInstFuncionariosServicio, $window, $q) {
+        function($scope, pimcMenuService, pimcBarraEstadoService, pimcInstDatosPrincipalesService, pimcInstFuncionariosServicio, pimcInstPersonajesServicio, $window, $q) {
             // Initialization function
             var init = function() {
                 var institucionSeleccionada = pimcMenuService.obtenerElementoSeleccionado("Instituciones");
@@ -45,6 +46,12 @@
     
                     // DATOS PRINCIPALES
                     conexiones.push($scope.cargarDatosPrincipales());
+
+                    // FUNCIONARIOS
+                    conexiones.push($scope.cargarFuncionarios());
+
+                    // Personajes
+                    conexiones.push($scope.cargarInstPersonajes());
     
                     $q.all(conexiones).then(function(){
                         $scope.cargandoInstituciones = false;                
@@ -88,6 +95,20 @@
             }
 
             $scope.funcionariosEditados = function(funcionarios) {
+                $scope.funcionarios = funcionarios;
+            }
+
+            // PERSONAJES
+            $scope.instPersonajes = [];
+            $scope.cargarInstPersonajes = function() {
+                return pimcInstPersonajesServicio.cargarInstPersonajes($scope.institucionID)
+                .then( function(personajes) {
+                    $scope.instPersonajes = personajes;
+                    pimcBarraEstadoService.registrarAccion("Personajes de la institucion han sido cargados");
+                });
+            }
+
+            $scope.personajesInstEditados = function(personajes) {
                 $scope.funcionarios = funcionarios;
             }
 
