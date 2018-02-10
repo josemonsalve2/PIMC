@@ -89,7 +89,7 @@
         requiresLogin: true 
       })
       .when('/eventos', {
-        templateUrl: 'views/evento.html',
+        templateUrl: 'views/evento/evento.html',
         controller:  'eventoPerfilController',
         requiresLogin: true 
       })
