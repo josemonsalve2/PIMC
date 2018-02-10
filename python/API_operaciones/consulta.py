@@ -13,23 +13,54 @@ def consultarTodosFiltro(elementoRelacional, parametrosJSON):
   camposBD = pimcBD.obtenerCamposTabla(elementoRelacional)
   argumentosBD = []
   # Inicializamos la consulta
-  querry = '''SELECT * FROM ''' + elementoRelacional + ''' WHERE '''
+  query = '''SELECT * FROM ''' + elementoRelacional + ''' WHERE ( '''
   
+  hayParametros = false
   for campo in camposBD:
     if campo in parametrosJSON:
-        if isinstance(parametrosJSON[campo],str) :
-          querry = querry + str(campo) + ' LIKE %s OR '
-          argumentosBD.append("%"+parametrosJSON[campo]+"%")
-        else:
-          querry = querry + str(campo) + ' = %s OR '
-          argumentosBD.append(parametrosJSON[campo])
+      hayParametros = true
+      if isinstance(parametrosJSON[campo],str) :
+        query = query + str(campo) + ' LIKE %s OR '
+        argumentosBD.append("%"+parametrosJSON[campo]+"%")
+      else:
+        query = query + str(campo) + ' = %s OR '
+        argumentosBD.append(parametrosJSON[campo])
 
-  if len(argumentosBD) == 0:
-    querry = '''SELECT * FROM ''' + elementoRelacional
-  else: 
-    querry = querry[:-3] #remove the last OR
+  if hayParametros:
+    query = query[:-3] + ' )' # quitamos el ultimo or y cerramos los parentesis
+ 
+  #revisamos si hay restricciones
+  hayRestricciones = false
+  if parametrosJSON['restricciones'] and isinstance(parametrosJSON['restricciones'], dict):
+    if hayParametros:
+      query = query + ' AND (' # Agregamos un and y un parentesis para agregar las restricciones
+    restricciones = parametrosJSON['restricciones']
+    for campo in camposBD: 
+      if campo in restricciones:
+        hayRestricciones = true
+        if isinstance(restricciones[campo],str) :
+          query = query + str(campo) + ' LIKE %s AND '
+          argumentosBD.append("%" + restricciones[campo] + "%")
+        else:
+          query = query + str(campo) + ' = %s AND '
+          argumentosBD.append(restricciones[campo])
+    
+    if not hayRestricciones:
+      # Si no hay restricciones agregadas quitamos el ' AND (' del principio
+      query = query[:-6]
+    else:
+      # si hay restricciones, quitamos el ultimo AND
+      query = query[:-4]
+    
+    #cerramos el parentesis
+    query = query + ' )'
+
+  if not (hayParametros or hayRestricciones):
+    # si no se encontraron ninguno de los dos simplificamos la consulta
+    query = '''SELECT * FROM ''' + elementoRelacional
+  
   try:
-    cur.execute(querry, argumentosBD)
+    cur.execute(query, argumentosBD)
     rv = cur.fetchall()
     if (len(rv) != 0):
       columns = cur.description
@@ -58,9 +89,9 @@ def consultarElemento(elementoRelacional, parametrosJSON):
     if idElementoRelacional in parametrosJSON:
       idValor = parametrosJSON[idElementoRelacional]
       # Inicializamos la consulta
-      querry = '''SELECT * FROM %s WHERE %s = %d '''
+      query = '''SELECT * FROM %s WHERE %s = %d '''
       try:
-        cur.execute(querry % (elementoRelacional, idElementoRelacional, int(idValor)))
+        cur.execute(query % (elementoRelacional, idElementoRelacional, int(idValor)))
         rv = cur.fetchall()
         if (len(rv) != 0):
           columns = cur.description
