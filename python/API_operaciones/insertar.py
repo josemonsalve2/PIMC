@@ -17,7 +17,7 @@ def insertarNuevoElemento(elementoRelacional, parametrosJSON):
     return None
   
   # Inicializamos la consulta
-  querry = '''INSERT INTO ''' + str(elementoRelacional) + '''('''
+  query = '''INSERT INTO ''' + str(elementoRelacional) + '''('''
   camposBD = pimcBD.obtenerCamposTabla(elementoRelacional)
   
   # Revisamos que algo se haya insertado
@@ -26,43 +26,43 @@ def insertarNuevoElemento(elementoRelacional, parametrosJSON):
   # Llenamos los campos
   for campo in camposBD:
     if campo in parametrosJSON:
-      querry = querry + str(campo)+ ", "
+      query = query + str(campo)+ ", "
   
   # Para los valores
-  querry = querry[:-2] + ") VALUES("
+  query = query[:-2] + ") VALUES("
   
   for campo in camposBD:
     if campo in parametrosJSON:
       insertado = True
       if isinstance(parametrosJSON[campo], str):
-        querry = querry + '"' + parametrosJSON[campo] + '"' + ', '
+        query = query + '"' + parametrosJSON[campo] + '"' + ', '
       else:
-        querry = querry + str(parametrosJSON[campo]) + ', '
+        query = query + str(parametrosJSON[campo]) + ', '
   
   # borramos la ultima coma
-  querry = querry[:-2] + ')'
+  query = query[:-2] + ')'
         
   if insertado:
     try:
       #Enviamos consulta
-      numAffectedRows = cur.execute(querry)
+      numAffectedRows = cur.execute(query)
       mysql.commit()
       if numAffectedRows == 0:
         raise ValueError("Algo salio mal")
         return None
       
       #Obtanemos el elemento insertado
-      querry = "SELECT LAST_INSERT_ID()"
+      query = "SELECT LAST_INSERT_ID()"
       idElementoRelacional = pimcBD.obtenerTablaId(elementoRelacional)
       
       if idElementoRelacional != None:
-        cur.execute(querry)
+        cur.execute(query)
         rv = cur.fetchall()
         if (len(rv) != 0):
           for row in rv:
             nuevoID = row[0]
-          querry = "SELECT * FROM " + str(elementoRelacional) + " WHERE " + str(idElementoRelacional) + " = " + str(nuevoID)
-          cur.execute(querry)
+          query = "SELECT * FROM " + str(elementoRelacional) + " WHERE " + str(idElementoRelacional) + " = " + str(nuevoID)
+          cur.execute(query)
           rv = cur.fetchall()
           columns = cur.description
           result = [{columns[index][0]:column for index, column in enumerate(value)} for value in rv]

@@ -27,20 +27,20 @@ class bd_descripcion:
   def llenarInformacion(self):
     # Obtenemos todos los nombres de las tablas
     db_cursor = mysql.cursor()
-    querry = "SHOW TABLES"
-    db_cursor.execute(querry)
+    query = "SHOW TABLES"
+    db_cursor.execute(query)
     tablasDB = db_cursor.fetchall()
     # Por cada tabla
     for tabla in tablasDB:
       self.insertarTabla(tabla[0])
       # Obtenemos la llave primaria
-      querry = "SHOW KEYS FROM " + tabla[0] + " WHERE Key_name = 'PRIMARY'"
-      db_cursor.execute(querry)
+      query = "SHOW KEYS FROM " + tabla[0] + " WHERE Key_name = 'PRIMARY'"
+      db_cursor.execute(query)
       llave = db_cursor.fetchone()
       self.insertarIdPrincipalTabla(tabla[0], llave[4])
       # Obtenemos los nombres de las columnas 
-      querry = "SHOW COLUMNS FROM " + tabla[0]
-      db_cursor.execute(querry)
+      query = "SHOW COLUMNS FROM " + tabla[0]
+      db_cursor.execute(query)
       columnas = db_cursor.fetchall()
       for columna in columnas:
         self.insertarDescripcion(tabla[0], columna[0])

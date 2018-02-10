@@ -19,7 +19,7 @@ def modificarElemento(elementoRelacional, parametrosJSON):
   idElementoRelacional = pimcBD.obtenerTablaId(elementoRelacional)
   idValor = None
   # Inicializamos la consulta
-  querry = '''UPDATE ''' + str(elementoRelacional) + ''' SET '''
+  query = '''UPDATE ''' + str(elementoRelacional) + ''' SET '''
   camposBD = pimcBD.obtenerCamposTabla(elementoRelacional)
   argumentosBD = []
   
@@ -29,7 +29,7 @@ def modificarElemento(elementoRelacional, parametrosJSON):
         idValor = parametrosJSON[campo]
       else:
         argumentosBD.append(parametrosJSON[campo])
-        querry = querry + str(campo) + ' =  %s , '
+        query = query + str(campo) + ' =  %s , '
 
   if idValor == None:
     raise ValueError("No se envio llave primaria para modificar")
@@ -40,15 +40,15 @@ def modificarElemento(elementoRelacional, parametrosJSON):
     return None
   
   # borramos la ultima coma Agregamos ID
-  querry = querry[:-2] + " WHERE " + str(idElementoRelacional) + " = %s "
+  query = query[:-2] + " WHERE " + str(idElementoRelacional) + " = %s "
   argumentosBD.append(idValor)
         
   try:
     #Enviamos consulta
-    numAffectedRows = cur.execute(querry, tuple(argumentosBD))
+    numAffectedRows = cur.execute(query, tuple(argumentosBD))
     mysql.commit()
     return numAffectedRows
   
   except (MySQLdb.Error, MySQLdb.Warning) as e:
-    raise ValueError("MYSQL ERROR ("+querry+") = ", str(e))
+    raise ValueError("MYSQL ERROR ("+query+") = ", str(e))
     return None
