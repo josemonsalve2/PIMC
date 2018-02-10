@@ -49,7 +49,7 @@
         controller:  'inicioController'
       })
       .when('/personajes', {
-        templateUrl: 'views/personaje.html',
+        templateUrl: 'views/personaje/personaje.html',
         controller:  'personajePerfilController',
         requiresLogin: true 
       })
