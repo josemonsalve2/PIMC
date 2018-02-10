@@ -78,7 +78,7 @@ def modificarElementoRelacionalPIMC0_2(elemento_relacional):
 @app.route("/PIMC0.2/ConsultarTodos/<elemento_relacional>", methods=['GET'])
 def consultarTodosFiltroPIMC0_2(elemento_relacional):
   if request.method == 'GET':
-    data = request.args.to_dict(); 
+    data = request.args.to_dict() 
     if not data:
       data = {}
     try:
@@ -90,10 +90,26 @@ def consultarTodosFiltroPIMC0_2(elemento_relacional):
   else:
     return ""
 
+@app.route("/PIMC0.2/ConsultarTodosAvanzado/<elemento_relacional>", methods=['POST'])
+def consultarTodosFiltroAvanzaodPIMC0_2(elemento_relacional):
+  if request.method == 'POST':
+    data = request.get_json()
+    if not data:
+      data = {}
+    try:
+      return jsonify(pimcAPI.consultarTodosFiltroAvanzado(elemento_relacional, data))
+    except ValueError as e:
+      print("HEREEEE")
+      raise InvalidUsage("ERROR: " + str(e), status_code = 400)
+    except Exception as e:
+        raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
+  else:
+    return ""
+
 @app.route("/PIMC0.2/cargarArchivos/<elemento_relacional>", methods=['POST'])
 def cargarArchivosPIMC0_2(elemento_relacional):
   if request.method == 'POST':
-    data = request; 
+    data = request
     try:
       if not data:
         raise ValueError("No se envio ningun archivo")
@@ -108,7 +124,7 @@ def cargarArchivosPIMC0_2(elemento_relacional):
 @app.route("/PIMC0.2/listaArchivos/<elemento_relacional>", methods=['GET'])
 def listaArchivosPIMC0_2(elemento_relacional):
   if request.method == 'GET':
-    data = request.args.to_dict(); 
+    data = request.args.to_dict() 
     if not data:
       data = {}
     try:
@@ -123,7 +139,7 @@ def listaArchivosPIMC0_2(elemento_relacional):
 @app.route("/PIMC0.2/descargarArchivo/<elemento_relacional>", methods=['GET'])
 def descargarArchivosPIMC0_2(elemento_relacional):
   if request.method == 'GET':
-    data = request.args.to_dict(); 
+    data = request.args.to_dict() 
     if not data:
       data = {}
     try:
@@ -139,7 +155,7 @@ def descargarArchivosPIMC0_2(elemento_relacional):
 @app.route("/PIMC0.2/eliminarArchivo/<elemento_relacional>", methods=['GET'])
 def eliminarArchivosPIMC0_2(elemento_relacional):
   if request.method == 'GET':
-    data = request.args.to_dict(); 
+    data = request.args.to_dict() 
     if not data:
       data = {}
     try:
@@ -154,7 +170,7 @@ def eliminarArchivosPIMC0_2(elemento_relacional):
 @app.route("/PIMC0.2/renombrarArchivo/<elemento_relacional>", methods=['GET'])
 def renombrarArchivosPIMC0_2(elemento_relacional):
   if request.method == 'GET':
-    data = request.args.to_dict(); 
+    data = request.args.to_dict() 
     if not data:
       data = {}
     try:

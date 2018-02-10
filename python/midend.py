@@ -1,6 +1,7 @@
 import traceback
 from API_operaciones import mysql_connection
 from tools.invalidUsage import InvalidUsage
+from flask import jsonify
 import pimcAPI_v01
 import pimcAPI_v02
 
