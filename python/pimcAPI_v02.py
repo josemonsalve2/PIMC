@@ -99,7 +99,6 @@ def consultarTodosFiltroAvanzaodPIMC0_2(elemento_relacional):
     try:
       return jsonify(pimcAPI.consultarTodosFiltroAvanzado(elemento_relacional, data))
     except ValueError as e:
-      print("HEREEEE")
       raise InvalidUsage("ERROR: " + str(e), status_code = 400)
     except Exception as e:
         raise InvalidUsage("ERROR: " + traceback.format_exc(), status_code = 400)
