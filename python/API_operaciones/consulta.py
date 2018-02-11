@@ -36,7 +36,7 @@ def consultarTodosFiltroAvanzado(elementoRelacional, parametrosJSON):
           argumentosBD.append(filtros[campo])
 
   if hayFiltros:
-    query = query[:-3] + ' )' # quitamos el ultimo or y cerramos los parentesis
+    query = query[:-3] # quitamos el ultimo or y cerramos los parentesis
  
   #revisamos si hay restricciones
   hayRestricciones = False
@@ -54,13 +54,13 @@ def consultarTodosFiltroAvanzado(elementoRelacional, parametrosJSON):
           query = query + str(campo) + ' = %s AND '
           argumentosBD.append(restricciones[campo])
     
-    if not hayRestricciones:
+    if not hayRestricciones and hayFiltros:
       # Si no hay restricciones agregadas quitamos el ' AND (' del principio
       query = query[:-6]
     else:
       # si hay restricciones, quitamos el ultimo AND
       query = query[:-4]
-    
+
     #cerramos el parentesis
     query = query + ' )'
 
@@ -68,6 +68,7 @@ def consultarTodosFiltroAvanzado(elementoRelacional, parametrosJSON):
     raise ValueError("No se enviaron ni filtros ni restricciones")
 
   try:
+    print (query)
     cur.execute(query, argumentosBD)
     rv = cur.fetchall()
     if (len(rv) != 0):
