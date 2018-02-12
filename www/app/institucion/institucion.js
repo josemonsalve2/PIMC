@@ -21,9 +21,10 @@
          'pimcInstDatosPrincipalesService',
          'pimcInstFuncionariosServicio',
          'pimcInstPersonajesServicio',
+         'pimcComentarios',
          '$window',
          '$q',
-        function($scope, pimcMenuService, pimcBarraEstadoService, pimcInstDatosPrincipalesService, pimcInstFuncionariosServicio, pimcInstPersonajesServicio, $window, $q) {
+        function($scope, pimcMenuService, pimcBarraEstadoService, pimcInstDatosPrincipalesService, pimcInstFuncionariosServicio, pimcInstPersonajesServicio, pimcComentarios, $window, $q) {
             // Initialization function
             var init = function() {
                 var institucionSeleccionada = pimcMenuService.obtenerElementoSeleccionado("Instituciones");
