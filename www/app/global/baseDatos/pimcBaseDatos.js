@@ -72,7 +72,7 @@
             return $http.post(modificarElementoURL, contenido).then(
                 function (data) {
                     // Revisamos si la respuesta tiene elementos 
-                    if (data.data[0] != 0){
+                    if (data.data[0] == 0){
                         return $q.reject("No se modifico nada en la base de datos");
                     } else {
                         return $q.resolve(data.data[0]);
@@ -90,10 +90,10 @@
                 return $q.reject("contenido debe ser un diccionario");
             }
             var modificarElementoURL = pimcService.crearURLOperacion('Eliminar', baseDatos);
-            return $http.post(modificarElementoURL, contenido).then(
+            return $http.delete(modificarElementoURL, {params: contenido}).then(
                 function (data) {
                     // Revisamos si la respuesta tiene elementos 
-                    if (data.data[0] != 0){
+                    if (data.data[0] == 0){
                         return $q.reject("No se elimino nada en la base de datos");
                     } else {
                         return $q.resolve(data.data[0]);
