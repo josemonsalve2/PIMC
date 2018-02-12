@@ -6,7 +6,13 @@
 
 
     // Service para comentarios. Cargar y guardar funcionarios de la institucion
-    institucionPerfil.service('pimcInstFuncionariosServicio', ['$http', '$q', 'pimcService', 'pimcBarraEstadoService', function ($http, $q, pimcService, pimcBarraEstadoService) {
+    institucionPerfil.service('pimcInstFuncionariosServicio', 
+        ['$http', 
+        '$q', 
+        'pimcService', 
+        'pimcBarraEstadoService', 
+        'pimcBaseDatosService',
+        function ($http, $q, pimcService, pimcBarraEstadoService, pimcBaseDatosService) {
         var pimcInstFuncionariosServicioCtrl = this;
 
         pimcInstFuncionariosServicioCtrl.crearVacio = function () {
@@ -56,33 +62,32 @@
         }; //Fin de cargar datos principales
 
         pimcInstFuncionariosServicioCtrl.guardarFuncionarios = function (funcionarios) {
+            var conexiones = [];
             angular.forEach(funcionarios, function(funcionario){
                 // Si los datos fueron cambiados, entonces actualizamos todas las bases de datos
-                if (funcionario.estado != pimcService.datosEstados.LIMPIO) {
-
-                    pimcBarraEstadoService.registrarAccion("Actualizando BD InstitucionesFuncionarios");
-                    var modificarInstitucionesFuncionariosURL = pimService.crearURLOperacion('Modificar', 'InstitucionesFuncionarios');
-                    return $http.post(modificarInstitucionesFuncionariosURL, funcionario.contenido).then(
-                        // funcion conexion exitosa
-                        function (data) {
-                            if (data.data[0] != 0) {
-                                return true;
-
-                            } else {
-                                pimcService.error("ERROR no se modificó la base de datos guardando los funcionarios de la institucion ", data);
-                                return false;
-                            }
-                        }, function (dataError) {
-                            // funcion error de conexion
-                            pimcService.error("ERROR guardando funcionarios de la institucion", dataError);
-                            return $q.resolve(false);
-                        }
-                    );
+                if (funcionario.estado == pimcService.datosEstados.INSERTADO) {
+                    pimcBarraEstadoService.registrarAccion("Guardando elemento en la BD InstitucionesFuncionarios");
+                    conexiones.push(
+                        pimcBaseDatosService.insertarElemento("InstitucionesFuncionarios", funcionario.contenido));
+                } else if (funcionario.estado == pimcService.datosEstados.MODIFICADO) {
+                    pimcBarraEstadoService.registrarAccion("Modificando elemento en la BD InstitucionesFuncionarios");
+                    conexiones.push(
+                        pimcBaseDatosService.modificarElemento("InstitucionesFuncionarios", funcionario.contenido));
+                } else if (funcionario.estado == pimcService.datosEstados.ELIMINADO) {
+                    pimcBarraEstadoService.registrarAccion("Eliminando elemento en la BD InstitucionesFuncionarios");
+                    conexiones.push(
+                        pimcBaseDatosService.eliminarElemento("InstitucionesFuncionarios", funcionario.contenido));
                 }
-                return false;
             }); // fin forEach
-        }; // Fin de guardar funcionarios
-
+            $q.all(conexiones).then(
+                function() {
+                    return $q.resolve(true);
+                },
+                function(error) {
+                    pimcBarraEstadoService.registrarAccion("ERROR guardando los funcionarios = " + error);
+                }
+            )
+        }; // Fin de guardar funcionario
     }]); // fin servicio 
 
     // Controller para los funcionarios
@@ -99,23 +104,29 @@
 
         // Inicializacion de funcionarios
         instFuncionariosCtrl.funcionariosInt = [];
+        instFuncionariosCtrl.institucionInt = {};
         instFuncionariosCtrl.funcionarioSeleccionado = undefined;
         instFuncionariosCtrl.csvHelper = "";
 
 
         // Para actualizar los elementos internos en caso de que sea necesario
         instFuncionariosCtrl.$onChanges = function (changes) { 
+            if (changes.institucion) {
+                instFuncionariosCtrl.institucionInt = angular.copy(instFuncionariosCtrl.institucion);
+            }
             if (changes.activo) {
                 instFuncionariosCtrl.activoInt = $window.angular.copy(instFuncionariosCtrl.activo);
             }
-            if (changes.funcionarios) {
+            if (changes.funcionarios && instFuncionariosCtrl.funcionarios != instFuncionariosCtrl.funcionariosInt) {
+                instFuncionariosCtrl.funcionarioSeleccionado = undefined;
                 instFuncionariosCtrl.funcionariosInt = $window.angular.copy(instFuncionariosCtrl.funcionarios); // Datos principales
             }          
           } 
         // Funcion para datos editados
         instFuncionariosCtrl.datoEditado = function (campo, valorNuevo) {
             pimcBarraEstadoService.registrarAccion("Cambio funcionario" + instFuncionariosCtrl.funcionarioSeleccionado.contenido.nombre + " campo " + campo + " cambio a " + valorNuevo);
-            instFuncionariosCtrl.funcionarioSeleccionado.estado = pimcService.datosEstados.MODIFICADO;
+            if (instFuncionariosCtrl.funcionarioSeleccionado.estado == pimcService.datosEstados.LIMPIO)
+                instFuncionariosCtrl.funcionarioSeleccionado.estado = pimcService.datosEstados.MODIFICADO;
             instFuncionariosCtrl.reportarCambio({funcionarios: instFuncionariosCtrl.funcionariosInt});
         };
 
@@ -131,18 +142,31 @@
         instFuncionariosCtrl.agregarFuncionario = function() {
             pimcBarraEstadoService.registrarAccion("Funcionario agregado");
             var nuevoFuncionario = pimcInstFuncionariosServicio.crearVacio();
+            nuevoFuncionario.contenido.institucionID = instFuncionariosCtrl.institucionInt.contenido.institucionID;
             instFuncionariosCtrl.funcionariosInt.push(nuevoFuncionario);
+            instFuncionariosCtrl.funcionarioSeleccionado = nuevoFuncionario;
+            instFuncionariosCtrl.reportarCambio({funcionarios: instFuncionariosCtrl.funcionariosInt});            
         }
 
         // Eliminar funcionario
         instFuncionariosCtrl.eliminarFuncionario = function(funcionario) {
             pimcBarraEstadoService.registrarAccion("Funcionario " + funcionario.contenido.nombre + " eliminado");
+            var indexof = instFuncionariosCtrl.funcionariosInt.indexOf(funcionario);
+            // Revisamos que no se este borrando el seleccionado
+            if (instFuncionariosCtrl.funcionarioSeleccionado) {
+                var indexofSeleccionado = instFuncionariosCtrl.funcionariosInt.indexOf(
+                instFuncionariosCtrl.funcionarioSeleccionado);
+                if (indexofSeleccionado == indexof) {
+                    instFuncionariosCtrl.funcionarioSeleccionado = undefined;
+                }
+            }
             if (instFuncionariosCtrl.funcionariosInt.estado == pimcService.datosEstados.INSERTADO) {
-                var indexof = instFuncionariosCtrl.funcionariosInt.indexof(funcionario);
                 instFuncionariosCtrl.funcionariosInt.splice(indexof, 1);
+                instFuncionariosCtrl.reportarCambio({funcionarios: instFuncionariosCtrl.funcionariosInt});                
                 return;
             }
             funcionario.estado = pimcService.datosEstados.ELIMINADO;
+            instFuncionariosCtrl.reportarCambio({funcionarios: instFuncionariosCtrl.funcionariosInt});            
         }
 
         // Listado de funciones del funcionario
@@ -176,6 +200,7 @@
 
     institucionPerfil.component('pimcInstitucionesFuncionarios', {
         bindings: {
+            institucion: '<',
             funcionarios: '<',
             activo: '<',
             reportarCambio:'&'

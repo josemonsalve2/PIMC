@@ -131,6 +131,7 @@
                 // Guardado
                 conexiones['datosPrincipales'] = pimcInstDatosPrincipalesService.guardarDatosPrincipales($scope.datosPrincipales);
                 conexiones['anotaciones'] = pimcComentarios.guardarNotas('Instituciones',$scope.institucionID, $scope.notas);
+                conexiones['funcionarios'] = pimcInstFuncionariosServicio.guardarFuncionarios($scope.funcionarios);
 
                 // Incializamos todo
                 $scope.cargandoInstituciones = true;
@@ -156,7 +157,7 @@
                     return true;
                 },
                     function (rejectedResponse) {
-                        pimcService.debug("[ERROR][GUARDANDO DOCUMENTO = " + $scope.documentoID + " ] " + rejectedResponse);
+                        pimcService.debug("[ERROR][GUARDANDO INSTITUCION = " + $scope.institucionID + " ] " + rejectedResponse);
                         pimcBarraEstadoService.registrarAccion("Ocurrio un error guardando los datos")
                         init();                        
                         return false;
