@@ -7,13 +7,18 @@
     autocompletarModule.service('pimcAutocompletarService', ['$http', '$q', 'pimcService', function($http, $q, pimcService){
         var pimcAutocompletarServiceCtrl = this;
         
-        pimcAutocompletarServiceCtrl.buscarElementosSimilares = function (elementoRelacional, camposAutocompletar, hint) {
-            var urlAutocompletar = pimcService.crearURLOperacion('ConsultarTodos', elementoRelacional);
-            var parametros = {};
+        pimcAutocompletarServiceCtrl.buscarElementosSimilares = function (elementoRelacional, camposAutocompletar, restricciones, hint) {
+            var urlAutocompletar = pimcService.crearURLOperacion('ConsultarTodosAvanzado', elementoRelacional);
+            // Filtros
+            var filtros = {};
             angular.forEach(camposAutocompletar, function(campoAutocompletar) {
-                parametros[campoAutocompletar] = hint;
+                filtros[campoAutocompletar] = hint;
             });
-            return $http.get(urlAutocompletar, { params: parametros }).then(function (data) {
+            // Parametros de busqueda
+            var parametros = {};
+            parametros.filtros = filtros;
+            parametros.restricciones = restricciones;
+            return $http.post(urlAutocompletar, parametros).then(function (data) {
                 return data.data;
             });
         } // fin autocompletarElemento
@@ -33,6 +38,7 @@
             // Valores por defecto
             autocompletarCtrl.elementoRelacionalInt = "";
             autocompletarCtrl.camposElementoRelacionalInt = "";
+            autocompletarCtrl.restriccionesInt = {};
             autocompletarCtrl.opcionesInt = {
                 minLength: 3,
                 delay: 100
@@ -81,6 +87,13 @@
                 if (changes.permitirAgregar) {
                     autocompletarCtrl.permitirAgregarInt = $window.angular.copy(autocompletarCtrl.permitirAgregar); 
                 }
+                // restricciones 
+                if (changes.restricciones) {
+                    autocompletarCtrl.restriccionesInt = $window.angular.copy(autocompletarCtrl.restricciones);
+                    if (!autocompletarCtrl.restriccionesInt) {
+                        autocompletarCtrl.restriccionesInt = {};
+                    }
+                }
             } 
 
             // Funcion de autocompletar
@@ -89,6 +102,7 @@
                 return pimcAutocompletarService.buscarElementosSimilares(
                     autocompletarCtrl.elementoRelacionalInt, 
                     autocompletarCtrl.camposElementoRelacionalInt,
+                    autocompletarCtrl.restricciones,
                     valorActual
                 ).then(
                     function(resultados) {
@@ -160,6 +174,7 @@
         bindings:{
             elementoRelacional:'<', // Tabla en la que se buscara el match
             camposElementoRelacional: '<', // Campo en el que se buscara un match
+            restricciones: '<', // Codndiciones para filtrar los valores que aparecen
             mostrarCampo: '<', // Campo que se mostara al seleccionar
             opciones: '<', // Controllar delays, min lenght y el resto de parametros
             permitirAgregar:'<', // Agrega una nueva entrada al principio de la lista que es insertar nuevo elemento
