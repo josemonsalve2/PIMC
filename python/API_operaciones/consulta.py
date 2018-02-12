@@ -42,7 +42,7 @@ def consultarTodosFiltroAvanzado(elementoRelacional, parametrosJSON):
   hayRestricciones = False
   if 'restricciones' in parametrosJSON and isinstance(parametrosJSON['restricciones'], dict):
     if hayFiltros:
-      query = query + ' AND (' # Agregamos un and y un parentesis para agregar las restricciones
+      query = query + ') AND (' # Agregamos un and y un parentesis para agregar las restricciones
     restricciones = parametrosJSON['restricciones']
     for campo in camposBD: 
       if campo in restricciones:
@@ -56,13 +56,13 @@ def consultarTodosFiltroAvanzado(elementoRelacional, parametrosJSON):
     
     if not hayRestricciones and hayFiltros:
       # Si no hay restricciones agregadas quitamos el ' AND (' del principio
-      query = query[:-6]
+      query = query[:-7]
     else:
       # si hay restricciones, quitamos el ultimo AND
       query = query[:-4]
 
-    #cerramos el parentesis
-    query = query + ' )'
+  #cerramos el parentesis
+  query = query + ' )'
 
   if not (hayFiltros or hayRestricciones):
     raise ValueError("No se enviaron ni filtros ni restricciones")
