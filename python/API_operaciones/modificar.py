@@ -42,13 +42,13 @@ def modificarElemento(elementoRelacional, parametrosJSON):
   # borramos la ultima coma Agregamos ID
   query = query[:-2] + " WHERE " + str(idElementoRelacional) + " = %s "
   argumentosBD.append(idValor)
-        
+  
   try:
     #Enviamos consulta
-    numAffectedRows = cur.execute(query, tuple(argumentosBD))
+    numAffectedRows = cur.execute(query, argumentosBD)
     mysql.commit()
     return numAffectedRows
   
   except (MySQLdb.Error, MySQLdb.Warning) as e:
     raise ValueError("MYSQL ERROR ("+query+") = ", str(e))
-    return None
+
