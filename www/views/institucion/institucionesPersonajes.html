@@ -3,7 +3,7 @@
             <uib-tab index="0" heading="Listado">
                 <div class="p-t-1"> 
                     <table class="table-left">
-                        <tr><th></th><th>Nombre</th><th>Tipo Empleo</th><th>Funcionario</th><th ng-if="instPersonajesCtrl.habilitarEliminar">Eliminar</th></tr>
+                        <tr><th></th><th>Nombre</th><th>Tipo Empleo</th><th>Funcionario</th><th ng-if="instPersonajesCtrl.habilitarEliminar" style="width:50px">Eliminar</th></tr>
                         <tr ng-repeat="instPersonaje in instPersonajesCtrl.instPersonajesInt | filtrarEliminados track by $index"
                             ng-click="instPersonajesCtrl.abrirInstPersonaje(instPersonaje)">
                             <td>{{$index + 1}}</td>
@@ -11,7 +11,8 @@
                             <td>{{instPersonaje.contenido.tipoEmpleo || "No definido" }}</td>
                             <td>{{instPersonaje.funcionario.nombre || "No definido" }}</td>
                             <td ng-if="instPersonajesCtrl.habilitarEliminar" 
-                                ng-click="instPersonajesCtrl.eliminarInstPersonaje(instPersonaje);$event.stopPropagation()">
+                                ng-click="instPersonajesCtrl.eliminarInstPersonaje(instPersonaje);$event.stopPropagation()"
+                                style="width:50px;text-align:center">
                                 <span class="label label-danger"><i class="glyphicon glyphicon-remove-sign"></i></span>
                             </td>
                         </tr>
@@ -27,10 +28,77 @@
             </uib-tab>
             <uib-tab index="$index + 1" ng-repeat="instPersonaje in instPersonajesCtrl.instPersonajesInt | filtrarAbiertos track by $index" heading="{{instPersonaje.personaje.nombre? instPersonaje.personaje.nombre : 'Personaje Nuevo ' + ($index + 1)}}">
                 <div class="row p-t-2">
-                    <div class="col-sm-12">
-                        <p class="text-right"><button class="btn btn-danger" ng-click="instPersonajesCtrl.cerrarInstPersonaje(instPersonaje)">Cerrar Elemento</button></p>
-
+                    <div class="col-sm-12 col-md-6 p-t-0">
+                        <ul class="list-group m-b-1">
+                            <li class="list-group-item">
+                                <span class="label label-primary">Nombre</span>
+                                <pimc-autocompletar
+                                    elemento-relacional="'Personajes'"
+                                    campos-elemento-relacional="'nombre'"
+                                    mostrar-campo="'nombre'"
+                                    permitir-agregar="'true'"
+                                    reportar-cambio="instPersonajesCtrl.cambioCampoPersonaje(elementoSeleccionado, estado, instPersonaje)"
+                                ></pimc-autocompletar>
+                            </li> 
+                            <li class="list-group-item">
+                                <span class="label label-primary">Funcionario</span>
+                                <pimc-autocompletar
+                                    elemento-relacional="'InstitucionesFuncionarios'"
+                                    campos-elemento-relacional="'nombre'"
+                                    restricciones="{InstitucionID:instPersonajesCtrl.institucionInt.institucionID}"
+                                    mostrar-campo="'nombre'"
+                                    permitir-agregar="'true'"
+                                    reportar-cambio="instPersonajesCtrl.cambioCampoFuncionario(elementoSeleccionado, estado, instPersonaje)"
+                                ></pimc-autocompletar>
+                            </li> 
+                            <li class="list-group-item">
+                                <span class="label label-primary">Tipo de empleado</span>
+                                <span editable-text="instPersonaje.contenido.tipoEmpleo" 
+                                    onaftersave="instPersonajesCtrl.datoEditado(instPersonaje, 'tipoEmpleo', $data)"> 
+                                    {{ instPersonaje.contenido.tipoEmpleo || "Indeterminado" }}</span>
+                            </li> 
+                            <li class="list-group-item">
+                                <span class="label label-primary">Fecha Inicial</span>
+                                <pimc-fecha-con-formato
+                                    fecha = 'instPersonaje.contenido.fechaInicial'
+                                    formato = 'instPersonaje.contenido.fechaInicialFormato'
+                                    reportar-cambio="instPersonajesCtrl.fechaEditada(fecha, formato, instPersonaje, 'fechaInicial')">
+                                </pimc-fecha-con-formato>
+                            </li> 
+                            <li class="list-group-item">
+                                <span class="label label-primary">Fecha Final</span>
+                                <pimc-fecha-con-formato
+                                    fecha = 'instPersonaje.contenido.fechaFinal'
+                                    formato = 'instPersonaje.contenido.fechaFinalFormato'
+                                    reportar-cambio="instPersonajesCtrl.fechaEditada(fecha, formato, instPersonaje, 'fechaFinal')">
+                                </pimc-fecha-con-formato>
+                            </li> 
+                            <li class="list-group-item">
+                                    <span class="label label-primary">Salario (Unidades)</span>
+                                    <span editable-number="instPersonaje.contenido.salario" 
+                                        onaftersave="instPersonajesCtrl.datoEditado(instPersonaje, 'tipoEmpleo', $data)"> 
+                                        {{ instPersonaje.contenido.salario || " Salario Indeterminado" }}
+                                    </span>
+                                    <span editable-text="instPersonaje.contenido.salarioUnidades" 
+                                        onaftersave="instPersonajesCtrl.datoEditado(instPersonaje, 'tipoEmpleo', $data)"> 
+                                        {{ instPersonaje.contenido.salarioUnidades|| "(Unidades)" }}
+                                    </span>
+                            </li> 
+                        </ul>
                     </div>
+                    <div class="col-sm-12 col-md-6">
+                        <ul class="list-group m-b-0">
+                        <li class="list-group-item" style="max-height: 300px; overflow-y: auto;">
+                            <pimc-comentarios-anotaciones 
+                            notas = "instPersonaje.notas" 
+                            reportar-cambio = "instPersonajesCtrl.notasEditadas(notas, instPersonaje)">
+                            </pimc-comentarios-anotaciones>
+                        </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <p class="text-right"><button class="btn btn-danger" ng-click="instPersonajesCtrl.cerrarInstPersonaje(instPersonaje)">Cerrar Elemento</button></p>
                 </div>
             </uib-tab>
         </uib-tabset>
