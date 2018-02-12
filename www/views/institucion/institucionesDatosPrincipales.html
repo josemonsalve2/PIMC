@@ -3,15 +3,15 @@
             <ul class="list-group m-b-0">
                 <li class="list-group-item">
                     <span class="label label-primary">Nombre Institucion</span>
-                    <span editable-text="instDatosPrincipalesCtrl.datosPrincipalesInt.contenido.nombre" 
-                        onbeforesave="datoEditado('nombre', $data)"> 
+                    <span blur="submit" editable-text="instDatosPrincipalesCtrl.datosPrincipalesInt.contenido.nombre" 
+                        onbeforesave="instDatosPrincipalesCtrl.datoEditado('nombre', $data)"> 
                         {{ instDatosPrincipalesCtrl.datosPrincipalesInt.contenido.nombre || "Nombre Indeterminado" }}</span>
                     
                 </li> 
                 <li class="list-group-item">
                     <span class="label label-primary">Tipo de institucion</span>
-                    <span editable-text="instDatosPrincipalesCtrl.datosPrincipalesInt.contenido.tipoInstitucion"
-                        onbeforesave="datoEditado('tipoInstitucion', $data)"> 
+                    <span blur="submit" editable-text="instDatosPrincipalesCtrl.datosPrincipalesInt.contenido.tipoInstitucion"
+                        onbeforesave="instDatosPrincipalesCtrl.datoEditado('tipoInstitucion', $data)"> 
                         {{ instDatosPrincipalesCtrl.datosPrincipalesInt.contenido.tipoInstitucion || "Indeterminado" }}</span>
                 </li> 
                 <li class="list-group-item">
@@ -31,8 +31,8 @@
                 </li> 
                 <li class="list-group-item">
                     <span class="label label-primary">Categoría</span>
-                    <span editable-text="instDatosPrincipalesCtrl.datosPrincipalesInt.contenido.categoria" 
-                        onbeforesave="datoEditado('categoria', $data)"  
+                    <span blur="submit" editable-text="instDatosPrincipalesCtrl.datosPrincipalesInt.contenido.categoria" 
+                        onbeforesave="instDatosPrincipalesCtrl.datoEditado('categoria', $data)"  
                         class="m-l-1"> {{ instDatosPrincipalesCtrl.datosPrincipalesInt.contenido.categoria || "No definido" }}</span>
                 </li> 
                 <li class="list-group-item">
@@ -42,7 +42,7 @@
                     e-rows="2" 
                     buttons="no" 
                     blur="submit"
-                    onbeforesave="datoEditado('funciones', $data)">
+                    onbeforesave="instDatosPrincipalesCtrl.datoEditado('funciones', $data)">
                     {{instDatosPrincipalesCtrl.datosPrincipalesInt.contenido.funciones || "Funciones no asignadas"}}</p>
                 </li> 
             </ul>

@@ -17,6 +17,7 @@
     institucionPerfil.controller('institucionPerfilController', 
         ['$scope', 
          'pimcMenuService',
+         'pimcService',
          'pimcBarraEstadoService',
          'pimcInstDatosPrincipalesService',
          'pimcInstFuncionariosServicio',
@@ -24,7 +25,7 @@
          'pimcComentarios',
          '$window',
          '$q',
-        function($scope, pimcMenuService, pimcBarraEstadoService, pimcInstDatosPrincipalesService, pimcInstFuncionariosServicio, pimcInstPersonajesServicio, pimcComentarios, $window, $q) {
+        function($scope, pimcMenuService, pimcService, pimcBarraEstadoService, pimcInstDatosPrincipalesService, pimcInstFuncionariosServicio, pimcInstPersonajesServicio, pimcComentarios, $window, $q) {
             // Initialization function
             var init = function() {
                 var institucionSeleccionada = pimcMenuService.obtenerElementoSeleccionado("Instituciones");
@@ -48,10 +49,13 @@
                     // DATOS PRINCIPALES
                     conexiones.push($scope.cargarDatosPrincipales());
 
+                    // NOTAS
+                    conexiones.push($scope.cargarNotas());
+
                     // FUNCIONARIOS
                     conexiones.push($scope.cargarFuncionarios());
 
-                    // Personajes
+                    // PERSONAJES
                     conexiones.push($scope.cargarInstPersonajes());
     
                     $q.all(conexiones).then(function(){
@@ -112,6 +116,52 @@
             $scope.personajesInstEditados = function(personajes) {
                 $scope.funcionarios = funcionarios;
             }
+
+             // FUNCIONES DE LA BARRA DE ESTADO
+            $scope.borrarCambios = function() {
+                if (confirm("Esta seguro que desea borrar los cambios?")) {
+                    pimcBarraEstadoService.registrarAccion("Los cambios han sido borrados");
+                    init();
+                }
+            };
+            $scope.datosGuardados = false;
+            $scope.guardarCambios = function() {
+                var conexiones = {};
+                
+                // Guardado
+                conexiones['datosPrincipales'] = pimcInstDatosPrincipalesService.guardarDatosPrincipales($scope.datosPrincipales);
+                conexiones['anotaciones'] = pimcComentarios.guardarNotas('Instituciones',$scope.institucionID, $scope.notas);
+
+                // Incializamos todo
+                $scope.cargandoInstituciones = true;
+                $q.all(conexiones).then(function (responses) {
+                    var guardoAlgo = false;
+                    for (var res in responses) {
+                        if (res && responses[res]) {
+                            guardoAlgo = true;
+                            if (responses[res].data) {
+                                pimcService.debug(res + ' = ' + responses[res].data);
+                            }
+                            else {
+                                pimcService.debug(res + ' = ' + responses[res]);
+                            }
+                        }
+                    }
+                    if (guardoAlgo) {
+                        $scope.datosGuardados = true;
+                        init();
+                    } else {
+                        $scope.cargandoInstituciones = false;
+                    }
+                    return true;
+                },
+                    function (rejectedResponse) {
+                        pimcService.debug("[ERROR][GUARDANDO DOCUMENTO = " + $scope.documentoID + " ] " + rejectedResponse);
+                        pimcBarraEstadoService.registrarAccion("Ocurrio un error guardando los datos")
+                        init();                        
+                        return false;
+                    });
+            };
 
             // inicializamos la institucion
             init();
