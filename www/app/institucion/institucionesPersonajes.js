@@ -270,7 +270,8 @@
         instPersonajesCtrl.agregarInstPersonaje = function() {
             pimcBarraEstadoService.registrarAccion("Personaje agregado");
             var nuevoInstPersonaje = pimcInstPersonajesServicio.crearVacio();
-            nuevoInstPersonaje.institucion.contenido = instPersonajesCtrl.institucionInt;
+            nuevoInstPersonaje.institucion.contenido = instPersonajesCtrl.institucionInt.contenido;
+            nuevoInstPersonaje.contenido.institucionID = instPersonajesCtrl.institucionInt.contenido.institucionID;
             nuevoInstPersonaje.institucion.estado = pimcService.datosEstados.LIMPIO;
             nuevoInstPersonaje.abierto = true;
             instPersonajesCtrl.instPersonajesInt.push(nuevoInstPersonaje);
