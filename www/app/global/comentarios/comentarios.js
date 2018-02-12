@@ -84,6 +84,7 @@
                     for (var res in responses) {
                         pimcService.debug(res + ' = ' + responses[res].data);
                     }
+                    return "Notas guardadas";
                 }, function(responses) {
                 for (var res in responses) {
                         pimcService.debug("[ERROR]" + res + ' = ' + responses[res]);
