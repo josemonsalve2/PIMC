@@ -32,17 +32,17 @@
 
         // ESTADO DE DATOS
         pimcService.datosEstados = {
-            LIMPIO: 0,
-            MODIFICADO: 1,
-            INSERTADO: 2,
-            ELIMINADO: 3,
-            CREADO: 4,
+            LIMPIO: 0, // Contenido igual al de la base de datos
+            MODIFICADO: 1, // Contenido ha sido cambiado y es diferente a la base de datos
+            INSERTADO: 2, // Contenido nuevo no existe en la base de datos
+            ELIMINADO: 3, // Contenido esta en la base de datos pero esta eliminado de la vista
+            VACIO: 4, // El contenido esta vacio
             propiedades: {
                 0: { nombre: 'Limpia', value: 0, code: 'L' },
                 1: { nombre: 'Modificada', value: 1, code: 'M' },
                 2: { nombre: 'Insertada', value: 2, code: 'I' },
                 3: { nombre: 'Eliminada', value: 3, code: 'E' },
-                4: { nombre: 'Creada', value: 3, code: 'C' }
+                4: { nombre: 'Vacio', value: 3, code: 'V' }
             }
         };
 
