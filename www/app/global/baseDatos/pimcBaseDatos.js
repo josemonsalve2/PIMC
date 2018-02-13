@@ -11,7 +11,7 @@
         var pimcBaseDatosServiceCtrl = this;
 
         pimcBaseDatosServiceCtrl.consultarPorID = function(elementoRelacional, elementoRelacionalID) {
-            var consultaElementoRelacionalURL = pimcService.crearURLOperacion('Consultar', elementoRelacional);
+            var consultaElementoRelacionalURL = pimcService.crearURLOperacion('Consulta', elementoRelacional);
             var idNombre = pimcService.idElementoRelaciona[elementoRelacional];
             if (!idNombre) {
                 return $q.reject("Elemento Relacional no disponible")
