@@ -55,6 +55,7 @@
             Actividades: "actividadID",
             Instituciones: "institucionID",
             InstitucionesFuncionarios: "funcionID",
+            InstitucionesPersonajes: "empleoID",
             Eventos: "eventoID",
             Lugares: "lugarID",
             Territorios: "territorioID"
