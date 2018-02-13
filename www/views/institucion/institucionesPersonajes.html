@@ -33,6 +33,7 @@
                             <li class="list-group-item">
                                 <span class="label label-primary">Nombre</span>
                                 <pimc-autocompletar
+                                    elemento="instPersonaje.personaje.contenido"
                                     elemento-relacional="'Personajes'"
                                     campos-elemento-relacional="'nombre'"
                                     mostrar-campo="'nombre'"
@@ -43,6 +44,7 @@
                             <li class="list-group-item">
                                 <span class="label label-primary">Funcionario</span>
                                 <pimc-autocompletar
+                                    elemento="instPersonaje.funcionario.contenido"                                
                                     elemento-relacional="'InstitucionesFuncionarios'"
                                     campos-elemento-relacional="'nombre'"
                                     restricciones="{InstitucionID:instPersonajesCtrl.institucionInt.institucionID}"
