@@ -113,8 +113,8 @@
                 });
             }
 
-            $scope.personajesInstEditados = function(personajes) {
-                $scope.funcionarios = funcionarios;
+            $scope.instPersonajesEditados = function(personajes) {
+                $scope.instPersonajes = personajes;
             }
 
              // FUNCIONES DE LA BARRA DE ESTADO
@@ -132,6 +132,7 @@
                 conexiones['datosPrincipales'] = pimcInstDatosPrincipalesService.guardarDatosPrincipales($scope.datosPrincipales);
                 conexiones['anotaciones'] = pimcComentarios.guardarNotas('Instituciones',$scope.institucionID, $scope.notas);
                 conexiones['funcionarios'] = pimcInstFuncionariosServicio.guardarFuncionarios($scope.funcionarios);
+                conexiones['instPersonajes'] = pimcInstPersonajesServicio.guardarInstPersonajes($scope.instPersonajes);
 
                 // Incializamos todo
                 $scope.cargandoInstituciones = true;
