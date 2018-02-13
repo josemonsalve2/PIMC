@@ -50,6 +50,9 @@
 
             // Para actualizar los elementos internos en caso de que sea necesario
             autocompletarCtrl.$onChanges = function (changes) {
+                if (changes.elemento && autocompletarCtrl.elemento) {
+                    autocompletarCtrl.elementoSeleccionado = angular.copy(autocompletarCtrl.elemento);
+                }
                 if (changes.elementoRelacional) {
                     autocompletarCtrl.elementoRelacionalInt = $window.angular.copy(autocompletarCtrl.elementoRelacional);
                     // Si el elemento relacional cambia, reiniciamos el seleccionado
@@ -172,6 +175,7 @@
 
     autocompletarModule.component('pimcAutocompletar', {
         bindings:{
+            elemento: '<',
             elementoRelacional:'<', // Tabla en la que se buscara el match
             camposElementoRelacional: '<', // Campo en el que se buscara un match
             restricciones: '<', // Codndiciones para filtrar los valores que aparecen
