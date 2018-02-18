@@ -22,7 +22,7 @@
       if(!listadoCtrl.ignorarPrimeroActivado) listadoCtrl.ignorarPrimeroActivado = false; // permite ignorar el primer elemento en caso de querer mostrarlo diferente
       if(!listadoCtrl.volverPrincipalActivado) listadoCtrl.volverPrincipalActivado = false; // Agrega un boton al lado de cada elemento para volver ese elemento principal
 
-      if(listadoCtrl.csvStringInt != "") {
+      if(listadoCtrl.csvString && listadoCtrl.csvStringInt != "") {
         listadoCtrl.listadoInt = listadoCtrl.csvString.split(",");
         listadoCtrl.listadoInt = listadoCtrl.listadoInt.map(function(e) {
           return e.trim();
@@ -34,7 +34,7 @@
       if (changes.csvString) {
         if (listadoCtrl.csvStringInt != listadoCtrl.csvString) {
           listadoCtrl.csvStringInt = $window.angular.copy(listadoCtrl.csvString); // Notas
-          if (listadoCtrl.csvStringInt != "") {
+          if (listadoCtrl.csvStringInt && listadoCtrl.csvStringInt != "") {
             listadoCtrl.listadoInt = listadoCtrl.csvString.split(",");
             listadoCtrl.listadoInt = listadoCtrl.listadoInt.map(function (e) {
               return e.trim();
