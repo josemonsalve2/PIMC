@@ -28,6 +28,7 @@
                     disponibilidad: ""
                 };
                 datosPrincipalesVacios.estado = pimcService.datosEstados.LIMPIO;
+                return datosPrincipalesVacios;
             }
     
             // Funcion para cargar datos principales del documento
@@ -97,7 +98,7 @@
             // Desactivar 
             documentoDatosPrincipalesCtrl.activo = false;
             // Inicializacion de datos principales
-            documentoDatosPrincipalesCtrl.datosPrincipalesInt = pimcDocumentoDatosPrincipalesService.crearVacio;
+            documentoDatosPrincipalesCtrl.datosPrincipalesInt = pimcDocumentoDatosPrincipalesService.crearVacio();
             documentoDatosPrincipalesCtrl.filesListaInt = [];
 
             // Para actualizar los elementos internos en caso de que sea necesario
@@ -107,11 +108,16 @@
                 }
                 if (changes.datosPrincipales) {
                     documentoDatosPrincipalesCtrl.datosPrincipalesInt = $window.angular.copy(documentoDatosPrincipalesCtrl.datosPrincipales); // Datos principales
+                    if (!documentoDatosPrincipalesCtrl.datosPrincipalesInt || 
+                        !documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido ||
+                        !documentoDatosPrincipalesCtrl.datosPrincipalesInt.estado) {
+                            documentoDatosPrincipalesCtrl.datosPrincipalesInt = pimcDocumentoDatosPrincipalesService.crearVacio();
+                        }
                 }
                 if (changes.filesLista) {
                     documentoDatosPrincipalesCtrl.filesListaInt = $window.angular.copy(documentoDatosPrincipalesCtrl.filesLista); // FILES
                 }
-              } 
+              }
             // Funcion para datos editados
             documentoDatosPrincipalesCtrl.datoEditado = function (campo, valorNuevo) {
                 pimcBarraEstadoService.registrarAccion("Dato Principal" + campo + " modificado " + valorNuevo);

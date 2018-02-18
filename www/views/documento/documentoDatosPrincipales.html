@@ -15,7 +15,7 @@
                           buttons="right" 
                           onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('titulo',$data)" 
                           e-rows="2"
-                          class="m-l-1">{{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.titulo }}</span>
+                          class="m-l-1">{{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.titulo || "Nuevo Titulo"}}</span>
                 </li>
             </ul>
           <ul class="list-group m-b-0 dos-columnas">
@@ -24,56 +24,56 @@
                 <span class="label label-primary">Fondo documental</span>
                 <span editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fondo" 
                             onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('fondo',$data)"  
-                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fondo }}</span>
+                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.fondo || "Fondo Documental" }}</span>
             </li>
             <li class="list-group-item">
                 <span class="label label-primary">Institución fondo</span>
                 <span editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.institucionFondo" 
                             onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('institucion',$data)"  
-                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.institucionFondo }}</span>
+                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.institucionFondo  || "Institucion fondo"  }}</span>
             </li>
             <li class="list-group-item">
                 <span class="label label-primary">Sección</span> 
                 <span editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.seccion" 
                             onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('seccion',$data)"  
-                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.seccion }}</span>
+                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.seccion  || "Seccion nueva" }}</span>
             </li>
             <li class="list-group-item">
                 <span class="label label-primary">Número de referencia</span>
                 <span editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numRefDentroFondo" 
                             onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('numReferencia',$data)"  
-                            class="m-l-1"> {{documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numRefDentroFondo}}</span>
+                            class="m-l-1"> {{documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numRefDentroFondo || "nuevo numero Referencia" }}</span>
             </li>
             
             <li class="list-group-item">
                 <span class="label label-primary">Folio inicial</span> 
                 <span editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.folioInicial" 
                             onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('folioInicial',$data)"  
-                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.folioInicial }}</span>
+                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.folioInicial || "nuevo folio inicial"}}</span>
             </li>
             <li class="list-group-item">
                 <span class="label label-primary">Folio final</span> 
                 <span editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.folioFinal" 
                             onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('folioFinal',$data)"  
-                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.folioFinal }}</span>
+                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.folioFinal || "nuevo folio final"}}</span>
             </li>
             <li class="list-group-item">
                 <span class="label label-primary">Legajo</span> 
                 <span editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.legajo" 
                             onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('legajo',$data)"  
-                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.legajo }}</span>
+                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.legajo || "nuevo legajo"}}</span>
             </li>
             <li class="list-group-item">
                 <span class="label label-primary">Numero de orden</span> 
                 <span editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numOrden" 
                             onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('numOrden',$data)"  
-                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numOrden }}</span>
+                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numOrden  || "nuevo numero orden" }}</span>
             </li>
             <li class="list-group-item">
                 <span class="label label-primary">Numero de páginas</span> 
                 <span editable-text="documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numPaginas" 
                             onbeforesave="documentoDatosPrincipalesCtrl.datoEditado('numPaginas',$data)"  
-                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numPaginas }}</span>
+                            class="m-l-1"> {{ documentoDatosPrincipalesCtrl.datosPrincipalesInt.contenido.numPaginas  || "nuevo numero paginas" }}</span>
             </li>
 
           </ul>
