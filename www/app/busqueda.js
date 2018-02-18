@@ -95,6 +95,13 @@
             });
         };
 
+        $scope.reportarDatosAgregados = function(datosAgregados) {
+            if (datosAgregados) {
+                $scope.cargandoDatos = true;
+                $scope.init();
+            }
+        }
+
         $scope.init();
 
     }]);
