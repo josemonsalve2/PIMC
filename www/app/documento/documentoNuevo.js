@@ -4,34 +4,21 @@
 
     var documentoPerfil = angular.module('documentoPerfil');
 
-
-    // Service para comentarios. Cargar y guardar datos principales de la embarcacion
-    documentoPerfil.service('pimcDocumentoNuevoService', 
-        ['$q', 
-         'pimcService', 
-         'pimcBarraEstadoService', 
-         'pimcBaseDatosService',
-         function ($q, pimcService, pimcBarraEstadoService, pimcBaseDatosService) {
-            var documentoNuevoService = this;
-
-            documentoNuevoService.crearNuevoDocumento = function (informacioDocumento) {
-
-            }
-    
-        }]
-    ); // Fin pimcDocumentoNuevoService
-
     // Controller para los datos principales
     documentoPerfil.controller('documentoNuevoController', 
         ['$uibModal',
          '$q',
+         '$timeout',
          'pimcService',
          'pimcFilesService',
-         'pimcBarraEstadoService', 
-         'pimcDocumentoNuevoService', 
-         function($uibModal, pimcService, pimcFilesService, pimcBarraEstadoService, pimcDocumentoNuevoService) {
+         'pimcBarraEstadoService',
+         'pimcBaseDatosService',
+         function($uibModal, $q, $timeout, pimcService, pimcFilesService, pimcBarraEstadoService, pimcBaseDatosService) {
             var documentoNuevoCtrl = this;
             documentoNuevoCtrl.agregados = false;
+            documentoNuevoCtrl.reportarAgregados = function() {
+                documentoNuevoCtrl.agregados = true;
+            }
             // funcion para abrir modal
             documentoNuevoCtrl.abrirModalCrearDocumento = function () {
                 var modalInstance = $uibModal.open({
@@ -40,18 +27,17 @@
                     size: 'lg',
                     resolve: {
                         reportarAgregados: function() {
-                            documentoNuevoCtrl.agregados = true;
+                            return documentoNuevoCtrl.reportarAgregados;
                         }
                     }
                   });
           
                   modalInstance.result.then(
                   function (resultadoAgregados) {
-                      if (resultado || documentoNuevoCtrl.agregados) {
+                      if (resultadoAgregados || documentoNuevoCtrl.agregados) {
                         documentoNuevoCtrl.reportarCambio({documentosGuardados: true});
                         pimcService.debug('Modal closed');
                       }
-                    
                   }, function () {
                       if (documentoNuevoCtrl.agregados) {
                         documentoNuevoCtrl.reportarCambio({documentosGuardados: true});
@@ -71,14 +57,15 @@
         close: '&', 
         dismiss: '&'
     },
-    controller: function(pimcDocumentoNuevoService, pimcService, pimcFilesService, $q) {
+    controller: function(pimcBaseDatosService, pimcService, pimcFilesService, $q, $timeout) {
         var $ctrl = this;
         // Inicializamos el formulario
         $ctrl.init = function() {
             $ctrl.datosPrincipales = {};
             $ctrl.datosPrincipales.contenido = {};
             $ctrl.datosPrincipales.estado = pimcService.datosEstados.VACIO;
-            $ctrl.listaFiles = {};
+            $ctrl.listaFiles = [];
+            $ctrl.cargando = false;
         }
 
         $ctrl.$onInit = function () {
@@ -93,12 +80,18 @@
 
         // Boton crea y agregar otro
         $ctrl.crearContinuar = function () {
+            $ctrl.cargando = true;
             $ctrl.guardar().then(
                 function(guardado) {
                     if (guardado) {
                         $ctrl.mensajeGuardado = true;
+                        $timeout(function() {
+                            $ctrl.mensajeGuardado = false;
+                        }, 3000);
                         $ctrl.reportarAgregados();
                         $ctrl.init();
+                    } else {
+                        $ctrl.cargando = false;
                     }
                 }
             );
@@ -106,9 +99,11 @@
         };
 
         $ctrl.crearCerrar = function () {
+            $ctrl.cargando = true;
             $ctrl.guardar().then(
                 function(guardado) {
-                    $uibModalInstance.close(guardado);
+                    $ctrl.cargando = false;
+                    $ctrl.close({$value: guardado});
                 }
             );
         };
@@ -117,20 +112,18 @@
         $ctrl.guardar = function(){
             if ($ctrl.datosPrincipales.estado != pimcService.datosEstados.VACIO){
                 // primero creamos el documento, si tenemos exito agregamos los archivos
-                return pimcBaseDatosService.insertarElemento("Documentos", $ctrl.documentoPerfil.contenido).then(
+                return pimcBaseDatosService.insertarElemento("Documentos", $ctrl.datosPrincipales.contenido).then(
                     function(elementoInsertado) {
-                        if ($ctrl.listaFiles.length != 0)
+                        if (Array.isArray($ctrl.listaFiles) && $ctrl.listaFiles.length != 0)
                         {
-                            return pimcFilesService.guardarCambiosFiles('Documentos', elementoInsertado.documentoID, $ctrl.listaFiles).then(
-                                function() {
-                                    return $q.resolve(true);
-                                }, 
-                                function(error){
-                                    $ctrl.mensajeError = "Error guardando archivos" + error;
-                                    $ctrl.mostrarError = true;
-                                    return $q.resolve(false);
-                                }
-                            );
+                            if (pimcFilesService.guardarCambiosFiles('Documentos', elementoInsertado.documentoID, $ctrl.listaFiles))
+                            {
+                                return $q.resolve(true);
+                            } else {
+                                $ctrl.mensajeError = "Error guardando archivos" + error;
+                                $ctrl.mostrarError = true;
+                                return $q.resolve(false);
+                            }
                         } else {
                             return $q.resolve(true);
                         }
@@ -153,7 +146,7 @@
         }
     
         $ctrl.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
+            $ctrl.dismiss({$value: false});
         };
 
         // Primera inicializacion

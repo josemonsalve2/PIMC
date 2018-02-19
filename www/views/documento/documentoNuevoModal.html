@@ -1,15 +1,21 @@
-<div class="modal-content">
+<div>
     <div class="modal-header">
         <h1>Agregar documento nuevo</h1>
     </div>
-    <div class="modal-body">
-        <pimc-documento-datos-principales
-            datos-principales = "$ctrl.datosPrincipales"
-            activo="true"
-            files-lista = "$ctrl.listaFiles"
-            reportar-cambio="$ctrl.datosPrincipalesEditados(datosPrincipales, listadoFiles)">
+    <div class="text-center" ng-show="$ctrl.cargando"><img src="images/loader.gif"></div>
+    <div class="" class="modal-body" style="max-height:500px; overflow-y:auto; overflow-x:hidden">
+        <div class="m-t-2 m-b-1 m-l-1 m-r-1 alert alert-danger" ng-if="$ctrl.mensajeError">{{$ctrl.mensajeError}}</div>
+        <div class="m-t-2 m-b-1 m-l-1 m-r-1 alert alert-success" ng-if="$ctrl.mensajeGuardado">El documento ha sido creado</div>
+        <div class="m-l-1 m-r-1">
+            <pimc-documento-datos-principales
+                ng-if="!$ctrl.cargando"
+                datos-principales = "$ctrl.datosPrincipales"
+                activo="true"
+                files-lista = "$ctrl.listaFiles"
+                reportar-cambio="$ctrl.datosPrincipalesEditados(datosPrincipales, listadoFiles)">
 
-        </pimc-documento-datos-principales>
+            </pimc-documento-datos-principales>
+        </div>
     </div>
     <div class="modal-footer">
         <button class="btn btn-danger" ng-click="$ctrl.limpiar()">Limpiar</button><button class="btn btn-info" ng-click="$ctrl.crearContinuar()">Crear y agregar otro</button><button class="btn btn-primary" ng-click="$ctrl.crearCerrar();">Crear</button>
